@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c692d01a-e485-430f-a680-47640e663057" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/api/routes/testAPI.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react_pacts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/react_pacts/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react_pacts/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/react_pacts/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/react_pacts/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/react_pacts/src/App.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -24,27 +25,29 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="css" value="2" />
           <entry key="html" value="1" />
           <entry key="jade" value="1" />
-          <entry key="js" value="10" />
-          <entry key="json" value="1" />
+          <entry key="js" value="11" />
+          <entry key="json" value="2" />
           <entry key="md" value="2" />
           <entry key="www" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="CSS" value="2" />
           <entry key="HTML" value="1" />
-          <entry key="JSON" value="1" />
+          <entry key="JSON" value="2" />
           <entry key="Jade" value="1" />
-          <entry key="JavaScript" value="12" />
+          <entry key="JavaScript" value="13" />
           <entry key="Markdown" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="7" />
-          <entry key="js" value="124" />
+          <entry key="js" value="154" />
           <entry key="json" value="2" />
           <entry key="md" value="37" />
           <entry key="www" value="5" />
@@ -54,7 +57,7 @@
         <counts>
           <entry key="HTML" value="7" />
           <entry key="JSON" value="2" />
-          <entry key="JavaScript" value="129" />
+          <entry key="JavaScript" value="159" />
           <entry key="Markdown" value="37" />
         </counts>
       </usages-collector>
@@ -65,10 +68,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/react_pacts/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+            <state>
+              <caret column="3" selection-start-column="3" selection-end-column="3" />
               <folding>
-                <element signature="e#0#41#0" expanded="true" />
+                <element signature="e#24#65#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -110,7 +113,7 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="685" />
+    <option name="x" value="573" />
     <option name="y" value="23" />
     <option name="width" value="1056" />
     <option name="height" value="920" />
@@ -132,6 +135,12 @@
               <item name="pacts" type="b2602c69:ProjectViewProjectNode" />
               <item name="pacts" type="462c0819:PsiDirectoryNode" />
               <item name="react_pacts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pacts" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pacts" type="462c0819:PsiDirectoryNode" />
+              <item name="react_pacts" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="pacts" type="b2602c69:ProjectViewProjectNode" />
@@ -173,15 +182,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1552831949401</updated>
-      <workItem from="1552831950621" duration="3292000" />
+      <workItem from="1552831950621" duration="4366000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3292000" />
+    <option name="totallyTimeSpent" value="4366000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="685" y="23" width="1056" height="920" extended-state="0" />
+    <frame x="573" y="23" width="1056" height="920" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
@@ -295,12 +304,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/api/package.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react_pacts/src/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="6" lean-forward="true" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/react_pacts/src/App.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/react_pacts/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+        <state>
+          <caret column="3" selection-start-column="3" selection-end-column="3" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#24#65#0" expanded="true" />
           </folding>
         </state>
       </provider>
