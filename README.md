@@ -2,7 +2,7 @@
 
 ## Team
 * Ivan Esmeral (Project Lead)
-* Kasra Khadem (Business Development)
+* Jamie Wang (Business Development)
 * Stephanie Shi
 * Siddharth Kumar
 * Annie Su
@@ -12,7 +12,7 @@
 
 ### Cloning the project
 
-$ git clone https://github.com/hack4impact/pacts.git
+`$ git clone https://github.com/hack4impact/pacts.git`
 
 
 
