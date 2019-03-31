@@ -58,9 +58,7 @@ class Nav extends React.Component {
           onChange={this.handleChange}
           indicatorColor="primary"
         >
-          <Tab label="Records" icon={<FolderIcon/>} component={Link} to="/payment/all" />
           <Tab label="Home" icon={<PersonIcon/>} component={Link} to="/" />
-          <Tab label="Checklists" icon={<CalendarIcon/>} component={Link} to="/checklist" />
       </Tabs>
       </AppBar>
       </MuiThemeProvider>

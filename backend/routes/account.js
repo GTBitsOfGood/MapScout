@@ -237,11 +237,7 @@ router.post('/register', (req, res) => {
       firstName,
       lastName,
       email,
-      password,
-      landlordFirstName,
-      landlordLastName,
-      landlordEmail,
-      landlordNumber
+      password
     } = req.body;
 
     // Check that the input email is a valid email url
@@ -452,10 +448,8 @@ router.post('/update', authenticated, (req, res) => {
 
   // Pull values from the request
   var {
-    type,
     firstName,
     lastName,
-    startDate
   } = req.body;
 
   // Find user in the database
@@ -473,10 +467,9 @@ router.post('/update', authenticated, (req, res) => {
       type = type.trim();
       firstName = firstName.trim();
       lastName = lastName.trim();
-      startDate = startDate.trim();
 
       // Check if any of the form fields are null
-      if (!type || !firstName || !lastName || !startDate) {
+      if (!firstName || !lastName) {
         res.send({
           success: false,
           error: 'Please complete all form fields',
@@ -485,10 +478,8 @@ router.post('/update', authenticated, (req, res) => {
       }
 
       // Update user information
-      user.type = type;
       user.firstName = firstName;
       user.lastName = lastName;
-      user.startDate = startDate;
 
       // Save the user information updates to database
       user.save((saveUserErr) => {

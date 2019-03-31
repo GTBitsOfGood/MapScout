@@ -115,19 +115,6 @@ class Welcome extends Component {
 
           <div style={{ height: "3vh" }}/>
 
-          <Link to="/leaseAgreement">
-          <Button
-            color="secondary"
-            variant="contained"
-            size="large"
-            style={{ width: "80%", margin: "0 auto", boxShadow: "none" }}
-          >
-            Lease Agreement
-          </Button>
-          </Link>
-
-          <div style={{ height: "3vh" }}/>
-
           <Link to="/howto">
           <Button
             color="secondary"

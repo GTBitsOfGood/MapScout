@@ -42,11 +42,6 @@ class Register extends Component {
       lastName: '',
       email: '',
       password: '',
-      confirmPassword: '',
-      landlordFirstName: '',
-      landlordLastName: '',
-      landlordEmail: '',
-      landlordNumber: '',
       error: '',
       showPassword: false,
       redirect: false,
@@ -54,15 +49,11 @@ class Register extends Component {
 
     // Bindings so 'this' refers to component
     this.redirect = this.redirect.bind(this);
-    this.handleChangeTenantFirstName = this.handleChangeTenantFirstName.bind(this);
-    this.handleChangeTenantLastName = this.handleChangeTenantLastName.bind(this);
-    this.handleChangeTenantEmail = this.handleChangeTenantEmail.bind(this);
+    this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
+    this.handleChangeLastName = this.handleChangeLastName.bind(this);
+    this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
-    this.handleChangeLandlordFirstName = this.handleChangeLandlordFirstName.bind(this);
-    this.handleChangeLandlordLastName = this.handleChangeLandlordLastName.bind(this);
-    this.handleChangeLandlordEmail = this.handleChangeLandlordEmail.bind(this);
-    this.handleChangeLandlordNumber = this.handleChangeLandlordNumber.bind(this);
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
     this.handleClickShowPassword = this.handleClickShowPassword.bind(this);
   }
@@ -77,11 +68,7 @@ class Register extends Component {
         lastName,
         email,
         password,
-        confirmPassword,
-        landlordFirstName,
-        landlordLastName,
-        landlordEmail,
-        landlordNumber
+        confirmPassword
     } = this.state;
 
     // Check that required form fields are filled in.
@@ -112,10 +99,6 @@ class Register extends Component {
        lastName,
        email,
        password,
-       landlordFirstName,
-       landlordLastName,
-       landlordEmail,
-       landlordNumber,
      })
        .then(response => {
          // If the user did not successfully register
@@ -147,33 +130,29 @@ class Register extends Component {
      * when a user begins typing.
      */
 
-    handleClickShowPassword(event) {
-      this.setState({
-        showPassword: !this.state.showPassword
-      });
-    }
-
-
-    handleChangeTenantFirstName(event) {
+    handleChangeFirstName(event) {
       this.setState({
         firstName: event.target.value,
       });
     }
 
-
-    handleChangeTenantLastName(event) {
+    handleChangeLastName(event) {
       this.setState({
         lastName: event.target.value,
       });
     }
 
-
-    handleChangeTenantEmail(event) {
+    handleChangeEmail(event) {
       this.setState({
         email: event.target.value,
       });
     }
 
+    handleClickShowPassword(event) {
+      this.setState({
+        showPassword: !this.state.showPassword
+      });
+    }
 
     handleChangePassword(event) {
       this.setState({
@@ -188,33 +167,6 @@ class Register extends Component {
       });
     }
 
-
-    handleChangeLandlordFirstName(event) {
-      this.setState({
-        landlordFirstName: event.target.value,
-      });
-    }
-
-
-    handleChangeLandlordLastName(event) {
-      this.setState({
-        landlordLastName: event.target.value,
-      });
-    }
-
-
-    handleChangeLandlordEmail(event) {
-      this.setState({
-        landlordEmail: event.target.value,
-      });
-    }
-
-
-    handleChangeLandlordNumber(event) {
-      this.setState({
-        landlordNumber: event.target.value,
-      });
-    }
 
     // Redirect appropriately
     redirect() {
@@ -245,35 +197,35 @@ class Register extends Component {
         <MuiThemeProvider theme={theme}>
           <TextField
             required
-            id="tenant first name"
-            label="Tenant First Name"
+            id="first name"
+            label="First Name"
             type="text"
             margin="normal"
             variant="outlined"
             style={{ width: "80%", margin: "0 auto" }}
-            onChange={ this.handleChangeTenantFirstName }/>
+            onChange={ this.handleChangeFirstName }/>
           <br/>
           <br/>
           <TextField
             required
             id="last name"
-            label="Tenant Last Name"
+            label="Last Name"
             margin="normal"
             variant="outlined"
             style={{ width: "80%", margin: "0 auto" }}
             type="text"
-            onChange= { this.handleChangeTenantLastName }/>
+            onChange= { this.handleChangeLastName }/>
           <br/>
           <br/>
           <TextField
             required
-            id="tenant email"
+            id="email"
             label="Your email"
             margin="normal"
             variant="outlined"
             type="email"
             style={{ width: "80%", margin: "0 auto" }}
-            onChange= { this.handleChangeTenantEmail }/>
+            onChange= { this.handleChangeEmail }/>
           <br/>
           <br/>
           <TextField
@@ -310,46 +262,6 @@ class Register extends Component {
             variant="outlined"
             style={{ width: "80%", margin: "0 auto" }}
             onChange= { this.handleConfirmPassword }/>
-          <br/>
-          <br/>
-          <TextField
-            id="landlord first name"
-            label="Landlord First Name"
-            margin="normal"
-            variant="outlined"
-            type="text"
-            style={{ width: "80%", margin: "0 auto" }}
-            onChange= { this.handleChangeLandlordFirstName }/>
-          <br/>
-          <br/>
-          <TextField
-            id="landlord last name"
-            label="Landlord Last Name"
-            margin="normal"
-            variant="outlined"
-            type="text"
-            style={{ width: "80%", margin: "0 auto" }}
-            onChange= { this.handleChangeLandlordLastName }/>
-          <br/>
-          <br/>
-          <TextField
-            id="landlord email"
-            label="Landlord Email"
-            margin="normal"
-            variant="outlined"
-            type="email"
-            style={{ width: "80%", margin: "0 auto" }}
-            onChange= { this.handleChangeLandlordEmail }/>
-          <br/>
-          <br/>
-          <TextField
-            id="landlord number"
-            label="Landlord number"
-            margin="normal"
-            variant="outlined"
-            type="text"
-            style={{ width: "80%", margin: "0 auto" }}
-            onChange= { this.handleChangeLandlordNumber }/>
           <br/>
           <br/>
 
