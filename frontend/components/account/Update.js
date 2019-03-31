@@ -244,18 +244,6 @@ class Update extends Component {
 
               {/* Render the fields */}
               <label>
-              Type: tenant or attorney?
-              <input
-                placeholder="Type: tenant or attorney?"
-                type="text"
-                className="form-control"
-                value={ this.state.type }
-                onChange={ this.handleChangeType }
-                autoFocus="true"
-              />
-              </label>
-
-              <label>
               First name
               <input
                 placeholder="First name"
@@ -275,18 +263,6 @@ class Update extends Component {
                 className="form-control"
                 value={ this.state.lastName }
                 onChange={ this.handleChangeLastName }
-                autoFocus="true"
-              />
-              </label>
-
-              <label>
-              Start date dd/mm/yyyy
-              <input
-                placeholder="Start date dd/mm/yyyy"
-                type="text"
-                className="form-control"
-                value={ this.state.startDate }
-                onChange={ this.handleChangeStartDate }
                 autoFocus="true"
               />
               </label>
