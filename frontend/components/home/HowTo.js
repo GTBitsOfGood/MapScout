@@ -26,42 +26,10 @@ const theme = createMuiTheme({
 
 /**
  * Render a card welcoming a user
- * If the user is not logged in, prompt them to log in or register
  */
-class Welcome extends Component {
+class HowTo extends Component {
   constructor(props) {
     super(props);
-
-    // Bindings so 'this' refers to component
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-
-  handleLogout() {
-    /**
-     * Call to backend route to log the user in
-     */
-    axios.post('/api/user/logout').then(response => {
-      // If the user did not successfully log out
-      if (!response.data.success) {
-        this.setState({
-          error: response.data.error,
-          pending: false,
-        });
-      // If the user did successfully log out
-      } else {
-        this.setState({
-          error: null,
-          pending: false,
-        });
-      }
-    })
-    // If there was some unhandled error to this point
-    .catch(err => {
-      this.setState({
-        error: err.message,
-        pending: false,
-      });
-    });
   }
 
   render() {
@@ -103,4 +71,4 @@ class Welcome extends Component {
   }
 }
 
-export default Welcome;
+export default HowTo;

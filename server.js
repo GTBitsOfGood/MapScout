@@ -68,7 +68,6 @@ if (errors.length > 0) {
 }
 
 // Import app
-const account = require('./backend/routes/account');
 const generalRoutes = require('./backend/routes/routes');
 
 // Connecting to mongo
@@ -85,7 +84,6 @@ app.use(session({
 }));
 
 // Prefix all backend routes with "/api"
-app.use('/api/user', account);
 app.use('/api/', generalRoutes);
 
 // All other routes go to the frontend
