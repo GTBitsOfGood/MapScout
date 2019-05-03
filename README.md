@@ -1,61 +1,67 @@
-# PACTS Project
-Description
+# Flask React Boilerplate
 
-### Development
+[![Build Status](https://travis-ci.org/YaleDHLab/flask-react-boilerplate.svg?branch=master)](https://travis-ci.org/YaleDHLab/flask-react-boilerplate)
 
-Create and configure the env.sh file to have the below variables. These are your local environment variables for local development and therefore can be separate from those on heroku.
+Simple boilerplate for a Flask backend and React client including:
 
-```javascript
-# env.sh
-export MONGODB_URI="mongodb://name:here@example.mlab.com:11111/name-of-db";
-export SESSION_SECRET="enter_a_session_secret";
-export HOST_EMAIL_ROUTE="http://either_local_or_production";
+* ES6 transpiling via Webpack
+* Hot module reloading via Webpack Dev Server
+* State management via Redux
+* Tests via Pytest and Jest
+* Linting via Pylint and Eslint
+* Travis CI for automatic testing and linting
+
+## Dependencies
+
+To install the boilerplate dependencies, you can run:
+
+```bash
+git clone https://github.com/YaleDHLab/flask-react-boilerplate
+cd flask-react-boilerplate
+npm install --no-optional
+pip install -r requirements.txt
 ```
 
-The app can use AWS or Azure storage for images. Configure which storage
-service to use with:
+## Quickstart
 
-```
-export STORAGE_SERVICE=[AWS | Azure]
-```
+Once the dependencies are installed, you can start the api with the following command:
 
-AWS and Azure require different configuration variables. If you are using AWS:
-
-```
-export AWS_ACCESS_KEY_ID="XXXXXXXXXX";
-export AWS_SECRET_ACCESS_KEY="XXXXXXX/XXXXXX";
-export AWS_BUCKET_URL="XXXXXXXXXX";
-export AWS_REGION="country-region-number";
+```bash
+npm run production
 ```
 
-If you are using Azure:
+That will start the server on port 7082. To run the development server with hot module reloading, run:
 
-```
-export AZURE_STORAGE_ACCOUNT_NAME="myStorageAccountName"
-export AZURE_STORAGE_CONTAINER_NAME="ContainerName"
-export AZURE_STORAGE_ACCOUNT_ACCESS_KEY="AccountKey"
+```bash
+npm run start
 ```
 
-### Running the application
+That will start the webpack dev server on port 7081.
 
-1.  Open you computer terminal and navigate to the project directory
-2.  Do `source env.sh` to load all the variables in the env.sh file in the terminal
-3.  Do `npm install` (This only has to be done on the first time to install all the required node modules)
-4.  Do `npm run frontend` in one terminal window
-5.  Do `npm run backend` in another terminal window
+## Tests
 
-### Technology stack
+To run the Javascript tests (located in `src/tests/`), run:
 
-*   `React` frontend JavaScript framework
-*   `Redux` centralized frontend state management
-*   `Bootstrap` frontend CSS/JavaScript styling framework
-*   `Node` backend JavaScript
-*   `MongoDB` no-SQL database
-*   `Mongoose` database client for JavaScript/Node
-*   `AWS S3` image hosting
-*   `Heroku` hosting provider
-*   `Sendgrid` email service
-
+```bash
+npm run jest
 ```
 
+To run the Python tests (located in `server/tests/`), run:
+
+```bash
+pytest
+```
+
+## Linting
+
+To lint the Javascript files (located in `src`), run:
+
+```bash
+npm run lint-js
+```
+
+To lint the Python files (located in `server`), run:
+
+```bash
+npm run lint-py
 ```
