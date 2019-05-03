@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
+import CsvUpload from './CsvUpload';
 
 class Index extends Component {
 
     constructor(props, context) {
-        console.log('bananas');
         super(props, context);
     }
 
@@ -73,7 +73,7 @@ class Index extends Component {
                     </RB.Row>
                     <RB.Row style={{
                         position: 'absolute',
-                        top: 0,
+                        top: "50%",
                         left: 0,
                         right: 0,
                         bottom: 0,
@@ -88,6 +88,8 @@ class Index extends Component {
                        }}></div>
                     </RB.Row>
                 </RB.Grid>
+                <CsvUpload>
+                </CsvUpload>
             </div>
         )
     }
