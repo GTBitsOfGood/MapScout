@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import AppWrapper from './components/app';
-import App from './components/App.jsx';
-import About from './components/About.jsx';
+import AppWrapper from './components/AppWrapper';
+import App from './components/App';
+import About from './components/About';
 
 const routes = (
     <AppWrapper>
         <Switch>
-            // <Route exact path='/' component={About} />
-            // <Route path='/about' component={App} />
+            <Route exact path='/' component={App} />
+            <Route path='/about' component={About} />
         </Switch>
     </AppWrapper>
 );

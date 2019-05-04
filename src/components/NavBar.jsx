@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
+import { Link } from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -50,7 +51,7 @@ class NavBar extends Component {
                        </DropdownToggle>
                        <DropdownMenu right>
                          <DropdownItem>
-                           Option 1
+                           Upload CSV
                          </DropdownItem>
                          <DropdownItem>
                            Option 2

@@ -32,7 +32,7 @@ class About extends Component {
                         <RB.Col xs={4} md={2} />
                         <RB.Col xs={12} md={8}>
                             <RB.PageHeader>
-                                About !!!!!!
+                                About
                                 <br />
                             </RB.PageHeader>
                         </RB.Col>
