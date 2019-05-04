@@ -1,12 +1,42 @@
 import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
+import NavBar from './NavBar';
+import {
+  Container,
+  Row,
+  Col
+} from 'reactstrap';
+
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem } from 'reactstrap';
 
 class Index extends Component {
 
     constructor(props, context) {
         super(props, context);
-    }
+        this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
+
 
     componentDidMount() {
         // Connect the initMap() function within this class to the global window context,
@@ -56,41 +86,33 @@ class Index extends Component {
         } = this.props;
 
         return (
-            <div>
-                <RB.Grid>
-                    <RB.Row>
-                        <RB.Col xs={4} md={2} />
-                        <RB.Col xs={12} md={8}>
-                            <RB.PageHeader>
-                                PACTS
-                                <br />
-                                <small>
-                                    by Hack4Impact
-                                </small>
-                            </RB.PageHeader>
-                        </RB.Col>
-                        <RB.Col xs={4} md={2} />
-                    </RB.Row>
-                    <RB.Row style={{
+          <div>
+            <NavBar/>
+              <Container>
+                <Row>
+                    <Col xs={4} md={2} />
+                    <Col xs={12} md={8}>
+                    </Col>
+                    <Col xs={4} md={2} />
+                </Row>
+                <Row style={{
+                    position: 'absolute',
+                    top: "8%",
+                    left: "1%",
+                    right: "1%",
+                    bottom: "0%",
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',}}>
+                    <div ref="map" id="map" style={{
                         position: 'absolute',
-                        top: "50%",
+                        top: 0,
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',}}>
-                        <div ref="map" id="map" style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                       }}></div>
-                    </RB.Row>
-                </RB.Grid>
-                <CsvUpload uploadCsv={uploadCsv} >
-                </CsvUpload>
-            </div>
+                   }}></div>
+                </Row>
+              </Container>
+          </div>
         )
     }
 
