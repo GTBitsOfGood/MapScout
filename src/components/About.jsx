@@ -39,8 +39,6 @@ class About extends Component {
                         <RB.Col xs={4} md={2} />
                     </RB.Row>
                 </RB.Grid>
-                <CsvUpload>
-                </CsvUpload>
             </div>
         )
     }

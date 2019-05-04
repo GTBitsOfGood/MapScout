@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
 import NavBar from './NavBar';
+import {
+  Container,
+  Row,
+  Col
+} from 'reactstrap';
 
 import {
   Collapse,
@@ -83,14 +88,14 @@ class Index extends Component {
         return (
           <div>
             <NavBar/>
-              <RB.Grid>
-                <RB.Row>
-                    <RB.Col xs={4} md={2} />
-                    <RB.Col xs={12} md={8}>
-                    </RB.Col>
-                    <RB.Col xs={4} md={2} />
-                </RB.Row>
-                <RB.Row style={{
+              <Container>
+                <Row>
+                    <Col xs={4} md={2} />
+                    <Col xs={12} md={8}>
+                    </Col>
+                    <Col xs={4} md={2} />
+                </Row>
+                <Row style={{
                     position: 'absolute',
                     top: "8%",
                     left: "1%",
@@ -105,10 +110,8 @@ class Index extends Component {
                         right: 0,
                         bottom: 0,
                    }}></div>
-                </RB.Row>
-              </RB.Grid>
-            <CsvUpload>
-            </CsvUpload>
+                </Row>
+              </Container>
           </div>
         )
     }
