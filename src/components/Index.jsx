@@ -82,7 +82,7 @@ class Index extends Component {
 
     render() {
         const {
-          testThing
+          uploadCsv
         } = this.props;
 
         return (

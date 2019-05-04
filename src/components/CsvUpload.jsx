@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 
 class CsvUpload extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onDrop = (files) => {
-      this.setState({files})
+      this.setState({files});
+      this.props.uploadCsv(files[0]);
     };
     this.state = {
       files: []

@@ -52,3 +52,6 @@ CORS(app)
 # Create app blueprints
 from main import main as main_blueprint
 app.register_blueprint(main_blueprint)
+
+from bulk_resource import bulk_resource as bulk_resource_blueprint
+app.register_blueprint(bulk_resource_blueprint)
