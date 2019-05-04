@@ -5,6 +5,7 @@
 # import os
 #
 from flask import abort, jsonify, redirect, render_template, request, url_for, flash, make_response
+from werkzeug import secure_filename
 # from flask.ext.login import current_user, login_required
 #
 # from flask_wtf.file import (
@@ -49,11 +50,6 @@ from . import bulk_resource
 # )
 
 
-@bulk_resource.route('/api/csv/upload', methods=['GET', 'POST'])
-def upload():
-    return jsonify([{'title': 'A'}, {'title': 'C'}])
-
-
 # @csrf.exempt
 # @bulk_resource.route('/upload', methods=['GET', 'POST'])
 # @login_required
@@ -84,195 +80,203 @@ def upload():
 #
 #
 # @csrf.exempt
-# @bulk_resource.route('/_upload', methods=['POST'])
-# def upload_row():
-#     """ Processes each Deferred Ajax request """
-#     data = json.loads(request.form['json'])
-#
-#     # Store CSV fields as descriptors
-#     if data['action'] == 'fields-reset': # Reset operation
-#         try:
-#             fields = data['fields']
-#
-#             # Temporary storage area for CSV data
-#             csv_storage = CsvStorage(
-#                 date_uploaded=datetime.now(),
-#                 user=current_user,
-#                 action='reset',
-#             )
-#
-#             # Store new descriptors
-#             fields = [f.strip() for f in fields if
-#                 f.strip() and f.strip() != 'Name' and f.strip() != 'Address']
-#             for f in fields:
-#                 desc = CsvDescriptor(
-#                     csv_storage=csv_storage,
-#                     name=f,
-#                     values=set(),
-#                 )
-#                 db.session.add(desc)
-#             db.session.add(csv_storage)
-#             db.session.commit()
-#             return jsonify({
-#                 "status": "Success",
-#                 "message": "Successfully added fields",
-#                 })
-#         except:
-#             db.session.rollback()
-#             abort(404)
-#     if data['action'] == 'fields-update': # Update operation
-#         try:
-#             fields = data['fields']
-#             csv_storage = CsvStorage(
-#                 date_uploaded=datetime.now(),
-#                 user=current_user,
-#                 action='update',
-#             )
-#
-#             # get old fields
-#             descriptors = Descriptor.query.all()
-#             descriptors = dict([(d.name, d) for d in descriptors])
-#             old_d = list(descriptors.keys())
-#
-#             # compare with new fields
-#             new_d = [f.strip() for f in fields if
-#                 f.strip() and f.strip() != 'Name' and f.strip() != 'Address']
-#
-#             # store descriptors to remove
-#             removed = set(old_d) - set(new_d)
-#             for f in removed:
-#                 old_desc = Descriptor.query.filter_by(
-#                     name=f
-#                 ).first()
-#                 desc = CsvDescriptorRemove(
-#                     csv_storage=csv_storage,
-#                     descriptor_id=old_desc.id,
-#                     name=old_desc.name,
-#                 )
-#                 db.session.add(desc)
-#
-#             # store old descriptors not removed
-#             keep = set(old_d).intersection(set(new_d))
-#             for f in keep:
-#                 existing_desc = descriptors.get(f)
-#                 existing_type = 'option' if existing_desc.values else 'text'
-#                 # CSVDescriptor only stores values from CSV, not existing values in app
-#                 desc = CsvDescriptor(
-#                     csv_storage=csv_storage,
-#                     name=f,
-#                     values=set(),
-#                     descriptor_id=existing_desc.id,
-#                     descriptor_type=existing_type,
-#                 )
-#                 db.session.add(desc)
-#
-#             # store new descriptors
-#             added = set(new_d) - set(old_d)
-#             for f in added:
-#                 desc = CsvDescriptor(
-#                     csv_storage=csv_storage,
-#                     name=f,
-#                     values=set(),
-#                 )
-#                 db.session.add(desc)
-#
-#             db.session.add(csv_storage)
-#             db.session.commit()
-#             return jsonify({
-#                 "status": "Success",
-#                 "message": "Successfully added fields"
-#                 })
-#         except:
-#             db.session.rollback()
-#             abort(404)
-#
-#     # Store CSV rows
-#     if data['action'] == 'reset-update': # Reset operation
-#         try:
-#             row = data['row']
-#             clean_row = {k.strip():v.strip() for k, v in row.items()}
-#
-#             # Validate addresses
-#             address = clean_row['Address']
-#             # print(validate_address(data, address))
-#             gstatus = validate_address(data, address)
-#             if gstatus != 'OK':
-#                 msg = 'Address cannot be geocoded due to ' + gstatus + ": " + address
-#                 return jsonify({
-#                     "status": "Error",
-#                     "message": msg
-#                     })
-#
-#             csv_storage = CsvStorage.most_recent(user=current_user)
-#             if csv_storage is None:
-#                 abort(404)
-#
-#             csv_row = CsvRow(
-#                 csv_storage=csv_storage,
-#                 data=clean_row,
-#             )
-#             db.session.add(csv_row)
-#             db.session.commit()
-#             return jsonify({
-#                 "status": "Success",
-#                 "message": "Successfully added {}".format(clean_row['Name'])
-#                 })
-#         except:
-#             db.session.rollback()
-#             abort(404)
-#     if data['action'] == 'update': # Update operation
-#         try:
-#             row = data['row']
-#             clean_row = {k.strip():v.strip() for k, v in row.items()}
-#
-#             # Validate addresses
-#             address = clean_row['Address']
-#             gstatus = validate_address(data, address)
-#             if gstatus != 'OK':
-#                 msg = 'Address cannot be geocoded due to ' + gstatus + ": " + address
-#                 return jsonify({
-#                     "status": "Error",
-#                     "message": msg
-#                     })
-#
-#             csv_storage = CsvStorage.most_recent(user=current_user)
-#             if csv_storage is None:
-#                 abort(404)
-#
-#             csv_row = CsvRow(
-#                 csv_storage=csv_storage,
-#                 data=clean_row
-#             )
-#             # See if resource already exists
-#             existing_resource = Resource.query.filter_by(
-#                 name=row['Name']
-#             ).first()
-#             if existing_resource is not None:
-#                 csv_row.resource_id = existing_resource.id
-#
-#             db.session.add(csv_row)
-#             db.session.commit()
-#             return jsonify({
-#                 "status": "Success",
-#                 "message": "Successfully added {}".format(clean_row['Name'])
-#                 })
-#         except:
-#             db.session.rollback()
-#             abort(404)
-#
-#     # Done processing CSV, move onto next step
-#     if data['action'] == 'finished':
-#         csv_storage = CsvStorage.most_recent(user=current_user)
-#         if csv_storage is None:
-#             abort(404)
-#
-#         if len(csv_storage.csv_rows) == 0:
-#             return jsonify({
-#                 "status": "Error",
-#                 "message": 'No resources to update from CSV'
-#                 })
-#
-#         return jsonify(redirect=url_for('bulk_resource.set_descriptor_types'))
+@bulk_resource.route('/api/csv/upload', methods=['POST'])
+def upload():
+    print('here')
+    print(request)
+    print(request.args.get('file'))
+    if request.method == 'POST':
+        print('post')
+        f = request.files['file']
+        print(f.filename)
+        f.save(secure_filename(f.filename))
+        return 'file uploaded successfully'
+
+
+    # # Store CSV fields as descriptors
+    # if data['action'] == 'fields-reset': # Reset operation
+    #     try:
+    #         fields = data['fields']
+    #
+    #         # Temporary storage area for CSV data
+    #         csv_storage = CsvStorage(
+    #             date_uploaded=datetime.now(),
+    #             user=current_user,
+    #             action='reset',
+    #         )
+    #
+    #         # Store new descriptors
+    #         fields = [f.strip() for f in fields if
+    #             f.strip() and f.strip() != 'Name' and f.strip() != 'Address']
+    #         for f in fields:
+    #             desc = CsvDescriptor(
+    #                 csv_storage=csv_storage,
+    #                 name=f,
+    #                 values=set(),
+    #             )
+    #             db.session.add(desc)
+    #         db.session.add(csv_storage)
+    #         db.session.commit()
+    #         return jsonify({
+    #             "status": "Success",
+    #             "message": "Successfully added fields",
+    #             })
+    #     except:
+    #         db.session.rollback()
+    #         abort(404)
+    # if data['action'] == 'fields-update': # Update operation
+    #     try:
+    #         fields = data['fields']
+    #         csv_storage = CsvStorage(
+    #             date_uploaded=datetime.now(),
+    #             user=current_user,
+    #             action='update',
+    #         )
+    #
+    #         # get old fields
+    #         descriptors = Descriptor.query.all()
+    #         descriptors = dict([(d.name, d) for d in descriptors])
+    #         old_d = list(descriptors.keys())
+    #
+    #         # compare with new fields
+    #         new_d = [f.strip() for f in fields if
+    #             f.strip() and f.strip() != 'Name' and f.strip() != 'Address']
+    #
+    #         # store descriptors to remove
+    #         removed = set(old_d) - set(new_d)
+    #         for f in removed:
+    #             old_desc = Descriptor.query.filter_by(
+    #                 name=f
+    #             ).first()
+    #             desc = CsvDescriptorRemove(
+    #                 csv_storage=csv_storage,
+    #                 descriptor_id=old_desc.id,
+    #                 name=old_desc.name,
+    #             )
+    #             db.session.add(desc)
+    #
+    #         # store old descriptors not removed
+    #         keep = set(old_d).intersection(set(new_d))
+    #         for f in keep:
+    #             existing_desc = descriptors.get(f)
+    #             existing_type = 'option' if existing_desc.values else 'text'
+    #             # CSVDescriptor only stores values from CSV, not existing values in app
+    #             desc = CsvDescriptor(
+    #                 csv_storage=csv_storage,
+    #                 name=f,
+    #                 values=set(),
+    #                 descriptor_id=existing_desc.id,
+    #                 descriptor_type=existing_type,
+    #             )
+    #             db.session.add(desc)
+    #
+    #         # store new descriptors
+    #         added = set(new_d) - set(old_d)
+    #         for f in added:
+    #             desc = CsvDescriptor(
+    #                 csv_storage=csv_storage,
+    #                 name=f,
+    #                 values=set(),
+    #             )
+    #             db.session.add(desc)
+    #
+    #         db.session.add(csv_storage)
+    #         db.session.commit()
+    #         return jsonify({
+    #             "status": "Success",
+    #             "message": "Successfully added fields"
+    #             })
+    #     except:
+    #         db.session.rollback()
+    #         abort(404)
+    #
+    # # Store CSV rows
+    # if data['action'] == 'reset-update': # Reset operation
+    #     try:
+    #         row = data['row']
+    #         clean_row = {k.strip():v.strip() for k, v in row.items()}
+    #
+    #         # Validate addresses
+    #         address = clean_row['Address']
+    #         # print(validate_address(data, address))
+    #         gstatus = validate_address(data, address)
+    #         if gstatus != 'OK':
+    #             msg = 'Address cannot be geocoded due to ' + gstatus + ": " + address
+    #             return jsonify({
+    #                 "status": "Error",
+    #                 "message": msg
+    #                 })
+    #
+    #         csv_storage = CsvStorage.most_recent(user=current_user)
+    #         if csv_storage is None:
+    #             abort(404)
+    #
+    #         csv_row = CsvRow(
+    #             csv_storage=csv_storage,
+    #             data=clean_row,
+    #         )
+    #         db.session.add(csv_row)
+    #         db.session.commit()
+    #         return jsonify({
+    #             "status": "Success",
+    #             "message": "Successfully added {}".format(clean_row['Name'])
+    #             })
+    #     except:
+    #         db.session.rollback()
+    #         abort(404)
+    # if data['action'] == 'update': # Update operation
+    #     try:
+    #         row = data['row']
+    #         clean_row = {k.strip():v.strip() for k, v in row.items()}
+    #
+    #         # Validate addresses
+    #         address = clean_row['Address']
+    #         gstatus = validate_address(data, address)
+    #         if gstatus != 'OK':
+    #             msg = 'Address cannot be geocoded due to ' + gstatus + ": " + address
+    #             return jsonify({
+    #                 "status": "Error",
+    #                 "message": msg
+    #                 })
+    #
+    #         csv_storage = CsvStorage.most_recent(user=current_user)
+    #         if csv_storage is None:
+    #             abort(404)
+    #
+    #         csv_row = CsvRow(
+    #             csv_storage=csv_storage,
+    #             data=clean_row
+    #         )
+    #         # See if resource already exists
+    #         existing_resource = Resource.query.filter_by(
+    #             name=row['Name']
+    #         ).first()
+    #         if existing_resource is not None:
+    #             csv_row.resource_id = existing_resource.id
+    #
+    #         db.session.add(csv_row)
+    #         db.session.commit()
+    #         return jsonify({
+    #             "status": "Success",
+    #             "message": "Successfully added {}".format(clean_row['Name'])
+    #             })
+    #     except:
+    #         db.session.rollback()
+    #         abort(404)
+    #
+    # # Done processing CSV, move onto next step
+    # if data['action'] == 'finished':
+    #     csv_storage = CsvStorage.most_recent(user=current_user)
+    #     if csv_storage is None:
+    #         abort(404)
+    #
+    #     if len(csv_storage.csv_rows) == 0:
+    #         return jsonify({
+    #             "status": "Error",
+    #             "message": 'No resources to update from CSV'
+    #             })
+
+        # return jsonify({"status": "Sucess"})
 #
 #
 # @bulk_resource.route('/set-descriptor-types', methods=['GET', 'POST'])

@@ -29,10 +29,16 @@ export function requestProviders() {
     }
 }
 
-export function testThing() {
+export function uploadCsv(file) {
     return function(dispatch) {
         dispatch(requestSearchSent());
-        return fetch(`${config.endpoint}test`)
+        return fetch(`${config.endpoint}csv/upload`, {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "text/csv"
+                        },
+                        body: file
+                    })
             .then(response => response.json()
                 .then(json => ({
                     status: response.status,

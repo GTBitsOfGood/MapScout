@@ -52,7 +52,7 @@ class Index extends Component {
 
     render() {
         const {
-          testThing
+          uploadCsv
         } = this.props;
 
         return (
@@ -88,7 +88,7 @@ class Index extends Component {
                        }}></div>
                     </RB.Row>
                 </RB.Grid>
-                <CsvUpload>
+                <CsvUpload uploadCsv={uploadCsv} >
                 </CsvUpload>
             </div>
         )
