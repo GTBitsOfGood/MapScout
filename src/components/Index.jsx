@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
+import NavBar from './NavBar';
+
 import {
   Collapse,
   Navbar,
@@ -79,72 +81,35 @@ class Index extends Component {
         } = this.props;
 
         return (
-            <div>
-            <Navbar color="light" light expand="md">
-         <NavbarBrand href="/">Philadelphia Alliance of Child Trauma Services</NavbarBrand>
-         <NavbarToggler onClick={this.toggle} />
-         <Collapse isOpen={this.state.isOpen} navbar>
-           <Nav className="ml-auto" navbar>
-             <NavItem>
-               <NavLink href="/components/">About</NavLink>
-             </NavItem>
-             <NavItem>
-               <NavLink href="https://github.com/reactstrap/reactstrap">Contact Us</NavLink>
-             </NavItem>
-             <UncontrolledDropdown nav inNavbar>
-               <DropdownToggle nav caret>
-                 Manage Resources
-               </DropdownToggle>
-               <DropdownMenu right>
-                 <DropdownItem>
-                   Option 1
-                 </DropdownItem>
-                 <DropdownItem>
-                   Option 2
-                 </DropdownItem>
-                 <DropdownItem divider />
-                 <DropdownItem>
-                   Reset
-                 </DropdownItem>
-               </DropdownMenu>
-             </UncontrolledDropdown>
-           </Nav>
-         </Collapse>
-       </Navbar>
-                <RB.Grid>
-                    <RB.Row>
-                        <RB.Col xs={4} md={2} />
-                        <RB.Col xs={12} md={8}>
-                            <RB.PageHeader>
-                                PACTS
-                                <br />
-                                <small>
-                                    by Hack4Impact
-                                </small>
-                            </RB.PageHeader>
-                        </RB.Col>
-                        <RB.Col xs={4} md={2} />
-                    </RB.Row>
-                    <RB.Row style={{
+          <div>
+            <NavBar/>
+              <RB.Grid>
+                <RB.Row>
+                    <RB.Col xs={4} md={2} />
+                    <RB.Col xs={12} md={8}>
+                    </RB.Col>
+                    <RB.Col xs={4} md={2} />
+                </RB.Row>
+                <RB.Row style={{
+                    position: 'absolute',
+                    top: "8%",
+                    left: "1%",
+                    right: "1%",
+                    bottom: "0%",
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',}}>
+                    <div ref="map" id="map" style={{
                         position: 'absolute',
-                        top: "50%",
+                        top: 0,
                         left: 0,
                         right: 0,
                         bottom: 0,
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',}}>
-                        <div ref="map" id="map" style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                       }}></div>
-                    </RB.Row>
-                </RB.Grid>
-                <CsvUpload>
-                </CsvUpload>
-            </div>
+                   }}></div>
+                </RB.Row>
+              </RB.Grid>
+            <CsvUpload>
+            </CsvUpload>
+          </div>
         )
     }
 
