@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
 import NavBar from './NavBar';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
@@ -27,10 +28,6 @@ class About extends Component {
     }
 
     render() {
-        const {
-          uploadCsv
-        } = this.props;
-
         return (
             <div>
             <NavBar/>
@@ -45,11 +42,14 @@ class About extends Component {
                         </RB.Col>
                         <RB.Col xs={4} md={2} />
                     </RB.Row>
-                    <CsvUpload uploadCsv={uploadCsv}></CsvUpload>
+                    <CsvUpload uploadCsv={file => this.props.uploadCsv(file)}></CsvUpload>
                 </RB.Grid>
             </div>
         )
     }
 }
 
-export default About;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(About);

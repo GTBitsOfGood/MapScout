@@ -18,4 +18,5 @@ def upload():
         csv_parsed = []
         for row in reader:
             csv_parsed.append(row)
-        return csv_parsed
+            print(row)
+        return jsonify({'results': csv_parsed})
