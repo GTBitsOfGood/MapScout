@@ -45,11 +45,15 @@ class About extends Component {
                         </RB.Col>
                         <RB.Col xs={4} md={2} />
                     </RB.Row>
-                    <CsvUpload uploadCsv={uploadCsv}></CsvUpload>
+                    <CsvUpload uploadCsv={uploadCsv} />
                 </RB.Grid>
             </div>
         )
     }
 }
 
-export default About;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(About);
+

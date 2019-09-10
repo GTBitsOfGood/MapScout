@@ -4,14 +4,16 @@ import Dropzone from 'react-dropzone';
 class CsvUpload extends Component {
   constructor(props) {
     super(props);
-    this.onDrop = (files) => {
-      this.setState({files});
-      this.props.uploadCsv(files[0]);
-    };
     this.state = {
       files: []
     };
+    this.onDrop = this.onDrop.bind(this);
   }
+
+  onDrop(files) {
+        this.setState({files});
+        this.props.uploadCsv(files[0]);
+    };
 
   render() {
     const files = this.state.files.map(file => (
