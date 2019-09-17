@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import * as RB from 'react-bootstrap';
-import CsvUpload from './CsvUpload';
 import NavBar from './NavBar';
 import {
   Container,
@@ -23,9 +21,9 @@ import {
 
 class Index extends Component {
 
-    constructor(props, context) {
-        super(props, context);
-        this.toggle = this.toggle.bind(this);
+  constructor(props, context) {
+    super(props, context);
+    this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false
     };

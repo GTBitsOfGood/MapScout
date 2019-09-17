@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import Index from './Index';
-import About from './About';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const mapStateToProps = state => (state.mainReducer);
 

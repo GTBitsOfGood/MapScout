@@ -8,7 +8,7 @@ from flask_login import LoginManager
 from flask_assets import Environment
 from flask_wtf import CsrfProtect
 from flask_compress import Compress
-from flask_rq import RQ
+# from flask_rq import RQ
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

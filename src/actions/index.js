@@ -45,6 +45,7 @@ export function uploadCsv(file) {
                     json
                 })))
             .then(({ status, json }) => {
+                console.log(json);
                 if (status >= 400) dispatch(requestSearchFailed());
                 else {
                     console.log(json);

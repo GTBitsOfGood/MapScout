@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as RB from 'react-bootstrap';
 import CsvUpload from './CsvUpload';
 import NavBar from './NavBar';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
@@ -11,41 +12,33 @@ const mapStateToProps = state => (state.mainReducer);
 export const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class About extends Component {
-    constructor(props, context) {
-      console.log('inside about !!!');
-        super(props, context);
-        this.toggle = this.toggle.bind(this);
-        this.state = {
-          isOpen: false
-        };
-    }
-
-    toggle() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
+    constructor(props) {
+        super(props);
     }
 
     render() {
-        const {
-          uploadCsv
-        } = this.props;
-
         return (
             <div>
-            <NavBar/>
+                <NavBar/>
                 <RB.Grid>
-                    <RB.Row>
-                        <RB.Col xs={4} md={2} />
-                        <RB.Col xs={12} md={8}>
-                            <RB.PageHeader>
-                                Upload CSV
-                                <br />
-                            </RB.PageHeader>
-                        </RB.Col>
-                        <RB.Col xs={4} md={2} />
-                    </RB.Row>
-                    <CsvUpload uploadCsv={uploadCsv} />
+                    {/*TODO: Make login work*/}
+                    <RB.Jumbotron>
+                        <RB.Form>
+                            <RB.FormGroup controlId="formBasicEmail">
+                                <RB.Label>Email address</RB.Label>
+                                <RB.FormControl type="email" placeholder="Enter email" />
+                            </RB.FormGroup>
+                            <RB.FormGroup controlId="formBasicPassword">
+                                <RB.Label>Password</RB.Label>
+                                <RB.FormControl type="password" placeholder="Password" />
+                            </RB.FormGroup>
+                            <RB.Button variant="primary" type="submit">
+                                Submit
+                            </RB.Button>
+                        </RB.Form>
+                    </RB.Jumbotron>
+                    {/*TODO: Hide CSV if user hasn't logged in*/}
+                    <CsvUpload uploadCsv={file => this.props.uploadCsv(file)} />
                 </RB.Grid>
             </div>
         )
@@ -54,6 +47,5 @@ class About extends Component {
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(About);
-
