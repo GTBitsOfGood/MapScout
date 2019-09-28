@@ -1,20 +1,7 @@
 import React, { Component } from 'react';
-import * as RB from 'react-bootstrap';
-import CsvUpload from './CsvUpload';
-import { Link } from 'react-router-dom';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
+import Navbar from 'react-bootstrap/NavBar';
+import Nav from 'react-bootstrap/Nav';
+import {Link} from "react-router-dom";
 
 class NavBar extends Component {
     constructor(props, context) {
@@ -34,37 +21,16 @@ class NavBar extends Component {
     render() {
         return (
             <div>
-              <Navbar color="light" light expand="md">
-                 <NavbarBrand href="/">Philadelphia Alliance of Child Trauma Services</NavbarBrand>
-                 <NavbarToggler onClick={this.toggle} />
-                 <Collapse isOpen={this.state.isOpen} navbar>
-                   <Nav className="ml-auto" navbar>
-                     <NavItem>
-                       <NavLink href="/about">About</NavLink>
-                     </NavItem>
-                     <NavItem>
-                       <NavLink href="https://github.com/reactstrap/reactstrap">Contact Us</NavLink>
-                     </NavItem>
-                     <UncontrolledDropdown nav inNavbar>
-                       <DropdownToggle nav caret>
-                         Manage Resources
-                       </DropdownToggle>
-                       <DropdownMenu right>
-                         <DropdownItem>
-                           Upload CSV
-                         </DropdownItem>
-                         <DropdownItem>
-                           Option 2
-                         </DropdownItem>
-                         <DropdownItem divider />
-                         <DropdownItem>
-                           Reset
-                         </DropdownItem>
-                       </DropdownMenu>
-                     </UncontrolledDropdown>
-                   </Nav>
-                 </Collapse>
-             </Navbar>
+                <Navbar bg="light" expand="lg">
+                    <Navbar.Brand href="/">PACTS</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="navbar-nav" />
+                    <Navbar.Collapse id="navbar-nav">
+                        <Nav className="mr-auto">
+                            <Nav.Link as={Link} to="/">Home</Nav.Link>
+                            <Nav.Link as={Link} to="/providers">Facility Upload</Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
             </div>
         )
     }
