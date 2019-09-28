@@ -21,4 +21,22 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  background-color: #FAFBFC;
+}
+
+#auth-container {
+    padding: 20px;
+    width: 100%;
+    background-color: white;
+}
+
+@media only screen and (min-width: 768px) {
+    /*Desktop Specific*/
+    #auth-container {
+        margin-top: 30px;
+        width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 }
