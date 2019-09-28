@@ -8,32 +8,35 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 
+import localizationStrings from '../utils/Localization';
+
 const mapStateToProps = state => (state.mainReducer);
 export const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 class Auth extends Component {
     render() {
+        let { header, description, emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, submit, signUp } = localizationStrings;
         return(
             <Container>
                 <div id="auth-container">
-                    <h2>Provider Login</h2>
-                    <p>Please verify that you are with the PACTS network</p>
+                    <h2>{header}</h2>
+                    <p>{description}</p>
                     <Form>
                         <hr />
                         <Form.Group controlId="formEmail">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Label>{emailLabel}</Form.Label>
+                            <Form.Control type="email" placeholder={emailPlaceholder} />
                         </Form.Group>
                         <Form.Group controlId="formPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
+                            <Form.Label>{passwordLabel}</Form.Label>
+                            <Form.Control type="password" placeholder={passwordPlaceholder} />
                         </Form.Group>
                         <hr />
                         <Button variant="primary" type="submit" block>
-                            Submit
+                            {submit}
                         </Button>
                         <Button variant="link" size="sm" block>
-                            Sign Up
+                            {signUp}
                         </Button>
                     </Form>
                 </div>
