@@ -211,7 +211,7 @@ class Resource(db.Model):
             values=[]
         )
         text_about = Descriptor(
-            name='About',
+            name='ProviderRoutes',
             is_searchable=True,
             values=[]
         )
