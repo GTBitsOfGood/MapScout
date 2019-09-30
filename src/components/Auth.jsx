@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Button from "react-bootstrap/Button";
+import Alert from 'react-bootstrap/Alert';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -20,7 +21,8 @@ class Auth extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            error: null
         };
 
         this.inputChange = (event) => {
@@ -34,24 +36,20 @@ class Auth extends Component {
         this.login = () => {
             this.props.firebase.signInEmailPassword(this.state.email, this.state.password)
                 .then(authUser => {
-                    alert('Successfully logged in');
-                    this.props.history.push("/");
+                    this.props.history.push("/providers");
                 })
                 .catch(error => {
-                    alert('Incorrect Password')
+                    this.setState({error: error.message});
                 });
         }
     }
 
     render() {
-        let { header, description, emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, submit, signUp } = localizationStrings;
+        let { emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, login, signUp, forgotPassword } = localizationStrings;
         return(
             <Container>
                 <div id="auth-container">
-                    <h2>{header}</h2>
-                    <p>{description}</p>
                     <Form>
-                        <hr />
                         <Form.Group controlId="formEmail">
                             <Form.Label>{emailLabel}</Form.Label>
                             <Form.Control type="email" placeholder={emailPlaceholder} onChange={this.inputChange}/>
@@ -59,10 +57,21 @@ class Auth extends Component {
                         <Form.Group controlId="formPassword">
                             <Form.Label>{passwordLabel}</Form.Label>
                             <Form.Control type="password" placeholder={passwordPlaceholder} onChange={this.inputChange}/>
+                            <Button variant="link" size="sm" style={{paddingLeft: 0}}>
+                                {forgotPassword}
+                            </Button>
                         </Form.Group>
-                        <hr />
+                        {
+                            this.state.error &&
+                                <Alert variant="danger" onClose={() => this.setState({error: null})} dismissible>
+                                    {
+                                        //TODO: Add translations
+                                        this.state.error
+                                    }
+                                </Alert>
+                        }
                         <Button variant="primary" onClick={this.login} block>
-                            {submit}
+                            {login}
                         </Button>
                         <Button variant="link" size="sm" block>
                             {signUp}
@@ -80,19 +89,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps,
 )(auth);
-
-{/*<Jumbotron>*/}
-{/*    <Form>*/}
-{/*        <Form.Group controlId="formBasicEmail">*/}
-{/*            <Form.Label>Email address</Form.Label>*/}
-{/*            <Form.Control type="email" placeholder="Enter email" />*/}
-{/*        </Form.Group>*/}
-{/*        <Form.Group controlId="formBasicPassword">*/}
-{/*            <Form.Label>Password</Form.Label>*/}
-{/*            <Form.Control type="password" placeholder="Password" />*/}
-{/*        </Form.Group>*/}
-{/*        <Button variant="primary" type="submit">*/}
-{/*            Submit*/}
-{/*        </Button>*/}
-{/*    </Form>*/}
-{/*</Jumbotron>*/}

@@ -3,14 +3,13 @@ import LocalizedStrings from 'react-localization';
 let localizationStrings = new LocalizedStrings({
     en: {
         //auth page text
-        header: "Provider Login",
-        description: "Please verify that you are with the PACTS network",
         emailLabel: "Email Address",
         emailPlaceholder: "Enter Email",
         passwordLabel: "Password",
         passwordPlaceholder: "Password",
-        submit: "Submit",
+        login: "Log In",
         signUp: "Sign Up",
+        forgotPassword: "Forgot Password?",
         //nav bar text
         home: "Home ",
         facilityUpload: "Facility Upload",
@@ -18,14 +17,13 @@ let localizationStrings = new LocalizedStrings({
     },
     es: {
         //auth page text
-        header: "Inicio de sesión del proveedor",
-        description: "Verifica que estás con la red PACTS",
         emailLabel: "Dirección de correo electrónico",
         emailPlaceholder: "Ingrese correo electrónico",
         passwordLabel: "Contraseña",
         passwordPlaceholder: "Contraseña",
-        submit: "Enviar",
+        login: "Iniciar sesión",
         signUp: "Regístrate",
+        forgotPassword: "¿Olvidar la contraseña?",
         //nav bar text
         home: "Casa",
         facilityUpload: "Subida de instalaciones",

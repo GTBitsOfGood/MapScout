@@ -7,13 +7,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import {Route, Switch, Redirect} from "react-router-dom";
+import firebase from "firebase";
 
 const mapStateToProps = state => (state.mainReducer);
-
 export const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-// Fake auth state
-const loggedIn = false;
+const authRoute = '/providers/auth';
 
 class ProviderRoutes extends Component {
     render() {
@@ -21,8 +20,8 @@ class ProviderRoutes extends Component {
             <div>
                 <NavBar/>
                 <Switch>
-                    <PrivateRoute exact path='/providers' component={CsvUpload} />
-                    <Route path='/providers/auth' component={Auth} />
+                    <PrivateRoute exact path='/providers' component={CsvUpload}/>
+                    <Route path={authRoute} component={Auth}/>
                 </Switch>
             </div>
         )
@@ -33,15 +32,17 @@ class ProviderRoutes extends Component {
 const PrivateRoute = ({ component: Component }) => (
     <Route render={props => (
         // Check if user is logged in
-        loggedIn ?
+        // TODO: Move firebase stuff to redux+cookies, this here is bad
+        firebase.auth().currentUser != null ?
             <Component {...props}/>
             :
             <Redirect to={{
-                pathname: '/providers/auth',
+                pathname: authRoute,
                 state: { from: props.location }
             }}/>
     )}/>
 );
+
 
 export default connect(
     mapStateToProps,
