@@ -9,7 +9,7 @@ const routes = (
         <Switch>
             <Route exact path='/' component={App} />
             <Route path='/providers' component={ProviderRoutes} />
-        </Switch>
+\        </Switch>
     </AppWrapper>
 );
 
