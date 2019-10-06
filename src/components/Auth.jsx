@@ -36,7 +36,10 @@ class Auth extends Component {
         this.login = () => {
             this.props.firebase.signInEmailPassword(this.state.email, this.state.password)
                 .then(authUser => {
-                    this.props.history.push("/providers");
+                    this.props.firebase.database.collection("providers").get().then(querySnapshot => {
+                        const data = querySnapshot.docs
+                        console.log(data); // array of cities objects
+                    })
                 })
                 .catch(error => {
                     this.setState({error: error.message});
