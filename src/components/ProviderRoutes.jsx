@@ -1,50 +1,55 @@
 import React, { Component } from 'react';
-import CsvUpload from './CsvUpload';
+import Dashboard from './Dashboard';
 import Auth from "./Auth";
 import NavBar from './NavBar';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actions from '../actions';
 import {Route, Switch, Redirect} from "react-router-dom";
-import firebase from "firebase";
-
-const mapStateToProps = state => (state.mainReducer);
-export const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+import Container from "react-bootstrap/Container";
+import { compose } from 'redux'
+import { connect } from 'react-redux'
+import { withFirebase, isEmpty, isLoaded } from "react-redux-firebase";
 
 const authRoute = '/providers/auth';
 
 class ProviderRoutes extends Component {
     render() {
+
+        const PrivateRoute = ({ component: Component }) => (
+            <Route render={props => (
+                // Check if user is logged in
+                isEmpty(this.props.auth) ?
+                    <Redirect to={{
+                        pathname: authRoute,
+                        state: { from: props.location }
+                    }}/>
+                    :
+                    <Component {...props}/>
+            )}/>
+        );
+
         return (
             <div>
                 <NavBar/>
-                <Switch>
-                    <PrivateRoute exact path='/providers' component={CsvUpload}/>
-                    <Route path={authRoute} component={Auth}/>
-                </Switch>
+                <Container>
+                    <div id="auth-container">
+                        {
+                            isLoaded(this.props.auth) ?
+                                <Switch>
+                                    <PrivateRoute exact path='/providers' component={Dashboard}/>
+                                    <Route path={authRoute} component={Auth}/>
+                                </Switch>
+                                : //TODO: Make Loading Pretty
+                                <h1>Loading...</h1>
+                        }
+                    </div>
+                </Container>
             </div>
         )
     }
 }
 
-//Redirects unauthenticated users to auth screen
-const PrivateRoute = ({ component: Component }) => (
-    <Route render={props => (
-        // Check if user is logged in
-        // TODO: Move firebase stuff to redux+cookies, this here is bad
-        firebase.auth().currentUser != null ?
-            <Component {...props}/>
-            :
-            <Redirect to={{
-                pathname: authRoute,
-                state: { from: props.location }
-            }}/>
-    )}/>
-);
-
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ProviderRoutes);
+//Need auth property to check if logged in or loading
+export default compose(
+    withFirebase,
+    connect(({ firebase: { auth } }) => ({ auth }))
+)(ProviderRoutes)

@@ -4,7 +4,7 @@ import * as actions from '../actions';
 import Index from './Index';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const mapStateToProps = state => (state.mainReducer);
+const mapStateToProps = state => state;
 
 export const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
