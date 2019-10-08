@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import mainReducer from './mainReducer';
+import { firebaseReducer } from "react-redux-firebase";
 
 export const rootReducer = combineReducers({
-    mainReducer: mainReducer,
+    firebase: firebaseReducer,
 });

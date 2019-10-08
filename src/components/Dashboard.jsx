@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 
-class CsvUpload extends Component {
+class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.onDrop = (files) => {
@@ -39,4 +39,4 @@ class CsvUpload extends Component {
   }
 }
 
-export default CsvUpload;
+export default Dashboard;
