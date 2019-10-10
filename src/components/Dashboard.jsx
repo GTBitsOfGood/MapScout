@@ -41,6 +41,7 @@ class Dashboard extends Component {
     ));
 
     return (
+        <div>
       <Dropzone onDrop={this.onDrop}>
         {({getRootProps, getInputProps}) => (
           <section className="container">
@@ -53,19 +54,19 @@ class Dashboard extends Component {
               <h4>Files</h4>
               <ul>{files}</ul>
             </aside>
-              <section>
-                  <ul>
-                      {Object.keys(this.state.data).map((key, value) => {
-                          return <li>{this.state.data[key]['buildingNum']}</li>;
-                      })}
-                  </ul>
-              </section>
           </section>
 
         )}
       </Dropzone>
+            <section>
+        <ul>
+        {Object.keys(this.state.data).map((key, value) => {
+                return <li>{this.state.data[key]['buildingNum']}</li>;
+            })}</ul>
+            </section>
+        </div>
 
-    );
+    )
   }
 }
 
