@@ -2,13 +2,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import AppWrapper from './components/AppWrapper';
 import App from './components/App';
-import ProviderRoutes from './components/ProviderRoutes';
+import ProviderRoutes, { providerRoute } from './components/ProviderRoutes';
 
 const routes = (
     <AppWrapper>
         <Switch>
             <Route exact path='/' component={App} />
-            <Route path='/providers' component={ProviderRoutes} />
+            <Route path="/providers" component={ProviderRoutes} />
         </Switch>
     </AppWrapper>
 );
