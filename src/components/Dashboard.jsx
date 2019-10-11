@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 import { withFirebase } from 'react-redux-firebase';
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -16,17 +19,25 @@ class Dashboard extends Component {
   }
 
     getFirebase = async () => {
-        var providers = {}
+        var providers = []
         await this.props.firebase
             .firestore()
             .collection("providers").get().then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
-                    providers[doc.id] = doc.data()
-                    console.log(doc.id, " => ", doc.data());
+                    var dataMap = {}
+                    dataMap = doc.data()
+                    dataMap['provider'] = doc.id
+                    var keys = Object.keys(dataMap)
+                    for(const key of keys) {
+                        if (dataMap[key].constructor === Array) {
+                            var arrData = dataMap[key]
+                            dataMap[key] = dataMap[key].join(', ')
+                        }
+                    }
+                    providers.push(dataMap)
                 });
             });
         this.setState({data: providers})
-        console.log(this.state.data)
 
     }
     componentDidMount(){
@@ -34,6 +45,19 @@ class Dashboard extends Component {
     }
 
   render() {
+      const data = this.state.data
+
+      const columns = [{
+          Header: 'Providers',
+          accessor: 'provider',
+      }, {
+              Header: 'Address',
+              accessor: 'address',
+          },{
+          Header: 'Ages',
+          accessor: 'ages',
+      },
+      ]
     const files = this.state.files.map(file => (
       <li key={file.name}>
         {file.name} - {file.size} bytes
@@ -58,11 +82,11 @@ class Dashboard extends Component {
 
         )}
       </Dropzone>
-            <section>
-        <ul>
-        {Object.keys(this.state.data).map((key, value) => {
-                return <li>{this.state.data[key]['buildingNum']}</li>;
-            })}</ul>
+            <section className="container">
+                <ReactTable
+                    data={data}
+                    columns={columns}
+                />
             </section>
         </div>
 
