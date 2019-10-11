@@ -12,9 +12,19 @@ class Dashboard extends Component {
             this.setState({files});
             this.props.uploadCsv(files[0]);
         };
+
+        this.deleteEntry = async (document) => {
+            await this.props.firebase
+                .firestore()
+                .collection("providers").doc(document).delete().then(function() {
+                alert("Successfully deleted " + document + "!");
+            });
+            this.setState({providers: this.state.providers.filter(entry => entry['provider'] != document)});
+        };
+
         this.state = {
             files: [],
-            data: []
+            providers: [],
         };
     }
 
@@ -37,7 +47,7 @@ class Dashboard extends Component {
                     providers.push(dataMap)
                 });
             });
-        this.setState({data: providers})
+        this.setState({providers: providers})
 
     };
 
@@ -46,19 +56,24 @@ class Dashboard extends Component {
     }
 
     render() {
-        const data = this.state.data;
+        const data = this.state.providers;
 
-        const columns = [{
-            Header: 'Providers',
-            accessor: 'provider',
-        }, {
-            Header: 'Address',
-            accessor: 'address',
-        },{
-            Header: 'Ages',
-            accessor: 'ages',
-        },
-        ];
+        const columns = [
+
+            {
+                Header: 'Providers',
+                accessor: 'provider',
+            }, {
+                Header: 'Address',
+                accessor: 'address',
+            }, {
+                Header: 'Ages',
+                accessor: 'ages',
+            },{
+                Header: 'Delete Entry',
+                accessor: 'provider',
+                Cell: ({value}) => (<button onClick={() => this.deleteEntry(value)}>Delete Entry</button>)
+            }];
         const files = this.state.files.map(file => (
             <li key={file.name}>
                 {file.name} - {file.size} bytes
