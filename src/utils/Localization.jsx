@@ -3,8 +3,6 @@ import LocalizedStrings from 'react-localization';
 let localizationStrings = new LocalizedStrings({
     en: {
         //auth page text
-        welcome: "Hey Admin!",
-        welcomeMessage: "Please log in to manage providers.",
         emailLabel: "Email address",
         emailPlaceholder: "Enter email",
         passwordLabel: "Password",
@@ -19,7 +17,6 @@ let localizationStrings = new LocalizedStrings({
     },
     es: {
         //auth page text
-        welcome: "Hey Admin!",
         emailLabel: "Dirección de correo electrónico",
         emailPlaceholder: "Ingrese correo electrónico",
         passwordLabel: "Contraseña",
