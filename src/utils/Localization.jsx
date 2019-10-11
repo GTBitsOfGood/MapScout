@@ -3,13 +3,15 @@ import LocalizedStrings from 'react-localization';
 let localizationStrings = new LocalizedStrings({
     en: {
         //auth page text
-        emailLabel: "Email Address",
-        emailPlaceholder: "Enter Email",
+        welcome: "Hey Admin!",
+        welcomeMessage: "Please log in to manage providers.",
+        emailLabel: "Email address",
+        emailPlaceholder: "Enter email",
         passwordLabel: "Password",
         passwordPlaceholder: "Password",
-        login: "Log In",
-        signUp: "Sign Up",
-        forgotPassword: "Forgot Password?",
+        login: "Login",
+        signUp: "Sign up",
+        forgotPassword: "Forgot your password?",
         //nav bar text
         home: "Home ",
         facilityUpload: "Facility Upload",
@@ -17,6 +19,7 @@ let localizationStrings = new LocalizedStrings({
     },
     es: {
         //auth page text
+        welcome: "Hey Admin!",
         emailLabel: "Dirección de correo electrónico",
         emailPlaceholder: "Ingrese correo electrónico",
         passwordLabel: "Contraseña",

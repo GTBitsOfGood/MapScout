@@ -24,21 +24,59 @@ html, body {
   background-color: #F8F9FA;
 }
 
-#auth-container {
+#auth-root {
+    padding: 20px 20px 40px 20px;
     margin-top: 10px;
-    padding: 20px;
-    width: 100%;
     background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
-    #auth-container {
+    #auth-root {
         margin-top: 30px;
-        width: 480px;
+        width: 400px;
         margin-left: auto;
         margin-right: auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+}
+
+@-webkit-keyframes fade-out {
+    0% {opacity: 1; transform: translateY(0);}
+    100% {opacity: 0; transform: translateY(-30px)}
+}
+
+@keyframes fade-out {
+    0% {opacity: 1; transform: translateY(0);}
+    100% {opacity: 0; transform: translateY(-30px)}
+}
+
+.fade-out {
+    -webkit-animation-duration: 300ms;
+    animation-duration: 300ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+
+    -webkit-animation-name: fade-out;
+    animation-name: fade-out;
+}
+
+/*Loading Spinner, Temporary*/
+.loader {
+    display: inline-block;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    margin-left: -16px;
+    margin-right: 2px;
+    margin-bottom: -2px;
+    width: 16px;
+    height: 16px;
+    animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
