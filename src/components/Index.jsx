@@ -71,7 +71,11 @@ class Index extends Component {
         return (
           <div>
             <NavBar/>
-              <Container fluid="True">
+              <Container fluid="True" style={{
+                  width: "95%",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+              }}>
                 <Row>
                     <Col style={{
                         height: "1000px"
