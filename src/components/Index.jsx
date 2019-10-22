@@ -32,7 +32,7 @@ class Index extends Component {
 
     initMap(mapDOMNode) {
         var mapOptions = {
-            zoom: 13,
+            zoom: 12,
             center: new google.maps.LatLng(39.9526, -75.1652),
             mapTypeId: 'roadmap',
             styles: [
@@ -120,27 +120,51 @@ class Index extends Component {
         var geocoder = new google.maps.Geocoder();
         // In this case it gets the address from an element on the page, but obviously you
         // could just pass it to the method instead
-        geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
-            if( status == google.maps.GeocoderStatus.OK ) {
-                // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
-                map.setCenter( results[0].geometry.location );
-                var marker = new google.maps.Marker( {
-                    map: map,
-                    position: results[0].geometry.location,
-                    label: "Bethanna"
-                });
-                var contentString = '<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>';
-                var infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
-                marker.addListener('click', function() {
-                    infowindow.open(map, marker);
-                });
+        var locations = [
+          ['<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>', 39.935362, -75.186162],
+          ['can just make this a string', 40.018002, -75.094173],
+          ['html works here', 39.957149, -75.201862]
+        ];
+
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            map: map
+          });
+
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent(locations[i][0]);
+              infowindow.open(map, marker);
             }
-            else {
-                alert( 'Geocode was not successful for the following reason: ' + status );
-            }
-        });
+          })(marker, i));
+        }
+        // geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
+        //     if( status == google.maps.GeocoderStatus.OK ) {
+        //         // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
+        //         map.setCenter( results[0].geometry.location );
+        //         var marker = new google.maps.Marker( {
+        //             map: map,
+        //             position: results[0].geometry.location,
+        //             label: "Bethanna"
+        //         });
+        //         var contentString = '<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>';
+        //         var infowindow = new google.maps.InfoWindow({
+        //             content: contentString
+        //         });
+        //         marker.addListener('click', function() {
+        //             infowindow.open(map, marker);
+        //         });
+        //     }
+        //     else {
+        //         alert( 'Geocode was not successful for the following reason: ' + status );
+        //     }
+        // });
     }
 
 
