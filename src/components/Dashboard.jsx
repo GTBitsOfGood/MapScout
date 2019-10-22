@@ -1,10 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import { withFirebase } from 'react-redux-firebase';
-import Spinner from "react-bootstrap/Spinner";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
-import 'react-table/react-table.css';
 import { Link } from "react-router-dom";
 import {formRoute, providerRoute} from "./ProviderRoutes";
 import Button from "react-bootstrap/Button";
