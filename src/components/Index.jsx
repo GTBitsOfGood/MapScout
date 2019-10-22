@@ -3,7 +3,7 @@ import NavBar from './NavBar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'; 
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 
 class Index extends Component {
 
@@ -28,13 +28,110 @@ class Index extends Component {
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
+        // loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&center=39.94569585220261,-75.16275139551811&zoom=13&format=png&maptype=roadmap&style=feature:administrative.land_parcel%7Cvisibility:off&style=feature:administrative.neighborhood%7Cvisibility:off&style=feature:poi%7Celement:labels.text%7Cvisibility:off&style=feature:poi.business%7Cvisibility:off&style=feature:road%7Celement:labels%7Cvisibility:off&style=feature:road%7Celement:labels.icon%7Cvisibility:off&style=feature:road.arterial%7Celement:labels%7Cvisibility:off&style=feature:road.highway%7Celement:labels%7Cvisibility:off&style=feature:road.local%7Cvisibility:off&style=feature:transit%7Cvisibility:off&style=feature:water%7Celement:labels.text%7Cvisibility:off&size=480x360')
     }
 
     initMap(mapDOMNode) {
         var mapOptions = {
             zoom: 13,
             center: new google.maps.LatLng(39.9526, -75.1652),
-            mapTypeId: 'roadmap'
+            mapTypeId: 'roadmap',
+            styles: [
+              {
+                "featureType": "administrative.land_parcel",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "administrative.neighborhood",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi",
+                "elementType": "labels.text",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "poi.business",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "road",
+                "elementType": "labels",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "road",
+                "elementType": "labels.icon",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.arterial",
+                "elementType": "labels",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.highway",
+                "elementType": "labels",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "road.local",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "transit",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              },
+              {
+                "featureType": "water",
+                "elementType": "labels.text",
+                "stylers": [
+                  {
+                    "visibility": "off"
+                  }
+                ]
+              }
+            ]
         };
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
@@ -86,8 +183,8 @@ class Index extends Component {
                     <Col style={{
                         height: "1000px",
                         top: "8%",
-                        left: "1%",
-                        right: "1%",
+                        left: "0%",
+                        right: "0%",
                         bottom: "0%",
                         justifyContent: 'flex-end',
                         }}>
