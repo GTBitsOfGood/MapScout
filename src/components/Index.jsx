@@ -152,32 +152,28 @@ class Index extends Component {
         return (
           <div>
             <NavBar/>
-              <Container fluid="True" style={{
-                  width: "95%",
-                  paddingLeft: "0px",
-                  paddingRight: "0px",
-              }}>
+              <Container>
                 <Row>
-                    <Col style={{
-                        height: "1000px"
-                    ,}}>
-                        <p> Table Here </p>
+                    <Col xs={4} md={2} />
+                    <Col xs={12} md={8}>
                     </Col>
-                    <Col style={{
-                        height: "1000px",
-                        top: "8%",
-                        left: "0%",
-                        right: "0%",
-                        bottom: "0%",
-                        justifyContent: 'flex-end',
-                        }}>
-                        <div ref="map" id="map" style={{
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                       }}></div>
-                     </Col>
+                    <Col xs={4} md={2} />
+                </Row>
+                <Row style={{
+                    position: 'absolute',
+                    top: "8%",
+                    left: "1%",
+                    right: "1%",
+                    bottom: "0%",
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',}}>
+                    <div ref="map" id="map" style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                   }}></div>
                 </Row>
               </Container>
           </div>
