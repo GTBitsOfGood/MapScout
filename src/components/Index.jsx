@@ -152,35 +152,20 @@ class Index extends Component {
         return (
           <div>
             <NavBar/>
-              <style>
-              {`
-                  .container-fluid {
-                      overflow: hidden;
-                      width: 95%;
-                      height:calc(100vh - 46px);
-                      height:-moz-calc(100vh - 46px);
-                      height:-webkit-calc(100vh - 46px);
-                      padding-left: 15px;
-                      padding-right: 15px;
-                  }
-              `}
-              </style>
-              <Container fluid="True">
-                <Row class="mh-100" style = {{
-                    height: "95%",
-                    marginLeft: "0px",
-                    marginRight: "0px",
-                }}>
+              <Container fluid="True" style={{
+                  width: "95%",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+              }}>
+                <Row>
                     <Col style={{
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                    }}>
-                        <p> List View </p>
+                        height: "1000px"
+                    ,}}>
+                        <p> Table Here </p>
                     </Col>
                     <Col style={{
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                        top: "0%",
+                        height: "1000px",
+                        top: "8%",
                         left: "0%",
                         right: "0%",
                         bottom: "0%",
