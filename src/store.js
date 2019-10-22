@@ -9,6 +9,8 @@ import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import 'firebase/firestore'
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyDhA6ue9yEMupXLN7MyZPHkrp2bXs_KlSA",
@@ -37,14 +39,14 @@ const history = createBrowserHistory();
 const loggerMiddleware = createLogger();
 
 let middlewares = [
-  routerMiddleware(history),
-  thunkMiddleware,
+    routerMiddleware(history),
+    thunkMiddleware,
 ];
 
 // add the freeze dev middleware
 if (process.env.NODE_ENV !== 'production') {
-  middlewares.push(freeze);
-  middlewares.push(loggerMiddleware);
+    middlewares.push(freeze);
+    middlewares.push(loggerMiddleware);
 }
 
 // apply the middleware
@@ -52,8 +54,8 @@ let middleware = applyMiddleware(...middlewares);
 
 // create the store
 const store = createStoreWithFirebase(
-  connectRouter(history)(rootReducer),
-  middleware,
+    connectRouter(history)(rootReducer),
+    middleware,
 );
 
 export { store, history };

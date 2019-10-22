@@ -17,28 +17,209 @@ body {
 }
 
 html, body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  background-color: #F8F9FA;
+    overflow-x: hidden;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F9FA;
 }
 
-#auth-container {
+#auth-root {
     margin-top: 10px;
-    padding: 20px;
-    width: 100%;
+}
+
+.box {
+    position: relative;
+    z-index: 1;
     background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 20px 20px 40px 20px;
+    box-shadow: 0 0 10px rgba(3, 215, 252, 0.2); /*Blue*/
+}
+
+.splash {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 300px);
+    width: 600px;
+    height: 600px;
+    background-image: url("../img/login-hero-01.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.form-wrapper {
+    background-color: white;
+    padding: 20px;
+    height: 100%;
+}
+
+.step-wrapper {
+    padding: 20px;
 }
 
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
-    #auth-container {
+    #auth-root {
         margin-top: 30px;
-        width: 480px;
+        width: 400px;
         margin-left: auto;
         margin-right: auto;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    .step-wrapper {
+        padding: 20px 0 20px 60px;
+    }
+}
+
+@-webkit-keyframes translate {
+    0% {opacity: 1; transform: translateY(0);}
+    100% {opacity: 0; transform: translateY(-60px)}
+}
+
+@keyframes translate {
+    0% {opacity: 1; transform: translateY(0);}
+    100% {opacity: 0; transform: translateY(-60px)}
+}
+
+@-webkit-keyframes fade-out {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes fade-out {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes fade-in {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.translate {
+    -webkit-animation-duration: 400ms;
+    animation-duration: 400ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+
+    -webkit-animation-name: translate;
+    animation-name: translate;
+}
+
+.fade-out {
+    -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+
+    -webkit-animation-name: fade-out;
+    animation-name: fade-out;
+}
+
+.fade-in {
+    -webkit-animation-duration: 600ms;
+    animation-duration: 600ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+
+    -webkit-animation-name: fade-in;
+    animation-name: fade-in;
+}
+
+.hide {
+    opacity: 0;
+}
+
+.react-bootstrap-table th {
+    background-color: #F8F9FA;
+    border: 0;
+}
+
+.react-bootstrap-table tbody tr:first-child td {
+    border-top: 0;
+}
+
+/*Loading Spinner, Temporary*/
+.spinner {
+    font-size: 10px;
+    margin: 50px auto;
+    text-indent: -9999em;
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    background: #ffffff;
+    background: -moz-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -webkit-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -o-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -ms-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: linear-gradient(to right, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+.spinner:before {
+    width: 50%;
+    height: 50%;
+    background: #0069D9;
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+}
+.spinner:after {
+    background: #F8F9FA;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+@-webkit-keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    display: inline-block;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    margin-left: -16px;
+    margin-right: 2px;
+    margin-bottom: -2px;
+    width: 16px;
+    height: 16px;
+    animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

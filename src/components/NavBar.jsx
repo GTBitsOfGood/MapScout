@@ -3,6 +3,8 @@ import Navbar from 'react-bootstrap/NavBar';
 import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
 
+import { providerRoute } from "./ProviderRoutes";
+
 import localizationStrings from '../utils/Localization';
 
 class NavBar extends Component {
@@ -24,13 +26,13 @@ class NavBar extends Component {
         let { home, facilityUpload } = localizationStrings;
         return (
             <div>
-                <Navbar bg="light" expand="lg">
+                <Navbar expand="lg">
                     <Navbar.Brand href="/">PACTS</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link as={Link} to="/">{home}</Nav.Link>
-                            <Nav.Link as={Link} to="/providers">{facilityUpload}</Nav.Link>
+                            <Nav.Link as={Link} to={providerRoute}>{facilityUpload}</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
