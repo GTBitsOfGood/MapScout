@@ -1,12 +1,5 @@
-<<<<<<< HEAD
-import React, {Component} from 'react';
-import Dropzone from 'react-dropzone';
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-=======
 import React, {Component, Fragment} from 'react';
 import { withFirebase } from 'react-redux-firebase';
 import Row from "react-bootstrap/Row";
@@ -17,10 +10,13 @@ import {formRoute, providerRoute} from "./ProviderRoutes";
 import Button from "react-bootstrap/Button";
 import SingleProvider from "./SingleProvider";
 var classNames = require('classnames');
->>>>>>> develop
 
 
 class Dashboard extends Component {
+    static contextTypes = {
+        store: PropTypes.object.isRequired
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -30,11 +26,11 @@ class Dashboard extends Component {
         };
     }
 
+
     getFirebase = async () => {
         var providers = [];
-        await this.props.firebase
-            .firestore()
-            .collection("providers").get().then(function(querySnapshot) {
+
+        await this.context.store.firestore.get("providers").then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                     var dataMap = {};
                     dataMap = doc.data();
@@ -49,24 +45,20 @@ class Dashboard extends Component {
                     providers.push(dataMap)
                 });
             });
-        this.setState({providers: providers})
-
+        this.props.dispatch({ type: 'UPDATE_DATA', payload:  providers})
+        this.setState({data: providers})
     };
-
-    static contextTypes = {
-        store: PropTypes.object.isRequired
-    }
 
 
     async componentDidMount(){
-        this.getFirebase();
-        const { firestore } = this.context.store
-        firestore.get('providers').then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                console.log(doc.data())
-            })
-        })
-
+        if (!this.context.store.getState().firestoreData.retreived) {
+            console.log('retreive new data')
+            this.getFirebase()
+        } else {
+            console.log('data stored in global state')
+            this.setState({data: this.context.store.getState().firestoreData.data})
+        }
+        this.setState({isLoading: false})
     }
 
     render() {
