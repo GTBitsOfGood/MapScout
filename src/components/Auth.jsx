@@ -8,6 +8,9 @@ import { withFirebase } from 'react-redux-firebase'
 
 import localizationStrings from '../utils/Localization';
 import Container from "react-bootstrap/Container";
+import Blur from "@animate/blur";
+
+var classNames = require('classnames');
 
 class Auth extends Component {
     constructor(props) {
@@ -40,7 +43,7 @@ class Auth extends Component {
                 await setTimeout(() => {
                     this.props.onSubmit();
                     this.setState({isLoading: false})
-                }, 300);
+                }, 400);
             } catch (err) {
                 //TODO: Add translations
                 this.setState({error: err.message, isLoading: false});
@@ -53,7 +56,7 @@ class Auth extends Component {
         let { isLoading, error, animate } = this.state;
         return(
             <Container fluid>
-                <div id="auth-root" className={animate ? "fade-out" : null}>
+                <div id="auth-root" className={classNames('box', { translate: animate })}>
                     <Form onSubmit={this.handleSubmit}>
                         <div className="mb-4">
                             <h2>{login}</h2>
@@ -79,7 +82,7 @@ class Auth extends Component {
                                 onClick={!isLoading ? this.handleSubmit : null}
                                 disabled={isLoading}
                                 block>
-                            {isLoading&&<div className="loader" />} {login}
+                            {isLoading&&<div className="loader"/>} {login}
                         </Button>
                         <div className="mt-2">
                             <a href="#">
@@ -88,6 +91,14 @@ class Auth extends Component {
                         </div>
                     </Form>
                 </div>
+                {
+                    animate ?
+                        <Blur>
+                            <div className="splash fade-out" />
+                        </Blur>
+                        :
+                        <div className="splash" />
+                }
             </Container>
         )
     }
