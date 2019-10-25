@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
-import { withFirebase } from 'react-redux-firebase';
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
 
 
 class Dashboard extends Component {
@@ -12,6 +14,8 @@ class Dashboard extends Component {
             this.setState({files});
             this.props.uploadCsv(files[0]);
         };
+
+
 
         this.deleteEntry = async (document) => {
             await this.props.firebase
@@ -93,8 +97,20 @@ class Dashboard extends Component {
 
     };
 
+    static contextTypes = {
+        store: PropTypes.object.isRequired
+    }
+
+
     componentDidMount(){
         this.getFirebase();
+        const { firestore } = this.context.store
+        firestore.get('providers').then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                console.log(doc.data())
+            })
+        })
+
     }
 
     handleChange = (event) => {
@@ -174,7 +190,7 @@ class Dashboard extends Component {
                     )}
                 </Dropzone>
                 <div>
-                
+
                 </div>
                 <section className="container">
                     <ReactTable
@@ -188,4 +204,7 @@ class Dashboard extends Component {
     }
 }
 
-export default withFirebase(Dashboard);
+export default connect((state) => ({
+    firestore: state.firestore,
+    firebase: state.firebase
+}))(Dashboard)

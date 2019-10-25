@@ -6,6 +6,7 @@ import thunkMiddleware from 'redux-thunk';
 import { rootReducer } from './reducers/index';
 import freeze from 'redux-freeze';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase'
+import { reduxFirestore, firestoreReducer } from 'redux-firestore'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
@@ -32,7 +33,7 @@ firebase.initializeApp(firebaseConfig);
 firebase.firestore()
 
 const createStoreWithFirebase = compose(
-    reactReduxFirebase(firebase, rrfConfig)
+    reactReduxFirebase(firebase, rrfConfig),
     reduxFirestore(firebase)
 )(createStore);
 
@@ -50,6 +51,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 let middleware = applyMiddleware(...middlewares);
+
 
 const store = createStoreWithFirebase(
     connectRouter(history)(rootReducer),
