@@ -29,10 +29,11 @@ const rrfConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+firebase.firestore()
 
 const createStoreWithFirebase = compose(
-    reactReduxFirebase(firebase, rrfConfig) // firebase instance as first argument
-    // reduxFirestore(firebase) // <- needed if using firestore
+    reactReduxFirebase(firebase, rrfConfig)
+    reduxFirestore(firebase)
 )(createStore);
 
 const history = createBrowserHistory();
@@ -43,16 +44,13 @@ let middlewares = [
     thunkMiddleware,
 ];
 
-// add the freeze dev middleware
 if (process.env.NODE_ENV !== 'production') {
     middlewares.push(freeze);
     middlewares.push(loggerMiddleware);
 }
 
-// apply the middleware
 let middleware = applyMiddleware(...middlewares);
 
-// create the store
 const store = createStoreWithFirebase(
     connectRouter(history)(rootReducer),
     middleware,
