@@ -1,7 +1,6 @@
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
+import { compose } from "redux";
 import React, {Component, Fragment} from 'react';
-import { withFirebase } from 'react-redux-firebase';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -9,14 +8,11 @@ import { Link } from "react-router-dom";
 import {formRoute, providerRoute} from "./ProviderRoutes";
 import Button from "react-bootstrap/Button";
 import SingleProvider from "./SingleProvider";
+import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 var classNames = require('classnames');
 
 
 class Dashboard extends Component {
-    static contextTypes = {
-        store: PropTypes.object.isRequired
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -27,56 +23,19 @@ class Dashboard extends Component {
     }
 
 
-    getFirebase = async () => {
-        var providers = [];
-
-        await this.context.store.firestore.get("providers").then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                    var dataMap = {};
-                    dataMap = doc.data();
-                    dataMap['provider'] = doc.id;
-                    var keys = Object.keys(dataMap);
-                    for(const key of keys) {
-                        if (dataMap[key].constructor === Array) {
-                            var arrData = dataMap[key];
-                            dataMap[key] = dataMap[key].join(', ')
-                        }
-                    }
-                    providers.push(dataMap)
-                });
-            });
-        this.props.dispatch({ type: 'UPDATE_DATA', payload:  providers})
-        this.setState({data: providers})
-    };
-
-
     async componentDidMount(){
-        if (!this.context.store.getState().firestoreData.retreived) {
-            console.log('retreive new data')
-            this.getFirebase()
-        } else {
-            console.log('data stored in global state')
-            this.setState({data: this.context.store.getState().firestoreData.data})
+        const { firestore, providers } = this.props;
+        if ( !isLoaded(providers) ) {
+            await firestore.get('providers');
         }
-        this.setState({isLoading: false})
+        this.setState({isLoading: false});
     }
 
     render() {
         const { isLoading, data, selectedIndex } = this.state;
+        const providers = this.props.providers;
 
-        const columns = [{
-            Header: 'Providers',
-            accessor: 'provider',
-        }, {
-            Header: 'Address',
-            accessor: 'address',
-        },{
-            Header: 'Ages',
-            accessor: 'ages',
-        },
-        ];
-
-        if (isLoading)
+        if (isLoading && !isLoaded(providers))
             return <div style={{ width: '100%' }}>
                 <div className="spinner" />
         </div>;
@@ -87,12 +46,13 @@ class Dashboard extends Component {
                     <Col sm={3}>
                         <ListGroup variant="flush">
                             {
-                                data.map((item, index) =>
+                                !isEmpty(providers) &&
+                                providers.map((item, index) =>
                                     <ListGroup.Item
-                                        href={item.provider}
+                                        href={item.id}
                                         onClick={() => this.setState({selectedIndex: index})}
                                         active={selectedIndex === index}>
-                                        {item.provider}
+                                        {item.id}
                                     </ListGroup.Item>
                                 )
                             }
@@ -109,8 +69,8 @@ class Dashboard extends Component {
                     <Col sm={9}>
                         <div className="bg-white">
                             {
-                                data && data[selectedIndex] &&
-                                <SingleProvider item={data[selectedIndex]}/>
+                                providers && providers[selectedIndex] &&
+                                <SingleProvider item={providers[selectedIndex]}/>
                             }
                         </div>
                     </Col>
@@ -120,7 +80,9 @@ class Dashboard extends Component {
     }
 }
 
-export default connect((state) => ({
-    firestore: state.firestore,
-    firebase: state.firebase
-}))(Dashboard)
+export default compose(
+    withFirestore,
+    connect((state) => ({
+        providers: state.firestore.ordered.providers,
+        firebase: state.firebase
+})))(Dashboard)
