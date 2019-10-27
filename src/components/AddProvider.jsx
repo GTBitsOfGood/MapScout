@@ -54,17 +54,20 @@ class AddProvider extends Component {
         this.setState({ width: window.innerWidth });
     }
 
-    addFirestore = () => {
-        this.props.firestore.set({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, this.state.itemUpdates)
+    addFirestore = async () => {
+        await this.props.firestore.set({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, this.state.itemUpdates)
+        await this.props.firestore.get('providers')
     }
 
-    updateFirestore = () => {
+    updateFirestore = async () => {
         //Change 'ages' to the specific parameter to update
-        this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'})
+        await this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'})
+        await this.props.firestore.get('providers')
     }
 
-    removeFirestore = () => {
-        this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']})
+    removeFirestore = async () => {
+        await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']})
+        await this.props.firestore.get('providers')
     }
 
     addRow = () => {
