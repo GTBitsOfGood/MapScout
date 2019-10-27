@@ -59,6 +59,7 @@ class AddProvider extends Component {
     }
 
     updateFirestore = () => {
+        //Change 'ages' to the specific parameter to update
         this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'})
     }
 
