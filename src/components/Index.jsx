@@ -4,33 +4,36 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import ToggleButton from 'react-bootstrap/ToggleButton';
 import Fade from 'react-bootstrap/Collapse';
+import { compose } from "redux";
+import { connect } from 'react-redux';
+import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 
 class Index extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false,
       listView: true,
+      isLoading: true, 
     };
     this.switchView = this.switchView.bind(this);
 
   }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
 
-    // creates map
-    componentDidMount() {
+    // creates map and firebase
+    async componentDidMount() {
+        const { firestore, providers } = this.props;
+        if (!isLoaded(providers)) {
+          await firestore.get('providers');
+        }
+        this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
+        
     }
 
     initMap(mapDOMNode) {
@@ -167,67 +170,73 @@ class Index extends Component {
     }
 
     switchView() {
-      console.log("switchView");
       this.setState({ listView: !this.state.listView });
     }
 
     render() {
-        return (
-          <div>
-            <NavBar/>
-              <style>
-              {`
-                  .container-fluid {
-                      overflow: hidden;
-                      width: 95%;
-                      height:calc(100vh - 56px);
-                      height:-moz-calc(100vh - 56px);
-                      height:-webkit-calc(100vh - 56px);
-                      padding-left: 15px;
-                      padding-right: 15px;
-                  }
-              `}
-              </style>
-              <Container fluid="True">
-              {/* toggle switch */}
-              <Button variant="primary"
-                onClick={this.switchView}>
-                  {this.state.listView ? "Hide Map" : "Show Map"}
-              </Button>
-                <Row class="mh-100" style = {{
-                    height: "95%",
-                    marginLeft: "0px",
-                    marginRight: "0px",
-                }}>
-                  {/* toggled list view */}
-                  <Col style={{
-                      paddingLeft: "0px",
-                      paddingRight: "0px",
-                  }}>
-                  <p> List View </p>
-                  </Col>
-                  <Fade in={this.state.listView}>
-                  <Col style={{
+      const { isLoading, data, selectedIndex } = this.state;
+      const providers = this.props.providers;
+
+      if (isLoading && !isLoaded(providers))
+        return <div style={{ width: '100%' }}>
+          <div className="spinner" />
+      </div>;
+      return (
+        <div>
+          <NavBar/>
+            <style>
+            {`
+                .container-fluid {
+                    overflow: hidden;
+                    width: 95%;
+                    height:calc(100vh - 56px);
+                    height:-moz-calc(100vh - 56px);
+                    height:-webkit-calc(100vh - 56px);
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+            `}
+            </style>
+            <Container fluid="True">
+            {/* toggle switch button */}
+            <Button variant="primary"
+              onClick={this.switchView}>
+                {this.state.listView ? "Hide Map" : "Show Map"}
+            </Button>
+              <Row className="mh-100" style = {{
+                  height: "95%",
+                  marginLeft: "0px",
+                  marginRight: "0px",
+              }}>
+                {/* toggled list view */}
+                <Col style={{
                     paddingLeft: "0px",
                     paddingRight: "0px",
-                    top: "0%",
-                    left: "0%",
-                    right: "0%",
-                    bottom: "0%",
-                    justifyContent: 'flex-end',
-                  }}>
-                    <div ref="map" id="map" style={{
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                    }}></div>
-                  </Col>
-                  </Fade>
-                </Row>
-              </Container>
-          </div>
-        )
+                }}>
+                <p> List View </p>
+                </Col>
+                <Fade in={this.state.listView}>
+                <Col style={{
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+                  top: "0%",
+                  left: "0%",
+                  right: "0%",
+                  bottom: "0%",
+                  justifyContent: 'flex-end',
+                }}>
+                  <div ref="map" id="map" style={{
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}></div>
+                </Col>
+                </Fade>
+              </Row>
+            </Container>
+        </div>
+      )
     }
 
 }
@@ -240,4 +249,9 @@ function loadJS(src) {
     ref.parentNode.insertBefore(script, ref);
 }
 
-export default Index;
+export default compose(
+  withFirestore,
+  connect((state) => ({
+    providers: state.firestore.ordered.providers,
+    firebase: state.firebase
+  })))(Index)
