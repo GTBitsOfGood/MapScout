@@ -201,27 +201,28 @@ class Index extends Component {
             </style>
             <Container fluid="True">
             {/* toggle switch button */}
-            <Button variant="primary"
-              onClick={this.switchView}>
+            <Button variant="primary" onClick={this.switchView} style={{
+                marginTop:"15px",
+                marginLeft:"15px",
+                marginRight:"15px",
+                marginBottom:"15px",
+            }}>
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
               <Row className="mh-100" style = {{
-                  height: "95%",
+                  height: "90%",
                   marginLeft: "0px",
                   marginRight: "0px",
               }}>
                 {/* List View*/}
-                <Col style={{
-                    paddingLeft: "0px",
-                    paddingRight: "0px",
-                }}>
+                <Col>
                 <ListGroup variant="flush"> 
                   {
                     !isEmpty(providers) &&
                     providers.map((item, index) =>
                       <ListGroup.Item
                         href={item.id}
-                        onClick={() => this.setState({ selectedIndex: index })}
+                        onClick={() => this.setState({ selectedIndex: index })} 
                         active={selectedIndex === index}>
                         {item.id}
                       </ListGroup.Item>
@@ -232,15 +233,7 @@ class Index extends Component {
 
                 {/* Map View */}
                 <Collapse appear={true} in={this.state.listView}>
-                <Col style={{
-                  paddingLeft: "0px",
-                  paddingRight: "0px",
-                  top: "0%",
-                  left: "0%",
-                  right: "0%",
-                  bottom: "0%",
-                  justifyContent: 'flex-end',
-                }}>
+                <Col>
                   <div ref="map" id="map" style={{
                     top: 0,
                     left: 0,
