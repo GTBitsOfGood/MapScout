@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import Fade from 'react-bootstrap/Collapse';
 
 class Index extends Component {
 
@@ -15,13 +16,14 @@ class Index extends Component {
       isOpen: false,
       listView: true,
     };
+    this.switchView = this.switchView.bind(this); 
+
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
-
 
     // creates map 
     componentDidMount() {
@@ -164,6 +166,10 @@ class Index extends Component {
         // });
     }
 
+    switchView() {
+      console.log("switchView"); 
+      this.setState({ listView: !this.state.listView });
+    }
 
     render() {
         return (
@@ -183,37 +189,41 @@ class Index extends Component {
               `}
               </style>
               <Container fluid="True">
+              {/* toggle switch */}
               <Button variant="primary"
-                onClick={() => this.setState({listView: !this.state.listView})}>
-                  {this.state.listView ? "Toggle Off List View" : "Toggle On List View"} 
-                </Button> 
+                onClick={this.switchView}>
+                  {this.state.listView ? "Hide Map" : "Show Map"} 
+              </Button> 
                 <Row class="mh-100" style = {{
                     height: "95%",
                     marginLeft: "0px",
                     marginRight: "0px",
-                }}>
-                    {this.state.listView && <Col style={{
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                    }}>
-                        <p> List View </p>
-                    </Col> }
-                    <Col style={{
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                        top: "0%",
-                        left: "0%",
-                        right: "0%",
-                        bottom: "0%",
-                        justifyContent: 'flex-end',
-                        }}>
-                        <div ref="map" id="map" style={{
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                       }}></div>
-                     </Col>
+                }}> 
+                  {/* toggled list view */}
+                  <Col style={{
+                      paddingLeft: "0px",
+                      paddingRight: "0px",
+                  }}>
+                  <p> List View </p>
+                  </Col> 
+                  <Fade in={this.state.listView}>
+                  <Col style={{
+                    paddingLeft: "0px",
+                    paddingRight: "0px",
+                    top: "0%",
+                    left: "0%",
+                    right: "0%",
+                    bottom: "0%",
+                    justifyContent: 'flex-end',
+                  }}>
+                    <div ref="map" id="map" style={{
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                    }}></div>
+                  </Col>
+                  </Fade>
                 </Row>
               </Container>
           </div>
