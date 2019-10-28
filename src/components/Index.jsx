@@ -16,7 +16,7 @@ class Index extends Component {
       isOpen: false,
       listView: true,
     };
-    this.switchView = this.switchView.bind(this); 
+    this.switchView = this.switchView.bind(this);
 
   }
   toggle() {
@@ -25,7 +25,7 @@ class Index extends Component {
     });
   }
 
-    // creates map 
+    // creates map
     componentDidMount() {
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
@@ -38,7 +38,7 @@ class Index extends Component {
         zoom: 12,
         center: new google.maps.LatLng(39.9526, -75.1652),
         mapTypeId: 'roadmap',
-        styles: [ 
+        styles: [
           {
             "featureType": "administrative.land_parcel",
             "elementType": "labels",
@@ -142,7 +142,7 @@ class Index extends Component {
             }
           })(marker, i));
         }
-        // The Following Code is from the Penn Team 
+        // The Following Code is from the Penn Team
         // geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
         //     if( status == google.maps.GeocoderStatus.OK ) {
         //         // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
@@ -167,7 +167,7 @@ class Index extends Component {
     }
 
     switchView() {
-      console.log("switchView"); 
+      console.log("switchView");
       this.setState({ listView: !this.state.listView });
     }
 
@@ -192,20 +192,20 @@ class Index extends Component {
               {/* toggle switch */}
               <Button variant="primary"
                 onClick={this.switchView}>
-                  {this.state.listView ? "Hide Map" : "Show Map"} 
-              </Button> 
+                  {this.state.listView ? "Hide Map" : "Show Map"}
+              </Button>
                 <Row class="mh-100" style = {{
                     height: "95%",
                     marginLeft: "0px",
                     marginRight: "0px",
-                }}> 
+                }}>
                   {/* toggled list view */}
                   <Col style={{
                       paddingLeft: "0px",
                       paddingRight: "0px",
                   }}>
                   <p> List View </p>
-                  </Col> 
+                  </Col>
                   <Fade in={this.state.listView}>
                   <Col style={{
                     paddingLeft: "0px",
