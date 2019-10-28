@@ -4,7 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Fade from 'react-bootstrap/Collapse';
+import Collapse from 'react-bootstrap/Collapse';
+import ListGroup from "react-bootstrap/ListGroup";
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
@@ -17,6 +18,7 @@ class Index extends Component {
       isOpen: false,
       listView: true,
       isLoading: true, 
+      selectedIndex: 0,
     };
     this.switchView = this.switchView.bind(this);
 
@@ -208,14 +210,28 @@ class Index extends Component {
                   marginLeft: "0px",
                   marginRight: "0px",
               }}>
-                {/* toggled list view */}
+                {/* List View*/}
                 <Col style={{
                     paddingLeft: "0px",
                     paddingRight: "0px",
                 }}>
-                <p> List View </p>
+                <ListGroup variant="flush"> 
+                  {
+                    !isEmpty(providers) &&
+                    providers.map((item, index) =>
+                      <ListGroup.Item
+                        href={item.id}
+                        onClick={() => this.setState({ selectedIndex: index })}
+                        active={selectedIndex === index}>
+                        {item.id}
+                      </ListGroup.Item>
+                    )
+                  }
+                </ListGroup>
                 </Col>
-                <Fade in={this.state.listView}>
+
+                {/* Map View */}
+                <Collapse appear={true} in={this.state.listView}>
                 <Col style={{
                   paddingLeft: "0px",
                   paddingRight: "0px",
@@ -232,7 +248,7 @@ class Index extends Component {
                     bottom: 0,
                   }}></div>
                 </Col>
-                </Fade>
+                </Collapse>
               </Row>
             </Container>
         </div>
