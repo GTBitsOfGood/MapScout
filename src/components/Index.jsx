@@ -175,6 +175,10 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
+    expandForModal(index) { 
+      this.setState({ selectedIndex: index });
+    }
+
     render() {
       const { isLoading, data, selectedIndex } = this.state;
       const providers = this.props.providers;
@@ -210,7 +214,7 @@ class Index extends Component {
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
               <Row className="mh-100" style = {{
-                  height: "90%",
+                  height: "85%",
                   marginLeft: "0px",
                   marginRight: "0px",
               }}>
@@ -222,9 +226,10 @@ class Index extends Component {
                     providers.map((item, index) =>
                       <ListGroup.Item
                         href={item.id}
-                        onClick={() => this.setState({ selectedIndex: index })} 
+                        onClick={(index) => this.expandForModal(index)} 
                         active={selectedIndex === index}>
-                        {item.id}
+                        <h5>{item.id}</h5>
+                        <p style={{marginBottom:"0"}}>{item.address}</p>
                       </ListGroup.Item>
                     )
                   }
