@@ -26,7 +26,9 @@ class NavBar extends Component {
         let { home, facilityUpload } = localizationStrings;
         return (
             <div>
-                <Navbar expand="lg">
+                <Navbar expand="lg" style = {{
+                    height: "56px",
+                }}>
                     <Navbar.Brand href="/">PACTS</Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
