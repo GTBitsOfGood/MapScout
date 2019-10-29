@@ -30,12 +30,11 @@ class Index extends Component {
         if (!isLoaded(providers)) {
           await firestore.get('providers');
         }
-        this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
-
+        this.setState({ isLoading: false });
     }
 
     initMap(mapDOMNode) {
@@ -127,11 +126,22 @@ class Index extends Component {
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
         // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
-        var locations = [
-          ['<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>', 39.935362, -75.186162],
-          ['can just make this a string', 40.018002, -75.094173],
-          ['html works here', 39.957149, -75.201862]
-        ];
+        let locations = [];
+        let temp = [];
+        const providers = this.props.providers;
+        if (!isEmpty(providers)) {
+          for (var i = 0; i < providers.length; i++) {
+            temp = [];
+            temp = [providers[i].id.toString(), providers[i].latitude, providers[i].longtitude];
+            locations.push(temp);
+          }
+        }
+
+        // var locations = [
+        //   ['<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>', 39.935362, -75.186162],
+        //   ['can just make this a string', 40.018002, -75.094173],
+        //   ['html works here', 39.957149, -75.201862]
+        // ];
         var infowindow = new google.maps.InfoWindow();
         var marker, i;
         for (i = 0; i < locations.length; i++) {
