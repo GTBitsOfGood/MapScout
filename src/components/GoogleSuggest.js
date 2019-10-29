@@ -7,17 +7,22 @@ import Form from "react-bootstrap/Form";
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
 class GoogleSuggest extends React.Component {
-    state = {
-        search: "",
-        value: "",
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            search: "",
+            value: this.props.value,
+        }
+    }
 
     handleInputChange(e) {
-        this.setState({search: e.target.value, value: e.target.value})
+        this.setState({search: e.target.value, value: e.target.value});
+        this.props.update(e.target.value);
     }
 
     handleSelectSuggest(suggest) {
-        this.setState({search: "", value: suggest.description})
+        this.setState({search: "", value: suggest.description});
+        this.props.update(suggest.description);
     }
 
     render() {

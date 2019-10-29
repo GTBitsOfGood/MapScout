@@ -19,27 +19,27 @@ class AddProvider extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { width: 0, step: 0, completed: false, animate: true, firestore: this.props.firestore,
-            itemUpdates: {
-                facilityName: 'testFacility',
-                address: 'testAddress',
-                ages: ['testAge', 'testAge'],
-                buildingNum: 'testNum',
-                childCare: 'testCare',
-                epic: 'testEpic',
-                hours: 'testHours',
-                insurance: 'testInsurance',
-                languages: 'english',
-                notes: 'none',
-                phoneNum: ['testNum', 'testNum'],
-                serviceType: 'testService',
-                specializations: ['testSpec', 'testSpec'],
-                therapyTypes: ['therapy1', 'therapy2', 'therapy3'],
-                website: 'https://',
-                weekendHours: 'N/A'
-        }}
+        this.state = { width: 0, step: 0, completed: false, animate: true, firestore: this.props.firestore};
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
+
+    // item: {
+    //     facilityName: 'testFacility',
+    //     address: 'testAddress',
+    //     ages: ['testAge', 'testAge'],
+    //     buildingNum: 'testNum',
+    //     childCare: 'testCare',
+    //     epic: 'testEpic',
+    //     hours: 'testHours',
+    //     insurance: 'testInsurance',
+    //     languages: 'english',
+    //     notes: 'none',
+    //     phoneNum: ['testNum', 'testNum'],
+    //     serviceType: 'testService',
+    //     specializations: ['testSpec', 'testSpec'],
+    //     therapyTypes: ['therapy1', 'therapy2', 'therapy3'],
+    //     website: 'https://',
+    //     weekendHours: 'N/A'
 
     async componentDidMount() {
         this.updateWindowDimensions();
@@ -54,21 +54,27 @@ class AddProvider extends Component {
         this.setState({ width: window.innerWidth });
     }
 
+    setValue = (e) => {
+        let item = this.state.item;
+        item[e.target.name] = e.target.value;
+        this.setState({item})
+    };
+
     addFirestore = async () => {
-        await this.props.firestore.set({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, this.state.itemUpdates)
+        await this.props.firestore.set({collection: 'providers', doc: this.state.item['facilityName']}, this.state.item);
         await this.props.firestore.get('providers')
-    }
+    };
 
     updateFirestore = async () => {
         //Change 'ages' to the specific parameter to update
-        await this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'})
+        await this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'});
         await this.props.firestore.get('providers')
-    }
+    };
 
     removeFirestore = async () => {
-        await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']})
+        await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
         await this.props.firestore.get('providers')
-    }
+    };
 
     addRow = () => {
         //Fill in
@@ -148,6 +154,8 @@ class AddProvider extends Component {
                                         <div className={animate ? "fade-in" : "hide"}>
                                             <RowForm
                                                 step={step}
+                                                item={this.state.item}
+                                                setValue={this.setValue}
                                                 setCompleted={(completed)=>this.setState({completed})}
                                             />
                                         </div>
