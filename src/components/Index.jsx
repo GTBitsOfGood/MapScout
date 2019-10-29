@@ -132,7 +132,7 @@ class Index extends Component {
         if (!isEmpty(providers)) {
           for (var i = 0; i < providers.length; i++) {
             temp = [];
-            temp = [providers[i].id.toString(), providers[i].latitude, providers[i].longtitude];
+            temp = [providers[i].id.toString(), providers[i].latitude, providers[i].longitude];
             locations.push(temp);
           }
         }
