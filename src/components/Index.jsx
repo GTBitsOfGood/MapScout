@@ -17,7 +17,7 @@ class Index extends Component {
     this.state = {
       isOpen: false,
       listView: true,
-      isLoading: true, 
+      isLoading: true,
       selectedIndex: 0,
     };
     this.switchView = this.switchView.bind(this);
@@ -35,7 +35,7 @@ class Index extends Component {
         // Asynchronously load the Google Maps script, passing in the callback reference
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
-        
+
     }
 
     initMap(mapDOMNode) {
@@ -175,7 +175,7 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
-    expandForModal(index) { 
+    expandForModal(index) {
       this.setState({ selectedIndex: index });
     }
 
@@ -203,7 +203,7 @@ class Index extends Component {
                 }
             `}
             </style>
-            <Container fluid="True">
+            <Container dimension="width" fluid="True">
             {/* toggle switch button */}
             <Button variant="primary" onClick={this.switchView} style={{
                 marginTop:"15px",
@@ -220,13 +220,13 @@ class Index extends Component {
               }}>
                 {/* List View*/}
                 <Col>
-                <ListGroup variant="flush"> 
+                <ListGroup variant="flush">
                   {
                     !isEmpty(providers) &&
                     providers.map((item, index) =>
                       <ListGroup.Item
                         href={item.id}
-                        onClick={(index) => this.expandForModal(index)} 
+                        onClick={(index) => this.expandForModal(index)}
                         active={selectedIndex === index}>
                         <h5>{item.id}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>
