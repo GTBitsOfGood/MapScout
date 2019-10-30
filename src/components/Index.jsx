@@ -203,7 +203,7 @@ class Index extends Component {
                 }
             `}
             </style>
-            <Container dimension="width" fluid="True">
+            <Container fluid="True">
             {/* toggle switch button */}
             <Button variant="primary" onClick={this.switchView} style={{
                 marginTop:"15px",
