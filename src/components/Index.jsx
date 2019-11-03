@@ -17,25 +17,35 @@ class Index extends Component {
     this.state = {
       isOpen: false,
       listView: true,
-      isLoading: true, 
+      isLoading: true,
       selectedIndex: 0,
     };
     this.switchView = this.switchView.bind(this);
 
   }
 
+    addFirestore = async () => {
+        firestore.collection('providers').where('facilityName', '==', 'Joseph J. Peters Institute').get().then(
+            function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.id)
+                });
+            }
+        )
+    };
+
     // creates map and firebase
     async componentDidMount() {
         const { firestore, providers } = this.props;
         if (!isLoaded(providers)) {
-          await firestore.get('providers');
+            await firestore.get('providers');
         }
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
-        
+
     }
 
     initMap(mapDOMNode) {
@@ -175,7 +185,7 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
-    expandForModal(index) { 
+    expandForModal(index) {
       this.setState({ selectedIndex: index });
     }
 
@@ -220,13 +230,13 @@ class Index extends Component {
               }}>
                 {/* List View*/}
                 <Col>
-                <ListGroup variant="flush"> 
+                <ListGroup variant="flush">
                   {
                     !isEmpty(providers) &&
                     providers.map((item, index) =>
                       <ListGroup.Item
                         href={item.id}
-                        onClick={(index) => this.expandForModal(index)} 
+                        onClick={(index) => this.expandForModal(index)}
                         active={selectedIndex === index}>
                         <h5>{item.id}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>

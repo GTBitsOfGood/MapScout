@@ -61,7 +61,7 @@ class AddProvider extends Component {
     };
 
     addFirestore = async () => {
-        await this.props.firestore.set({collection: 'providers', doc: this.state.item['facilityName']}, this.state.item);
+        await this.props.firestore.set({collection: 'providers'}, this.state.item);
         await this.props.firestore.get('providers')
     };
 
@@ -72,6 +72,14 @@ class AddProvider extends Component {
     };
 
     removeFirestore = async () => {
+        this.props.firestore.collection('providers').where('facilityName', '==', 'Joseph J. Peters Institute').then(
+            function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    console.log(doc.id)
+                });
+            }
+        )
+
         await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
         await this.props.firestore.get('providers')
     };
