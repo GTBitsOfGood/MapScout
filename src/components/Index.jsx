@@ -9,6 +9,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import Modal from 'react-bootstrap/Modal';
+// import ModalPopup from './ModalPopup'
 
 class Index extends Component {
 
@@ -19,6 +21,7 @@ class Index extends Component {
       listView: true,
       isLoading: true,
       selectedIndex: 0,
+      showModal: false,
     };
     this.switchView = this.switchView.bind(this);
   }
@@ -156,14 +159,10 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
-    expandForModal(index) {
-      this.setState({ selectedIndex: index });
-    }
-
-
     render() {
       const { isLoading, data, selectedIndex } = this.state;
       const providers = this.props.providers;
+      const { showModal } = this.state;
 
       if (isLoading && !isLoaded(providers))
         return <div style={{ width: '100%' }}>
@@ -208,15 +207,20 @@ class Index extends Component {
                     providers.map((item, index) =>
                       <ListGroup.Item
                         href={item.id}
-                        onClick={(index) => this.expandForModal(index)}
+                        onClick={() => this.setState({ selectedIndex: index, showModal: true})}
                         active={selectedIndex === index}>
                         <h5>{item.facilityName}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>
-
                       </ListGroup.Item>
                     )
                   }
                 </ListGroup>
+                  <div>
+                    {
+                      providers[selectedIndex] && providers &&
+                      <ModalPopup show={showModal} onHide={() => this.setState({showModal: false})} item={providers[selectedIndex]} />
+                    }
+                  </div>
                 </Col>
 
                 {/* Map View */}
@@ -244,6 +248,21 @@ function loadJS(src) {
     script.src = src;
     script.async = true;
     ref.parentNode.insertBefore(script, ref);
+}
+
+function ModalPopup(props) {
+  return (
+    <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {props.item.facilityName}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  )
 }
 
 export default compose(
