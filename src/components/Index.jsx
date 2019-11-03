@@ -21,7 +21,6 @@ class Index extends Component {
       selectedIndex: 0,
     };
     this.switchView = this.switchView.bind(this);
-
   }
 
     // creates map and firebase
@@ -126,22 +125,16 @@ class Index extends Component {
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
         // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
-        let locations = [];
+        let locations = []; //for each location ['string for onclick', num(lat), num(long)]
         let temp = [];
         const providers = this.props.providers;
         if (!isEmpty(providers)) {
           for (var i = 0; i < providers.length; i++) {
-            temp = [];
-            temp = [providers[i].id.toString(), providers[i].latitude, providers[i].longitude];
+            console.log([providers[i].id, providers[i].latitude, providers[i].longitude]);
+            temp = [providers[i].facilityName.toString(), providers[i].latitude, providers[i].longitude];
             locations.push(temp);
           }
         }
-
-        // var locations = [
-        //   ['<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>', 39.935362, -75.186162],
-        //   ['can just make this a string', 40.018002, -75.094173],
-        //   ['html works here', 39.957149, -75.201862]
-        // ];
         var infowindow = new google.maps.InfoWindow();
         var marker, i;
         for (i = 0; i < locations.length; i++) {
@@ -157,28 +150,6 @@ class Index extends Component {
             }
           })(marker, i));
         }
-        // The Following Code is from the Penn Team
-        // geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
-        //     if( status == google.maps.GeocoderStatus.OK ) {
-        //         // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
-        //         map.setCenter( results[0].geometry.location );
-        //         var marker = new google.maps.Marker( {
-        //             map: map,
-        //             position: results[0].geometry.location,
-        //             label: "Bethanna"
-        //         });
-        //         var contentString = '<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>';
-        //         var infowindow = new google.maps.InfoWindow({
-        //             content: contentString
-        //         });
-        //         marker.addListener('click', function() {
-        //             infowindow.open(map, marker);
-        //         });
-        //     }
-        //     else {
-        //         alert( 'Geocode was not successful for the following reason: ' + status );
-        //     }
-        // });
     }
 
     switchView() {
@@ -188,6 +159,7 @@ class Index extends Component {
     expandForModal(index) {
       this.setState({ selectedIndex: index });
     }
+
 
     render() {
       const { isLoading, data, selectedIndex } = this.state;
@@ -202,31 +174,31 @@ class Index extends Component {
           <NavBar/>
             <style>
             {`
-                .container-fluid {
-                    overflow: hidden;
-                    width: 95%;
-                    height:calc(100vh - 56px);
-                    height:-moz-calc(100vh - 56px);
-                    height:-webkit-calc(100vh - 56px);
-                    padding-left: 15px;
-                    padding-right: 15px;
-                }
+              .container-fluid {
+                overflow: hidden;
+                width: 95%;
+                height:calc(100vh - 56px);
+                height:-moz-calc(100vh - 56px);
+                height:-webkit-calc(100vh - 56px);
+                padding-left: 15px;
+                padding-right: 15px;
+              }
             `}
             </style>
             <Container fluid="True">
             {/* toggle switch button */}
             <Button variant="primary" onClick={this.switchView} style={{
-                marginTop:"15px",
-                marginLeft:"15px",
-                marginRight:"15px",
-                marginBottom:"15px",
+              marginTop:"15px",
+              marginLeft:"15px",
+              marginRight:"15px",
+              marginBottom:"15px",
             }}>
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
               <Row className="mh-100" style = {{
-                  height: "85%",
-                  marginLeft: "0px",
-                  marginRight: "0px",
+                height: "85%",
+                marginLeft: "0px",
+                marginRight: "0px",
               }}>
                 {/* List View*/}
                 <Col>
@@ -238,8 +210,9 @@ class Index extends Component {
                         href={item.id}
                         onClick={(index) => this.expandForModal(index)}
                         active={selectedIndex === index}>
-                        <h5>{item.id}</h5>
+                        <h5>{item.facilityName}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>
+
                       </ListGroup.Item>
                     )
                   }
