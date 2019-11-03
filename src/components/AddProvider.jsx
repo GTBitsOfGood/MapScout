@@ -66,22 +66,26 @@ class AddProvider extends Component {
     };
 
     updateFirestore = async () => {
-        //Change 'ages' to the specific parameter to update
-        await this.props.firestore.update({collection: 'providers', doc: this.state.itemUpdates['facilityName']}, {'ages': '10'});
+        //Change 'ages' to the specific parameter to update, dummy is the facilityName
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'Joseph J. Peters Institute']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.update({collection: 'providers', doc: doc.id}, {'ages': ['Children', 'Youth', 'Adults', 'Your Mom']})
+            });
+        })
         await this.props.firestore.get('providers')
     };
 
     removeFirestore = async () => {
-        this.props.firestore.collection('providers').where('facilityName', '==', 'Joseph J. Peters Institute').then(
-            function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    console.log(doc.id)
-                });
-            }
-        )
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'dummy']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.delete({collection: 'providers', doc: doc.id})
+            });
+        })
 
-        await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
-        await this.props.firestore.get('providers')
+        //await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
+        await firestore.get('providers')
     };
 
     addRow = () => {
@@ -182,5 +186,6 @@ class AddProvider extends Component {
 export default compose(
     withFirestore,
     connect((state) => ({
+        providers: state.firestore.ordered.providers,
         firebase: state.firebase
     })))(AddProvider)

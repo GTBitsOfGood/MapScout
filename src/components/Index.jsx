@@ -24,14 +24,17 @@ class Index extends Component {
 
   }
 
-    addFirestore = async () => {
-        firestore.collection('providers').where('facilityName', '==', 'Joseph J. Peters Institute').get().then(
-            function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    console.log(doc.id)
-                });
-            }
-        )
+    handleFilterChange = (event) => {
+        this.setState({filterValue: event.target.value});
+    }
+
+    filterFirestore = async () => {
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['languages', 'array-contains', this.state.filterValue]}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                console.log(doc.id)
+            });
+        })
     };
 
     // creates map and firebase
@@ -244,6 +247,8 @@ class Index extends Component {
                     )
                   }
                 </ListGroup>
+                    <input type="text" name="name" value={this.state.value} onChange={this.handleFilterChange}/>
+                    <Button block onClick={this.filterFirestore}>Test Filter Provider</Button>
                 </Col>
 
                 {/* Map View */}
@@ -257,7 +262,9 @@ class Index extends Component {
                   }}></div>
                 </Col>
                 </Collapse>
+
               </Row>
+
             </Container>
         </div>
       )
