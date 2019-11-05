@@ -250,10 +250,13 @@ function loadJS(src) {
     ref.parentNode.insertBefore(script, ref);
 }
 
+//TODO eventually change this to a working component
 function ModalPopup(props) {
   // TODO change the boolean to alerts on True
   return (
-    <Modal {...props} aria-labelledby="contained-modal-title-vcenter" scrollable="True">
+    <div>
+
+    <Modal {...props} size="lg" scrollable="True">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           <h3>{props.item.facilityName}</h3>
@@ -261,16 +264,27 @@ function ModalPopup(props) {
       </Modal.Header>
       <Modal.Body>
 
+        <Container>
+        <Row>
+          <Col>
+            <div>
+              <FaMapPin/> &nbsp;
+              {props.item.address}
+            </div>
+            <div>
+              <FaPhone/> &nbsp;
+              {props.item.phoneNum}
+            </div>
+          </Col>
 
-        <div>
-          <FaMapPin/> &nbsp;
-          {props.item.address}
-        </div>
-        <div>
-          <FaPhone/> &nbsp;
-          {props.item.phoneNum}
-        </div>
+          <Col>
+            Hours
+          </Col>
+        </Row>
+
+        </Container>
         <br/>
+
 
         <div>
           <h5><b>Languages Spoken</b></h5>
@@ -370,6 +384,7 @@ function ModalPopup(props) {
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
+    </div>
   )
 }
 
