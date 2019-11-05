@@ -126,6 +126,13 @@ class Index extends Component {
           }
         ]
       }; // styles from https://mapstyle.withgoogle.com
+
+      // heres the svg for the point
+      // <svg width="26" height="33" viewBox="0 0 26 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+      // <path d="M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z" fill="#F79845" stroke="white" stroke-width="2" />
+      // <circle cx="13" cy="12.5" r="5" fill="white" />
+      // </svg >
+
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
         // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
@@ -140,15 +147,23 @@ class Index extends Component {
         }
         var infowindow = new google.maps.InfoWindow();
         var marker, i;
+        // var iconMarker = {
+        //   path: "M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z",
+        //   fill: '#F79845',
+        //   fillOpacity: .6,
+        //   stroke: "white",
+        //   strokeWidth:"2",
+        //   anchor: new google.maps.Point(0, 0),
+        // }
         for (i = 0; i < locations.length; i++) {
           marker = new google.maps.Marker({
             position: new google.maps.LatLng(locations[i][2], locations[i][3]),
-            map: map
+            map: map,
           });
 
           google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-              var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>" ;
+              var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>" ; //TODO more details button
               infowindow.setContent(contentStr);
               infowindow.open(map, marker);
             }
@@ -161,7 +176,7 @@ class Index extends Component {
     }
 
     render() {
-      const { isLoading, data, selectedIndex } = this.state;
+      const { isLoading, selectedIndex } = this.state;
       const providers = this.props.providers;
       const { showModal } = this.state;
 
@@ -418,8 +433,9 @@ function formatTime(arr, time, index) {
     }
   }
   let endtime_ending = "AM";
-  if (time/100 > 12) {
-    time = time - 1200;
+  let time1 = Math.round(time/36);  //
+  if (time1/100 > 12) { //check if hour
+    time = time1 - 1200;
     endtime_ending = "PM";
   }
   let timestr = time.toString()
