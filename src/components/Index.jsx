@@ -10,7 +10,7 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import Modal from 'react-bootstrap/Modal';
-// import ModalPopup from './ModalPopup'
+import { FaMapPin, FaPhone } from "react-icons/fa";
 
 class Index extends Component {
 
@@ -133,8 +133,7 @@ class Index extends Component {
         const providers = this.props.providers;
         if (!isEmpty(providers)) {
           for (var i = 0; i < providers.length; i++) {
-            console.log([providers[i].id, providers[i].latitude, providers[i].longitude]);
-            temp = [providers[i].facilityName.toString(), providers[i].latitude, providers[i].longitude];
+            temp = [providers[i].facilityName.toString(), providers[i].address.toString(), providers[i].latitude, providers[i].longitude];
             locations.push(temp);
           }
         }
@@ -142,13 +141,13 @@ class Index extends Component {
         var marker, i;
         for (i = 0; i < locations.length; i++) {
           marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+            position: new google.maps.LatLng(locations[i][2], locations[i][3]),
             map: map
           });
 
           google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-              infowindow.setContent(locations[i][0]);
+              infowindow.setContent(locations[i][0] + " - " + locations[i][1] );
               infowindow.open(map, marker);
             }
           })(marker, i));
@@ -255,9 +254,44 @@ function ModalPopup(props) {
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.item.facilityName}
+          <h4>{props.item.facilityName}</h4>
         </Modal.Title>
       </Modal.Header>
+      <Modal.Body>
+
+        <div>
+          <FaMapPin/> &nbsp;
+          {props.item.address}
+        </div>
+        <div>
+          <FaPhone/> &nbsp;
+          {props.item.phoneNum}
+        </div>
+        <br/>
+
+        <div>
+          <h5><b>Languages Spoken</b></h5>
+          <hr/>
+          {props.item.languages}
+        </div>
+        <br/>
+
+        <div>
+          <h5><b>Ages</b></h5>
+          <hr/>
+        </div>
+        <br/>
+
+        <div>
+          <h5><b>ChildCare</b></h5>
+          <hr/>
+          <script>
+            console.log(props.item.childcare)
+          </script>
+        </div>
+        <br/>
+
+      </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
