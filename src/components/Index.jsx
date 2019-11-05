@@ -433,9 +433,9 @@ function formatTime(arr, time, index) {
     }
   }
   let endtime_ending = "AM";
-  let time1 = Math.round(time/36);  //
-  if (time1/100 > 12) { //check if hour
-    time = time1 - 1200;
+  time = Math.round(time/36);  //
+  if (time/100 > 12) { //check if hour
+    time = time - 1200;
     endtime_ending = "PM";
   }
   let timestr = time.toString()
