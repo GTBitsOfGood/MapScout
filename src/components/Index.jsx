@@ -251,14 +251,16 @@ function loadJS(src) {
 }
 
 function ModalPopup(props) {
+  // TODO change the boolean to alerts on True
   return (
-    <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+    <Modal {...props} aria-labelledby="contained-modal-title-vcenter" scrollable="True">
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          <h4>{props.item.facilityName}</h4>
+          <h3>{props.item.facilityName}</h3>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
+
 
         <div>
           <FaMapPin/> &nbsp;
@@ -272,23 +274,96 @@ function ModalPopup(props) {
 
         <div>
           <h5><b>Languages Spoken</b></h5>
-          <hr/>
-          {props.item.languages}
+          <hr style={{marginTop: "0.5rem", marginBottom:"0.5rem",}}/>
+          <div>
+          {props.item.languages.map(function(location, index) {
+            if(index != props.item.languages.length - 1){
+              return <div style={{display:"inline",}}>{location}, </div>;
+            } else {
+              return <div style={{ display: "inline",}}>{location}</div>;
+            }
+          })}
+          </div>
         </div>
         <br/>
 
         <div>
           <h5><b>Ages</b></h5>
-          <hr/>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
+          {props.item.ages.map(function (age, index) {
+            if (index != props.item.ages.length - 1) {
+              return <div style={{ display: "inline", }}>{age}, </div>;
+            } else {
+              return <div style={{ display: "inline", }}>{age}</div>;
+            }
+          })}
         </div>
         <br/>
 
         <div>
           <h5><b>Childcare Availability</b></h5>
-          <hr/>
-          {props.item.childcare ? 'Yes' : 'No'}
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
+          {props.item.childcare[0] ? "Yes" : "No"}
         </div>
         <br/>
+
+        <div>
+          <h5><b>Insurance Type Accepted</b></h5>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
+          {props.item.insurance.map(function (insur, index) {
+            if (index != props.item.insurance.length - 1) {
+              return <div style={{ display: "inline", }}>{insur}, </div>;
+            } else {
+              return <div style={{ display: "inline", }}>{insur}</div>;
+            }
+          })}
+        </div>
+        <br/>
+
+        <div>
+          <h5><b>Epic Designation</b></h5>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
+          {props.item.epic[0] ? "Yes" : "No"}
+        </div>
+        <br/>
+
+        <div>
+          <h5><b>Service Types</b></h5>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }} />
+          {props.item.serviceType.map(function (service, index) {
+            if (index != props.item.serviceType.length - 1) {
+              return <div style={{ display: "inline", }}>{service}; </div>;
+            } else {
+              return <div style={{ display: "inline", }}>{service}</div>;
+            }
+          })}
+        </div>
+        <br />
+
+        <div>
+          <h5><b>Therapy Types</b></h5>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }} />
+          {props.item.therapyTypes.map(function (therapy, index) {
+            if (index != props.item.therapyTypes.length - 1) {
+              return <div style={{ display: "inline", }}>{therapy}; </div>;
+            } else {
+              return <div style={{ display: "inline", }}>{therapy}</div>;
+            }
+          })}
+        </div>
+        <br />
+
+        <div>
+          <h5><b>Specializations</b></h5>
+          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }} />
+          {props.item.specializations.map(function (special, index) {
+            if (index != props.item.specializations.length - 1) {
+              return <div style={{ display: "inline", }}>{special}; </div>;
+            } else {
+              return <div style={{ display: "inline", }}>{special}</div>;
+            }
+          })}
+        </div>
 
       </Modal.Body>
       <Modal.Footer>
