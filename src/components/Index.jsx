@@ -277,8 +277,36 @@ function ModalPopup(props) {
             </div>
           </Col>
 
-          <Col>
-            Hours
+          <Col style={{textAlign: "center"}}>
+            <b>Hours</b> &nbsp;
+            <div> Monday: {props.item.hours.Monday ? props.item.hours.Monday.map(function (time, index) {
+              return formatTime(props.item.hours.Monday, time, index);
+            }) : 'CLOSED'
+            }</div>
+            <div> Tuesday: {props.item.hours.Tuesday ? props.item.hours.Tuesday.map(function (time, index) {
+              return formatTime(props.item.hours.Tuesday, time, index);
+            }) : 'CLOSED'
+            }</div>
+            <div> Wednesday: {props.item.hours.Wednesday ? props.item.hours.Wednesday.map(function (time, index) {
+              return formatTime(props.item.hours.Wednesday, time, index);
+            }) : 'CLOSED'
+            } </div>
+            <div> Thursday: {props.item.hours.Thursday ? props.item.hours.Thursday.map(function (time, index) {
+              return formatTime(props.item.hours.Thursday, time, index);
+            }) : 'CLOSED'
+            }</div>
+            <div> Friday: {props.item.hours.Friday ? props.item.hours.Friday.map(function (time, index) {
+              return formatTime(props.item.hours.Friday, time, index);
+            }) : 'CLOSED'
+            } </div>
+            <div> Saturday: {props.item.hours.Saturday ? props.item.hours.Saturday.map(function (time, index) {
+              return formatTime(props.item.hours.Saturday, time, index);
+            }) : 'CLOSED'
+            } </div>
+            <div> Sunday: {props.item.hours.Sunday ? props.item.hours.Sunday.map(function (time, index) {
+              return formatTime(props.item.hours.Sunday, time, index);
+            }) : 'CLOSED'
+            }   </div>
           </Col>
         </Row>
 
@@ -386,6 +414,23 @@ function ModalPopup(props) {
     </Modal>
     </div>
   )
+}
+
+function formatTime(arr, time, index) {
+  if (time == null) {
+    if (index != arr.length - 1) {
+      return <div style={{ display: "inline", }}>CLOSED - </div>;
+    } else {
+      return <div style={{ display: "inline", }}>CLOSED</div>;
+    }
+  }
+  let timestr = time.toString()
+  let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2);
+  if (index != arr.length - 1) {
+    return <div style={{ display: "inline", }}>{timeformat} - </div>;
+  } else {
+    return <div style={{ display: "inline", }}>{timeformat}</div>;
+  }
 }
 
 export default compose(
