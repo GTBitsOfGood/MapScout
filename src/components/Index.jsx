@@ -6,11 +6,12 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from "react-bootstrap/ListGroup";
+import Alert from 'react-bootstrap/Alert';
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import Modal from 'react-bootstrap/Modal';
-import { FaMapPin, FaPhone } from "react-icons/fa";
+import { FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
 
 class Index extends Component {
 
@@ -266,7 +267,7 @@ function ModalPopup(props) {
 
         <Container>
         <Row>
-          <Col>
+          <Col style={{display:"flex", flexDirection:"Column", justifyContent:"center"}}>
             <div>
               <FaMapPin/> &nbsp;
               {props.item.address}
@@ -275,10 +276,11 @@ function ModalPopup(props) {
               <FaPhone/> &nbsp;
               {props.item.phoneNum}
             </div>
+              {props.item.website[0] ? <div><FaGlobe /> &nbsp; {props.item.website[0]}</div> : <div></div>}
           </Col>
 
           <Col style={{textAlign: "center"}}>
-            <b>Hours</b> &nbsp;
+            <h6><b>Hours</b></h6>
             <div> Monday: {props.item.hours.Monday ? props.item.hours.Monday.map(function (time, index) {
               return formatTime(props.item.hours.Monday, time, index);
             }) : 'CLOSED'
@@ -342,12 +344,7 @@ function ModalPopup(props) {
         </div>
         <br/>
 
-        <div>
-          <h5><b>Childcare Availability</b></h5>
-          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
-          {props.item.childcare[0] ? "Yes" : "No"}
-        </div>
-        <br/>
+          {props.item.childcare[0] ? <div><Alert variant={"primary"}> ChildCare Available</Alert><br/></div> : <div></div>}
 
         <div>
           <h5><b>Insurance Type Accepted</b></h5>
@@ -362,12 +359,8 @@ function ModalPopup(props) {
         </div>
         <br/>
 
-        <div>
-          <h5><b>Epic Designation</b></h5>
-          <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
-          {props.item.epic[0] ? "Yes" : "No"}
-        </div>
-        <br/>
+          {props.item.epic[0] ? <div><Alert variant={"primary"}> EPIC Designation </Alert><br/></div> : <div></div>}
+
 
         <div>
           <h5><b>Service Types</b></h5>
@@ -424,10 +417,10 @@ function formatTime(arr, time, index) {
       return <div style={{ display: "inline", }}>CLOSED</div>;
     }
   }
-  let endtime_ending = "AM"; 
-  if (time/100 > 12) { 
-    time = time - 1200; 
-    endtime_ending = "PM"; 
+  let endtime_ending = "AM";
+  if (time/100 > 12) {
+    time = time - 1200;
+    endtime_ending = "PM";
   }
   let timestr = time.toString()
   let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2) + endtime_ending;
