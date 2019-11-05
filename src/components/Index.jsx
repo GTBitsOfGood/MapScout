@@ -147,7 +147,8 @@ class Index extends Component {
 
           google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-              infowindow.setContent(locations[i][0] + " - " + locations[i][1] );
+              var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>" ;
+              infowindow.setContent(contentStr);
               infowindow.open(map, marker);
             }
           })(marker, i));
@@ -283,11 +284,9 @@ function ModalPopup(props) {
         <br/>
 
         <div>
-          <h5><b>ChildCare</b></h5>
+          <h5><b>Childcare Availability</b></h5>
           <hr/>
-          <script>
-            console.log(props.item.childcare)
-          </script>
+          {props.item.childcare ? 'Yes' : 'No'}
         </div>
         <br/>
 
