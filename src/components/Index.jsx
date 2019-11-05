@@ -424,8 +424,13 @@ function formatTime(arr, time, index) {
       return <div style={{ display: "inline", }}>CLOSED</div>;
     }
   }
+  let endtime_ending = "AM"; 
+  if (time/100 > 12) { 
+    time = time - 1200; 
+    endtime_ending = "PM"; 
+  }
   let timestr = time.toString()
-  let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2);
+  let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2) + endtime_ending;
   if (index != arr.length - 1) {
     return <div style={{ display: "inline", }}>{timeformat} - </div>;
   } else {
