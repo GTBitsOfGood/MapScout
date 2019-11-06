@@ -166,6 +166,13 @@ body {
     background-color: #0069D9;
 }
 
+.row-spaced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
 /*Loading Spinner, Temporary*/
 
 .spinner {

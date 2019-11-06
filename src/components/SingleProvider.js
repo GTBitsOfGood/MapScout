@@ -3,6 +3,8 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import {compose} from "redux";
 import {withFirestore} from "react-redux-firebase";
+import ProviderInfo from "./ProviderInfo";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update
@@ -11,19 +13,31 @@ import {withFirestore} from "react-redux-firebase";
 // };
 
 const SingleProvider = (props) => <Container>
-    <Button onClick={async () => {
-        props.setLoading();
-        await props.firestore.delete({collection: 'providers', doc: props.item['facilityName']});
-        await props.firestore.get('providers');
-        props.resetIndex();
-    }}>Delete</Button>
-    {
-        Object.keys(props.item).map((item, index) =>
-            <div key={index}>
-                <h2>{item}</h2>
-            </div>
-        )
-    }
+    <div className="row-spaced pt-3">
+        <h2>{props.item.facilityName}</h2>
+        <div>
+            <ButtonToolbar>
+                <Button
+                    onClick={props.editProvider}
+                    variant="info"
+                    className="mr-2">
+                    Edit
+                </Button>
+                <Button
+                    variant="danger"
+                    onClick={async () => {
+                        props.setLoading();
+                        await props.firestore.delete({collection: 'providers', doc: props.item['facilityName']});
+                        await props.firestore.get('providers');
+                        props.resetIndex();
+                    }}>
+                    Delete
+                </Button>
+            </ButtonToolbar>
+        </div>
+    </div>
+    <hr />
+    <ProviderInfo item={props.item} />
 </Container>;
 
 export default compose(withFirestore)(SingleProvider)

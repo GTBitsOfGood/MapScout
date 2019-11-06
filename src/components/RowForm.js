@@ -34,7 +34,7 @@ const options ={
     insurance: [
         {label: 'Medicaid', value: 'Medicaid'},
         {label: 'Private', value: 'Private'},
-        {label: 'Uninsured/Underinsured', value: 'Uninsured'},
+        {label: 'Uninsured/Underinsured', value: 'Uninsured/Underinsured'},
         {label: 'Sliding Scale', value: 'Sliding Scale'},
     ],
     languages: [
