@@ -45,10 +45,6 @@ class Index extends Component {
         this.switchView = this.switchView.bind(this);
     }
 
-    handleFilterChange = (event) => {
-        this.setState({filterValue: event.target.value});
-    };
-
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
@@ -82,19 +78,6 @@ class Index extends Component {
           }).length === this.state[filterName].length
         })
       })
-    };
-
-
-    filterFirestore = async () => {
-        console.log(this.props.providers);
-        let firestore = this.props.firestore;
-        await firestore.get({collection: 'providers', where: ['languages', 'array-contains', this.state.filterValue]}
-            .then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                    console.log(doc.id)
-                });
-            }));
-        this.setState({ activeProviders: this.props.providers })
     };
 
     // creates map and firebase
@@ -374,12 +357,7 @@ class Index extends Component {
                             </Modal>
                         }
                         </div>
-                        <input
-                            type="text"
-                            name="name"
-                            value={this.state.value}
-                            onChange={this.handleFilterChange} />
-                        <Button block onClick={this.filterFirestore}>Test Filter Provider</Button>
+
                     </Col>
                     <Collapse appear={true} in={this.state.listView}>
                         <Col md={6}>
