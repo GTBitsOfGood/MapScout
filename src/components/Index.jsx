@@ -44,20 +44,25 @@ class Index extends Component {
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
-        });
-        console.log(this.state.activeProviders);
-        const filterName = e.target.name;
-        const filterVal = e.target.value;
+        })
+        console.log(this.state.activeProviders)
+        const filterName = e.target.name
+        const filterVal = e.target.value
 
         if (e.target.type === "checkbox" && e.target.checked) {
-            this.setState({[filterName]: [...this.state[filterName], filterVal]})
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
-            this.setState({[filterName]:
-                    this.state[filterName].filter(function(filter) {
-                        return filter !== filterVal
-                    })
+            await this.setState({
+                [filterName]: [...this.state[filterName], filterVal]
+            })
+
+        } else if(e.target.type === "checkbox" && !e.target.checked){
+
+            await this.setState({
+                [filterName]: this.state[filterName].filter(function(filter) {
+                    return filter !== filterVal
+                })
             })
         }
+
         this.filterActiveProviders(filterName)
     };
 
