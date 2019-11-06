@@ -10,11 +10,9 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ModalPopup from "./ModalPopup";
-import Modal from 'react-bootstrap/Modal';
-import { FaCheck, FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
+
 
 class Index extends Component {
-
   constructor(props, context) {
     super(props, context);
     this.state = {
@@ -226,40 +224,16 @@ class Index extends Component {
       const { showModal } = this.state;
 
       if (isLoading && !isLoaded(providers))
-        return <div style={{ width: '100%' }}>
-          <div className="spinner" />
-      </div>;
+        return <div className="spinner" />;
       return (
         <div>
           <NavBar/>
-            <style>
-            {`
-              .container-fluid {
-                overflow: hidden;
-                width: 95%;
-                height:calc(100vh - 56px);
-                height:-moz-calc(100vh - 56px);
-                height:-webkit-calc(100vh - 56px);
-                padding-left: 15px;
-                padding-right: 15px;
-              }
-            `}
-            </style>
-            <Container fluid="True">
+            <Container className="view-container" fluid="True">
             {/* toggle switch button */}
-            <Button variant="primary" onClick={this.switchView} style={{
-              marginTop:"15px",
-              marginLeft:"15px",
-              marginRight:"15px",
-              marginBottom:"15px",
-            }}>
+            <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
-              <Row className="mh-100" style = {{
-                height: "85%",
-                marginLeft: "0px",
-                marginRight: "0px",
-              }}>
+              <Row className="mh-100" className="view-row">
                 {/* List View*/}
                 <Col md={6}>
                 <ListGroup variant="flush">
@@ -271,7 +245,7 @@ class Index extends Component {
                         onClick={() => this.setState({ selectedIndex: index, showModal: true})}
                         active={selectedIndex === index}>
                         <h5>{item.facilityName}</h5>
-                        <p style={{marginBottom:"0"}}>{item.address}</p>
+                        <p className="list-view-text-body">{item.address}</p>
                       </ListGroup.Item>
                     )
                   }
@@ -287,12 +261,7 @@ class Index extends Component {
                 {/* Map View */}
                 <Collapse appear={true} in={this.state.listView}>
                 <Col md={6}>
-                  <div ref="map" id="map" style={{
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                  }}></div>
+                  <div ref="map" id="map" className="map-view"></div>
                 </Col>
                 </Collapse>
               </Row>
