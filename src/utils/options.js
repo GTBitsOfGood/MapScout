@@ -37,6 +37,7 @@ const options ={
         {label: 'Sliding Scale', value: 'Sliding Scale'},
     ],
     languages: [
+        {label: 'English', value: 'English'},
         {label: 'Spanish', value: 'Spanish'},
         {label: 'Portuguese', value: 'Portuguese'},
         {label: 'Kurdish', value: 'Kurdish'},
