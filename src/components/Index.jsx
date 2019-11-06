@@ -17,15 +17,14 @@ class Index extends Component {
 
   constructor(props, context) {
     super(props, context);
+
     this.state = {
         isOpen: false,
         listView: true,
         isLoading: true,
         selectedIndex: 0,
-        ageFilter: {
-            'ages': [],
-            'languages': []
-        }
+        activeProviders: null,
+        languages: []
     };
     this.switchView = this.switchView.bind(this);
 
@@ -35,18 +34,44 @@ class Index extends Component {
         this.setState({filterValue: event.target.value});
     }
 
-    handleInputChange = (e) => {
-      console.log(this.state.filters)
-        if (e.target.type === "checkbox") {
-            this.setState(prevState => ({
-                filters: [...prevState.filters[e.target.name], e.target.value]
-            }));
-            console.log(this.state.filters)
-        } else {
-            this.setState({[e.target.name]: [e.target.value]});
-        }
-       // this.props.setItem(this.state);
+    // Remove async later
+    handleInputChange = async (e) => {
+      this.setState({
+        activeProviders: this.props.providers
+      })
+
+      const filterName = e.target.name
+      const filterVal = e.target.value
+      
+      if (e.target.type === "checkbox" && e.target.checked) {
+        await this.setState({
+          [filterName]: [...this.state[filterName], filterVal]
+        })
+          
+      } else if(e.target.type === "checkbox" && !e.target.checked){
+
+        await this.setState({
+          [filterName]: this.state[filterName].filter(function(filter) {
+            return filter !== filterVal
+          })
+        })
+      }
+
+      this.filterActiveProviders(filterName)
     };
+
+    // Remove async later
+    filterActiveProviders = async (filterName) => {
+      await this.setState({
+        activeProviders: this.state.activeProviders.filter((filter) => {
+
+          return filter[filterName].filter( (elem) => {
+          return this.state[filterName].indexOf(elem) > -1;
+          }).length == this.state[filterName].length
+        })
+      })
+    }
+
 
     filterFirestore = async () => {
       console.log(this.props.providers)
@@ -56,6 +81,7 @@ class Index extends Component {
                 console.log(doc.id)
             });
         })
+        this.setState({ activeProviders: this.props.providers })
     };
 
     // creates map and firebase
@@ -64,6 +90,7 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
+        this.setState({ activeProviders: this.props.providers })
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
@@ -181,28 +208,6 @@ class Index extends Component {
             }
           })(marker, i));
         }
-        // The Following Code is from the Penn Team
-        // geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
-        //     if( status == google.maps.GeocoderStatus.OK ) {
-        //         // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
-        //         map.setCenter( results[0].geometry.location );
-        //         var marker = new google.maps.Marker( {
-        //             map: map,
-        //             position: results[0].geometry.location,
-        //             label: "Bethanna"
-        //         });
-        //         var contentString = '<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>';
-        //         var infowindow = new google.maps.InfoWindow({
-        //             content: contentString
-        //         });
-        //         marker.addListener('click', function() {
-        //             infowindow.open(map, marker);
-        //         });
-        //     }
-        //     else {
-        //         alert( 'Geocode was not successful for the following reason: ' + status );
-        //     }
-        // });
     }
 
     switchView() {
@@ -215,7 +220,7 @@ class Index extends Component {
 
     render() {
       const { isLoading, data, selectedIndex } = this.state;
-      const providers = this.props.providers;
+      const providers = this.state.activeProviders;
 
       if (isLoading && !isLoaded(providers))
         return <div style={{ width: '100%' }}>
@@ -249,13 +254,13 @@ class Index extends Component {
             </Button>
                 <DropdownButton id="dropdown-basic-button" title="Languages">
                     <Form.Check
-                        name="Languages"
+                        name="languages"
                         onChange={this.handleInputChange}
                         type="checkbox"
                         value="English"
                         label="English" />
                     <Form.Check
-                        name="Languages"
+                        name="languages"
                         onChange={this.handleInputChange}
                         type="checkbox"
                         value="Spanish"
