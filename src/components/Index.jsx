@@ -15,7 +15,15 @@ import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
+import options from "../utils/options";
 
+function loadJS(src) {
+    var ref = window.document.getElementsByTagName("script")[0];
+    var script = window.document.createElement("script");
+    script.src = src;
+    script.async = true;
+    ref.parentNode.insertBefore(script, ref);
+}
 
 class Index extends Component {
     constructor(props) {
@@ -44,25 +52,30 @@ class Index extends Component {
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
-        });
-        console.log(this.state.activeProviders);
-        const filterName = e.target.name;
-        const filterVal = e.target.value;
+        })
+        console.log(this.state.activeProviders)
+        const filterName = e.target.name
+        const filterVal = e.target.value
 
         if (e.target.type === "checkbox" && e.target.checked) {
-            this.setState({[filterName]: [...this.state[filterName], filterVal]})
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
-            this.setState({[filterName]:
-                    this.state[filterName].filter(function(filter) {
-                        return filter !== filterVal
-                    })
+            await this.setState({
+                [filterName]: [...this.state[filterName], filterVal]
+            })
+
+        } else if(e.target.type === "checkbox" && !e.target.checked){
+
+            await this.setState({
+                [filterName]: this.state[filterName].filter(function(filter) {
+                    return filter !== filterVal
+                })
             })
         }
+
         this.filterActiveProviders(filterName)
     };
 
     filterActiveProviders = async (filterName) => {
-      this.setState({
+      await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
           return filter[filterName].filter((elem) => {
             return this.state[filterName].indexOf(elem) > -1;
@@ -279,6 +292,27 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
+    renderDropdown(title, key) {
+        return(
+            <DropdownButton
+                title={title}
+                variant="light"
+                alignLeft
+                style ={{ marginRight: 5 }}>
+                {options[key].map((item, index) =>
+                    <Form.Check
+                        as={Dropdown.Item}
+                        name={key}
+                        key={index}
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value={item.value}
+                        label={item.label} />
+                )}
+            </DropdownButton>
+        )
+    }
+
     render() {
     const { isLoading, data, selectedIndex, showModal } = this.state;
     const providers = this.state.activeProviders;
@@ -290,275 +324,21 @@ class Index extends Component {
         <Fragment>
             <NavBar/>
             <Container className="view-container" fluid>
-                <Button variant="primary" onClick={this.switchView} className="switch-view-button">
-                    {this.state.listView ? "Hide Map" : "Show Map"}
-                </Button>
-                <Row>
-                    <div>
-                        <ButtonGroup style ={{
-                            marginLeft:"15px",
-                            marginBottom:"10px"
-                        }}>
-                            <DropdownButton id="dropdown-basic-button" title="Languages" style ={{
-                                marginRight:"5px"
-                            }}>
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="English"
-                                    label="English" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Spanish"
-                                    label="Spanish" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Portugese"
-                                    label="Portugese" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Kurdish"
-                                    label="Kurdish" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Mandarin"
-                                    label="Mandarin" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Russian"
-                                    label="Russian" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="ASL"
-                                    label="ASL" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Creole"
-                                    label="Creole" />
-                                <Form.Check
-                                    name="languages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Other"
-                                    label="Other" />
-                            </DropdownButton>
-                            <DropdownButton id="dropdown-basic-button" title="Service Type" style ={{
-                                marginRight:"5px"
-                            }}>
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Outpatient Services"
-                                    label="Outpatient Services" />
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Residential Programs"
-                                    label="Residential Programs" />
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Parent/Caregiver Services"
-                                    label="Parent/Caregiver Services" />
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="School-Based Services"
-                                    label="School-Based Services" />
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Foster & Kinship Care"
-                                    label="Foster & Kinship Care" />
-                                <Form.Check
-                                    name="serviceType"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="In-Home Services"
-                                    label="In-Home Services" />
-                            </DropdownButton>
-                            <DropdownButton id="dropdown-basic-button" title="Specializations" style ={{
-                                marginRight:"5px"
-                            }}>
-                                <Form.Check
-                                    name="specializations"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Autism Spectrum Disorder"
-                                    label="Autism Spectrum Disorder" />
-                                <Form.Check
-                                    name="specializations"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Young Children"
-                                    label="Young Children" />
-                                <Form.Check
-                                    name="specializations"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="LGBTQ+ Competent"
-                                    label="LGBTQ+ Competent" />
-                                <Form.Check
-                                    name="specializations"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Experience working with immigrant and refugees"
-                                    label="Experience working with immigrant and refugees" />
-                            </DropdownButton>
-                            <DropdownButton id="dropdown-basic-button" title="Ages" style ={{
-                                marginRight:"5px"
-                            }}>
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Toddler/preschoolers"
-                                    label="Toddler/preschoolers (0-6)" />
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Children"
-                                    label="Children (6-10)" />
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Preteens"
-                                    label="Preteens (11-13)" />
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Adolescents"
-                                    label="Adolescents (14-21)" />
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Adults"
-                                    label="Adults (21-65)" />
-                                <Form.Check
-                                    name="ages"
-                                    onChange={this.handleInputChange}
-                                    type="checkbox"
-                                    value="Seniors"
-                                    label="Seniors (65+)" />
-                            </DropdownButton>
-                        </ButtonGroup>
-                    </div>
-                    <ButtonGroup style ={{
-                        marginLeft:"15px",
-                        marginBottom:"10px"
-                    }}>
-                        <DropdownButton id="dropdown-basic-button" title="Insurance" style ={{
-                            marginRight:"5px"
-                        }}>
-                            <Form.Check
-                                name="insurance"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Medicaid"
-                                label="Medicaid" />
-                            <Form.Check
-                                name="insurance"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Private"
-                                label="Private" />
-                            <Form.Check
-                                name="insurance"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Uninsured/Underinsured"
-                                label="Uninsured/Underinsured" />
-                            <Form.Check
-                                name="insurance"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Sliding Scale"
-                                label="Sliding Scale" />
-                        </DropdownButton>
-                        <DropdownButton id="dropdown-basic-button" title="Therapy Types" style ={{
-                            marginRight:"5px"
-                        }}>
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)"
-                                label="TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Pri-CARE (Child Adult Relationship Enhancement)"
-                                label="Pri-CARE (Child Adult Relationship Enhancement)" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="CFTSI (Child Family Traumatic Stress Intervention)"
-                                label="CFTSI (Child Family Traumatic Stress Intervention)" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Adolescent Dialectical Behavioral Therapy (DBT)"
-                                label="Adolescent Dialectical Behavioral Therapy (DBT)" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Family Therapy"
-                                label="Family Therapy" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="EMDR"
-                                label="EMDR" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Other Evidence-Based Practices (EBPs)"
-                                label="Other Evidence-Based Practices (EBPs)" />
-                            <Form.Check
-                                name="therapyTypes"
-                                onChange={this.handleInputChange}
-                                type="checkbox"
-                                value="Support Groups"
-                                label="Support Groups" />
-                        </DropdownButton>
-                    </ButtonGroup>
-                </Row>
-                <Row className="mh-100" style = {{
-                    height: "85%",
-                    marginLeft: "0px",
-                    marginRight: "0px",
-                    marginTop: "10px"
+                <ButtonGroup style ={{
+                    marginLeft: 15,
+                    marginBottom: 10,
                 }}>
+                    <Button variant="primary" onClick={this.switchView} className="switch-view-button">
+                        {this.state.listView ? "Hide Map" : "Show Map"}
+                    </Button>
+                    {this.renderDropdown("Languages", "languages")}
+                    {this.renderDropdown("Service Type", "serviceType")}
+                    {this.renderDropdown("Specializations", "specializations")}
+                    {this.renderDropdown("Ages", "ages")}
+                    {this.renderDropdown("Insurance", "insurance")}
+                    {this.renderDropdown("Therapy Types", "therapyTypes")}
+                </ButtonGroup>
+                <Row className="mh-100" style={{ height: "85%" }} noGutters>
                     <Col md={6}>
                         <ListGroup variant="flush">
                         {
@@ -566,10 +346,11 @@ class Index extends Component {
                             providers.map((item, index) =>
                                 <ListGroup.Item
                                     href={item.id}
+                                    key={index}
                                     onClick={() => this.setState({ selectedIndex: index, showModal: true})}
                                     active={selectedIndex === index}>
                                     <h5>{item.facilityName}</h5>
-                                    <p className="list-view-text-body">{item.address}</p>
+                                    <p className="list-view-text-body">{item.address[0]}</p>
                                 </ListGroup.Item>
                             )
                         }
@@ -610,14 +391,6 @@ class Index extends Component {
         </Fragment>);
     }
 
-}
-
-function loadJS(src) {
-    var ref = window.document.getElementsByTagName("script")[0];
-    var script = window.document.createElement("script");
-    script.src = src;
-    script.async = true;
-    ref.parentNode.insertBefore(script, ref);
 }
 
 export default compose(
