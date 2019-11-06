@@ -11,7 +11,7 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import Modal from 'react-bootstrap/Modal';
-import { FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
+import { FaCheck, FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
 
 class Index extends Component {
 
@@ -447,7 +447,6 @@ function ModalPopup(props) {
         </Container>
         <br/>
 
-
         <div>
           <h5><b>Languages Spoken</b></h5>
           <hr style={{marginTop: "0.5rem", marginBottom:"0.5rem",}}/>
@@ -476,8 +475,6 @@ function ModalPopup(props) {
         </div>
         <br/>
 
-          {props.item.childcare[0] ? <div><Alert variant={"primary"}> ChildCare Available</Alert><br/></div> : <div></div>}
-
         <div>
           <h5><b>Insurance Type Accepted</b></h5>
           <hr style={{ marginTop: "0.5rem", marginBottom: "0.5rem", }}/>
@@ -490,9 +487,6 @@ function ModalPopup(props) {
           })}
         </div>
         <br/>
-
-          {props.item.epic[0] ? <div><Alert variant={"primary"}> EPIC Designation </Alert><br/></div> : <div></div>}
-
 
         <div>
           <h5><b>Service Types</b></h5>
@@ -531,8 +525,12 @@ function ModalPopup(props) {
             }
           })}
         </div>
+        <br />
 
         {/* TODO checkmarks for EPIC and Childcare change from alerts */}
+        {props.item.childcare[0] ? <h5>ChildCare Available <FaCheck/><br /></h5> : <div></div>}
+        {props.item.epic[0] ? <h5>EPIC Designation <FaCheck /><br /></h5> : <div></div>}
+
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
