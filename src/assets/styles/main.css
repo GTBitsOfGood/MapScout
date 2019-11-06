@@ -141,6 +141,11 @@ html, body {
     border-top: 0;
 }
 
+.select-column {
+    width: 20px;
+    background-color: #0069D9;
+}
+
 /*Loading Spinner, Temporary*/
 .spinner {
     font-size: 10px;

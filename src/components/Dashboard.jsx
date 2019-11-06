@@ -39,6 +39,7 @@ class Dashboard extends Component {
     render() {
         const { isLoading, data, selectedIndex } = this.state;
         const providers = this.props.providers;
+        console.log(providers);
 
         if (isLoading && !isLoaded(providers))
             return <div style={{ width: '100%' }}>
@@ -55,6 +56,7 @@ class Dashboard extends Component {
                                 providers.map((item, index) =>
                                     <ListGroup.Item
                                         href={item.id}
+                                        key={index}
                                         onClick={() => this.setState({selectedIndex: index})}
                                         active={selectedIndex === index}>
                                         <b>{item.facilityName}</b>
@@ -77,7 +79,10 @@ class Dashboard extends Component {
                         <div className="bg-white">
                             {
                                 providers && providers[selectedIndex] &&
-                                <SingleProvider item={providers[selectedIndex]}/>
+                                <SingleProvider item={providers[selectedIndex]}
+                                                editProvider={() => this.props.selectItem(providers[selectedIndex])}
+                                                setLoading={() => this.setState({isLoading: true})}
+                                                resetIndex={() => this.setState({selectedIndex: 0, isLoading: false})}/>
                             }
                         </div>
                     </Col>
