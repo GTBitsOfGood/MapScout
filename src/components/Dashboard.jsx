@@ -11,6 +11,12 @@ import SingleProvider from "./SingleProvider";
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 var classNames = require('classnames');
 
+export const SELECT_ITEM = 'SELECT_ITEM';
+
+const selectItem = data => ({
+    type: SELECT_ITEM,
+    data
+});
 
 class Dashboard extends Component {
     constructor(props) {
@@ -21,7 +27,6 @@ class Dashboard extends Component {
             isLoading: true
         };
     }
-
 
     async componentDidMount(){
         const { firestore, providers } = this.props;
@@ -52,7 +57,9 @@ class Dashboard extends Component {
                                         href={item.id}
                                         onClick={() => this.setState({selectedIndex: index})}
                                         active={selectedIndex === index}>
-                                        {item.id}
+                                        <b>{item.facilityName}</b>
+                                        <br />
+                                        <small>{item.address[0]}</small>
                                     </ListGroup.Item>
                                 )
                             }
@@ -80,9 +87,18 @@ class Dashboard extends Component {
     }
 }
 
+const mapDispatchToProps = {
+    selectItem,
+};
+
+const mapStateToProps = (state) => ({
+    providers: state.firestore.ordered.providers,
+    firebase: state.firebase
+});
+
 export default compose(
     withFirestore,
-    connect((state) => ({
-        providers: state.firestore.ordered.providers,
-        firebase: state.firebase
-})))(Dashboard)
+    connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    ))(Dashboard)

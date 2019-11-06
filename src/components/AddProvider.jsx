@@ -19,29 +19,18 @@ class AddProvider extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { width: 0, step: 0, completed: false, animate: true, firestore: this.props.firestore};
+        this.state = {
+            width: 0,
+            step: 0,
+            completed: false,
+            animate: true,
+            item: {},
+        };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
-    // item: {
-    //     facilityName: 'testFacility',
-    //     address: 'testAddress',
-    //     ages: ['testAge', 'testAge'],
-    //     buildingNum: 'testNum',
-    //     childCare: 'testCare',
-    //     epic: 'testEpic',
-    //     hours: 'testHours',
-    //     insurance: 'testInsurance',
-    //     languages: 'english',
-    //     notes: 'none',
-    //     phoneNum: ['testNum', 'testNum'],
-    //     serviceType: 'testService',
-    //     specializations: ['testSpec', 'testSpec'],
-    //     therapyTypes: ['therapy1', 'therapy2', 'therapy3'],
-    //     website: 'https://',
-    //     weekendHours: 'N/A'
-
     async componentDidMount() {
+        if (this.props.item)
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
@@ -63,6 +52,7 @@ class AddProvider extends Component {
     addFirestore = async () => {
         await this.props.firestore.set({collection: 'providers'}, this.state.item);
         await this.props.firestore.get('providers')
+        this.props.history.push(providerRoute)
     };
 
     updateFirestore = async () => {
@@ -129,10 +119,9 @@ class AddProvider extends Component {
                                 width > 768 &&
                                     <Fragment>
                                         <br />
-                                        <Button block disabled={!completed}>Add Provider</Button>
-                                        <Button block onClick={this.addFirestore}>Test Add Provider</Button>
-                                        <Button block onClick={this.removeFirestore}>Test Remove Provider</Button>
-                                        <Button block onClick={this.updateFirestore}>Test Update Provider</Button>
+                                        <Button block disabled={!completed} onClick={this.addFirestore}>
+                                            Add Provider
+                                        </Button>
                                         <Button as={Link} to={providerRoute} variant="link" block>Cancel</Button>
                                     </Fragment>
                             }
@@ -167,8 +156,10 @@ class AddProvider extends Component {
                                             <RowForm
                                                 step={step}
                                                 item={this.state.item}
-                                                setValue={this.setValue}
-                                                setCompleted={(completed)=>this.setState({completed})}
+                                                setItem={(item) => {
+                                                    let completed = item.facilityName && item.phoneNum.length > 0;
+                                                    this.setState({item, completed})
+                                                }}
                                             />
                                         </div>
                                     </Form>
@@ -187,5 +178,6 @@ export default compose(
     withFirestore,
     connect((state) => ({
         providers: state.firestore.ordered.providers,
-        firebase: state.firebase
+        firebase: state.firebase,
+        item: state.item
     })))(AddProvider)
