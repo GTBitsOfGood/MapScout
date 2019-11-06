@@ -6,7 +6,7 @@ import ProviderRoutes, { providerRoute } from './components/ProviderRoutes';
 
 const routes = (
     <AppWrapper>
-        <HashRouter basename="/">
+        <HashRouter basename='/'>
             <Switch>
                 <Route exact path='/' component={App} />
                 <Route path="/providers" component={ProviderRoutes} />
