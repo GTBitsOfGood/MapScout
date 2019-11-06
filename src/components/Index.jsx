@@ -6,19 +6,26 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from "react-bootstrap/ListGroup";
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import Form from 'react-bootstrap/Form'
 
 class Index extends Component {
 
   constructor(props, context) {
     super(props, context);
     this.state = {
-      isOpen: false,
-      listView: true,
-      isLoading: true,
-      selectedIndex: 0,
+        isOpen: false,
+        listView: true,
+        isLoading: true,
+        selectedIndex: 0,
+        ageFilter: {
+            'ages': [],
+            'languages': []
+        }
     };
     this.switchView = this.switchView.bind(this);
 
@@ -28,7 +35,21 @@ class Index extends Component {
         this.setState({filterValue: event.target.value});
     }
 
+    handleInputChange = (e) => {
+      console.log(this.state.filters)
+        if (e.target.type === "checkbox") {
+            this.setState(prevState => ({
+                filters: [...prevState.filters[e.target.name], e.target.value]
+            }));
+            console.log(this.state.filters)
+        } else {
+            this.setState({[e.target.name]: [e.target.value]});
+        }
+       // this.props.setItem(this.state);
+    };
+
     filterFirestore = async () => {
+      console.log(this.props.providers)
         let firestore = this.props.firestore
         await firestore.get({collection: 'providers', where: ['languages', 'array-contains', this.state.filterValue]}).then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
@@ -226,6 +247,21 @@ class Index extends Component {
             }}>
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
+                <DropdownButton id="dropdown-basic-button" title="Languages">
+                    <Form.Check
+                        name="Languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="English"
+                        label="English" />
+                    <Form.Check
+                        name="Languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Spanish"
+                        label="Spanish" />
+
+                </DropdownButton>
               <Row className="mh-100" style = {{
                   height: "85%",
                   marginLeft: "0px",
