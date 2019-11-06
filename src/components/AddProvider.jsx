@@ -74,6 +74,33 @@ class AddProvider extends Component {
         this.props.history.push(providerRoute)
     };
 
+    updateFirestore = async () => {
+        //Change 'ages' to the specific parameter to update, dummy is the facilityName
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'Joseph J. Peters Institute']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.update({collection: 'providers', doc: doc.id}, {'ages': ['Children', 'Youth', 'Adults', 'Your Mom']})
+            });
+        })
+        await this.props.firestore.get('providers')
+    };
+
+    removeFirestore = async () => {
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'dummy']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.delete({collection: 'providers', doc: doc.id})
+            });
+        })
+
+        //await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
+        await firestore.get('providers')
+    };
+
+    addRow = () => {
+        //Fill in
+    };
+
     next = () => {
         this.setState({step: this.state.step += 1, animate: false});
         setTimeout(() => this.setState({animate: true}), 100);
@@ -173,6 +200,7 @@ class AddProvider extends Component {
 export default compose(
     withFirestore,
     connect((state) => ({
+        providers: state.firestore.ordered.providers,
         firebase: state.firebase,
         item: state.item
     })))(AddProvider)
