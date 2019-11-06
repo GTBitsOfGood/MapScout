@@ -540,7 +540,7 @@ class Index extends Component {
                         href={item.id}
                         onClick={(index) => this.expandForModal(index)}
                         active={selectedIndex === index}>
-                        <h5>{item.id}</h5>
+                        <h5>{item.facilityName}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>
                       </ListGroup.Item>
                     )
