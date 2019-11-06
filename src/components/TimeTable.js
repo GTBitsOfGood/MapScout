@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import TimePicker from 'react-bootstrap-time-picker';
 import Button from "react-bootstrap/Button";
+import FormCheck from "react-bootstrap/FormCheck";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
@@ -82,14 +83,30 @@ export default class TimeTable extends Component {
     render() {
         const { days } = this.state;
 
+
+        const selectFormatter = (cell, row, index) => {
+            return (
+                <FormCheck
+                    type="radio"
+                    label={days[index].day}
+                    checked={days[index].selected}
+                    onClick={() => {
+                        const data = days;
+                        data[index].selected = !data[index].selected;
+                        this.setState({days: data});
+                        setTimeout(() => this.props.onChange(days), 100);
+                    }}/>
+            );
+        };
+
         const timeFormatter = (cell, row, index, formatExtraData) => {
             return (
                 <TimePicker
                     onChange={(time) => {
                         const data = days;
                         data[index][formatExtraData]= time;
-                        this.setState({data});
-                        this.props.onChange(days);
+                        this.setState({days: data});
+                        setTimeout(() => this.props.onChange(days), 100);
                     }}
                     value={cell}
                     step={30} />
@@ -106,7 +123,7 @@ export default class TimeTable extends Component {
                         data[index].end = days[i].end;
                         data[index].selected = true;
                         this.setState({days: data});
-                        this.props.onChange(days);
+                        setTimeout(() => this.props.onChange(days), 100);
                     }
                 }>Copy {index === 0 ? 'Below' : 'Above'}</Button>
             );
@@ -114,8 +131,9 @@ export default class TimeTable extends Component {
 
         const columns = [
             {
-                dataField: 'day',
+                dataField: 'selected',
                 text: 'Day',
+                formatter: selectFormatter,
             }, {
                 dataField: 'start',
                 text: 'Start Time',
@@ -132,24 +150,12 @@ export default class TimeTable extends Component {
                 formatter: actionFormatter,
             }];
 
-        const rowEvents = {
-            onClick: (e, row, index) => {
-                const data = days;
-                if (!days.selected) {
-                    data[index].selected = true;
-                }
-                this.setState({days: data});
-                this.props.onChange(days);
-            },
-        };
-
         return (
             <BootstrapTable
                 keyField='day'
                 data={ days }
                 columns={ columns }
                 bordered={ false }
-                rowEvents={ rowEvents }
             />
         )
     }

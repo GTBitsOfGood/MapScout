@@ -12,8 +12,10 @@ import {withFirestore} from "react-redux-firebase";
 
 const SingleProvider = (props) => <Container>
     <Button onClick={async () => {
-        await props.firestore.delete({collection: 'providers', doc: props.item['facilityName']});props.firestore.get('providers');
-        props.firestore.get('providers')
+        props.setLoading();
+        await props.firestore.delete({collection: 'providers', doc: props.item['facilityName']});
+        await props.firestore.get('providers');
+        props.resetIndex();
     }}>Delete</Button>
     {
         Object.keys(props.item).map((item, index) =>
