@@ -6,30 +6,98 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import ListGroup from "react-bootstrap/ListGroup";
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
+import { ButtonGroup } from 'reactstrap';
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import Form from 'react-bootstrap/Form'
 
 class Index extends Component {
 
   constructor(props, context) {
     super(props, context);
+
     this.state = {
-      isOpen: false,
-      listView: true,
-      isLoading: true,
-      selectedIndex: 0,
+        isOpen: false,
+        listView: true,
+        isLoading: true,
+        selectedIndex: 0,
+        activeProviders: null,
+        serviceType: [],
+        specializations: [],
+        ages: [],
+        insurance: [],
+        languages: [],
+        therapyTypes: []
+
     };
     this.switchView = this.switchView.bind(this);
 
   }
 
+    handleFilterChange = (event) => {
+        this.setState({filterValue: event.target.value});
+    }
+
+    // Remove async later
+    handleInputChange = async (e) => {
+      this.setState({
+        activeProviders: this.props.providers
+      })
+      console.log(this.state.activeProviders)
+      const filterName = e.target.name
+      const filterVal = e.target.value
+      
+      if (e.target.type === "checkbox" && e.target.checked) {
+        await this.setState({
+          [filterName]: [...this.state[filterName], filterVal]
+        })
+          
+      } else if(e.target.type === "checkbox" && !e.target.checked){
+
+        await this.setState({
+          [filterName]: this.state[filterName].filter(function(filter) {
+            return filter !== filterVal
+          })
+        })
+      }
+
+      this.filterActiveProviders(filterName)
+    };
+
+    // Remove async later
+    filterActiveProviders = async (filterName) => {
+      await this.setState({
+        activeProviders: this.state.activeProviders.filter((filter) => {
+
+          return filter[filterName].filter( (elem) => {
+          return this.state[filterName].indexOf(elem) > -1;
+          }).length == this.state[filterName].length
+        })
+      })
+    }
+
+
+    filterFirestore = async () => {
+      console.log(this.props.providers)
+        let firestore = this.props.firestore
+        await firestore.get({collection: 'providers', where: ['languages', 'array-contains', this.state.filterValue]}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                console.log(doc.id)
+            });
+        })
+        this.setState({ activeProviders: this.props.providers })
+    };
+
     // creates map and firebase
     async componentDidMount() {
         const { firestore, providers } = this.props;
         if (!isLoaded(providers)) {
-          await firestore.get('providers');
+            await firestore.get('providers');
         }
+        this.setState({ activeProviders: this.props.providers })
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
@@ -147,28 +215,6 @@ class Index extends Component {
             }
           })(marker, i));
         }
-        // The Following Code is from the Penn Team
-        // geocoder.geocode( { 'address' : "2501 Reed St, Philadelphia, PA 19146" }, function( results, status ) {
-        //     if( status == google.maps.GeocoderStatus.OK ) {
-        //         // In this case it creates a marker, but you can get the lat and lng from the location.LatLng
-        //         map.setCenter( results[0].geometry.location );
-        //         var marker = new google.maps.Marker( {
-        //             map: map,
-        //             position: results[0].geometry.location,
-        //             label: "Bethanna"
-        //         });
-        //         var contentString = '<div id="content"><h1>Bethanna</h1><h3>Service Type</h3><p>Outpatient Services; Behavioral Health Rehabilitation Services (BHRS); Autism Spectrum Disorders (ASDs) Assessment and Services</p><h3>Types of Therapy</h3><p>"Trauma-Focused Cognitive Behavioral Therapy (TF-CBT); Individual and Family Therapy; Ecosystem Family Therapy (ESFT); Parent-Child Interaction (PCIT); Art, Play and other Creative Therapies; Group Therapy"<p><h3>Languages</h3><p>English; Spanish</p><h3>Specializations</h3><p>Autism Spectrum Disorder</p><h3>Insurance Type Accepted</h3><p>Medicaid</p><h3>EPIC Designation</h3><p>X</p><h3>Childcare Availability</h3><p>N/A</p><h3>Hours of Operation</h3><p>Monday-Friday 8AM-10PM <br>Weekend Hours: Saturday 8AM-7PM; Sunday Closed</p></div>';
-        //         var infowindow = new google.maps.InfoWindow({
-        //             content: contentString
-        //         });
-        //         marker.addListener('click', function() {
-        //             infowindow.open(map, marker);
-        //         });
-        //     }
-        //     else {
-        //         alert( 'Geocode was not successful for the following reason: ' + status );
-        //     }
-        // });
     }
 
     switchView() {
@@ -181,7 +227,7 @@ class Index extends Component {
 
     render() {
       const { isLoading, data, selectedIndex } = this.state;
-      const providers = this.props.providers;
+      const providers = this.state.activeProviders;
 
       if (isLoading && !isLoaded(providers))
         return <div style={{ width: '100%' }}>
@@ -205,6 +251,7 @@ class Index extends Component {
             </style>
             <Container fluid="True">
             {/* toggle switch button */}
+            <div>
             <Button variant="primary" onClick={this.switchView} style={{
                 marginTop:"15px",
                 marginLeft:"15px",
@@ -213,10 +260,275 @@ class Index extends Component {
             }}>
                 {this.state.listView ? "Hide Map" : "Show Map"}
             </Button>
+            </div>
+            <div>
+            <ButtonGroup style ={{
+              marginLeft:"15px",
+              marginBottom:"10px"
+            }}>
+                <DropdownButton id="dropdown-basic-button" title="Languages" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="English"
+                        label="English" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Spanish"
+                        label="Spanish" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Portugese"
+                        label="Portugese" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Kurdish"
+                        label="Kurdish" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Mandarin"
+                        label="Mandarin" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Russian"
+                        label="Russian" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="ASL"
+                        label="ASL" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Creole"
+                        label="Creole" />
+                    <Form.Check
+                        name="languages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Other"
+                        label="Other" />
+
+                </DropdownButton>
+
+                <DropdownButton id="dropdown-basic-button" title="Service Type" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Outpatient Services"
+                        label="Outpatient Services" />
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Residential Programs"
+                        label="Residential Programs" />
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Parent/Caregiver Services"
+                        label="Parent/Caregiver Services" />
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="School-Based Services"
+                        label="School-Based Services" />
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Foster & Kinship Care"
+                        label="Foster & Kinship Care" />
+                    <Form.Check
+                        name="serviceType"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="In-Home Services"
+                        label="In-Home Services" />
+                </DropdownButton>
+
+                <DropdownButton id="dropdown-basic-button" title="Specializations" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="specializations"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Autism Spectrum Disorder"
+                        label="Autism Spectrum Disorder" />
+                    <Form.Check
+                        name="specializations"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Young Children"
+                        label="Young Children" />
+                    <Form.Check
+                        name="specializations"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="LGBTQ+ Competent"
+                        label="LGBTQ+ Competent" />
+                    <Form.Check
+                        name="specializations"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Experience working with immigrant and refugees"
+                        label="Experience working with immigrant and refugees" />
+                </DropdownButton>
+
+                <DropdownButton id="dropdown-basic-button" title="Ages" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Toddler/preschoolers"
+                        label="Toddler/preschoolers (0-6)" />
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Children"
+                        label="Children (6-10)" />
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Preteens"
+                        label="Preteens (11-13)" />
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Adolescents"
+                        label="Adolescents (14-21)" />
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Adults"
+                        label="Adults (21-65)" />
+                    <Form.Check
+                        name="ages"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Seniors"
+                        label="Seniors (65+)" />
+                </DropdownButton>
+                </ButtonGroup>
+                </div>
+                <ButtonGroup style ={{
+                  marginLeft:"15px",
+                  marginBottom:"10px"
+                }}>
+                <DropdownButton id="dropdown-basic-button" title="Insurance" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="insurance"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Medicaid"
+                        label="Medicaid" />
+                    <Form.Check
+                        name="insurance"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Private"
+                        label="Private" />
+                    <Form.Check
+                        name="insurance"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Uninsured/Underinsured"
+                        label="Uninsured/Underinsured" />
+                    <Form.Check
+                        name="insurance"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Sliding Scale"
+                        label="Sliding Scale" />
+                </DropdownButton>
+
+                <DropdownButton id="dropdown-basic-button" title="Therapy Types" style ={{
+                  marginRight:"5px"
+                }}>
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)"
+                        label="TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Pri-CARE (Child Adult Relationship Enhancement)"
+                        label="Pri-CARE (Child Adult Relationship Enhancement)" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="CFTSI (Child Family Traumatic Stress Intervention)"
+                        label="CFTSI (Child Family Traumatic Stress Intervention)" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Adolescent Dialectical Behavioral Therapy (DBT)"
+                        label="Adolescent Dialectical Behavioral Therapy (DBT)" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Family Therapy"
+                        label="Family Therapy" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="EMDR"
+                        label="EMDR" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Other Evidence-Based Practices (EBPs)"
+                        label="Other Evidence-Based Practices (EBPs)" />
+                    <Form.Check
+                        name="therapyTypes"
+                        onChange={this.handleInputChange}
+                        type="checkbox"
+                        value="Support Groups"
+                        label="Support Groups" />
+                </DropdownButton>
+              </ButtonGroup>
               <Row className="mh-100" style = {{
                   height: "85%",
                   marginLeft: "0px",
                   marginRight: "0px",
+                  marginTop: "10px"
               }}>
                 {/* List View*/}
                 <Col>
@@ -228,12 +540,14 @@ class Index extends Component {
                         href={item.id}
                         onClick={(index) => this.expandForModal(index)}
                         active={selectedIndex === index}>
-                        <h5>{item.id}</h5>
+                        <h5>{item.facilityName}</h5>
                         <p style={{marginBottom:"0"}}>{item.address}</p>
                       </ListGroup.Item>
                     )
                   }
                 </ListGroup>
+                    <input type="text" name="name" value={this.state.value} onChange={this.handleFilterChange}/>
+                    <Button block onClick={this.filterFirestore}>Test Filter Provider</Button>
                 </Col>
 
                 {/* Map View */}
@@ -247,7 +561,9 @@ class Index extends Component {
                   }}></div>
                 </Col>
                 </Collapse>
+
               </Row>
+
             </Container>
         </div>
       )

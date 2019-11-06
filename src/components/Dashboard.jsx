@@ -31,7 +31,7 @@ class Dashboard extends Component {
     async componentDidMount(){
         const { firestore, providers } = this.props;
         if ( !isLoaded(providers) ) {
-            await firestore.get('providers');
+            await firestore.get('providers')
         }
         this.setState({isLoading: false});
     }
