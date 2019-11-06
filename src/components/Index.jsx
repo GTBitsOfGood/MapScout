@@ -42,6 +42,7 @@ class Index extends Component {
 
     initMap(mapDOMNode) {
       var mapOptions = {
+        clickableIcons: false,
         zoom: 12,
         center: new google.maps.LatLng(39.9526, -75.1652),
         mapTypeId: 'roadmap',
@@ -65,10 +66,62 @@ class Index extends Component {
             ]
           },
           {
+            "featureType": "poi.attraction",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
             "featureType": "poi.business",
             "stylers": [
               {
                 "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.medical",
+            "stylers": [
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.medical",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "simplified"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.place_of_worship",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.school",
+            "elementType": "labels.icon",
+            "stylers": [
+              {
+                "visibility": "on"
+              }
+            ]
+          },
+          {
+            "featureType": "poi.school",
+            "elementType": "labels.text",
+            "stylers": [
+              {
+                "visibility": "on"
               }
             ]
           },
@@ -110,14 +163,6 @@ class Index extends Component {
           {
             "featureType": "road.local",
             "elementType": "labels",
-            "stylers": [
-              {
-                "visibility": "off"
-              }
-            ]
-          },
-          {
-            "featureType": "transit",
             "stylers": [
               {
                 "visibility": "off"
@@ -216,7 +261,7 @@ class Index extends Component {
                 marginRight: "0px",
               }}>
                 {/* List View*/}
-                <Col>
+                <Col md={6}>
                 <ListGroup variant="flush">
                   {
                     !isEmpty(providers) &&
@@ -241,7 +286,7 @@ class Index extends Component {
 
                 {/* Map View */}
                 <Collapse appear={true} in={this.state.listView}>
-                <Col>
+                <Col md={6}>
                   <div ref="map" id="map" style={{
                     top: 0,
                     left: 0,
@@ -282,7 +327,7 @@ function ModalPopup(props) {
 
         <Container>
         <Row>
-          <Col style={{display:"flex", flexDirection:"Column", justifyContent:"center"}}>
+          <Col md={6} style={{display:"flex", flexDirection:"Column", justifyContent:"center"}}>
             <div>
               <FaMapPin/> &nbsp;
               {props.item.address}
@@ -294,36 +339,108 @@ function ModalPopup(props) {
               {props.item.website[0] ? <div><FaGlobe /> &nbsp; {props.item.website[0]}</div> : <div></div>}
           </Col>
 
-          <Col style={{textAlign: "center"}}>
-            <h6><b>Hours</b></h6>
-            <div> Monday: {props.item.hours.Monday ? props.item.hours.Monday.map(function (time, index) {
-              return formatTime(props.item.hours.Monday, time, index);
-            }) : 'CLOSED'
-            }</div>
-            <div> Tuesday: {props.item.hours.Tuesday ? props.item.hours.Tuesday.map(function (time, index) {
-              return formatTime(props.item.hours.Tuesday, time, index);
-            }) : 'CLOSED'
-            }</div>
-            <div> Wednesday: {props.item.hours.Wednesday ? props.item.hours.Wednesday.map(function (time, index) {
-              return formatTime(props.item.hours.Wednesday, time, index);
-            }) : 'CLOSED'
-            } </div>
-            <div> Thursday: {props.item.hours.Thursday ? props.item.hours.Thursday.map(function (time, index) {
-              return formatTime(props.item.hours.Thursday, time, index);
-            }) : 'CLOSED'
-            }</div>
-            <div> Friday: {props.item.hours.Friday ? props.item.hours.Friday.map(function (time, index) {
-              return formatTime(props.item.hours.Friday, time, index);
-            }) : 'CLOSED'
-            } </div>
-            <div> Saturday: {props.item.hours.Saturday ? props.item.hours.Saturday.map(function (time, index) {
-              return formatTime(props.item.hours.Saturday, time, index);
-            }) : 'CLOSED'
-            } </div>
-            <div> Sunday: {props.item.hours.Sunday ? props.item.hours.Sunday.map(function (time, index) {
-              return formatTime(props.item.hours.Sunday, time, index);
-            }) : 'CLOSED'
-            }   </div>
+          <Col md={6} style={{background: "#F2F2F2", borderRadius:"17px", paddingTop: "15px", paddingBottom:"15px"}}>
+            <h6 style={{ textAlign: "center" }}><b>Hours</b></h6>
+            <Container>
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end"}}>
+                  <div>
+                    Monday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent:"flex-start"}}>
+                  <div> {props.item.hours.Monday ? props.item.hours.Monday.map(function (time, index) {
+                    return formatTime(props.item.hours.Monday, time, index);
+                  }) : 'CLOSED'
+                  }</div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                    Tuesday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div>{props.item.hours.Tuesday ? props.item.hours.Tuesday.map(function (time, index) {
+                    return formatTime(props.item.hours.Tuesday, time, index);
+                  }) : 'CLOSED'
+                  }</div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                  Wednesday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div> {props.item.hours.Wednesday ? props.item.hours.Wednesday.map(function (time, index) {
+                    return formatTime(props.item.hours.Wednesday, time, index);
+                  }) : 'CLOSED'
+                  } </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                   Thursday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div>{props.item.hours.Thursday ? props.item.hours.Thursday.map(function (time, index) {
+                    return formatTime(props.item.hours.Thursday, time, index);
+                  }) : 'CLOSED'
+                  }</div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                    Friday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div> {props.item.hours.Friday ? props.item.hours.Friday.map(function (time, index) {
+                    return formatTime(props.item.hours.Friday, time, index);
+                  }) : 'CLOSED'
+                  } </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                    Saturday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div>  {props.item.hours.Saturday ? props.item.hours.Saturday.map(function (time, index) {
+                    return formatTime(props.item.hours.Saturday, time, index);
+                  }) : 'CLOSED'
+                  } </div>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div>
+                    Sunday:
+                  </div>
+                </Col>
+                <Col style={{ display: "flex", justifyContent: "flex-start" }}>
+                  <div>{props.item.hours.Sunday ? props.item.hours.Sunday.map(function (time, index) {
+                    return formatTime(props.item.hours.Sunday, time, index);
+                  }) : 'CLOSED'
+                  }   </div>
+                </Col>
+              </Row>
+            </Container>
+
           </Col>
         </Row>
 
@@ -415,6 +532,7 @@ function ModalPopup(props) {
           })}
         </div>
 
+        {/* TODO checkmarks for EPIC and Childcare change from alerts */}
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
