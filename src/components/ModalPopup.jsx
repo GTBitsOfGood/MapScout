@@ -11,8 +11,9 @@ const ModalPopup = (props) =>
     <div>
     <Modal {...props} size="lg" scrollable="True">
       <Modal.Header className="modal-header" closeButton>
+
         <Modal.Title id="contained-modal-title-vcenter">
-          <h3>{props.item.facilityName}</h3>
+          <h2><b>{props.item.facilityName}</b></h2>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="modal-body">
