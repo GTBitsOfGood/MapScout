@@ -16,6 +16,7 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
+import { Flipper, Flipped } from "react-flip-toolkit";
 
 function loadJS(src) {
     var ref = window.document.getElementsByTagName("script")[0];
@@ -297,7 +298,7 @@ class Index extends Component {
     }
 
     render() {
-    const { isLoading, data, selectedIndex, showModal } = this.state;
+    const { isLoading, data, selectedIndex, showModal, listView } = this.state;
     const providers = this.state.activeProviders;
 
     if (isLoading && !isLoaded(providers))
@@ -306,66 +307,74 @@ class Index extends Component {
     return (
         <Fragment>
             <NavBar/>
-            <Container className="view-container" fluid>
-                <ButtonGroup style ={{
-                    marginLeft: 15,
-                    marginBottom: 10,
-                }}>
+            <div>
+                <div className="row-spaced">
+                    <ButtonGroup className="ml-2">
+                        {this.renderDropdown("Languages", "languages")}
+                        {this.renderDropdown("Service Type", "serviceType")}
+                        {this.renderDropdown("Specializations", "specializations")}
+                        {this.renderDropdown("Ages", "ages")}
+                        {this.renderDropdown("Insurance", "insurance")}
+                        {this.renderDropdown("Therapy Types", "therapyTypes")}
+                    </ButtonGroup>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                         {this.state.listView ? "Hide Map" : "Show Map"}
                     </Button>
-                    {this.renderDropdown("Languages", "languages")}
-                    {this.renderDropdown("Service Type", "serviceType")}
-                    {this.renderDropdown("Specializations", "specializations")}
-                    {this.renderDropdown("Ages", "ages")}
-                    {this.renderDropdown("Insurance", "insurance")}
-                    {this.renderDropdown("Therapy Types", "therapyTypes")}
-                </ButtonGroup>
-                <Row className="mh-100" style={{ height: "85%" }} noGutters>
-                    <Col md={6}>
-                        <ListGroup variant="flush">
-                        {
-                            !isEmpty(providers) &&
-                            providers.map((item, index) =>
-                                <ListGroup.Item
-                                    href={item.id}
-                                    key={index}
-                                    onClick={() => this.setState({ selectedIndex: index, showModal: true})}
-                                    active={selectedIndex === index}>
-                                    <h5>{item.facilityName}</h5>
-                                    <p className="list-view-text-body">{item.address[0]}</p>
-                                </ListGroup.Item>
-                            )
-                        }
-                        </ListGroup>
-                        <div>
-                        {
-                            providers && providers[selectedIndex] &&
-                            <Modal
-                                show={showModal}
-                                onHide={() => this.setState({showModal: false})}
-                                size="lg"
-                                scrollable>
-                                <Modal.Header className="modal-header" closeButton>
-                                    <Modal.Title id="contained-modal-title-vcenter">
-                                        <h2><b>{providers[selectedIndex].facilityName}</b></h2>
-                                    </Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body className="modal-body">
-                                    <ProviderInfo item={providers[selectedIndex]} />
-                                </Modal.Body>
-                            </Modal>
-                        }
+                </div>
+                <Flipper flipKey={listView}>
+                    <div className="row-nowrap">
+                    <Flipped flipId="list">
+                        <div style={{ width: listView ? '50%' : '100%' }}>
+                            <ListGroup variant="flush">
+                                {
+                                    !isEmpty(providers) &&
+                                    providers.map((item, index) =>
+                                        <ListGroup.Item
+                                            href={item.id}
+                                            key={index}
+                                            onClick={() => this.setState({ selectedIndex: index, showModal: true})}
+                                            active={selectedIndex === index}>
+                                            <Flipped key={index} inverseFlipId="list">
+                                                <div>
+                                                    <h5>{item.facilityName}</h5>
+                                                    <p className="list-view-text-body">{item.address[0]}</p>
+                                                </div>
+                                            </Flipped>
+                                        </ListGroup.Item>
+                                    )
+                                }
+                            </ListGroup>
+                            <div>
+                            {
+                                providers && providers[selectedIndex] &&
+                                <Modal
+                                    show={showModal}
+                                    onHide={() => this.setState({showModal: false})}
+                                    size="lg"
+                                    scrollable>
+                                    <Modal.Header className="modal-header" closeButton>
+                                        <Modal.Title id="contained-modal-title-vcenter">
+                                            <h2><b>{providers[selectedIndex].facilityName}</b></h2>
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body className="modal-body">
+                                        <ProviderInfo item={providers[selectedIndex]} />
+                                    </Modal.Body>
+                                </Modal>
+                            }
+                            </div>
                         </div>
-
-                    </Col>
-                    <Collapse appear={true} in={this.state.listView}>
-                        <Col md={6}>
-                            <div ref="map" id="map" className="map-view" />
-                        </Col>
-                    </Collapse>
-                </Row>
-            </Container>
+                    </Flipped>
+                    <Flipped flipId="map">
+                        <div style={{ width: '50%', marginRight: listView ? 0 : -1000, }}>
+                            <div
+                                ref="map" id="map" className="map-view"
+                                style={{ height: '85vh' }} />
+                        </div>
+                    </Flipped>
+                    </div>
+                </Flipper>
+            </div>
         </Fragment>);
     }
 

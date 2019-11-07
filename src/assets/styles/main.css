@@ -161,16 +161,18 @@ body {
     border-top: 0;
 }
 
-.select-column {
-    width: 20px;
-    background-color: #0069D9;
-}
-
 .row-spaced {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
+}
+
+.row-nowrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
 }
 
 /*Loading Spinner, Temporary*/

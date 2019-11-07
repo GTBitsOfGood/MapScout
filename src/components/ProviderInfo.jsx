@@ -11,22 +11,21 @@ const ProviderInfo = (props) =>
     <div>
         <Container>
         <Row>
-            <Col md={6} className="modal-col-flex-center">
+            <Col lg={6} className="modal-col-flex-center">
             <div>
               <FaMapPin/> &nbsp;
               {props.item.address}
             </div>
             <div>
               <FaPhone/> &nbsp;
-              {props.item.phoneNum}
+              {props.item.phoneNum.join(', ')}
             </div>
               {props.item.website[0] ? <div><FaGlobe /> &nbsp; {props.item.website[0]}</div> : <div></div>}
           </Col>
 
-          <Col md={6} className="modal-hours-backdrop">
+          <Col lg={6} className="modal-hours-backdrop">
             <h6 className="modal-center-text"><b>Hours</b></h6>
             <Container>
-
               <Row>
                 <Col className="modal-col-flex-end">
                   <div>
@@ -40,7 +39,6 @@ const ProviderInfo = (props) =>
                   }</div>
                 </Col>
               </Row>
-
               <Row>
                 <Col className="modal-col-flex-end">
                   <div>
