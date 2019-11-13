@@ -49,6 +49,12 @@ body {
     background-size: contain;
 }
 
+.fixed-container {
+    padding: 10px;
+    background-color: white;
+    border-bottom: solid 1px lightgray;
+}
+
 .map-list {
     max-height: calc(100vh - 130px);
     overflow-y: scroll;
@@ -230,8 +236,11 @@ body {
 
 @media only screen and (min-width: 900px) {
     .scroll-container {
-        max-height: calc(100vh - 64px);
+        max-height: calc(100vh - 123px);
         overflow-y: scroll;
+    }
+    .list-wrapper {
+        border-right: solid 6px #F8F9FA;
     }
 }
 

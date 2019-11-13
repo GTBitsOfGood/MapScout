@@ -49,35 +49,40 @@ class Dashboard extends Component {
             <Fragment>
                 <Row noGutters>
                     <Col sm={3}>
-                        <div className="scroll-container">
-                            <ListGroup variant="flush">
-                                {
-                                    !isEmpty(providers) &&
-                                    providers.map((item, index) =>
-                                        <ListGroup.Item
-                                            href={item.id}
-                                            key={index}
-                                            onClick={() => this.setState({selectedIndex: index})}
-                                            active={selectedIndex === index}>
-                                            <b>{item.facilityName}</b>
-                                            <br />
-                                            <small>{item.address[0]}</small>
-                                        </ListGroup.Item>
-                                    )
-                                }
-                            </ListGroup>
-                            <br />
-                            <Button
-                                block
-                                variant="link"
-                                as={Link}
-                                to={formRoute}>
-                                Add Provider
-                            </Button>
+                        <div className="list-wrapper">
+                            <div className="fixed-container">
+                                <Button
+                                    block
+                                    variant="primary"
+                                    as={Link}
+                                    to={formRoute}>
+                                    Add new provider
+                                </Button>
+                            </div>
+                            <div className="scroll-container">
+                                <ListGroup variant="flush">
+                                    {
+                                        !isEmpty(providers) &&
+                                        providers.map((item, index) =>
+                                            <ListGroup.Item
+                                                href={item.id}
+                                                key={index}
+                                                onClick={() => this.setState({selectedIndex: index})}
+                                                active={selectedIndex === index}>
+                                                <b>{item.facilityName}</b>
+                                                <br />
+                                                <small>{item.address[0]}</small>
+                                            </ListGroup.Item>
+                                        )
+                                    }
+                                </ListGroup>
+                            </div>
                         </div>
                     </Col>
                     <Col sm={9}>
-                        <div className="scroll-container">
+                        <div
+                            className="scroll-container"
+                            style={{ maxHeight: 'calc(100vh - 64px)' }}>
                             <div className="bg-white">
                                 {
                                     providers && providers[selectedIndex] &&
