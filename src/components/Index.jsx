@@ -53,8 +53,8 @@ class Index extends Component {
         this.switchView = this.switchView.bind(this);
     }
 
-    filterZipcode = async () => {
-        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=19153&key=${API_KEY}`);
+    filterZipcode = async (filterVal) => {
+        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
         let responseJson = await response.json();
 
         // Handle illegal response
@@ -74,8 +74,13 @@ class Index extends Component {
             return a.distance > b.distance ? 1 : -1
         })
 
-        this.filterProviders.forEach(function () {
+        var filterActiveProviders = []
+        filteredProviders.forEach(function (provider) {
+            filterActiveProviders.push(provider['provider'])
+        })
 
+        this.setState({
+            activeProviders: filterActiveProviders,
         })
 
     }
@@ -118,6 +123,19 @@ class Index extends Component {
       })
     };
 
+    handleZipcode = async (e) => {
+        const filterVal = e.target.value
+        console.log(filterVal.length)
+        if (filterVal.length == 5) {
+            this.filterZipcode(filterVal)
+        } else if (!filterVal.length) {
+            await this.props.firestore.get('providers')
+            this.setState({
+                activeProviders: this.props.providers
+            })
+        }
+    }
+
     handleSearch = async (e) => {
       const filterVal = e.target.value
       await this.setState({
@@ -146,7 +164,6 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
-        this.filterZipcode()
         this.setState({ activeProviders: this.props.providers });
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
@@ -390,7 +407,18 @@ class Index extends Component {
                         aria-describedby="basic-addon1"
                         onChange={this.handleSearch}
                       />
+                        <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">Zipcode</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            placeholder="Zipcode"
+                            aria-label="Zipcode"
+                            aria-describedby="basic-addon1"
+                            onChange={this.handleZipcode}
+                        />
                     </InputGroup>
+
+
                 </div>
                 <Flipper flipKey={listView}>
                     <div className="row-nowrap">
