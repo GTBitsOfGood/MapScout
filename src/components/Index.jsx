@@ -17,6 +17,8 @@ import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 
 function loadJS(src) {
     var ref = window.document.getElementsByTagName("script")[0];
@@ -41,7 +43,10 @@ class Index extends Component {
             ages: [],
             insurance: [],
             languages: [],
-            therapyTypes: []
+            therapyTypes: [],
+            filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
+            searchName: null,
+            name: null
         };
         this.switchView = this.switchView.bind(this);
     }
@@ -69,6 +74,10 @@ class Index extends Component {
         }
 
         this.filterActiveProviders(filterName)
+
+        if(this.state.searchName != null) {
+          this.filterSearch(this.state.searchName)
+        }
     };
 
     filterActiveProviders = async (filterName) => {
@@ -80,6 +89,28 @@ class Index extends Component {
         })
       })
     };
+
+    handleSearch = async (e) => {
+      const filterVal = e.target.value
+      await this.setState({
+        activeProviders: this.props.providers,
+        searchName: filterVal
+      })
+      this.state.filters.forEach(filter => this.filterActiveProviders(filter))
+
+      this.filterSearch(filterVal)
+
+  };
+
+    filterSearch = async (filterVal) => {
+      await this.setState({
+        activeProviders: this.state.activeProviders.filter((filter) => {
+          console.log(filter.facilityName)
+          return filter.facilityName.includes(filterVal)
+        })
+      })
+    }
+
 
     // creates map and firebase
     async componentDidMount() {
@@ -320,6 +351,17 @@ class Index extends Component {
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                         {this.state.listView ? "Hide Map" : "Show Map"}
                     </Button>
+                    <InputGroup className="mb-3">
+                      <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
+                      </InputGroup.Prepend>
+                      <FormControl
+                        placeholder="Name"
+                        aria-label="Name"
+                        aria-describedby="basic-addon1"
+                        onChange={this.handleSearch}
+                      />
+                    </InputGroup>
                 </div>
                 <Flipper flipKey={listView}>
                     <div className="row-nowrap">
