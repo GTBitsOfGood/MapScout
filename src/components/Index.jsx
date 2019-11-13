@@ -18,6 +18,8 @@ import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 
+const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
+
 function loadJS(src) {
     var ref = window.document.getElementsByTagName("script")[0];
     var script = window.document.createElement("script");
@@ -46,6 +48,32 @@ class Index extends Component {
         this.switchView = this.switchView.bind(this);
     }
 
+    filterZipcode = async () => {
+        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=19153&key=${API_KEY}`);
+        let responseJson = await response.json();
+
+        // Handle illegal response
+        let filterLat = responseJson['results'][0]['geometry']['location']['lat']
+        let filterLong = responseJson['results'][0]['geometry']['location']['lng']
+        var providerLat, providerLong;
+        var filteredProviders = []
+
+        this.props.providers.forEach(function(provider) {
+            providerLat = provider['latitude']
+            providerLong = provider['longitude']
+            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2)
+            filteredProviders.push({'provider': provider, 'distance': distance})
+        })
+
+        filteredProviders.sort(function(a, b) {
+            return a.distance > b.distance ? 1 : -1
+        })
+
+        this.filterProviders.forEach(function () {
+
+        })
+
+    }
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
@@ -87,6 +115,7 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
+        this.filterZipcode()
         this.setState({ activeProviders: this.props.providers });
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
