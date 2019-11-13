@@ -68,7 +68,7 @@ body {
 .count:before {
     content: "";
     display: block;
-    border-top: solid 1px #bebebe;
+    border-top: solid 1px lightgray;
     width: 100%;
     height: 2px;
     position: absolute;
@@ -80,7 +80,13 @@ body {
     padding: 0 20px;
     position: relative;
     z-index: 1;
-    font-weight: bold;
+    color: gray;
+}
+
+.map-cell {
+    border: solid lightgray 1px;
+    padding: 16px;
+    margin-bottom: 12px;
 }
 
 .filter-row {

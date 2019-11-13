@@ -1,15 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import NavBar from './NavBar';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Collapse from 'react-bootstrap/Collapse';
-import ListGroup from "react-bootstrap/ListGroup";
+import Badge from "react-bootstrap/Badge";
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Form from "react-bootstrap/Form";
 import Dropdown from 'react-bootstrap/Dropdown';
-import { ButtonGroup } from 'reactstrap';
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
@@ -277,6 +273,36 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
+    renderCell(item, index) {
+        return (
+            <div
+                className="map-cell"
+                key={index}
+                onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
+                <Flipped key={index} inverseFlipId="list">
+                    <div>
+                        <h5>
+                            <b>{item.facilityName}</b>
+                            {
+                                item.therapyTypes.includes('Pri-CARE') &&
+                                <Badge
+                                    style={{ marginLeft: 20 }}
+                                    variant="primary">Pri-CARE</Badge>
+                            }
+                            {
+                                item.therapyTypes.includes('TF-CBT') &&
+                                <Badge
+                                    style={{ marginLeft: 20 }}
+                                    variant="primary">TF-CBT</Badge>
+                            }
+                        </h5>
+                        <p className="list-view-text-body">{item.address[0]}</p>
+                    </div>
+                </Flipped>
+            </div>
+        );
+    }
+
     renderDropdown(title, key) {
         return(
             <DropdownButton
@@ -361,19 +387,7 @@ class Index extends Component {
                             </div>
                             {
                                 !isEmpty(providers) &&
-                                providers.map((item, index) =>
-                                    <div
-                                        className="map-cell"
-                                        key={index}
-                                        onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
-                                        <Flipped key={index} inverseFlipId="list">
-                                            <div>
-                                                <h5>{item.facilityName}</h5>
-                                                <p className="list-view-text-body">{item.address[0]}</p>
-                                            </div>
-                                        </Flipped>
-                                    </div>
-                                )
+                                providers.map(this.renderCell)
                             }
                             <div>
                             {
