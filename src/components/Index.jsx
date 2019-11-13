@@ -48,6 +48,7 @@ class Index extends Component {
             therapyTypes: [],
             filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
             searchName: null,
+            searchZip: null,
             name: null
         };
         this.switchView = this.switchView.bind(this);
@@ -63,7 +64,7 @@ class Index extends Component {
         var providerLat, providerLong;
         var filteredProviders = []
 
-        this.props.providers.forEach(function(provider) {
+        this.state.activeProviders.forEach(function(provider) {
             providerLat = provider['latitude']
             providerLong = provider['longitude']
             let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2)
@@ -79,7 +80,7 @@ class Index extends Component {
             filterActiveProviders.push(provider['provider'])
         })
 
-        this.setState({
+        await this.setState({
             activeProviders: filterActiveProviders,
         })
 
@@ -111,6 +112,10 @@ class Index extends Component {
         if(this.state.searchName != null) {
           this.filterSearch(this.state.searchName)
         }
+
+        if(this.state.searchZip != null) {
+          this.filterZipcode(this.state.searchZip)
+        }
     };
 
     filterActiveProviders = async (filterName) => {
@@ -134,14 +139,18 @@ class Index extends Component {
 
     handleZipcode = async (e) => {
         const filterVal = e.target.value
+        await this.setState({
+          activeProviders: this.props.providers,
+        })
         console.log(filterVal.length)
         if (filterVal.length == 5) {
             this.filterZipcode(filterVal)
-        } else if (!filterVal.length) {
-            await this.props.firestore.get('providers')
-            this.setState({
-                activeProviders: this.props.providers
-            })
+        }
+        console.log(this.state.activeProviders)
+        this.state.filters.forEach(filter => this.filterActiveProviders(filter))
+        console.log(this.state.activeProviders)
+        if(this.state.searchName != null) {
+          this.filterSearch(this.state.searchName)
         }
     }
 
@@ -153,7 +162,12 @@ class Index extends Component {
       })
       this.state.filters.forEach(filter => this.filterActiveProviders(filter))
 
+      if(this.state.searchZip != null) {
+        this.filterZipcode(this.state.searchZip)
+      }
+
       this.filterSearch(filterVal)
+      
 
   };
 
