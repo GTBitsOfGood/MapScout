@@ -75,20 +75,41 @@ class Index extends Component {
         var providerLat, providerLong;
         var filteredProviders = [];
 
+
+        var R = 6371e3;
+        const pi = Math.PI;
+        const metersPerMile = 1609.344;
+        var φ1 = filterLat * (pi/180);
+
         this.state.activeProviders.forEach(function(provider) {
             providerLat = provider['latitude'];
             providerLong = provider['longitude'];
             let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
-            filteredProviders.push({'provider': provider, 'distance': distance});
+
+            let φ2 = providerLat * (pi/180)
+            let Δφ = (providerLat-filterLat) * (pi/180)
+            let Δλ = (providerLong-filterLong) * (pi/180)
+            let a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ/2) * Math.sin(Δλ/2)
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+            let miDistance = (R * c) / metersPerMile
+
+            filteredProviders.push({'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1});
         });
 
         filteredProviders.sort(function(a, b) {
-            return a.distance > b.distance ? 1 : -1
+            return a.latLongdistance > b.latLongdistance ? 1 : -1
         });
 
+        var outThis = this;
         var filterActiveProviders = [];
         filteredProviders.forEach(function (provider) {
             filterActiveProviders.push(provider['provider'])
+            let distKey = provider['provider']['facilityName'] + 'Dist'
+            outThis.setState({
+                [distKey]: provider['miDistance']
+            })
         });
 
         await this.setState({
@@ -153,7 +174,14 @@ class Index extends Component {
         });
         console.log(filterVal.length);
         if (filterVal.length === 5) {
+            this.setState({
+                searchZip: filterVal
+            })
             this.filterZipcode(filterVal)
+        } else {
+            this.setState({
+                searchZip: null
+            })
         }
         this.state.filters.forEach(filter => this.filterActiveProviders(filter));
         if(this.state.searchName != null) {
@@ -428,7 +456,7 @@ class Index extends Component {
                             <FaMapPin/> {item.address[0]}
                             <div className="row-spaced">
                                 <div><FaPhone/> {item.phoneNum.join(', ')}</div>
-                                <small>12 mi</small>
+                                <small>{this.state[item.facilityName + 'Dist']  && this.state['searchZip'] ? this.state[item.facilityName + 'Dist'] + ' mi' : ''}</small>
                             </div>
                         </div>
                     </div>
