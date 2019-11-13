@@ -32,6 +32,7 @@ class Index extends Component {
         this.state = {
             showModal: false,
             isOpen: false,
+            moreFilter: false,
             listView: true,
             isLoading: true,
             selectedIndex: 0,
@@ -282,7 +283,7 @@ class Index extends Component {
                 title={title}
                 variant="light"
                 alignLeft
-                style ={{ marginRight: 5 }}>
+                style={{ marginRight: 5 }}>
                 {options[key].map((item, index) =>
                     <Form.Check
                         as={Dropdown.Item}
@@ -305,45 +306,75 @@ class Index extends Component {
         return <div className="spinner" />;
 
     return (
-        <Fragment>
+        <div className="bg-white">
             <NavBar/>
             <div>
-                <div className="row-spaced">
-                    <ButtonGroup className="ml-2">
-                        {this.renderDropdown("Languages", "languages")}
-                        {this.renderDropdown("Service Type", "serviceType")}
-                        {this.renderDropdown("Specializations", "specializations")}
-                        {this.renderDropdown("Ages", "ages")}
-                        {this.renderDropdown("Insurance", "insurance")}
-                        {this.renderDropdown("Therapy Types", "therapyTypes")}
-                    </ButtonGroup>
+                <div className="row-spaced ml-2">
+                    <div className="w-75">
+                        <Form.Row>
+                            <Col>
+                                <Form.Control placeholder="Search provider name" />
+                            </Col>
+                            <Col>
+                                <Form.Control placeholder="Search location" />
+                            </Col>
+                        </Form.Row>
+                    </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
-                        {this.state.listView ? "Hide Map" : "Show Map"}
+                        {this.state.listView ? "Hide" : "Show"}
                     </Button>
                 </div>
                 <Flipper flipKey={listView}>
                     <div className="row-nowrap">
                     <Flipped flipId="list">
-                        <div style={{ width: listView ? '50%' : '100%' }}>
-                            <ListGroup variant="flush">
+                        <div className="map-list" style={{
+                            width: listView ? '50%' : '100%'
+                        }}>
+                            <div className="filter-row">
+                                {this.renderDropdown("Languages", "languages")}
+                                {this.renderDropdown("Ages", "ages")}
+                                {this.renderDropdown("Insurance", "insurance")}
                                 {
-                                    !isEmpty(providers) &&
-                                    providers.map((item, index) =>
-                                        <ListGroup.Item
-                                            href={item.id}
-                                            key={index}
-                                            onClick={() => this.setState({ selectedIndex: index, showModal: true})}
-                                            active={selectedIndex === index}>
-                                            <Flipped key={index} inverseFlipId="list">
-                                                <div>
-                                                    <h5>{item.facilityName}</h5>
-                                                    <p className="list-view-text-body">{item.address[0]}</p>
-                                                </div>
-                                            </Flipped>
-                                        </ListGroup.Item>
-                                    )
+                                    this.state.moreFilter ?
+                                        <Fragment>
+                                            {this.renderDropdown("Service Type", "serviceType")}
+                                            {this.renderDropdown("Specializations", "specializations")}
+                                            {this.renderDropdown("Therapy Types", "therapyTypes")}
+                                            <Button
+                                                variant="link"
+                                                style={{ color: 'red' }}
+                                                onClick={() => this.setState({moreFilter: false})}>
+                                                - Less Filters
+                                            </Button>
+                                        </Fragment>
+                                        :
+                                        <Button
+                                            variant="link"
+                                            onClick={() => this.setState({moreFilter: true})}>
+                                            + More Filters
+                                        </Button>
                                 }
-                            </ListGroup>
+                            </div>
+                            <div className="count">
+                                <span>{isEmpty(providers) ?
+                                        'No' : providers.length} providers found</span>
+                            </div>
+                            {
+                                !isEmpty(providers) &&
+                                providers.map((item, index) =>
+                                    <div
+                                        className="map-cell"
+                                        key={index}
+                                        onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
+                                        <Flipped key={index} inverseFlipId="list">
+                                            <div>
+                                                <h5>{item.facilityName}</h5>
+                                                <p className="list-view-text-body">{item.address[0]}</p>
+                                            </div>
+                                        </Flipped>
+                                    </div>
+                                )
+                            }
                             <div>
                             {
                                 providers && providers[selectedIndex] &&
@@ -369,13 +400,13 @@ class Index extends Component {
                         <div style={{ width: '50%', marginRight: listView ? 0 : -1000, }}>
                             <div
                                 ref="map" id="map" className="map-view"
-                                style={{ height: '85vh' }} />
+                                style={{ height: 'calc(100vh - 130px)' }} />
                         </div>
                     </Flipped>
                     </div>
                 </Flipper>
             </div>
-        </Fragment>);
+        </div>);
     }
 
 }

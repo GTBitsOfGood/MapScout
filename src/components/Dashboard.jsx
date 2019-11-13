@@ -50,40 +50,44 @@ class Dashboard extends Component {
             <Fragment>
                 <Row noGutters>
                     <Col sm={3}>
-                        <ListGroup variant="flush">
-                            {
-                                !isEmpty(providers) &&
-                                providers.map((item, index) =>
-                                    <ListGroup.Item
-                                        href={item.id}
-                                        key={index}
-                                        onClick={() => this.setState({selectedIndex: index})}
-                                        active={selectedIndex === index}>
-                                        <b>{item.facilityName}</b>
-                                        <br />
-                                        <small>{item.address[0]}</small>
-                                    </ListGroup.Item>
-                                )
-                            }
-                        </ListGroup>
-                        <br />
-                        <Button
-                            block
-                            variant="link"
-                            as={Link}
-                            to={formRoute}>
-                            Add Provider
-                        </Button>
+                        <div className="scroll-container">
+                            <ListGroup variant="flush">
+                                {
+                                    !isEmpty(providers) &&
+                                    providers.map((item, index) =>
+                                        <ListGroup.Item
+                                            href={item.id}
+                                            key={index}
+                                            onClick={() => this.setState({selectedIndex: index})}
+                                            active={selectedIndex === index}>
+                                            <b>{item.facilityName}</b>
+                                            <br />
+                                            <small>{item.address[0]}</small>
+                                        </ListGroup.Item>
+                                    )
+                                }
+                            </ListGroup>
+                            <br />
+                            <Button
+                                block
+                                variant="link"
+                                as={Link}
+                                to={formRoute}>
+                                Add Provider
+                            </Button>
+                        </div>
                     </Col>
                     <Col sm={9}>
-                        <div className="bg-white">
-                            {
-                                providers && providers[selectedIndex] &&
-                                <SingleProvider item={providers[selectedIndex]}
-                                                editProvider={() => this.props.selectItem(providers[selectedIndex])}
-                                                setLoading={() => this.setState({isLoading: true})}
-                                                resetIndex={() => this.setState({selectedIndex: 0, isLoading: false})}/>
-                            }
+                        <div className="scroll-container">
+                            <div className="bg-white">
+                                {
+                                    providers && providers[selectedIndex] &&
+                                    <SingleProvider item={providers[selectedIndex]}
+                                                    editProvider={() => this.props.selectItem(providers[selectedIndex])}
+                                                    setLoading={() => this.setState({isLoading: true})}
+                                                    resetIndex={() => this.setState({selectedIndex: 0, isLoading: false})}/>
+                                }
+                            </div>
                         </div>
                     </Col>
                 </Row>
