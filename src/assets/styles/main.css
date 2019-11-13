@@ -87,6 +87,7 @@ body {
     border: solid lightgray 1px;
     padding: 16px;
     margin-bottom: 12px;
+    background-color: white;
 }
 
 .filter-row {
