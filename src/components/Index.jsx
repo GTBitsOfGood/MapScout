@@ -114,11 +114,20 @@ class Index extends Component {
     };
 
     filterActiveProviders = async (filterName) => {
+
+      // And filter, unused for now
+
+      // await this.setState({
+      //   activeProviders: this.state.activeProviders.filter((filter) => {
+      //     return filter[filterName].filter((elem) => {
+      //       return this.state[filterName].indexOf(elem) > -1;
+      //     }).length === this.state[filterName].length
+      //   })
+      // })
+
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
-          return filter[filterName].filter((elem) => {
-            return this.state[filterName].indexOf(elem) > -1;
-          }).length === this.state[filterName].length
+          return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length == 0
         })
       })
     };
@@ -152,7 +161,7 @@ class Index extends Component {
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
           console.log(filter.facilityName)
-          return filter.facilityName.toLowerCase().includes(filterVal)
+          return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
     }
