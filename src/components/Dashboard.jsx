@@ -39,7 +39,6 @@ class Dashboard extends Component {
     render() {
         const { isLoading, data, selectedIndex } = this.state;
         const providers = this.props.providers;
-        console.log(providers);
 
         if (isLoading && !isLoaded(providers))
             return <div style={{ width: '100%' }}>

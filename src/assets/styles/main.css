@@ -94,13 +94,31 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    margin-left: -12px;
 }
 
 .form-wrapper {
     background-color: white;
     padding: 20px;
     height: 100%;
+}
+
+.tag {
+    border: solid 1px;
+    border-radius: 2px;
+    padding: 0 8px 3px 8px;
+    display: inline-block;
+    margin-top: 8px;
+    margin-right: 5px;
+}
+
+.remove-tag {
+    opacity: 1;
+    margin-left: 5px;
+    font-size: 22px;
+}
+
+.remove-tag:hover {
+    opacity: 0.75;
 }
 
 .step-wrapper {

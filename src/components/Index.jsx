@@ -13,10 +13,18 @@ import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
+import { FaMapPin, FaPhone, FaTimesCircle } from "react-icons/fa";
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
+
+const colors = {
+    serviceType: '#DC8665',
+    specializations: '#138086',
+    ages: '#534666',
+    insurance: '#CD7672',
+    languages: '#240E8B',
+    therapyTypes: '#787FF6'
+};
 
 function loadJS(src) {
     var ref = window.document.getElementsByTagName("script")[0];
@@ -49,6 +57,12 @@ class Index extends Component {
             name: null
         };
         this.switchView = this.switchView.bind(this);
+        this.renderCell = this.renderCell.bind(this);
+        this.renderDropdown = this.renderDropdown.bind(this);
+        this.renderTag = this.renderTag.bind(this);
+        this.filterZipcode = this.filterZipcode.bind(this);
+        this.filterSearch = this.filterSearch.bind(this);
+        this.filterActiveProviders = this.filterActiveProviders.bind(this);
     }
 
     filterZipcode = async (filterVal) => {
@@ -56,39 +70,39 @@ class Index extends Component {
         let responseJson = await response.json();
 
         // Handle illegal response
-        let filterLat = responseJson['results'][0]['geometry']['location']['lat']
-        let filterLong = responseJson['results'][0]['geometry']['location']['lng']
+        let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
+        let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
         var providerLat, providerLong;
-        var filteredProviders = []
+        var filteredProviders = [];
 
         this.state.activeProviders.forEach(function(provider) {
-            providerLat = provider['latitude']
-            providerLong = provider['longitude']
-            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2)
-            filteredProviders.push({'provider': provider, 'distance': distance})
-        })
+            providerLat = provider['latitude'];
+            providerLong = provider['longitude'];
+            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
+            filteredProviders.push({'provider': provider, 'distance': distance});
+        });
 
         filteredProviders.sort(function(a, b) {
             return a.distance > b.distance ? 1 : -1
-        })
+        });
 
-        var filterActiveProviders = []
+        var filterActiveProviders = [];
         filteredProviders.forEach(function (provider) {
             filterActiveProviders.push(provider['provider'])
-        })
+        });
 
         await this.setState({
             activeProviders: filterActiveProviders,
         })
 
-    }
+    };
+
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
-        })
-        console.log(this.state.activeProviders)
-        const filterName = e.target.name
-        const filterVal = e.target.value
+        });
+        const filterName = e.target.name;
+        const filterVal = e.target.value;
 
         if (e.target.type === "checkbox" && e.target.checked) {
             await this.setState({
@@ -96,7 +110,6 @@ class Index extends Component {
             })
 
         } else if(e.target.type === "checkbox" && !e.target.checked){
-
             await this.setState({
                 [filterName]: this.state[filterName].filter(function(filter) {
                     return filter !== filterVal
@@ -104,7 +117,7 @@ class Index extends Component {
             })
         }
 
-        this.filterActiveProviders(filterName)
+        this.filterActiveProviders(filterName);
 
         if(this.state.searchName != null) {
           this.filterSearch(this.state.searchName)
@@ -116,7 +129,6 @@ class Index extends Component {
     };
 
     filterActiveProviders = async (filterName) => {
-
       // And filter, unused for now
 
       // await this.setState({
@@ -127,55 +139,49 @@ class Index extends Component {
       //   })
       // })
 
-      await this.setState({
-        activeProviders: this.state.activeProviders.filter((filter) => {
-          return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length == 0
-        })
-      })
+        await this.setState({
+            activeProviders: this.state.activeProviders.filter((filter) => {
+            return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
+            })
+        });
     };
 
     handleZipcode = async (e) => {
-        const filterVal = e.target.value
+        const filterVal = e.target.value;
         await this.setState({
           activeProviders: this.props.providers,
-        })
-        console.log(filterVal.length)
-        if (filterVal.length == 5) {
+        });
+        console.log(filterVal.length);
+        if (filterVal.length === 5) {
             this.filterZipcode(filterVal)
         }
-        console.log(this.state.activeProviders)
-        this.state.filters.forEach(filter => this.filterActiveProviders(filter))
-        console.log(this.state.activeProviders)
+        this.state.filters.forEach(filter => this.filterActiveProviders(filter));
         if(this.state.searchName != null) {
           this.filterSearch(this.state.searchName)
         }
-    }
+    };
 
     handleSearch = async (e) => {
-      const filterVal = e.target.value
+      const filterVal = e.target.value;
       await this.setState({
         activeProviders: this.props.providers,
         searchName: filterVal
-      })
-      this.state.filters.forEach(filter => this.filterActiveProviders(filter))
-
+      });
+      this.state.filters.forEach(filter => this.filterActiveProviders(filter));
       if(this.state.searchZip != null) {
         this.filterZipcode(this.state.searchZip)
       }
-
       this.filterSearch(filterVal)
-
-
   };
 
     filterSearch = async (filterVal) => {
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
-          console.log(filter.facilityName)
+          console.log(filter.facilityName);
           return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
-    }
+    };
 
 
     // creates map and firebase
@@ -373,6 +379,28 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
+    renderTag(item, index) {
+        return this.state[item].map((title, key) =>
+            <div
+                className="tag"
+                style={{ borderColor: colors[item], color: colors[item] }}
+                key={`${index}${key}`}>
+                {title}
+                <span
+                    className="remove-tag"
+                    onClick={()=>{
+                        this.setState({activeProviders: this.props.providers});
+                        let arr = this.state[item];
+                        arr = arr.filter((i) => i !== title);
+                        this.setState({[item]: arr});
+                        setTimeout(() => this.filterActiveProviders(item), 100);
+                    }}>
+                    <FaTimesCircle />
+                </span>
+            </div>
+        )
+    }
+
     renderCell(item, index) {
         return (
             <div
@@ -396,7 +424,13 @@ class Index extends Component {
                                     variant="primary">TF-CBT</Badge>
                             }
                         </h5>
-                        <p className="list-view-text-body">{item.address[0]}</p>
+                        <div style={{ color: 'gray' }}>
+                            <FaMapPin/> {item.address[0]}
+                            <div className="row-spaced">
+                                <div><FaPhone/> {item.phoneNum.join(', ')}</div>
+                                <small>12 mi</small>
+                            </div>
+                        </div>
                     </div>
                 </Flipped>
             </div>
@@ -405,22 +439,26 @@ class Index extends Component {
 
     renderDropdown(title, key) {
         return(
-            <DropdownButton
-                title={title}
-                variant="light"
-                alignLeft
-                style={{ marginRight: 5 }}>
-                {options[key].map((item, index) =>
-                    <Form.Check
-                        as={Dropdown.Item}
-                        name={key}
-                        key={index}
-                        onChange={this.handleInputChange}
-                        type="checkbox"
-                        value={item.value}
-                        label={item.label} />
-                )}
-            </DropdownButton>
+            <Dropdown>
+                <Dropdown.Toggle
+                    variant="light"
+                    alignLeft
+                    style={{ marginRight: 5, marginBottom: 5 }}
+                >{title}</Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {options[key].map((item, index) =>
+                        <Form.Check
+                            name={key}
+                            key={index}
+                            onChange={this.handleInputChange}
+                            className="dropdown-item"
+                            type="checkbox"
+                            checked={this.state[key].includes(item.value)}
+                            value={item.value}
+                            label={item.label} />
+                    )}
+                </Dropdown.Menu>
+            </Dropdown>
         )
     }
 
@@ -428,7 +466,7 @@ class Index extends Component {
     const { isLoading, data, selectedIndex, showModal, listView } = this.state;
     const providers = this.state.activeProviders;
 
-    if (isLoading && !isLoaded(providers))
+    if (isLoading || !isLoaded(providers))
         return <div className="spinner" />;
 
     return (
@@ -442,16 +480,13 @@ class Index extends Component {
                                 <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search location" onChange={this.handleZipcode} />
+                                <Form.Control placeholder="Search zipcode" onChange={this.handleZipcode} />
                             </Col>
                         </Form.Row>
                     </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                         {this.state.listView ? "Hide" : "Show"}
                     </Button>
-                    
-
-
                 </div>
                 <Flipper flipKey={listView}>
                     <div className="row-nowrap">
@@ -459,35 +494,46 @@ class Index extends Component {
                         <div className="map-list" style={{
                             width: listView ? '50%' : '100%'
                         }}>
-                            <div className="filter-row">
-                                {this.renderDropdown("Languages", "languages")}
-                                {this.renderDropdown("Ages", "ages")}
-                                {this.renderDropdown("Insurance", "insurance")}
-                                {
-                                    this.state.moreFilter ?
-                                        <Fragment>
-                                            {this.renderDropdown("Service Type", "serviceType")}
-                                            {this.renderDropdown("Specializations", "specializations")}
-                                            {this.renderDropdown("Therapy Types", "therapyTypes")}
+                            <Flipped inverseFlipId="list">
+                                <div className="filter-row">
+                                    {this.renderDropdown("Languages", "languages")}
+                                    {this.renderDropdown("Ages", "ages")}
+                                    {this.renderDropdown("Insurance", "insurance")}
+                                    {
+                                        this.state.moreFilter ?
+                                            <Fragment>
+                                                {this.renderDropdown("Service Type", "serviceType")}
+                                                {this.renderDropdown("Specializations", "specializations")}
+                                                {this.renderDropdown("Therapy Types", "therapyTypes")}
+                                                <Button
+                                                    variant="link"
+                                                    style={{ color: 'red' }}
+                                                    onClick={() => this.setState({moreFilter: false})}>
+                                                    - Less Filters
+                                                </Button>
+                                            </Fragment>
+                                            :
                                             <Button
                                                 variant="link"
-                                                style={{ color: 'red' }}
-                                                onClick={() => this.setState({moreFilter: false})}>
-                                                - Less Filters
+                                                onClick={() => this.setState({moreFilter: true})}>
+                                                + More Filters
                                             </Button>
-                                        </Fragment>
-                                        :
-                                        <Button
-                                            variant="link"
-                                            onClick={() => this.setState({moreFilter: true})}>
-                                            + More Filters
-                                        </Button>
-                                }
-                            </div>
-                            <div className="count">
-                                <span>{isEmpty(providers) ?
-                                        'No' : providers.length} providers found</span>
-                            </div>
+                                    }
+                                </div>
+                            </Flipped>
+                            <Flipped inverseFlipId="list">
+                                <div className="tag-row">
+                                    {
+                                        this.state.filters.map(this.renderTag)
+                                    }
+                                </div>
+                            </Flipped>
+                                <div className="count">
+                                    <Flipped inverseFlipId="list">
+                                        <span>{isEmpty(providers) ?
+                                                'No' : providers.length} providers found</span>
+                                    </Flipped>
+                                </div>
                             {
                                 !isEmpty(providers) &&
                                 providers.map(this.renderCell)
