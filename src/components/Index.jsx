@@ -134,7 +134,7 @@ class Index extends Component {
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
           console.log(filter.facilityName)
-          return filter.facilityName.includes(filterVal)
+          return filter.facilityName.toLowerCase().includes(filterVal)
         })
       })
     }
