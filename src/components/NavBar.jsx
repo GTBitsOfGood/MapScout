@@ -7,8 +7,8 @@ import localizationStrings from '../utils/Localization';
 const logo = require('../assets/img/logo.png');
 
 class NavBar extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.toggle = this.toggle.bind(this);
         this.state = {
           isOpen: false
