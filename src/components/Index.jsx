@@ -168,7 +168,7 @@ class Index extends Component {
       }
 
       this.filterSearch(filterVal)
-      
+
 
   };
 
@@ -413,36 +413,17 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Search provider name" />
+                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search location" />
+                                <Form.Control placeholder="Search location" onChange={this.handleZipcode} />
                             </Col>
                         </Form.Row>
                     </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                         {this.state.listView ? "Hide" : "Show"}
                     </Button>
-                    <InputGroup className="mb-3">
-                      <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
-                      </InputGroup.Prepend>
-                      <FormControl
-                        placeholder="Name"
-                        aria-label="Name"
-                        aria-describedby="basic-addon1"
-                        onChange={this.handleSearch}
-                      />
-                        <InputGroup.Prepend>
-                            <InputGroup.Text id="basic-addon1">Zipcode</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                            placeholder="Zipcode"
-                            aria-label="Zipcode"
-                            aria-describedby="basic-addon1"
-                            onChange={this.handleZipcode}
-                        />
-                    </InputGroup>
+                    
 
 
                 </div>
