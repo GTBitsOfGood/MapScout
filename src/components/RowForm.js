@@ -4,60 +4,19 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import GoogleSuggest from "./GoogleSuggest";
 import TimeTable from "./TimeTable";
-import { AsYouType } from 'libphonenumber-js'
+import {AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber} from 'libphonenumber-js';
+import options from "../utils/options";
 import MultiSelect from "@khanacademy/react-multi-select";
 
-//TODO: Move options outside of codebase
-const options ={
-    serviceType: [
-        {label: 'Outpatient Services', value: 'Outpatient Services'},
-        {label: 'Residential Programs', value: 'Residential Programs'},
-        {label: 'Parent/Caregiver Services', value: 'Parent/Caregiver Services'},
-        {label: 'School-Based Services', value: 'School-Based Services'},
-        {label: 'Foster & Kinship Care', value: 'Foster & Kinship Care'},
-        {label: 'In-Home Services', value: 'In-Home Services'},
-    ],
-    specializations: [
-        {label: 'Autism Spectrum Disorder', value: 'Autism Spectrum Disorder'},
-        {label: 'Young Children', value: 'Young Children'},
-        {label: 'LGBTQ+ Competent', value: 'LGBTQ+ Competent'},
-        {label: 'Experience working with immigrant and refugees', value: 'Experience working with immigrant and refugees'},
-    ],
-    ages: [
-        {label: 'Toddler/preschoolers (0-6)', value: '0-6'},
-        {label: 'Children (6-10)', value: '6-10'},
-        {label: 'Preteens (11-13)', value: '11-13'},
-        {label: 'Adolescents (14-21)', value: '14-21'},
-        {label: 'Adults (21-65)', value: '21-65'},
-        {label: 'Seniors (65+)', value: '65+'},
-    ],
-    insurance: [
-        {label: 'Medicaid', value: 'Medicaid'},
-        {label: 'Private', value: 'Private'},
-        {label: 'Uninsured/Underinsured', value: 'Uninsured'},
-        {label: 'Sliding Scale', value: 'Sliding Scale'},
-    ],
-    languages: [
-        {label: 'Spanish', value: 'Spanish'},
-        {label: 'Portuguese', value: 'Portuguese'},
-        {label: 'Kurdish', value: 'Kurdish'},
-        {label: 'Mandarin', value: 'Mandarin'},
-        {label: 'Russian', value: 'Russian'},
-        {label: 'ASL', value: 'ASL'},
-        {label: 'Creole', value: 'Creole'},
-        {label: 'Others', value: 'Others'},
-    ],
-    therapyTypes: [
-        {label: 'TF-CBT (Trauma-Focused Cognitive Behavioral Therapy)', value: 'TF-CBT'},
-        {label: 'Pri-CARE (Child Adult Relationship Enhancement)', value: 'Pri-CARE'},
-        {label: 'CFTSI (Child Family Traumatic Stress Intervention)', value: 'CFTSI'},
-        {label: 'Adolescent Dialectical Behavioral Therapy (DBT)', value: 'DBT'},
-        {label: 'Family Therapy', value: 'Family Therapy'},
-        {label: 'EMDR', value: 'EMDR'},
-        {label: 'Other Evidence-Based Practices (EBPs)', value: 'EBPs'},
-        {label: 'Support Groups', value: 'Support Groups'},
-    ],
-};
+function validURL(str) {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+}
 
 class RowForm extends Component {
 
@@ -88,29 +47,29 @@ class RowForm extends Component {
         } else {
             this.setState({[e.target.name]: [e.target.value]});
         }
-        this.props.setItem(this.state);
+        setTimeout(() => this.props.setItem(this.state), 100);
     };
 
     onPhoneChange = (e) => {
         if (e.target.value.length === 4 && e.target.value[0] === "(") {
-            this.setState({phoneNum: e.target.value});
+            this.setState({phoneNum: [e.target.value]});
         } else {
-            this.setState({phoneNum: new AsYouType('US').input(e.target.value)});
+            this.setState({phoneNum: [new AsYouType('US').input(e.target.value)]});
         }
-        this.props.setItem(this.state);
+        setTimeout(() => this.props.setItem(this.state), 100);
     };
 
     onTimeChange = (hours) => {
         this.setState({ hours: {
-                Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
-                Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
-                Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
-                Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
-                Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
-                Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
-                Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
-            }});
-        this.props.setItem(this.state);
+            Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
+            Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
+            Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
+            Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
+            Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
+            Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
+            Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
+        }});
+        setTimeout(() => this.props.setItem(this.state), 100);
     };
 
     render() {
@@ -127,17 +86,17 @@ class RowForm extends Component {
                                 value={item.facilityName}
                                 onChange={(e) => {
                                     this.setState({[e.target.name]: e.target.value});
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                                 placeholder="Name" />
                         </Form.Group>
                         <Row>
                             <Col xs={9}>
                                 <GoogleSuggest
-                                    value={item.address}
+                                    value={item.address[0]}
                                     update={(address)=> {
                                         this.setState({address: [address]});
-                                        this.props.setItem(this.state);
+                                        setTimeout(() => this.props.setItem(this.state), 100);
                                     }}
                                 />
                             </Col>
@@ -146,7 +105,7 @@ class RowForm extends Component {
                                     <Form.Label>Apt #</Form.Label>
                                     <Form.Control
                                         name="buildingNum"
-                                        value={item.buildingNum}
+                                        value={item.buildingNum[0]}
                                         onChange={this.handleInputChange}
                                         placeholder="789" />
                                 </Form.Group>
@@ -156,17 +115,43 @@ class RowForm extends Component {
                             <Form.Label>Phone Number *</Form.Label>
                             <Form.Control
                                 name="phoneNum"
-                                value={item.phoneNum}
+                                value={item.phoneNum[0]}
                                 onChange={this.onPhoneChange}
                                 placeholder="(000) 000-0000" />
+                            {
+                                item.phoneNum.length > 0 &&
+                                    <p>
+                                        <small style={{ color:
+                                                isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
+                                                ? 'green' : 'red' }}>
+                                            {
+                                                isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
+                                                    ? 'Valid number' : 'Invalid number'
+                                            }
+                                        </small>
+                                    </p>
+                            }
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Website</Form.Label>
                             <Form.Control
                                 name="website"
-                                value={item.website}
+                                value={item.website[0]}
                                 onChange={this.handleInputChange}
                                 placeholder="www.health.com" />
+                            {
+                                item.website.length > 0 &&
+                                <p>
+                                    <small style={{ color:
+                                            validURL(item.website[0])
+                                                ? 'green' : 'red' }}>
+                                        {
+                                            validURL(item.website[0])
+                                                ? 'Valid URL' : 'Invalid URL'
+                                        }
+                                    </small>
+                                </p>
+                            }
                         </Form.Group>
                     </Fragment>
                 );
@@ -184,7 +169,7 @@ class RowForm extends Component {
                                     this.setState({
                                         serviceType: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
@@ -197,7 +182,7 @@ class RowForm extends Component {
                                     this.setState({
                                         specializations: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
@@ -210,14 +195,14 @@ class RowForm extends Component {
                                     this.setState({
                                         therapyTypes: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
                         <Form.Group>
                             <Form.Check
                                 name="epic"
-                                value={item.epic}
+                                value={item.epic[0]}
                                 onChange={this.handleInputChange}
                                 type="checkbox"
                                 label="EPIC Designation" />
@@ -236,7 +221,7 @@ class RowForm extends Component {
                                     this.setState({
                                         languages: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
@@ -249,14 +234,14 @@ class RowForm extends Component {
                                     this.setState({
                                         ages: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
                         <Form.Group>
                             <Form.Check
                                 name="childcare"
-                                value={item.childcare}
+                                value={item.childcare[0]}
                                 onChange={this.handleInputChange}
                                 type="checkbox"
                                 label="Childcare Availability" />
@@ -270,7 +255,7 @@ class RowForm extends Component {
                                     this.setState({
                                         insurance: selected
                                     });
-                                    this.props.setItem(this.state);
+                                    setTimeout(() => this.props.setItem(this.state), 100);
                                 }}
                             />
                         </Form.Group>
@@ -278,7 +263,7 @@ class RowForm extends Component {
                             <Form.Label>Additional Note(s)</Form.Label>
                             <Form.Control
                                 name="notes"
-                                value={item.notes}
+                                value={item.notes[0]}
                                 onChange={this.handleInputChange}
                                 as="textarea"
                                 rows="3" />

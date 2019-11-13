@@ -1,22 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-  sans-serif;
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
 #map {
-  height: 100%;
+    height: 100%;
 }
 
-html, body {
+html,
+body {
     overflow-x: hidden;
     height: 100vh;
     width: 100vw;
@@ -35,7 +33,8 @@ html, body {
     background-color: white;
     border-radius: 5px;
     padding: 20px 20px 40px 20px;
-    box-shadow: 0 0 10px rgba(3, 215, 252, 0.2); /*Blue*/
+    box-shadow: 0 0 10px rgba(3, 215, 252, 0.2);
+    /*Blue*/
 }
 
 .splash {
@@ -50,10 +49,77 @@ html, body {
     background-size: contain;
 }
 
+.map-list {
+    max-height: calc(100vh - 130px);
+    overflow-y: scroll;
+    padding: 0 12px;
+}
+
+.no-span {
+    display: table;
+    white-space: nowrap;
+}
+
+.count{
+    position:relative;
+    text-align: center;
+    margin: 12px 0;
+}
+.count:before {
+    content: "";
+    display: block;
+    border-top: solid 1px lightgray;
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    z-index: 0;
+}
+.count span {
+    background: #fff;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    color: gray;
+}
+
+.map-cell {
+    border: solid lightgray 1px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: white;
+}
+
+.filter-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .form-wrapper {
     background-color: white;
     padding: 20px;
     height: 100%;
+}
+
+.tag {
+    border: solid 1px;
+    border-radius: 2px;
+    padding: 0 8px 3px 8px;
+    display: inline-block;
+    margin-top: 8px;
+    margin-right: 5px;
+}
+
+.remove-tag {
+    opacity: 1;
+    margin-left: 5px;
+    font-size: 22px;
+}
+
+.remove-tag:hover {
+    opacity: 0.75;
 }
 
 .step-wrapper {
@@ -74,28 +140,52 @@ html, body {
 }
 
 @-webkit-keyframes translate {
-    0% {opacity: 1; transform: translateY(0);}
-    100% {opacity: 0; transform: translateY(-60px)}
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px)
+    }
 }
 
 @keyframes translate {
-    0% {opacity: 1; transform: translateY(0);}
-    100% {opacity: 0; transform: translateY(-60px)}
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px)
+    }
 }
 
 @-webkit-keyframes fade-out {
-    0% {opacity: 1;}
-    100% {opacity: 0;}
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @keyframes fade-out {
-    0% {opacity: 1;}
-    100% {opacity: 0;}
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @keyframes fade-in {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .translate {
@@ -103,7 +193,6 @@ html, body {
     animation-duration: 400ms;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
-
     -webkit-animation-name: translate;
     animation-name: translate;
 }
@@ -113,7 +202,6 @@ html, body {
     animation-duration: 200ms;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
-
     -webkit-animation-name: fade-out;
     animation-name: fade-out;
 }
@@ -123,7 +211,6 @@ html, body {
     animation-duration: 600ms;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
-
     -webkit-animation-name: fade-in;
     animation-name: fade-in;
 }
@@ -141,7 +228,29 @@ html, body {
     border-top: 0;
 }
 
+@media only screen and (min-width: 900px) {
+    .scroll-container {
+        max-height: calc(100vh - 64px);
+        overflow-y: scroll;
+    }
+}
+
+.row-spaced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.row-nowrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
 /*Loading Spinner, Temporary*/
+
 .spinner {
     font-size: 10px;
     margin: 50px auto;
@@ -162,6 +271,7 @@ html, body {
     -ms-transform: translateZ(0);
     transform: translateZ(0);
 }
+
 .spinner:before {
     width: 50%;
     height: 50%;
@@ -172,6 +282,7 @@ html, body {
     left: 0;
     content: '';
 }
+
 .spinner:after {
     background: #F8F9FA;
     width: 75%;
@@ -185,6 +296,7 @@ html, body {
     bottom: 0;
     right: 0;
 }
+
 @-webkit-keyframes load3 {
     0% {
         -webkit-transform: rotate(0deg);
@@ -195,6 +307,7 @@ html, body {
         transform: rotate(360deg);
     }
 }
+
 @keyframes load3 {
     0% {
         -webkit-transform: rotate(0deg);
@@ -220,6 +333,96 @@ html, body {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-col-flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-hours-backdrop {
+    background: #F2F2F2;
+    border-radius: 17px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.modal-center-text {
+    text-align: center;
+}
+
+.modal-col-flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+ß .modal-col-flex-start {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.modal-text {
+    display: inline;
+}
+
+.modal-hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.modal-header {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    background-image: url("../img/modalimage.png");
+    background-position: center center;
+    background-size: cover;
+    -webkit-filter: grayscale(100%);
+    filter: gray;
+    color: white;
+    text-shadow: black 10px 10px 10px;
+}
+
+.view-container {
+    overflow: hidden;
+    width: 95%;
+    height: calc(100vh - 56px);
+    height: -moz-calc(100vh - 56px);
+    height: -webkit-calc(100vh - 56px);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.switch-view-button {
+    margin: 15px;
+}
+
+.view-row {
+    height: 85%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.list-view-text-body {
+    margin-bottom: 0;
+}
+
+.map-view {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

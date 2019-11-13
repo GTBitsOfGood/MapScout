@@ -13,7 +13,10 @@ import {providerRoute} from "./ProviderRoutes";
 import RowForm from "./RowForm";
 import {Flipper, Flipped} from "react-flip-toolkit";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import { withFirestore } from "react-redux-firebase";
+import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
+
+const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
 class AddProvider extends Component {
 
@@ -25,12 +28,12 @@ class AddProvider extends Component {
             completed: false,
             animate: true,
             item: {},
+            isLoading: false
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
     async componentDidMount() {
-        if (this.props.item)
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
@@ -50,8 +53,52 @@ class AddProvider extends Component {
     };
 
     addFirestore = async () => {
-        await this.props.firestore.set({collection: 'providers', doc: this.state.item['facilityName']}, this.state.item);
+        this.setState({isLoading: true});
+        let item = {
+            ...this.state.item,
+            latitude: null,
+            longitude: null,
+        };
+        if (this.state.item.address && this.state.item.address[0].length > 0) {
+            let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
+                this.state.item.address[0].replace(/\s/g, '%20')
+            }&key=${API_KEY}`);
+            let responseJson = await response.json();
+            if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
+                item.latitude = responseJson.results[0].geometry.location.lat;
+                item.longitude = responseJson.results[0].geometry.location.lng;
+            }
+        }
+        await this.props.firestore.set({collection: 'providers', doc: this.state.item['facilityName']}, item);
+        this.setState({isLoading: false});
         this.props.history.push(providerRoute)
+    };
+
+    updateFirestore = async () => {
+        //Change 'ages' to the specific parameter to update, dummy is the facilityName
+        let firestore = this.props.firestore;
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'Joseph J. Peters Institute']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.update({collection: 'providers', doc: doc.id}, {'ages': ['Children', 'Youth', 'Adults', 'Your Mom']})
+            });
+        });
+        await this.props.firestore.get('providers')
+    };
+
+    removeFirestore = async () => {
+        let firestore = this.props.firestore;
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'dummy']}).then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                firestore.delete({collection: 'providers', doc: doc.id})
+            });
+        });
+
+        //await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
+        await firestore.get('providers')
+    };
+
+    addRow = () => {
+        //Fill in
     };
 
     next = () => {
@@ -66,7 +113,12 @@ class AddProvider extends Component {
 
     render() {
 
-        const { width, step, completed, animate } = this.state;
+        const { width, step, completed, animate, isLoading } = this.state;
+
+        if (isLoading)
+        return <div style={{ width: '100%' }}>
+            <div className="spinner" />
+        </div>;
 
         return(
             <div>
@@ -75,17 +127,13 @@ class AddProvider extends Component {
                         <div className="step-wrapper">
                             <Steps current={step} direction={width > 768 ? "vertical" : "horizontal"} labelPlacement={width > 768 ? "horizontal" : "vertical"} >
                                 <Step
-                                    title="Map"
-                                    description="Description"/>
+                                    title="Map"/>
                                 <Step
-                                    title="Hours"
-                                    description="Description"/>
+                                    title="Hours"/>
                                 <Step
-                                    title="Service"
-                                    description="Description"/>
+                                    title="Service"/>
                                 <Step
-                                    title="More"
-                                    description="Description"/>
+                                    title="More"/>
                             </Steps>
                             {
                                 width > 768 &&
@@ -116,7 +164,8 @@ class AddProvider extends Component {
                                                         <Button onClick={this.prev} variant="link">Back</Button>
                                                     }
                                                     <Button
-                                                        onClick={ step === 3 ? this.addRow : this.next}
+                                                        onClick={ step === 3 ? this.addFirestore : this.next}
+                                                        disabled={ !completed && step === 3 }
                                                         variant="primary">
                                                         {step === 3 ? "Add Provider" : "Next"}
                                                     </Button>
@@ -129,7 +178,9 @@ class AddProvider extends Component {
                                                 step={step}
                                                 item={this.state.item}
                                                 setItem={(item) => {
-                                                    let completed = item.facilityName && item.phoneNum.length > 0;
+                                                    let completed =
+                                                        item.facilityName.length > 0
+                                                        && isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), "US");
                                                     this.setState({item, completed})
                                                 }}
                                             />
@@ -149,6 +200,7 @@ class AddProvider extends Component {
 export default compose(
     withFirestore,
     connect((state) => ({
+        providers: state.firestore.ordered.providers,
         firebase: state.firebase,
         item: state.item
     })))(AddProvider)
