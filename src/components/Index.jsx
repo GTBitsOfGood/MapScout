@@ -17,6 +17,10 @@ import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+
+const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
 function loadJS(src) {
     var ref = window.document.getElementsByTagName("script")[0];
@@ -42,11 +46,46 @@ class Index extends Component {
             ages: [],
             insurance: [],
             languages: [],
-            therapyTypes: []
+            therapyTypes: [],
+            filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
+            searchName: null,
+            searchZip: null,
+            name: null
         };
         this.switchView = this.switchView.bind(this);
     }
 
+    filterZipcode = async (filterVal) => {
+        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
+        let responseJson = await response.json();
+
+        // Handle illegal response
+        let filterLat = responseJson['results'][0]['geometry']['location']['lat']
+        let filterLong = responseJson['results'][0]['geometry']['location']['lng']
+        var providerLat, providerLong;
+        var filteredProviders = []
+
+        this.state.activeProviders.forEach(function(provider) {
+            providerLat = provider['latitude']
+            providerLong = provider['longitude']
+            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2)
+            filteredProviders.push({'provider': provider, 'distance': distance})
+        })
+
+        filteredProviders.sort(function(a, b) {
+            return a.distance > b.distance ? 1 : -1
+        })
+
+        var filterActiveProviders = []
+        filteredProviders.forEach(function (provider) {
+            filterActiveProviders.push(provider['provider'])
+        })
+
+        await this.setState({
+            activeProviders: filterActiveProviders,
+        })
+
+    }
     handleInputChange = async (e) => {
         this.setState({
             activeProviders: this.props.providers
@@ -70,17 +109,78 @@ class Index extends Component {
         }
 
         this.filterActiveProviders(filterName)
+
+        if(this.state.searchName != null) {
+          this.filterSearch(this.state.searchName)
+        }
+
+        if(this.state.searchZip != null) {
+          this.filterZipcode(this.state.searchZip)
+        }
     };
 
     filterActiveProviders = async (filterName) => {
+
+      // And filter, unused for now
+
+      // await this.setState({
+      //   activeProviders: this.state.activeProviders.filter((filter) => {
+      //     return filter[filterName].filter((elem) => {
+      //       return this.state[filterName].indexOf(elem) > -1;
+      //     }).length === this.state[filterName].length
+      //   })
+      // })
+
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
-          return filter[filterName].filter((elem) => {
-            return this.state[filterName].indexOf(elem) > -1;
-          }).length === this.state[filterName].length
+          return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length == 0
         })
       })
     };
+
+    handleZipcode = async (e) => {
+        const filterVal = e.target.value
+        await this.setState({
+          activeProviders: this.props.providers,
+        })
+        console.log(filterVal.length)
+        if (filterVal.length == 5) {
+            this.filterZipcode(filterVal)
+        }
+        console.log(this.state.activeProviders)
+        this.state.filters.forEach(filter => this.filterActiveProviders(filter))
+        console.log(this.state.activeProviders)
+        if(this.state.searchName != null) {
+          this.filterSearch(this.state.searchName)
+        }
+    }
+
+    handleSearch = async (e) => {
+      const filterVal = e.target.value
+      await this.setState({
+        activeProviders: this.props.providers,
+        searchName: filterVal
+      })
+      this.state.filters.forEach(filter => this.filterActiveProviders(filter))
+
+      if(this.state.searchZip != null) {
+        this.filterZipcode(this.state.searchZip)
+      }
+
+      this.filterSearch(filterVal)
+
+
+  };
+
+    filterSearch = async (filterVal) => {
+      await this.setState({
+        activeProviders: this.state.activeProviders.filter((filter) => {
+          console.log(filter.facilityName)
+          return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
+        })
+      })
+    }
+
 
     // creates map and firebase
     async componentDidMount() {
@@ -313,16 +413,19 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Search provider name" />
+                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search location" />
+                                <Form.Control placeholder="Search location" onChange={this.handleZipcode} />
                             </Col>
                         </Form.Row>
                     </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
                         {this.state.listView ? "Hide" : "Show"}
                     </Button>
+                    
+
+
                 </div>
                 <Flipper flipKey={listView}>
                     <div className="row-nowrap">
