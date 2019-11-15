@@ -7,6 +7,8 @@ import TimeTable from "./TimeTable";
 import {AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber} from 'libphonenumber-js';
 import options from "../utils/options";
 import MultiSelect from "@khanacademy/react-multi-select";
+import FileUploader from 'react-firebase-file-uploader'
+import {storage} from '../store'
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -38,6 +40,8 @@ class RowForm extends Component {
             specializations: [],
             therapyTypes: [],
             website: [],
+            image: '',
+            imageURL: ''
         };
     }
 
@@ -47,6 +51,7 @@ class RowForm extends Component {
         } else {
             this.setState({[e.target.name]: [e.target.value]});
         }
+        console.log(this.state.image)
         setTimeout(() => this.props.setItem(this.state), 100);
     };
 
@@ -72,7 +77,17 @@ class RowForm extends Component {
         setTimeout(() => this.props.setItem(this.state), 100);
     };
 
+    handleUploadSuccess = filename => {
+        this.setState({ image: filename })
+        storage.ref('images').child(filename).getDownloadURL()
+        .then(url => this.setState({
+            imageURL: url
+        }))
+    }
+
     render() {
+        console.log(`Image: ${this.state.image}`)
+        console.log(`ImageURL: ${this.state.imageURL}`)
         let item = this.state;
 
         switch (this.props.step) {
@@ -268,6 +283,14 @@ class RowForm extends Component {
                                 as="textarea"
                                 rows="3" />
                         </Form.Group>
+                        <FileUploader
+                            accept="image/*"
+                            name='image'
+                            storageRef={storage.ref('images')} 
+                            onUploadSuccess={this.handleUploadSuccess}
+                        >
+                                
+                        </FileUploader>
                     </Fragment>
                 );
             default:
