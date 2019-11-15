@@ -40,8 +40,8 @@ class RowForm extends Component {
             specializations: [],
             therapyTypes: [],
             website: [],
-            image: '',
-            imageURL: ''
+            image: 'modalimage.png',
+            imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
         };
     }
 
