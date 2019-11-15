@@ -51,7 +51,6 @@ class RowForm extends Component {
         } else {
             this.setState({[e.target.name]: [e.target.value]});
         }
-        console.log(this.state.image)
         setTimeout(() => this.props.setItem(this.state), 100);
     };
 
@@ -77,17 +76,16 @@ class RowForm extends Component {
         setTimeout(() => this.props.setItem(this.state), 100);
     };
 
-    handleUploadSuccess = filename => {
-        this.setState({ image: filename })
-        storage.ref('images').child(filename).getDownloadURL()
+    handleUploadSuccess = async filename => {
+        await this.setState({ image: filename })
+        await storage.ref('images').child(filename).getDownloadURL()
         .then(url => this.setState({
             imageURL: url
         }))
+        setTimeout(() => this.props.setItem(this.state), 100);
     }
 
     render() {
-        console.log(`Image: ${this.state.image}`)
-        console.log(`ImageURL: ${this.state.imageURL}`)
         let item = this.state;
 
         switch (this.props.step) {

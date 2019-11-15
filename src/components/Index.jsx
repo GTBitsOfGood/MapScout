@@ -172,7 +172,6 @@ class Index extends Component {
         await this.setState({
           activeProviders: this.props.providers,
         });
-        console.log(filterVal.length);
         if (filterVal.length === 5) {
             this.setState({
                 searchZip: filterVal
@@ -205,7 +204,6 @@ class Index extends Component {
     filterSearch = async (filterVal) => {
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
-          console.log(filter.facilityName);
           return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
