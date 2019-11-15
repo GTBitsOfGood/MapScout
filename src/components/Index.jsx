@@ -572,7 +572,7 @@ class Index extends Component {
                                     onHide={() => this.setState({showModal: false})}
                                     size="lg"
                                     scrollable>
-                                    <Modal.Header className="modal-header" closeButton>
+                                    <Modal.Header className="modal-header" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }} closeButton>
                                         <Modal.Title id="contained-modal-title-vcenter">
                                             <h2><b>{providers[selectedIndex].facilityName}</b></h2>
                                         </Modal.Title>
