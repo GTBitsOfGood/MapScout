@@ -7,8 +7,8 @@ import TimeTable from "./TimeTable";
 import {AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber} from 'libphonenumber-js';
 import options from "../utils/options";
 import MultiSelect from "@khanacademy/react-multi-select";
-import FileUploader from 'react-firebase-file-uploader'
-import {storage} from '../store'
+import FileUploader from 'react-firebase-file-uploader';
+import {storage} from '../store';
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -77,13 +77,13 @@ class RowForm extends Component {
     };
 
     handleUploadSuccess = async filename => {
-        await this.setState({ image: filename })
+        await this.setState({ image: filename });
         await storage.ref('images').child(filename).getDownloadURL()
         .then(url => this.setState({
             imageURL: url
-        }))
+        }));
         setTimeout(() => this.props.setItem(this.state), 100);
-    }
+    };
 
     render() {
         let item = this.state;
@@ -145,27 +145,46 @@ class RowForm extends Component {
                                     </p>
                             }
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Website</Form.Label>
-                            <Form.Control
-                                name="website"
-                                value={item.website[0]}
-                                onChange={this.handleInputChange}
-                                placeholder="www.health.com" />
-                            {
-                                item.website.length > 0 &&
-                                <p>
-                                    <small style={{ color:
-                                            validURL(item.website[0])
-                                                ? 'green' : 'red' }}>
-                                        {
-                                            validURL(item.website[0])
-                                                ? 'Valid URL' : 'Invalid URL'
-                                        }
-                                    </small>
-                                </p>
-                            }
-                        </Form.Group>
+                        <Row>
+                            <Col xs={8}>
+                                <Form.Group>
+                                    <Form.Label>Website</Form.Label>
+                                    <Form.Control
+                                        name="website"
+                                        value={item.website[0]}
+                                        onChange={this.handleInputChange}
+                                        placeholder="www.health.com" />
+                                    {
+                                        item.website.length > 0 &&
+                                        <p>
+                                            <small style={{ color:
+                                                    validURL(item.website[0])
+                                                        ? 'green' : 'red' }}>
+                                                {
+                                                    validURL(item.website[0])
+                                                        ? 'Valid URL' : 'Invalid URL'
+                                                }
+                                            </small>
+                                        </p>
+                                    }
+                                </Form.Group>
+                            </Col>
+                            <Col xs={4}>
+                                <Form.Group>
+                                    <Form.Label>Image</Form.Label>
+                                    <br />
+                                    <label className="btn btn-primary btn-block point">
+                                        Upload
+                                        <FileUploader
+                                            hidden
+                                            accept="image/*"
+                                            name='image'
+                                            storageRef={storage.ref('images')}
+                                            onUploadSuccess={this.handleUploadSuccess} />
+                                    </label>
+                                </Form.Group>
+                            </Col>
+                        </Row>
                     </Fragment>
                 );
             case 1:
@@ -281,14 +300,6 @@ class RowForm extends Component {
                                 as="textarea"
                                 rows="3" />
                         </Form.Group>
-                        <FileUploader
-                            accept="image/*"
-                            name='image'
-                            storageRef={storage.ref('images')} 
-                            onUploadSuccess={this.handleUploadSuccess}
-                        >
-                                
-                        </FileUploader>
                     </Fragment>
                 );
             default:

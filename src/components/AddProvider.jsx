@@ -17,6 +17,9 @@ import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
+const steps = [
+    "Map", "Hours", "Service", "More"
+];
 
 class AddProvider extends Component {
 
@@ -155,7 +158,7 @@ class AddProvider extends Component {
                                     <Form>
                                         <Row>
                                             <Col>
-                                                <h2>Map Info</h2>
+                                                <h2>{steps[step]} Info</h2>
                                             </Col>
                                             <Col xs="auto">
                                                 <ButtonToolbar>

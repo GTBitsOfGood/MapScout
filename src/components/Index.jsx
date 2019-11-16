@@ -430,7 +430,7 @@ class Index extends Component {
     renderCell(item, index) {
         return (
             <div
-                className="map-cell"
+                className="map-cell point"
                 key={index}
                 onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
                 <Flipped key={index} inverseFlipId="list">
@@ -572,7 +572,7 @@ class Index extends Component {
                                     onHide={() => this.setState({showModal: false})}
                                     size="lg"
                                     scrollable>
-                                    <Modal.Header className="modal-header" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }} closeButton>
+                                    <Modal.Header className="image-cover" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL || require('../assets/img/modalimage.png')})` }} closeButton>
                                         <Modal.Title id="contained-modal-title-vcenter">
                                             <h2><b>{providers[selectedIndex].facilityName}</b></h2>
                                         </Modal.Title>

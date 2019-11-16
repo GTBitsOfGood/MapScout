@@ -94,6 +94,9 @@ body {
     padding: 16px;
     margin-bottom: 12px;
     background-color: white;
+}
+
+.point {
     cursor: pointer;
 }
 
@@ -392,11 +395,8 @@ body {
     padding-right: 2rem;
 }
 
-.modal-header {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+.image-cover {
+    padding: 1.5rem 2rem;
     background-position: center center;
     background-size: cover;
     -webkit-filter: grayscale(100%);
