@@ -67,6 +67,7 @@ class Dashboard extends Component {
                                             <ListGroup.Item
                                                 href={item.id}
                                                 key={index}
+                                                style={{ cursor: 'pointer' }}
                                                 onClick={() => this.setState({selectedIndex: index})}
                                                 active={selectedIndex === index}>
                                                 <b>{item.facilityName}</b>

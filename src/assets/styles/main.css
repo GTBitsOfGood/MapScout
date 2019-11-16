@@ -94,6 +94,7 @@ body {
     padding: 16px;
     margin-bottom: 12px;
     background-color: white;
+    cursor: pointer;
 }
 
 .filter-row {
@@ -392,10 +393,7 @@ body {
 }
 
 .modal-header {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding: 1.5rem 2rem;
     background-image: url("../img/modalimage.png");
     background-position: center center;
     background-size: cover;
