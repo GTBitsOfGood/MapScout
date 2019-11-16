@@ -393,8 +393,10 @@ body {
 }
 
 .modal-header {
-    padding: 1.5rem 2rem;
-    background-image: url("../img/modalimage.png");
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
     background-position: center center;
     background-size: cover;
     -webkit-filter: grayscale(100%);
