@@ -7,6 +7,8 @@ import TimeTable from "./TimeTable";
 import {AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber} from 'libphonenumber-js';
 import options from "../utils/options";
 import MultiSelect from "@khanacademy/react-multi-select";
+import FileUploader from 'react-firebase-file-uploader'
+import {storage} from '../store'
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -38,6 +40,8 @@ class RowForm extends Component {
             specializations: [],
             therapyTypes: [],
             website: [],
+            image: 'modalimage.png',
+            imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
         };
     }
 
@@ -71,6 +75,15 @@ class RowForm extends Component {
         }});
         setTimeout(() => this.props.setItem(this.state), 100);
     };
+
+    handleUploadSuccess = async filename => {
+        await this.setState({ image: filename })
+        await storage.ref('images').child(filename).getDownloadURL()
+        .then(url => this.setState({
+            imageURL: url
+        }))
+        setTimeout(() => this.props.setItem(this.state), 100);
+    }
 
     render() {
         let item = this.state;
@@ -268,6 +281,14 @@ class RowForm extends Component {
                                 as="textarea"
                                 rows="3" />
                         </Form.Group>
+                        <FileUploader
+                            accept="image/*"
+                            name='image'
+                            storageRef={storage.ref('images')} 
+                            onUploadSuccess={this.handleUploadSuccess}
+                        >
+                                
+                        </FileUploader>
                     </Fragment>
                 );
             default:

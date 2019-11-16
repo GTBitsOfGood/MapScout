@@ -172,7 +172,6 @@ class Index extends Component {
         await this.setState({
           activeProviders: this.props.providers,
         });
-        console.log(filterVal.length);
         if (filterVal.length === 5) {
             this.setState({
                 searchZip: filterVal
@@ -205,7 +204,6 @@ class Index extends Component {
     filterSearch = async (filterVal) => {
       await this.setState({
         activeProviders: this.state.activeProviders.filter((filter) => {
-          console.log(filter.facilityName);
           return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
@@ -574,7 +572,7 @@ class Index extends Component {
                                     onHide={() => this.setState({showModal: false})}
                                     size="lg"
                                     scrollable>
-                                    <Modal.Header className="modal-header" closeButton>
+                                    <Modal.Header className="modal-header" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }} closeButton>
                                         <Modal.Title id="contained-modal-title-vcenter">
                                             <h2><b>{providers[selectedIndex].facilityName}</b></h2>
                                         </Modal.Title>
