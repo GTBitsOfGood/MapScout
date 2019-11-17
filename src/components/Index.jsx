@@ -358,13 +358,6 @@ class Index extends Component {
           }
         ]
       }; // styles from https://mapstyle.withgoogle.com
-
-      // heres the svg for the point
-      // <svg width="26" height="33" viewBox="0 0 26 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-      // <path d="M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z" fill="#F79845" stroke="white" stroke-width="2" />
-      // <circle cx="13" cy="12.5" r="5" fill="white" />
-      // </svg >
-
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
         // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
@@ -381,6 +374,8 @@ class Index extends Component {
         // for each location create a marker 
        this.setMarkers(map, markers, locations)
     }
+
+
     setMarkers(map, markers, locations) {
       var i;
       var iconMarker = {
