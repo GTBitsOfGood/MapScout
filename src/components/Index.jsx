@@ -382,7 +382,6 @@ class Index extends Component {
        this.setMarkers(map, markers, locations)
     }
     setMarkers(map, markers, locations) {
-      var infowindow = new google.maps.InfoWindow();
       var i;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
@@ -395,16 +394,17 @@ class Index extends Component {
 
       for (i = 0; i < locations.length; i++) {
         var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>"; //TODO more details button?
+        var infoWindow = new google.maps.InfoWindow({
+          content: contentStr,
+        });
+
         var marker = new google.maps.Marker({
           position: new google.maps.LatLng(locations[i][2], locations[i][3]),
           map: map,
           icon: iconMarker,
-          infowindow: new google.maps.InfoWindow({
-            content: contentStr,
-          }),
+          infowindow: infoWindow,
         });
         markers.push(marker);
-
 
         google.maps.event.addListener(marker, 'click', function (marker, i) {
           markers.forEach(function (marker) {
@@ -423,6 +423,13 @@ class Index extends Component {
           this.infowindow.open(map, this);
           this.setIcon(pressedIcon);
           })
+
+        google.maps.event.addListener(infoWindow, 'closeclick', function () {
+          markers.forEach(function (marker) {
+            marker.infowindow.close(map, marker);
+            marker.setIcon(iconMarker)
+          });
+        })
       };
     }
 
