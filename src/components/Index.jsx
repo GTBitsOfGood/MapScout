@@ -404,9 +404,9 @@ class Index extends Component {
 
         google.maps.event.addListener(marker, 'click', function (marker, i) {
           // this makes sure that only one info window is open 
-          markers.forEach(function (marker) {
-            marker.infowindow.close(map, marker);
-            marker.setIcon(iconMarker)
+          markers.forEach(function (marker1) {
+            marker1.infowindow.close(map, marker);
+            marker1.setIcon(iconMarker)
           });
 
           var pressedIcon = {
@@ -419,7 +419,8 @@ class Index extends Component {
           }
           this.infowindow.open(map, this);
           this.setIcon(pressedIcon);
-          map.panTo(marker.getPosition());
+          map.panTo(this.getPosition());
+          console.log(this.getPosition()); 
         })
 
         google.maps.event.addListener(infoWindow, 'closeclick', function () {
