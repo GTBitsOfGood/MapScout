@@ -54,7 +54,8 @@ class Index extends Component {
             filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
             searchName: null,
             searchZip: null,
-            name: null
+            name: null,
+            markers: null, 
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -402,6 +403,7 @@ class Index extends Component {
         markers.push(marker);
 
         google.maps.event.addListener(marker, 'click', function (marker, i) {
+          // this makes sure that only one info window is open 
           markers.forEach(function (marker) {
             marker.infowindow.close(map, marker);
             marker.setIcon(iconMarker)
@@ -417,7 +419,8 @@ class Index extends Component {
           }
           this.infowindow.open(map, this);
           this.setIcon(pressedIcon);
-          })
+          map.panTo(marker.getPosition());
+        })
 
         google.maps.event.addListener(infoWindow, 'closeclick', function () {
           markers.forEach(function (marker) {
@@ -426,6 +429,7 @@ class Index extends Component {
           });
         })
       };
+      this.setState({markers: markers}); 
     }
 
 
@@ -522,6 +526,7 @@ class Index extends Component {
 
     if (isLoading || !isLoaded(providers))
         return <div className="spinner" />;
+    console.log(this.state.markers); 
 
     return (
         <div className="bg-white">
