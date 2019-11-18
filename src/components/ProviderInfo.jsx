@@ -10,27 +10,49 @@ const ProviderInfo = (props) =>
         <Container>
         <Row>
             <Col lg={6} className="modal-col-flex-center">
-            <div>
 
-              {props.item.address.toString().split(',').map(function (value, index) {
-                if(index == 0) {
-                  return <div><FaMapPin /> &nbsp;{value}</div>;
-                } else if (index == props.item.address.toString().split(',').length - 1) { 
-                  return <div style={{ "display": "inline" }}>{value}<div>&nbsp; &nbsp; &nbsp;<a href={"https://maps.google.com/?q="+ props.item.address.toString()} target="_blank">View on Maps</a></div></div>;  
-                } else { 
-                  if (index == 1) { 
-                    return <div style={{ "display": "inline" }}>&nbsp; &nbsp; &nbsp; {value + ','} </div>; 
-                  }
-                  return value + ',';
-                }
-                
-              })}
-            </div>
-            <div>
-              <FaPhone/> &nbsp;
-              {props.item.phoneNum.join(', ')}
-            </div>
-          {props.item.website[0] ? <div><FaGlobe /> &nbsp; <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a></div> : <div></div>}
+              <Row> 
+                <Col lg={2} className="modal-col-flex-end" style={{paddingTop: "5px", paddingRight: "2px"}}> 
+                  <FaMapPin />
+                </Col> 
+                <Col lg={10} className="modal-col-flex-start" style={{paddingLeft: "2px" }}> 
+                  <div>
+                    {props.item.address.toString().split(',').map(function (value, index) {
+                      if (index == 0) {
+                        return <div>{value}</div>;
+                      } else if (index == props.item.address.toString().split(',').length - 1) {
+                        return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
+                      } else {
+                        if (index == 1) {
+                          return <div style={{ "display": "inline" }}>{value + ','}</div>;
+                        }
+                        return value + ',';
+                      }
+
+                    })}
+                  </div>
+                </Col> 
+
+              </Row> 
+
+              <Row>
+                <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                  <FaPhone />
+                </Col>
+                <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}> 
+                  {props.item.phoneNum.join(', ')}
+                </Col>
+              </Row> 
+
+              <Row> 
+                <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                  {props.item.website[0]? <FaGlobe /> : <div></div>}
+                </Col>
+                <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                  {props.item.website[0] ? <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a> : <div></div>}
+                </Col>
+              </Row> 
+  
           </Col>
 
           <Col lg={6} className="modal-hours-backdrop">
