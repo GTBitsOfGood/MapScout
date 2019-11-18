@@ -160,12 +160,12 @@ class Index extends Component {
       //     }).length === this.state[filterName].length
       //   })
       // })
-
         await this.setState({
             activeProviders: this.state.activeProviders.filter((filter) => {
             return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
             })
         });
+        this.greyOutMarkers()
     };
 
     handleZipcode = async (e) => {
@@ -376,8 +376,8 @@ class Index extends Component {
        this.setMarkers(map, markers, locations)
     }
 
-
     setMarkers(map, markers, locations) {
+      var self = this; 
       var i;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
@@ -404,9 +404,8 @@ class Index extends Component {
 
         google.maps.event.addListener(marker, 'click', function (marker, i) {
           // this makes sure that only one info window is open 
-          markers.forEach(function (marker1) {
-            marker1.infowindow.close(map, marker);
-            marker1.setIcon(iconMarker)
+          markers.forEach(function (marker) {
+            marker.infowindow.close(map, marker);
           });
 
           var pressedIcon = {
@@ -420,7 +419,6 @@ class Index extends Component {
           this.infowindow.open(map, this);
           this.setIcon(pressedIcon);
           map.panTo(this.getPosition());
-          console.log(this.getPosition()); 
         })
 
         google.maps.event.addListener(infoWindow, 'closeclick', function () {
@@ -428,6 +426,7 @@ class Index extends Component {
             marker.infowindow.close(map, marker);
             marker.setIcon(iconMarker)
           });
+          self.greyOutMarkers(); 
         })
       };
       this.setState({markers: markers}); 
@@ -455,14 +454,12 @@ class Index extends Component {
           console.log("match exists")
           marker.setIcon(pressedIcon)
         }
-
       });       
     }
 
     hoverLeave(item) { 
       console.log("entering")
       var markers = this.state.markers; 
-
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
         fillColor: "#5EB63B",
@@ -473,7 +470,52 @@ class Index extends Component {
       }
       markers.forEach(function(marker) { 
         marker.setIcon(iconMarker)
-      });       
+      });
+      this.greyOutMarkers(); 
+    }
+
+
+    greyOutMarkers() {
+      var markers = this.state.markers;
+      var listOfProviders = this.state.activeProviders;
+      var iconMarker = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#5EB63B",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      var iconMarkerGreyOut = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#C4C4C4",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      // redraw green for QA
+      // markers.forEach(function(marker) { 
+      //   marker.setIcon()
+      // });
+      // convert appropriate ones to grey 
+      var match = false;
+      markers.forEach(function (marker) {
+        match = false;
+        listOfProviders.forEach(function (provider) {
+          var provider_lat = Math.ceil(provider.latitude * 100000) / 100000;
+          var provider_lng = Math.ceil(provider.longitude * 100000) / 100000;
+          var marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
+          var marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
+          if ((marker_lng == provider_lng) && (marker_lat == provider_lat)) {
+            match = true;
+            marker.setIcon(iconMarker)
+          }
+        });
+        if (!match) {
+          marker.setIcon(iconMarkerGreyOut)
+        }
+      });
     }
 
     switchView() {
