@@ -433,6 +433,48 @@ class Index extends Component {
       this.setState({markers: markers}); 
     }
 
+    hoverEnter(item) { 
+      console.log("entering")
+      var markers = this.state.markers; 
+      var hover_lat = Math.ceil(item.latitude * 100000) / 100000; 
+      var hover_lng = Math.ceil(item.longitude * 100000) / 100000; 
+      var marker_lat; 
+      var marker_lng; 
+      var pressedIcon = {
+        path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
+        fillColor: '#FFB930',
+        fillOpacity: 1.0,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      markers.forEach(function(marker) { 
+        marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
+        marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
+        if((marker_lng == hover_lng) && (marker_lat == hover_lat)) { 
+          console.log("match exists")
+          marker.setIcon(pressedIcon)
+        }
+
+      });       
+    }
+
+    hoverLeave(item) { 
+      console.log("entering")
+      var markers = this.state.markers; 
+
+      var iconMarker = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#5EB63B",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      markers.forEach(function(marker) { 
+        marker.setIcon(iconMarker)
+      });       
+    }
 
     switchView() {
       this.setState({ listView: !this.state.listView });
@@ -465,7 +507,9 @@ class Index extends Component {
             <div
                 className="map-cell"
                 key={index}
-                onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
+                onClick={() => this.setState({ selectedIndex: index, showModal: true})}
+                onMouseEnter={() => this.hoverEnter(item)}
+                onMouseLeave={() => this.hoverLeave(item)}>
                 <Flipped key={index} inverseFlipId="list">
                     <div>
                         <h5>
