@@ -3,56 +3,67 @@ import { FaCheck, FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import Card from 'react-bootstrap/Card'; 
 
 const ProviderInfo = (props) =>
     <div>
         <Container>
         <Row>
             <Col lg={6} className="modal-col-flex-center">
-
-              <Row> 
-                <Col lg={2} className="modal-col-flex-end" style={{paddingTop: "5px", paddingRight: "2px"}}> 
-                  <FaMapPin />
-                </Col> 
-                <Col lg={10} className="modal-col-flex-start" style={{paddingLeft: "2px" }}> 
-                  <div>
-                    {props.item.address.toString().split(',').map(function (value, index) {
-                      if (index == 0) {
-                        return <div>{value}</div>;
-                      } else if (index == props.item.address.toString().split(',').length - 1) {
-                        return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
-                      } else {
-                        if (index == 1) {
-                          return <div style={{ "display": "inline" }}>{value + ','}</div>;
+            
+            <Card> 
+              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=1&size=400x200&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" + 
+              "&markers="+props.item.latitude+","+props.item.longitude}
+            alt="Google Map of bethanna"> 
+              </Card.Img>
+              <Card.Body style={{paddingTop: "10px", paddingBottom:"10px"}}> 
+                <Card.Text>
+                <Row>
+                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                    <FaMapPin />
+                  </Col>
+                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                    <div>
+                      {props.item.address.toString().split(',').map(function (value, index) {
+                        if (index == 0) {
+                          return <div>{value}</div>;
+                        } else if (index == props.item.address.toString().split(',').length - 1) {
+                          return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
+                        } else {
+                          if (index == 1) {
+                            return <div style={{ "display": "inline" }}>{value + ','}</div>;
+                          }
+                          return value + ',';
                         }
-                        return value + ',';
-                      }
 
-                    })}
-                  </div>
-                </Col> 
+                      })}
+                    </div>
+                  </Col>
 
-              </Row> 
+                </Row>
 
-              <Row>
-                <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
-                  <FaPhone />
-                </Col>
-                <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}> 
-                  {props.item.phoneNum.join(', ')}
-                </Col>
-              </Row> 
+                <Row>
+                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                    <FaPhone />
+                  </Col>
+                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                    {props.item.phoneNum.join(', ')}
+                  </Col>
+                </Row>
 
-              <Row> 
-                <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
-                  {props.item.website[0]? <FaGlobe /> : <div></div>}
-                </Col>
-                <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
-                  {props.item.website[0] ? <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a> : <div></div>}
-                </Col>
-              </Row> 
-  
+                <Row>
+                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                    {props.item.website[0] ? <FaGlobe /> : <div></div>}
+                  </Col>
+                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                    {props.item.website[0] ? <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a> : <div></div>}
+                  </Col>
+                </Row>  
+                </Card.Text>
+              </Card.Body>
+            </Card> 
+
+            
           </Col>
 
           <Col lg={6} className="modal-hours-backdrop">

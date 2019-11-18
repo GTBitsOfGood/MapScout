@@ -66,11 +66,12 @@ body {
     white-space: nowrap;
 }
 
-.count{
-    position:relative;
+.count {
+    position: relative;
     text-align: center;
     margin: 12px 0;
 }
+
 .count:before {
     content: "";
     display: block;
@@ -81,6 +82,7 @@ body {
     top: 50%;
     z-index: 0;
 }
+
 .count span {
     background: #fff;
     padding: 0 20px;
@@ -258,6 +260,7 @@ body {
     overflow-x: hidden;
 }
 
+
 /*Loading Spinner, Temporary*/
 
 .spinner {
@@ -361,6 +364,7 @@ body {
     border-radius: 17px;
     padding-top: 15px;
     padding-bottom: 15px;
+    vertical-align: middle;
 }
 
 .modal-center-text {
