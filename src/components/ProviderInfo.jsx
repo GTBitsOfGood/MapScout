@@ -19,10 +19,10 @@ const ProviderInfo = (props) =>
               <Card.Body style={{paddingTop: "10px", paddingBottom:"10px"}}> 
                 <Card.Text>
                 <Row>
-                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
                     <FaMapPin />
                   </Col>
-                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
                     <div>
                       {props.item.address.toString().split(',').map(function (value, index) {
                         if (index == 0) {
@@ -43,19 +43,19 @@ const ProviderInfo = (props) =>
                 </Row>
 
                 <Row>
-                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
                     <FaPhone />
                   </Col>
-                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
                     {props.item.phoneNum.join(', ')}
                   </Col>
                 </Row>
 
                 <Row>
-                  <Col lg={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
+                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
                     {props.item.website[0] ? <FaGlobe /> : <div></div>}
                   </Col>
-                  <Col lg={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
                     {props.item.website[0] ? <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a> : <div></div>}
                   </Col>
                 </Row>  
@@ -67,8 +67,9 @@ const ProviderInfo = (props) =>
           </Col>
 
           <Col lg={6} className="modal-hours-backdrop">
-            <h6 className="modal-center-text"><b>Hours</b></h6>
             <Container>
+              <h5 className="modal-center-text"><b>Hours</b></h5>
+              <hr className="modal-hr" />
               <Row>
                 <Col className="modal-col-flex-end">
                   <div>

@@ -364,7 +364,10 @@ body {
     border-radius: 17px;
     padding-top: 15px;
     padding-bottom: 15px;
-    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
 }
 
 .modal-center-text {
