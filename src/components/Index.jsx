@@ -377,7 +377,7 @@ class Index extends Component {
     }
 
     setMarkers(map, markers, locations) {
-      var self = this; 
+      var self = this; //needed to access other self stuuff before this gets changed
       var i;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
@@ -389,7 +389,7 @@ class Index extends Component {
       }
 
       for (i = 0; i < locations.length; i++) {
-        var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>"; //TODO more details button?
+        var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>"; //TODO more details button? yep so self.state.
         var infoWindow = new google.maps.InfoWindow({
           content: contentStr,
         });
@@ -434,7 +434,6 @@ class Index extends Component {
     }
 
     hoverEnter(item) { 
-      console.log("entering")
       var markers = this.state.markers; 
       var hover_lat = Math.ceil(item.latitude * 100000) / 100000; 
       var hover_lng = Math.ceil(item.longitude * 100000) / 100000; 
@@ -452,14 +451,13 @@ class Index extends Component {
         marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
         marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
         if((marker_lng == hover_lng) && (marker_lat == hover_lat)) { 
-          console.log("match exists")
+          // console.log("match exists")
           marker.setIcon(pressedIcon)
         }
       });       
     }
 
     hoverLeave(item) { 
-      console.log("entering")
       var markers = this.state.markers; 
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
@@ -614,7 +612,6 @@ class Index extends Component {
 
     if (isLoading || !isLoaded(providers))
         return <div className="spinner" />;
-    console.log(this.state.markers); 
 
     return (
         <div className="bg-white">
