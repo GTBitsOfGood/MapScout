@@ -12,7 +12,7 @@ const ProviderInfo = (props) =>
             <Col lg={6} className="modal-col-flex-center">
             
             <Card> 
-              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=1&size=400x200&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" + 
+              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=3&size=335x167&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" + 
               "&markers="+props.item.latitude+","+props.item.longitude}
             alt="Google Map of bethanna"> 
               </Card.Img>

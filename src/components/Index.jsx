@@ -406,8 +406,9 @@ class Index extends Component {
           // this makes sure that only one info window is open 
           markers.forEach(function (marker) {
             marker.infowindow.close(map, marker);
+            marker.setIcon(iconMarker)
           });
-
+          self.greyOutMarkers(); 
           var pressedIcon = {
             path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
             fillColor: '#FFB930',
