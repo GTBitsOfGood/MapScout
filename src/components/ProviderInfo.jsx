@@ -18,47 +18,38 @@ const ProviderInfo = (props) =>
               </Card.Img>
               <Card.Body style={{paddingTop: "10px", paddingBottom:"10px"}}> 
                 <Card.Text>
-                <Row>
-                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
-                    <FaMapPin />
-                  </Col>
-                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
+
+                  <div className="modal-card-text"> 
+                  <FaMapPin style={{ paddingTop: "5px" }} /> &nbsp; 
                     <div>
-                      {props.item.address.toString().split(',').map(function (value, index) {
-                        if (index == 0) {
-                          return <div>{value}</div>;
-                        } else if (index == props.item.address.toString().split(',').length - 1) {
-                          return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
-                        } else {
-                          if (index == 1) {
-                            return <div style={{ "display": "inline" }}>{value + ','}</div>;
-                          }
-                          return value + ',';
+                    {props.item.address.toString().split(',').map(function (value, index) {
+                      if (index == 0) {
+                        return <div>{value}</div>;
+                      } else if (index == props.item.address.toString().split(',').length - 1) {
+                        return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
+                      } else {
+                        if (index == 1) {
+                          return <div style={{ "display": "inline" }}>{value + ','}</div>;
                         }
+                        return value + ',';
+                      }
 
-                      })}
-                    </div>
-                  </Col>
+                    })}
+                    </div> 
+                  </div>
+                  
+                  <div className="modal-card-text"> 
+                    <FaPhone style={{ paddingTop: "5px" }} /> &nbsp; 
+                    <div> 
+                      {props.item.phoneNum.join(', ')}
+                    </div> 
+                  </div> 
 
-                </Row>
+                  <div className="modal-card-text"> 
+                    {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div></div>} 
+                    {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a></div> : <div></div>}
+                  </div> 
 
-                <Row>
-                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
-                    <FaPhone />
-                  </Col>
-                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
-                    {props.item.phoneNum.join(', ')}
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col xs={2} className="modal-col-flex-end" style={{ paddingTop: "5px", paddingRight: "2px" }}>
-                    {props.item.website[0] ? <FaGlobe /> : <div></div>}
-                  </Col>
-                  <Col xs={10} className="modal-col-flex-start" style={{ paddingLeft: "2px" }}>
-                    {props.item.website[0] ? <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a> : <div></div>}
-                  </Col>
-                </Row>  
                 </Card.Text>
               </Card.Body>
             </Card> 

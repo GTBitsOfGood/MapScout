@@ -231,7 +231,7 @@ class Index extends Component {
 
     initMap(mapDOMNode) {
       var mapOptions = {
-        zoom: 11,
+        zoom: 12,
         center: new google.maps.LatLng(39.9526, -75.1652),
         mapTypeId: 'roadmap',
         styles: [
