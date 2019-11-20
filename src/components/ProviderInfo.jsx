@@ -222,14 +222,25 @@ function formatTime(arr, time, index) {
       return <div className="modal-text">CLOSED</div>;
     }
   }
-  let endtime_ending = "AM";
-  time = Math.round(time/36);  //
-  if (time/100 > 12) { //check if hour
-    time = time - 1200;
-    endtime_ending = "PM";
+  let seconds = time
+  let hours = Math.floor(seconds / 3600)
+  let mins = seconds / 60 % 60
+  let endtime_ending = hours < 12 ? "AM" : "PM"
+  hours = hours % 12
+  if(hours == 0) {
+    hours = 12
   }
-  let timestr = time.toString()
-  let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2) + endtime_ending;
+  if(mins < 10) {
+    mins = "0" + mins
+  }
+  // time = Math.round(time/36);  //
+  // if (time/100 > 12) { //check if hour
+  //   time = time - 1200;
+  //   endtime_ending = "PM";
+  // }
+  // let timestr = time.toString()
+  // let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2) + endtime_ending;
+  let timeformat = `${hours}:${mins}${endtime_ending}`
   if (index != arr.length - 1) {
     return <div className="modal-text">{timeformat} - </div>;
   } else {
