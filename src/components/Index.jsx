@@ -55,7 +55,7 @@ class Index extends Component {
             therapyTypes: [],
             filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
             searchName: null,
-            searchZip: null,
+            searchZip: 19123,
             name: null,
             markers: null, 
         };
@@ -153,15 +153,6 @@ class Index extends Component {
     };
 
     filterActiveProviders = async (filterName) => {
-      // And filter, unused for now
-
-      // await this.setState({
-      //   activeProviders: this.state.activeProviders.filter((filter) => {
-      //     return filter[filterName].filter((elem) => {
-      //       return this.state[filterName].indexOf(elem) > -1;
-      //     }).length === this.state[filterName].length
-      //   })
-      // })
         await this.setState({
             activeProviders: this.state.activeProviders.filter((filter) => {
             return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
@@ -220,6 +211,7 @@ class Index extends Component {
             await firestore.get('providers');
         }
         this.setState({ activeProviders: this.props.providers });
+        this.filterZipcode(this.state.searchZip)
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
