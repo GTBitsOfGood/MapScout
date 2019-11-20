@@ -47,6 +47,7 @@ class Index extends Component {
             isLoading: true,
             selectedIndex: 0,
             activeProviders: null,
+            tempProviders: null,
             serviceType: [],
             specializations: [],
             ages: [],
@@ -59,7 +60,6 @@ class Index extends Component {
             searchZip: null,
             name: null,
             markers: null, 
-            allowRender: true
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -86,7 +86,7 @@ class Index extends Component {
         const metersPerMile = 1609.344;
         var φ1 = filterLat * (pi/180);
 
-        this.state.activeProviders.forEach(function(provider) {
+        this.state.tempProviders.forEach(function(provider) {
             providerLat = provider['latitude'];
             providerLong = provider['longitude'];
             let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
@@ -118,15 +118,12 @@ class Index extends Component {
         });
 
         await this.setState({
-            activeProviders: filterActiveProviders,
+            tempProviders: filterActiveProviders,
         })
 
     };
 
-    handleInputChange = async (e) => {
-        this.setState({
-            activeProviders: this.props.providers
-        });
+    filterNormalFilters = async (e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
 
@@ -142,75 +139,55 @@ class Index extends Component {
                 })
             })
         }
-
-        this.filterActiveProviders();
-
-        if(this.state.searchName != null) {
-          this.filterSearch(this.state.searchName)
-        }
-
-        if(this.state.searchZip != null) {
-          this.filterZipcode(this.state.searchZip)
-        }
     };
 
     filterActiveProviders = async () => {
       await this.state.filters.forEach(filterName => {
         this.setState({
-            activeProviders: this.state.activeProviders.filter((provider) => {
+            tempProviders: this.state.tempProviders.filter((provider) => {
             return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
-            }), 
-            allowRender: true
+            })
         })
       })
-        this.greyOutMarkers()
+      this.greyOutMarkers()
     };
-
-    handleZipcode = async (e) => {
-        const filterVal = e.target.value;
-        await this.setState({
-          activeProviders: this.props.providers,
-        });
-        if (filterVal.length === 5) {
-            this.setState({
-                searchZip: filterVal
-            })
-            this.filterZipcode(filterVal)
-        } else {
-            this.setState({
-                searchZip: null
-            })
-        }
-        this.filterActiveProviders()
-        if(this.state.searchName != null) {
-          this.filterSearch(this.state.searchName)
-        }
-    };
-
-    handleSearch = async (e) => {
-      const filterVal = e.target.value;
-      await this.setState({
-        activeProviders: this.props.providers,
-        searchName: filterVal
-      });
-      this.filterActiveProviders()
-      if(this.state.searchZip != null) {
-        this.filterZipcode(this.state.searchZip)
-      }
-      this.filterSearch(filterVal)
-  };
 
     filterSearch = async (filterVal) => {
       await this.setState({
-        activeProviders: this.state.activeProviders.filter((filter) => {
+        tempProviders: this.state.tempProviders.filter((filter) => {
           return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
     };
 
-    shouldComponentUpdate(nextProps, nextState) {
-      console.log(this.state.allowRender)
-      return this.state.allowRender
+    filterProviders = async (e) => {
+      this.setState({
+        tempProviders: this.props.providers,
+      });
+      if (typeof e !== 'undefined') {
+        const filtertype = e.target.getAttribute('filtertype')
+        const filterVal = e.target.value;
+
+        if(filtertype === 'normalfilter') {
+          await this.filterNormalFilters(e)
+        } else if(filtertype === 'search') {
+          await this.setState({searchName: filterVal});
+        } else if(filtertype === 'zipcode') {
+          await this.setState({searchZip: filterVal.length === 5 ? filterVal : null});
+        }
+      }
+
+      await this.filterActiveProviders()
+
+      if(this.state.searchName != null) {
+          await this.filterSearch(this.state.searchName)
+      }
+
+      if(this.state.searchZip != null) {
+          await this.filterZipcode(this.state.searchZip)
+      }
+
+      this.setState({activeProviders: this.state.tempProviders})
     }
 
     // creates map and firebase
@@ -219,8 +196,11 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
-        await this.setState({ activeProviders: this.props.providers });
-        // await this.filterZipcode(this.state.searchZip)
+        await this.setState({ 
+          activeProviders: this.props.providers, 
+          tempProviders: this.props.providers
+        });
+
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
@@ -454,7 +434,6 @@ class Index extends Component {
         marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
         marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
         if((marker_lng == hover_lng) && (marker_lat == hover_lat)) { 
-          // console.log("match exists")
           marker.setIcon(pressedIcon)
         }
       });       
@@ -479,7 +458,7 @@ class Index extends Component {
 
     greyOutMarkers() {
       var markers = this.state.markers;
-      var listOfProviders = this.state.activeProviders;
+      var listOfProviders = this.state.tempProviders;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
         fillColor: "#5EB63B",
@@ -534,12 +513,10 @@ class Index extends Component {
                 <span
                     className="remove-tag"
                     onClick={async ()=>{
-                        await this.setState({allowRender: false})
-                        this.setState({activeProviders: this.props.providers});
-                        let arr = this.state[item];
-                        arr = arr.filter((i) => i !== title);
-                        this.setState({[item]: arr});
-                        setTimeout(() => this.filterActiveProviders(), 100);
+                        await this.setState({
+                          [item]: this.state[item].filter((i) => i !== title)
+                        })
+                        await setTimeout(() => this.filterProviders(), 100);
                     }}>
                     <FaTimesCircle />
                 </span>
@@ -598,12 +575,13 @@ class Index extends Component {
                         <Form.Check
                             name={key}
                             key={index}
-                            onChange={this.handleInputChange}
+                            onChange={this.filterProviders}
                             className="dropdown-item"
                             type="checkbox"
                             checked={this.state[key].includes(item.value)}
                             value={item.value}
-                            label={item.label} />
+                            label={item.label} 
+                            filtertype="normalfilter"/>
                     )}
                 </Dropdown.Menu>
             </Dropdown>
@@ -627,10 +605,10 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder={searchProviderName}onChange={this.handleSearch} />
+                                <Form.Control placeholder={searchProviderName} filtertype='search' onChange={this.filterProviders} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder={searchZipcode} onChange={this.handleZipcode} />
+                                <Form.Control placeholder={searchZipcode} filtertype='zipcode' onChange={this.filterProviders} />
                             </Col>
                         </Form.Row>
                     </div>
