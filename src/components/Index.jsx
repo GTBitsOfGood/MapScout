@@ -142,7 +142,7 @@ class Index extends Component {
             })
         }
 
-        this.filterActiveProviders(filterName);
+        this.filterActiveProviders();
 
         if(this.state.searchName != null) {
           this.filterSearch(this.state.searchName)
@@ -153,21 +153,14 @@ class Index extends Component {
         }
     };
 
-    filterActiveProviders = async (filterName) => {
-      // And filter, unused for now
-
-      // await this.setState({
-      //   activeProviders: this.state.activeProviders.filter((filter) => {
-      //     return filter[filterName].filter((elem) => {
-      //       return this.state[filterName].indexOf(elem) > -1;
-      //     }).length === this.state[filterName].length
-      //   })
-      // })
-        await this.setState({
-            activeProviders: this.state.activeProviders.filter((filter) => {
-            return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
+    filterActiveProviders = async () => {
+      await this.state.filters.forEach(filterName => {
+        this.setState({
+            activeProviders: this.state.activeProviders.filter((provider) => {
+            return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
             })
-        });
+        })
+      })
         this.greyOutMarkers()
     };
 
@@ -186,7 +179,7 @@ class Index extends Component {
                 searchZip: null
             })
         }
-        this.state.filters.forEach(filter => this.filterActiveProviders(filter));
+        this.filterActiveProviders()
         if(this.state.searchName != null) {
           this.filterSearch(this.state.searchName)
         }
@@ -198,7 +191,7 @@ class Index extends Component {
         activeProviders: this.props.providers,
         searchName: filterVal
       });
-      this.state.filters.forEach(filter => this.filterActiveProviders(filter));
+      this.filterActiveProviders()
       if(this.state.searchZip != null) {
         this.filterZipcode(this.state.searchZip)
       }
@@ -539,7 +532,7 @@ class Index extends Component {
                         let arr = this.state[item];
                         arr = arr.filter((i) => i !== title);
                         this.setState({[item]: arr});
-                        setTimeout(() => this.filterActiveProviders(item), 100);
+                        setTimeout(() => this.filterActiveProviders(), 100);
                     }}>
                     <FaTimesCircle />
                 </span>
