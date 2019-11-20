@@ -14,6 +14,8 @@ import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle } from "react-icons/fa";
+import localizationStrings from '../utils/Localization';
+
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
@@ -45,6 +47,7 @@ class Index extends Component {
             isLoading: true,
             selectedIndex: 0,
             activeProviders: null,
+            tempProviders: null,
             serviceType: [],
             specializations: [],
             ages: [],
@@ -53,6 +56,7 @@ class Index extends Component {
             therapyTypes: [],
             filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
             searchName: null,
+            // searchZip: 19123,
             searchZip: null,
             name: null,
             markers: null,
@@ -82,7 +86,7 @@ class Index extends Component {
         const metersPerMile = 1609.344;
         var φ1 = filterLat * (pi/180);
 
-        this.state.activeProviders.forEach(function(provider) {
+        this.state.tempProviders.forEach(function(provider) {
             providerLat = provider['latitude'];
             providerLong = provider['longitude'];
             let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
@@ -114,15 +118,12 @@ class Index extends Component {
         });
 
         await this.setState({
-            activeProviders: filterActiveProviders,
+            tempProviders: filterActiveProviders,
         })
 
     };
 
-    handleInputChange = async (e) => {
-        this.setState({
-            activeProviders: this.props.providers
-        });
+    filterNormalFilters = async (e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
 
@@ -138,78 +139,56 @@ class Index extends Component {
                 })
             })
         }
-
-        this.filterActiveProviders(filterName);
-
-        if(this.state.searchName != null) {
-          this.filterSearch(this.state.searchName)
-        }
-
-        if(this.state.searchZip != null) {
-          this.filterZipcode(this.state.searchZip)
-        }
     };
 
-    filterActiveProviders = async (filterName) => {
-      // And filter, unused for now
-
-      // await this.setState({
-      //   activeProviders: this.state.activeProviders.filter((filter) => {
-      //     return filter[filterName].filter((elem) => {
-      //       return this.state[filterName].indexOf(elem) > -1;
-      //     }).length === this.state[filterName].length
-      //   })
-      // })
-        await this.setState({
-            activeProviders: this.state.activeProviders.filter((filter) => {
-            return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
+    filterActiveProviders = async () => {
+      await this.state.filters.forEach(filterName => {
+        this.setState({
+            tempProviders: this.state.tempProviders.filter((provider) => {
+            return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
             })
-        });
-        this.greyOutMarkers()
+        })
+      })
+      this.greyOutMarkers()
     };
-
-    handleZipcode = async (e) => {
-        const filterVal = e.target.value;
-        await this.setState({
-          activeProviders: this.props.providers,
-        });
-        if (filterVal.length === 5) {
-            this.setState({
-                searchZip: filterVal
-            })
-            this.filterZipcode(filterVal)
-        } else {
-            this.setState({
-                searchZip: null
-            })
-        }
-        this.state.filters.forEach(filter => this.filterActiveProviders(filter));
-        if(this.state.searchName != null) {
-          this.filterSearch(this.state.searchName)
-        }
-    };
-
-    handleSearch = async (e) => {
-      const filterVal = e.target.value;
-      await this.setState({
-        activeProviders: this.props.providers,
-        searchName: filterVal
-      });
-      this.state.filters.forEach(filter => this.filterActiveProviders(filter));
-      if(this.state.searchZip != null) {
-        this.filterZipcode(this.state.searchZip)
-      }
-      this.filterSearch(filterVal)
-  };
 
     filterSearch = async (filterVal) => {
       await this.setState({
-        activeProviders: this.state.activeProviders.filter((filter) => {
+        tempProviders: this.state.tempProviders.filter((filter) => {
           return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
         })
       })
     };
 
+    filterProviders = async (e) => {
+      this.setState({
+        tempProviders: this.props.providers,
+      });
+      if (typeof e !== 'undefined') {
+        const filtertype = e.target.getAttribute('filtertype')
+        const filterVal = e.target.value;
+
+        if(filtertype === 'normalfilter') {
+          await this.filterNormalFilters(e)
+        } else if(filtertype === 'search') {
+          await this.setState({searchName: filterVal});
+        } else if(filtertype === 'zipcode') {
+          await this.setState({searchZip: filterVal.length === 5 ? filterVal : null});
+        }
+      }
+
+      await this.filterActiveProviders()
+
+      if(this.state.searchName != null) {
+          await this.filterSearch(this.state.searchName)
+      }
+
+      if(this.state.searchZip != null) {
+          await this.filterZipcode(this.state.searchZip)
+      }
+
+      this.setState({activeProviders: this.state.tempProviders})
+    }
 
     // creates map and firebase
     async componentDidMount() {
@@ -217,7 +196,11 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
-        this.setState({ activeProviders: this.props.providers });
+        await this.setState({
+          activeProviders: this.props.providers,
+          tempProviders: this.props.providers
+        });
+
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
@@ -451,7 +434,6 @@ class Index extends Component {
         marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
         marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
         if((marker_lng == hover_lng) && (marker_lat == hover_lat)) {
-          // console.log("match exists")
           marker.setIcon(pressedIcon)
         }
       });
@@ -476,7 +458,7 @@ class Index extends Component {
 
     greyOutMarkers() {
       var markers = this.state.markers;
-      var listOfProviders = this.state.activeProviders;
+      var listOfProviders = this.state.tempProviders;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
         fillColor: "#5EB63B",
@@ -530,12 +512,11 @@ class Index extends Component {
                 {title}
                 <span
                     className="remove-tag"
-                    onClick={()=>{
-                        this.setState({activeProviders: this.props.providers});
-                        let arr = this.state[item];
-                        arr = arr.filter((i) => i !== title);
-                        this.setState({[item]: arr});
-                        setTimeout(() => this.filterActiveProviders(item), 100);
+                    onClick={async ()=>{
+                        this.setState({
+                          [item]: this.state[item].filter((i) => i !== title)
+                        })
+                        setTimeout(() => this.filterProviders(), 100);
                     }}>
                     <FaTimesCircle />
                 </span>
@@ -546,7 +527,7 @@ class Index extends Component {
     renderCell(item, index) {
         return (
             <div
-                className="map-cell point"
+                className="map-cell"
                 key={index}
                 onClick={() => this.setState({ selectedIndex: index, showModal: true})}
                 onMouseEnter={() => this.hoverEnter(item)}
@@ -594,12 +575,13 @@ class Index extends Component {
                         <Form.Check
                             name={key}
                             key={index}
-                            onChange={this.handleInputChange}
+                            onChange={this.filterProviders}
                             className="dropdown-item"
                             type="checkbox"
                             checked={this.state[key].includes(item.value)}
                             value={item.value}
-                            label={item.label} />
+                            label={item.label}
+                            filtertype="normalfilter"/>
                     )}
                 </Dropdown.Menu>
             </Dropdown>
@@ -607,8 +589,10 @@ class Index extends Component {
     }
 
     render() {
-    const { isLoading, data, selectedIndex, showModal, listView } = this.state;
-    const providers = this.state.activeProviders;
+        let { searchProviderName, searchZipcode, hideLabel, showLabel, languagesLabel, agesLabel, insuranceLabel,
+            serviceTypeLabel, specializationsLabel, therapyTypeLabel} = localizationStrings;
+        const { isLoading, data, selectedIndex, showModal, listView } = this.state;
+        const providers = this.state.activeProviders;
 
     if (isLoading || !isLoaded(providers))
         return <div className="spinner" />;
@@ -621,15 +605,15 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Search zipcode" onChange={this.handleZipcode} />
+                                <Form.Control placeholder={searchZipcode} filtertype='zipcode' onChange={this.filterProviders} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
+                                <Form.Control placeholder={searchProviderName} filtertype='search' onChange={this.filterProviders} />
                             </Col>
                         </Form.Row>
                     </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
-                        {this.state.listView ? "Hide" : "Show"}
+                        {this.state.listView ? hideLabel : showLabel}
                     </Button>
                 </div>
                 <Flipper flipKey={listView}>
@@ -640,15 +624,15 @@ class Index extends Component {
                         }}>
                             <Flipped inverseFlipId="list">
                                 <div className="filter-row">
-                                    {this.renderDropdown("Languages", "languages")}
-                                    {this.renderDropdown("Ages", "ages")}
-                                    {this.renderDropdown("Insurance", "insurance")}
+                                    {this.renderDropdown(languagesLabel, "languages")}
+                                    {this.renderDropdown(agesLabel, "ages")}
+                                    {this.renderDropdown(insuranceLabel, "insurance")}
                                     {
                                         this.state.moreFilter ?
                                             <Fragment>
-                                                {this.renderDropdown("Service Type", "serviceType")}
-                                                {this.renderDropdown("Specializations", "specializations")}
-                                                {this.renderDropdown("Therapy Types", "therapyTypes")}
+                                                {this.renderDropdown(serviceTypeLabel, "serviceType")}
+                                                {this.renderDropdown(specializationsLabel, "specializations")}
+                                                {this.renderDropdown(therapyTypeLabel, "therapyTypes")}
                                                 <Button
                                                     variant="link"
                                                     style={{ color: 'red' }}
@@ -690,7 +674,7 @@ class Index extends Component {
                                     onHide={() => this.setState({showModal: false})}
                                     size="lg"
                                     scrollable>
-                                    <Modal.Header className="image-cover" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL || require('../assets/img/modalimage.png')})` }} closeButton>
+                                    <Modal.Header className="modal-header" style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }} closeButton>
                                         <Modal.Title id="contained-modal-title-vcenter">
                                             <h2><b>{providers[selectedIndex].facilityName}</b></h2>
                                         </Modal.Title>
