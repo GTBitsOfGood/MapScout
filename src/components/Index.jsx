@@ -219,8 +219,8 @@ class Index extends Component {
         if (!isLoaded(providers)) {
             await firestore.get('providers');
         }
-        this.setState({ activeProviders: this.props.providers });
-        this.filterZipcode(this.state.searchZip)
+        await this.setState({ activeProviders: this.props.providers });
+        await this.filterZipcode(this.state.searchZip)
         this.setState({ isLoading: false });
         window.initMap = () => this.initMap(this.refs.map);
         // Asynchronously load the Google Maps script, passing in the callback reference
