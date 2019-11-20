@@ -24,7 +24,7 @@ class RowForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = props.item.facilityName ? props.item : {
             facilityName: '',
             address: [],
             ages: [],
@@ -188,7 +188,9 @@ class RowForm extends Component {
                     </Fragment>
                 );
             case 1:
-                return <TimeTable onChange={this.onTimeChange}/>;
+                return <TimeTable
+                    hours={this.props.item.hours || {}}
+                    onChange={this.onTimeChange}/>;
             case 2:
                 return(
                     <Fragment>

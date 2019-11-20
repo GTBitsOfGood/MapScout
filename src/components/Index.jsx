@@ -55,7 +55,7 @@ class Index extends Component {
             searchName: null,
             searchZip: null,
             name: null,
-            markers: null, 
+            markers: null,
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -224,7 +224,7 @@ class Index extends Component {
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
         this.setState({ isLoading: false });
-    } 
+    }
 
 
 
@@ -372,7 +372,7 @@ class Index extends Component {
           }
         }
         var markers = [];
-        // for each location create a marker 
+        // for each location create a marker
        this.setMarkers(map, markers, locations)
     }
 
@@ -403,12 +403,12 @@ class Index extends Component {
         markers.push(marker);
 
         google.maps.event.addListener(marker, 'click', function (marker, i) {
-          // this makes sure that only one info window is open 
+          // this makes sure that only one info window is open
           markers.forEach(function (marker) {
             marker.infowindow.close(map, marker);
             marker.setIcon(iconMarker)
           });
-          self.greyOutMarkers(); 
+          self.greyOutMarkers();
           var pressedIcon = {
             path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
             fillColor: '#FFB930',
@@ -427,18 +427,18 @@ class Index extends Component {
             marker.infowindow.close(map, marker);
             marker.setIcon(iconMarker)
           });
-          self.greyOutMarkers(); 
+          self.greyOutMarkers();
         })
       };
-      this.setState({markers: markers}); 
+      this.setState({markers: markers});
     }
 
-    hoverEnter(item) { 
-      var markers = this.state.markers; 
-      var hover_lat = Math.ceil(item.latitude * 100000) / 100000; 
-      var hover_lng = Math.ceil(item.longitude * 100000) / 100000; 
-      var marker_lat; 
-      var marker_lng; 
+    hoverEnter(item) {
+      var markers = this.state.markers;
+      var hover_lat = Math.ceil(item.latitude * 100000) / 100000;
+      var hover_lng = Math.ceil(item.longitude * 100000) / 100000;
+      var marker_lat;
+      var marker_lng;
       var pressedIcon = {
         path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
         fillColor: '#FFB930',
@@ -447,18 +447,18 @@ class Index extends Component {
         strokeWeight: 2,
         anchor: new google.maps.Point(0, 0),
       }
-      markers.forEach(function(marker) { 
+      markers.forEach(function(marker) {
         marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
         marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
-        if((marker_lng == hover_lng) && (marker_lat == hover_lat)) { 
+        if((marker_lng == hover_lng) && (marker_lat == hover_lat)) {
           // console.log("match exists")
           marker.setIcon(pressedIcon)
         }
-      });       
+      });
     }
 
-    hoverLeave(item) { 
-      var markers = this.state.markers; 
+    hoverLeave(item) {
+      var markers = this.state.markers;
       var iconMarker = {
         path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
         fillColor: "#5EB63B",
@@ -467,10 +467,10 @@ class Index extends Component {
         strokeWeight: 2,
         anchor: new google.maps.Point(0, 0),
       }
-      markers.forEach(function(marker) { 
+      markers.forEach(function(marker) {
         marker.setIcon(iconMarker)
       });
-      this.greyOutMarkers(); 
+      this.greyOutMarkers();
     }
 
 
@@ -494,10 +494,10 @@ class Index extends Component {
         anchor: new google.maps.Point(0, 0),
       }
       // redraw green for QA
-      // markers.forEach(function(marker) { 
+      // markers.forEach(function(marker) {
       //   marker.setIcon()
       // });
-      // convert appropriate ones to grey 
+      // convert appropriate ones to grey
       var match = false;
       markers.forEach(function (marker) {
         match = false;
@@ -621,10 +621,10 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
+                                <Form.Control placeholder="Search zipcode" onChange={this.handleZipcode} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search zipcode" onChange={this.handleZipcode} />
+                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
                             </Col>
                         </Form.Row>
                     </div>

@@ -13,10 +13,14 @@ var classNames = require('classnames');
 
 export const SELECT_ITEM = 'SELECT_ITEM';
 
-const selectItem = data => ({
-    type: SELECT_ITEM,
-    data
-});
+export function selectItem(data) {
+    return function (dispatch) {
+        dispatch({
+            type: SELECT_ITEM,
+            data,
+        })
+    }
+}
 
 class Dashboard extends Component {
     constructor(props) {
@@ -34,6 +38,10 @@ class Dashboard extends Component {
             await firestore.get('providers')
         }
         this.setState({isLoading: false});
+    }
+
+    componentDidUpdate(){
+        console.log(this.props);
     }
 
     render() {
@@ -54,6 +62,7 @@ class Dashboard extends Component {
                                 <Button
                                     block
                                     variant="primary"
+                                    onClick={() => this.props.selectItem({})}
                                     as={Link}
                                     to={formRoute}>
                                     Add new provider
@@ -81,8 +90,7 @@ class Dashboard extends Component {
                         </div>
                     </Col>
                     <Col sm={9}>
-                        <div
-                            className="scroll-container"
+                        <div className="scroll-container"
                             style={{ maxHeight: 'calc(100vh - 64px)' }}>
                             <div className="bg-white">
                                 {
@@ -107,7 +115,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     providers: state.firestore.ordered.providers,
-    firebase: state.firebase
+    firebase: state.firebase,
 });
 
 export default compose(

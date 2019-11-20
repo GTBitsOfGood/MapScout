@@ -6,6 +6,8 @@ import {withFirestore} from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Modal from "react-bootstrap/Modal";
+import {Link} from "react-router-dom";
+import {formRoute} from "./ProviderRoutes";
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update
@@ -23,6 +25,8 @@ const SingleProvider = (props) => <div>
             <ButtonToolbar>
                 <Button
                     onClick={props.editProvider}
+                    as={Link}
+                    to={formRoute}
                     variant="info"
                     className="mr-2">
                     Edit
