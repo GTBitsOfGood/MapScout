@@ -66,11 +66,12 @@ body {
     white-space: nowrap;
 }
 
-.count{
-    position:relative;
+.count {
+    position: relative;
     text-align: center;
     margin: 12px 0;
 }
+
 .count:before {
     content: "";
     display: block;
@@ -81,6 +82,7 @@ body {
     top: 50%;
     z-index: 0;
 }
+
 .count span {
     background: #fff;
     padding: 0 20px;
@@ -262,6 +264,7 @@ body {
     overflow-x: hidden;
 }
 
+
 /*Loading Spinner, Temporary*/
 
 .spinner {
@@ -365,6 +368,10 @@ body {
     border-radius: 17px;
     padding-top: 15px;
     padding-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
 }
 
 .modal-center-text {
@@ -383,6 +390,11 @@ body {
 
 .modal-text {
     display: inline;
+}
+
+.modal-card-text {
+    display: flex;
+    flex-direction: row;
 }
 
 .modal-hr {
