@@ -14,6 +14,8 @@ import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle } from "react-icons/fa";
+import localizationStrings from '../utils/Localization';
+
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
@@ -607,8 +609,10 @@ class Index extends Component {
     }
 
     render() {
-    const { isLoading, data, selectedIndex, showModal, listView } = this.state;
-    const providers = this.state.activeProviders;
+        let { searchProviderName, searchZipcode, hideLabel, showLabel, languagesLabel, agesLabel, insuranceLabel,
+            serviceTypeLabel, specializationsLabel, therapyTypeLabel} = localizationStrings;
+        const { isLoading, data, selectedIndex, showModal, listView } = this.state;
+        const providers = this.state.activeProviders;
 
     if (isLoading || !isLoaded(providers))
         return <div className="spinner" />;
@@ -621,15 +625,15 @@ class Index extends Component {
                     <div className="w-75">
                         <Form.Row>
                             <Col>
-                                <Form.Control placeholder="Search provider name"onChange={this.handleSearch} />
+                                <Form.Control placeholder={searchProviderName}onChange={this.handleSearch} />
                             </Col>
                             <Col>
-                                <Form.Control placeholder="Search zipcode" onChange={this.handleZipcode} />
+                                <Form.Control placeholder={searchZipcode} onChange={this.handleZipcode} />
                             </Col>
                         </Form.Row>
                     </div>
                     <Button variant="primary" onClick={this.switchView} className="switch-view-button">
-                        {this.state.listView ? "Hide" : "Show"}
+                        {this.state.listView ? hideLabel : showLabel}
                     </Button>
                 </div>
                 <Flipper flipKey={listView}>
@@ -640,15 +644,15 @@ class Index extends Component {
                         }}>
                             <Flipped inverseFlipId="list">
                                 <div className="filter-row">
-                                    {this.renderDropdown("Languages", "languages")}
-                                    {this.renderDropdown("Ages", "ages")}
-                                    {this.renderDropdown("Insurance", "insurance")}
+                                    {this.renderDropdown(languagesLabel, "languages")}
+                                    {this.renderDropdown(agesLabel, "ages")}
+                                    {this.renderDropdown(insuranceLabel, "insurance")}
                                     {
                                         this.state.moreFilter ?
                                             <Fragment>
-                                                {this.renderDropdown("Service Type", "serviceType")}
-                                                {this.renderDropdown("Specializations", "specializations")}
-                                                {this.renderDropdown("Therapy Types", "therapyTypes")}
+                                                {this.renderDropdown(serviceTypeLabel, "serviceType")}
+                                                {this.renderDropdown(specializationsLabel, "specializations")}
+                                                {this.renderDropdown(therapyTypeLabel, "therapyTypes")}
                                                 <Button
                                                     variant="link"
                                                     style={{ color: 'red' }}

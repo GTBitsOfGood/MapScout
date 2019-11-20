@@ -13,6 +13,17 @@ let localizationStrings = new LocalizedStrings({
         //nav bar text
         home: "Home ",
         facilityUpload: "Facility Upload",
+        searchProviderName: "Search provider name",
+        searchZipcode: "Search zipcode",
+        hideLabel: "Hide",
+        showLabel: "Show",
+        languagesLabel: "Languages",
+        agesLabel: "Ages",
+        insuranceLabel: "Insurance",
+        serviceTypeLabel: "Service Type",
+        specializationsLabel: "Specializations",
+        therapyTypeLabel: "Therapy Types",
+
 
     },
     es: {
