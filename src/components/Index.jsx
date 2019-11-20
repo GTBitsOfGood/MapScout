@@ -54,7 +54,8 @@ class Index extends Component {
             filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
             searchName: null,
             searchZip: null,
-            name: null
+            name: null,
+            markers: null, 
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -159,12 +160,12 @@ class Index extends Component {
       //     }).length === this.state[filterName].length
       //   })
       // })
-
         await this.setState({
             activeProviders: this.state.activeProviders.filter((filter) => {
             return filter[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
             })
         });
+        this.greyOutMarkers()
     };
 
     handleZipcode = async (e) => {
@@ -223,11 +224,13 @@ class Index extends Component {
         // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
         this.setState({ isLoading: false });
-    }
+    } 
+
+
+
 
     initMap(mapDOMNode) {
       var mapOptions = {
-        clickableIcons: false,
         zoom: 12,
         center: new google.maps.LatLng(39.9526, -75.1652),
         mapTypeId: 'roadmap',
@@ -356,17 +359,10 @@ class Index extends Component {
           }
         ]
       }; // styles from https://mapstyle.withgoogle.com
-
-      // heres the svg for the point
-      // <svg width="26" height="33" viewBox="0 0 26 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-      // <path d="M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z" fill="#F79845" stroke="white" stroke-width="2" />
-      // <circle cx="13" cy="12.5" r="5" fill="white" />
-      // </svg >
-
         var map = new google.maps.Map(mapDOMNode, mapOptions);
         var geocoder = new google.maps.Geocoder();
         // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
-        let locations = []; //for each location ['string for onclick', num(lat), num(long)]
+        var locations = []; //for each location ['string for onclick', num(lat), num(long)]
         let temp = [];
         const providers = this.props.providers;
         if (!isEmpty(providers)) {
@@ -375,30 +371,150 @@ class Index extends Component {
             locations.push(temp);
           }
         }
-        var infowindow = new google.maps.InfoWindow();
-        var marker, i;
-        // var iconMarker = {
-        //   path: "M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z",
-        //   fill: '#F79845',
-        //   fillOpacity: .6,
-        //   stroke: "white",
-        //   strokeWidth:"2",
-        //   anchor: new google.maps.Point(0, 0),
-        // }
-        for (i = 0; i < locations.length; i++) {
-          marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][2], locations[i][3]),
-            map: map,
-          });
+        var markers = [];
+        // for each location create a marker 
+       this.setMarkers(map, markers, locations)
+    }
 
-          google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-              var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>" ; //TODO more details button
-              infowindow.setContent(contentStr);
-              infowindow.open(map, marker);
-            }
-          })(marker, i));
+    setMarkers(map, markers, locations) {
+      var self = this; //needed to access other self stuuff before this gets changed
+      var i;
+      var iconMarker = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#5EB63B",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+
+      for (i = 0; i < locations.length; i++) {
+        var contentStr = '<b>' + locations[i][0] + '</b>' + "\n <div>" + locations[i][1] + "</div>"; //TODO more details button? yep so self.state.
+        var infoWindow = new google.maps.InfoWindow({
+          content: contentStr,
+        });
+
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][2], locations[i][3]),
+          map: map,
+          icon: iconMarker,
+          infowindow: infoWindow,
+        });
+        markers.push(marker);
+
+        google.maps.event.addListener(marker, 'click', function (marker, i) {
+          // this makes sure that only one info window is open 
+          markers.forEach(function (marker) {
+            marker.infowindow.close(map, marker);
+            marker.setIcon(iconMarker)
+          });
+          self.greyOutMarkers(); 
+          var pressedIcon = {
+            path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
+            fillColor: '#FFB930',
+            fillOpacity: 1.0,
+            strokeColor: "white",
+            strokeWeight: 2,
+            anchor: new google.maps.Point(0, 0),
+          }
+          this.infowindow.open(map, this);
+          this.setIcon(pressedIcon);
+          map.panTo(this.getPosition());
+        })
+
+        google.maps.event.addListener(infoWindow, 'closeclick', function () {
+          markers.forEach(function (marker) {
+            marker.infowindow.close(map, marker);
+            marker.setIcon(iconMarker)
+          });
+          self.greyOutMarkers(); 
+        })
+      };
+      this.setState({markers: markers}); 
+    }
+
+    hoverEnter(item) { 
+      var markers = this.state.markers; 
+      var hover_lat = Math.ceil(item.latitude * 100000) / 100000; 
+      var hover_lng = Math.ceil(item.longitude * 100000) / 100000; 
+      var marker_lat; 
+      var marker_lng; 
+      var pressedIcon = {
+        path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
+        fillColor: '#FFB930',
+        fillOpacity: 1.0,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      markers.forEach(function(marker) { 
+        marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
+        marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
+        if((marker_lng == hover_lng) && (marker_lat == hover_lat)) { 
+          // console.log("match exists")
+          marker.setIcon(pressedIcon)
         }
+      });       
+    }
+
+    hoverLeave(item) { 
+      var markers = this.state.markers; 
+      var iconMarker = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#5EB63B",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      markers.forEach(function(marker) { 
+        marker.setIcon(iconMarker)
+      });
+      this.greyOutMarkers(); 
+    }
+
+
+    greyOutMarkers() {
+      var markers = this.state.markers;
+      var listOfProviders = this.state.activeProviders;
+      var iconMarker = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#5EB63B",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      var iconMarkerGreyOut = {
+        path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+        fillColor: "#C4C4C4",
+        fillOpacity: 1,
+        strokeColor: "white",
+        strokeWeight: 2,
+        anchor: new google.maps.Point(0, 0),
+      }
+      // redraw green for QA
+      // markers.forEach(function(marker) { 
+      //   marker.setIcon()
+      // });
+      // convert appropriate ones to grey 
+      var match = false;
+      markers.forEach(function (marker) {
+        match = false;
+        listOfProviders.forEach(function (provider) {
+          var provider_lat = Math.ceil(provider.latitude * 100000) / 100000;
+          var provider_lng = Math.ceil(provider.longitude * 100000) / 100000;
+          var marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
+          var marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
+          if ((marker_lng == provider_lng) && (marker_lat == provider_lat)) {
+            match = true;
+            marker.setIcon(iconMarker)
+          }
+        });
+        if (!match) {
+          marker.setIcon(iconMarkerGreyOut)
+        }
+      });
     }
 
     switchView() {
@@ -432,7 +548,9 @@ class Index extends Component {
             <div
                 className="map-cell"
                 key={index}
-                onClick={() => this.setState({ selectedIndex: index, showModal: true})}>
+                onClick={() => this.setState({ selectedIndex: index, showModal: true})}
+                onMouseEnter={() => this.hoverEnter(item)}
+                onMouseLeave={() => this.hoverLeave(item)}>
                 <Flipped key={index} inverseFlipId="list">
                     <div>
                         <h5>
