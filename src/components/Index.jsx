@@ -59,6 +59,7 @@ class Index extends Component {
             searchZip: null,
             name: null,
             markers: null, 
+            allowRender: true
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -158,7 +159,8 @@ class Index extends Component {
         this.setState({
             activeProviders: this.state.activeProviders.filter((provider) => {
             return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
-            })
+            }), 
+            allowRender: true
         })
       })
         this.greyOutMarkers()
@@ -206,6 +208,10 @@ class Index extends Component {
       })
     };
 
+    shouldComponentUpdate(nextProps, nextState) {
+      console.log(this.state.allowRender)
+      return this.state.allowRender
+    }
 
     // creates map and firebase
     async componentDidMount() {
@@ -527,7 +533,8 @@ class Index extends Component {
                 {title}
                 <span
                     className="remove-tag"
-                    onClick={()=>{
+                    onClick={async ()=>{
+                        await this.setState({allowRender: false})
                         this.setState({activeProviders: this.props.providers});
                         let arr = this.state[item];
                         arr = arr.filter((i) => i !== title);
