@@ -513,10 +513,10 @@ class Index extends Component {
                 <span
                     className="remove-tag"
                     onClick={async ()=>{
-                        await this.setState({
+                        this.setState({
                           [item]: this.state[item].filter((i) => i !== title)
                         })
-                        await setTimeout(() => this.filterProviders(), 100);
+                        setTimeout(() => this.filterProviders(), 100);
                     }}>
                     <FaTimesCircle />
                 </span>
