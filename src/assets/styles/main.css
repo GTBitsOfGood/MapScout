@@ -124,6 +124,15 @@ body {
     margin-right: 5px;
 }
 
+.clear-all {
+    padding: 7px 8px 5px 8px;
+}
+
+.clear-all:hover {
+    opacity: 0.75;
+    cursor: pointer;
+}
+
 .remove-tag {
     opacity: 1;
     margin-left: 5px;

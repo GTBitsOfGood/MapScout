@@ -110,8 +110,8 @@ class Index extends Component {
         var outThis = this;
         var filterActiveProviders = [];
         filteredProviders.forEach(function (provider) {
-            filterActiveProviders.push(provider['provider'])
-            let distKey = provider['provider']['facilityName'] + 'Dist'
+            filterActiveProviders.push(provider['provider']);
+            let distKey = provider['provider']['facilityName'] + 'Dist';
             outThis.setState({
                 [distKey]: provider['miDistance']
             })
@@ -148,7 +148,7 @@ class Index extends Component {
             return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
             })
         })
-      })
+      });
       this.greyOutMarkers()
     };
 
@@ -165,7 +165,7 @@ class Index extends Component {
         tempProviders: this.props.providers,
       });
       if (typeof e !== 'undefined') {
-        const filtertype = e.target.getAttribute('filtertype')
+        const filtertype = e.target.getAttribute('filtertype');
         const filterVal = e.target.value;
 
         if(filtertype === 'normalfilter') {
@@ -177,7 +177,7 @@ class Index extends Component {
         }
       }
 
-      await this.filterActiveProviders()
+      await this.filterActiveProviders();
 
       if(this.state.searchName != null) {
           await this.filterSearch(this.state.searchName)
@@ -188,7 +188,7 @@ class Index extends Component {
       }
 
       this.setState({activeProviders: this.state.tempProviders})
-    }
+    };
 
     // creates map and firebase
     async componentDidMount() {
@@ -208,9 +208,6 @@ class Index extends Component {
         loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
         this.setState({ isLoading: false });
     }
-
-
-
 
     initMap(mapDOMNode) {
       var mapOptions = {
@@ -503,6 +500,23 @@ class Index extends Component {
       this.setState({ listView: !this.state.listView });
     }
 
+    evaluateFilters() {
+        let isFiltersEmpty = true;
+        this.state.filters.map(item => {
+            if (this.state[item].length > 0) {
+                isFiltersEmpty = false;
+            }
+        });
+        return !isFiltersEmpty;
+    }
+
+    clearFilters() {
+        this.state.filters.map(item =>
+            this.setState({[item]: []})
+        );
+        setTimeout(() => this.filterProviders(), 100);
+    }
+
     renderTag(item, index) {
         return this.state[item].map((title, key) =>
             <div
@@ -515,7 +529,7 @@ class Index extends Component {
                     onClick={async ()=>{
                         this.setState({
                           [item]: this.state[item].filter((i) => i !== title)
-                        })
+                        });
                         setTimeout(() => this.filterProviders(), 100);
                     }}>
                     <FaTimesCircle />
@@ -653,6 +667,15 @@ class Index extends Component {
                                 <div className="tag-row">
                                     {
                                         this.state.filters.map(this.renderTag)
+                                    }
+                                    {
+                                        this.evaluateFilters() &&
+                                        <div
+                                            onClick={() => this.clearFilters()}
+                                            className="tag clear-all"
+                                            style={{ borderColor: 'red', color: 'red' }}>
+                                            Clear All
+                                        </div>
                                     }
                                 </div>
                             </Flipped>
