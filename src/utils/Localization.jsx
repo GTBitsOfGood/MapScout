@@ -11,8 +11,10 @@ let localizationStrings = new LocalizedStrings({
         signUp: "Sign up",
         forgotPassword: "Forgot your password?",
         //nav bar text
-        home: "Home ",
+        home: "Home",
         facilityUpload: "Facility Upload",
+        adminLogin: "Admin Login",
+        signOut: "Sign Out",
         searchProviderName: "Search provider name",
         searchZipcode: "Search zipcode",
         hideLabel: "Hide",
@@ -23,8 +25,8 @@ let localizationStrings = new LocalizedStrings({
         serviceTypeLabel: "Service Type",
         specializationsLabel: "Specializations",
         therapyTypeLabel: "Therapy Types",
-
-
+        moreFilters: "More Filters",
+        lessFilters: "Less Filters",
     },
     es: {
         //auth page text
