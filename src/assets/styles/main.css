@@ -98,6 +98,10 @@ body {
     background-color: white;
 }
 
+.point {
+    cursor: pointer;
+}
+
 .filter-row {
     display: flex;
     flex-direction: row;
@@ -360,12 +364,9 @@ body {
 }
 
 .modal-hours-backdrop {
-    background: #F2F2F2;
-    border-radius: 17px;
     padding-top: 15px;
     padding-bottom: 15px;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     text-align: center;
 }
@@ -403,16 +404,14 @@ body {
     padding-right: 2rem;
 }
 
-.modal-header {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
+.image-cover {
+    padding: 1.5rem 2rem;
     background-position: center center;
     background-size: cover;
     -webkit-filter: grayscale(100%);
     filter: gray;
     color: white;
+    object-fit: cover;
     text-shadow: black 10px 10px 10px;
 }
 

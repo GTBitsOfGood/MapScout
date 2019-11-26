@@ -5,6 +5,9 @@ import {compose} from "redux";
 import {withFirestore} from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import Modal from "react-bootstrap/Modal";
+import {Link} from "react-router-dom";
+import {formRoute} from "./ProviderRoutes";
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update
@@ -12,13 +15,18 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 //     await this.props.firestore.get('providers')
 // };
 
-const SingleProvider = (props) => <Container>
-    <div className="row-spaced pt-3">
+const SingleProvider = (props) => <div>
+    <div
+        className="image-cover row-spaced mb-3"
+        style={{ backgroundImage: `url(${props.item.imageURL
+            || require('../assets/img/modalimage.png')})`}}>
         <h2>{props.item.facilityName}</h2>
         <div>
             <ButtonToolbar>
                 <Button
                     onClick={props.editProvider}
+                    as={Link}
+                    to={formRoute}
                     variant="info"
                     className="mr-2">
                     Edit
@@ -36,8 +44,9 @@ const SingleProvider = (props) => <Container>
             </ButtonToolbar>
         </div>
     </div>
-    <hr />
-    <ProviderInfo item={props.item} />
-</Container>;
+    <Container>
+        <ProviderInfo item={props.item} />
+    </Container>
+</div>;
 
 export default compose(withFirestore)(SingleProvider)

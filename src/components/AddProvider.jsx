@@ -17,6 +17,9 @@ import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
+const steps = [
+    "Map", "Hours", "Service", "More"
+];
 
 class AddProvider extends Component {
 
@@ -27,7 +30,7 @@ class AddProvider extends Component {
             step: 0,
             completed: false,
             animate: true,
-            item: {},
+            item: this.props.selected || {},
             isLoading: false
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -75,30 +78,31 @@ class AddProvider extends Component {
     };
 
     updateFirestore = async () => {
-        //Change 'ages' to the specific parameter to update, dummy is the facilityName
+        this.setState({isLoading: true});
+        let item = {
+            ...this.state.item,
+            latitude: null,
+            longitude: null,
+        };
+        if (this.state.item.address && this.state.item.address[0].length > 0) {
+            let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
+                this.state.item.address[0].replace(/\s/g, '%20')
+            }&key=${API_KEY}`);
+            let responseJson = await response.json();
+            if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
+                item.latitude = responseJson.results[0].geometry.location.lat;
+                item.longitude = responseJson.results[0].geometry.location.lng;
+            }
+        }
         let firestore = this.props.firestore;
-        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'Joseph J. Peters Institute']}).then(function(querySnapshot) {
+        await firestore.get({collection: 'providers', where: ['facilityName', '==', item.facilityName]}).then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                firestore.update({collection: 'providers', doc: doc.id}, {'ages': ['Children', 'Youth', 'Adults', 'Your Mom']})
+                firestore.update({collection: 'providers', doc: doc.id}, item)
             });
         });
-        await this.props.firestore.get('providers')
-    };
-
-    removeFirestore = async () => {
-        let firestore = this.props.firestore;
-        await firestore.get({collection: 'providers', where: ['facilityName', '==', 'dummy']}).then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                firestore.delete({collection: 'providers', doc: doc.id})
-            });
-        });
-
-        //await this.props.firestore.delete({collection: 'providers', doc: this.state.itemUpdates['facilityName']});
-        await firestore.get('providers')
-    };
-
-    addRow = () => {
-        //Fill in
+        await this.props.firestore.get('providers');
+        this.setState({isLoading: false});
+        this.props.history.push(providerRoute);
     };
 
     next = () => {
@@ -139,7 +143,12 @@ class AddProvider extends Component {
                                 width > 768 &&
                                     <Fragment>
                                         <br />
-                                        <Button block disabled={!completed} onClick={this.addFirestore}>
+                                        <Button block disabled={!completed} onClick={
+                                            this.props.selected && this.props.selected.facilityName ?
+                                                this.updateFirestore
+                                                :
+                                                this.addFirestore
+                                        }>
                                             Add Provider
                                         </Button>
                                         <Button as={Link} to={providerRoute} variant="link" block>Cancel</Button>
@@ -155,7 +164,7 @@ class AddProvider extends Component {
                                     <Form>
                                         <Row>
                                             <Col>
-                                                <h2>Map Info</h2>
+                                                <h2>{steps[step]} Info</h2>
                                             </Col>
                                             <Col xs="auto">
                                                 <ButtonToolbar>
@@ -202,5 +211,5 @@ export default compose(
     connect((state) => ({
         providers: state.firestore.ordered.providers,
         firebase: state.firebase,
-        item: state.item
+        selected: state.item.selected
     })))(AddProvider)

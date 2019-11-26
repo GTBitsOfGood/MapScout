@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import {SELECT_ITEM} from "../components/Dashboard";
+import { SELECT_ITEM } from "../components/Dashboard";
 
 const initialState = {
     selected: null,
