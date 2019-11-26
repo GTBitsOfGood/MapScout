@@ -10,17 +10,19 @@ const options ={
     ],
     specializations: [
         {label: 'Autism Spectrum Disorder', value: 'Autism Spectrum Disorder'},
-        {label: 'Medication Assisted Treatment Substance Use Disorders', value: 'Medication Assisted Treatment Substance Use Disorders'},
+        // {label: 'Medication Assisted Treatment Substance Use Disorders', value: 'Medication Assisted Treatment Substance Use Disorders'},
         {label: 'Anxiety Disorders', value: 'Anxiety Disorders'},
-        {label: 'Tamaa Program', value: 'Tamaa Program'},
+        // {label: 'Tamaa Program', value: 'Tamaa Program'},
         {label: 'Sexual Trauma Treatment', value: 'Sexual Trauma Treatment'},
-        {label: 'Domestic Violence Therapy', value: 'Domestic Violence Therapy'},
-        {label: 'Intentional Injuries', value: 'Intentional Injuries'},
+        {label: 'ADHD', value: 'ADHD'},                                     // New filter
+        {label: 'Drugs and Alcohol', value: 'Drugs and Alocohol'},          // New filter
+        // {label: 'Domestic Violence Therapy', value: 'Domestic Violence Therapy'},
+        // {label: 'Intentional Injuries', value: 'Intentional Injuries'},
         {label: 'Depressive Disorders', value: 'Depressive Disorders'},
-        {label: 'Family Therapy', value: 'Family Therapy'},
-        {label: 'Young Children', value: 'Young Children'},
-        {label: 'LGBTQ+ Competent', value: 'LGBTQ+ Competent'},
-        {label: 'Experience working with immigrant and refugees', value: 'Experience working with immigrant and refugees'},
+        // {label: 'Family Therapy', value: 'Family Therapy'},
+        // {label: 'Young Children', value: 'Young Children'},
+        // {label: 'LGBTQ+ Competent', value: 'LGBTQ+ Competent'},
+        // {label: 'Experience working with immigrant and refugees', value: 'Experience working with immigrant and refugees'},
     ],
     ages: [
         {label: 'Toddler/preschoolers (0-6)', value: 'Toddler'},
