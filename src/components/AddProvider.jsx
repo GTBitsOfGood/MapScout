@@ -116,7 +116,6 @@ class AddProvider extends Component {
     };
 
     render() {
-
         const { width, step, completed, animate, isLoading } = this.state;
 
         if (isLoading)
@@ -149,7 +148,8 @@ class AddProvider extends Component {
                                                 :
                                                 this.addFirestore
                                         }>
-                                            Add Provider
+                                            { this.props.selected && this.props.selected.facilityName ? "Edit" : "Add"
+                                            } Provider
                                         </Button>
                                         <Button as={Link} to={providerRoute} variant="link" block>Cancel</Button>
                                     </Fragment>
@@ -176,7 +176,11 @@ class AddProvider extends Component {
                                                         onClick={ step === 3 ? this.addFirestore : this.next}
                                                         disabled={ !completed && step === 3 }
                                                         variant="primary">
-                                                        {step === 3 ? "Add Provider" : "Next"}
+                                                        {step === 3 ?
+                                                            this.props.selected && this.props.selected.facilityName
+                                                                ? "Edit Provider"
+                                                                : "Add Provider"
+                                                            : "Next"}
                                                     </Button>
                                                 </ButtonToolbar>
                                             </Col>
