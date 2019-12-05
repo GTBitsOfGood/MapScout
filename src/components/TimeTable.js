@@ -5,61 +5,26 @@ import FormCheck from "react-bootstrap/FormCheck";
 import BootstrapTable from 'react-bootstrap-table-next';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
+const days = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+];
+
 export default class TimeTable extends Component {
     constructor(props) {
         super(props);
+        let arr = [];
+        days.map((item) =>
+            arr.push({
+                day: item,
+                start: props.hours[item] ? props.hours[item][0] : 0,
+                end: props.hours[item] ? props.hours[item][1] : 0,
+                action: "",
+                selected: props.hours[item] && props.hours[item].length === 2
+            })
+        );
+        console.log(arr);
         this.state = {
-            days: [
-                {
-                    day: "Monday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Tuesday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Wednesday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Thursday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Friday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Saturday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                },
-                {
-                    day: "Sunday",
-                    start: 0,
-                    end: 0,
-                    action: "",
-                    selected: false
-                }
-            ],
+            days: arr,
             selected: [ 0, 1, 2, 3, 4, 5, 6, 7 ]
         }
     }

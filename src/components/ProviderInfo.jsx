@@ -3,24 +3,24 @@ import { FaCheck, FaMapPin, FaPhone, FaGlobe } from "react-icons/fa";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card'; 
+import Card from 'react-bootstrap/Card';
 
 const ProviderInfo = (props) =>
     <div>
         <Container>
         <Row>
             <Col lg={6} className="modal-col-flex-center">
-            
-            <Card> 
-              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=3&size=335x167&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" + 
+
+            <Card>
+              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=3&size=335x167&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" +
               "&markers="+props.item.latitude+","+props.item.longitude}
-            alt="Google Map of bethanna"> 
+            alt="Google Map of bethanna">
               </Card.Img>
-              <Card.Body style={{paddingTop: "10px", paddingBottom:"10px"}}> 
+              <Card.Body style={{paddingTop: "10px", paddingBottom:"10px"}}>
                 <Card.Text>
 
-                  <div className="modal-card-text"> 
-                  <FaMapPin style={{ paddingTop: "5px" }} /> &nbsp; 
+                  <div className="modal-card-text">
+                  <FaMapPin style={{ paddingTop: "5px" }} /> &nbsp;
                     <div>
                     {props.item.address.toString().split(',').map(function (value, index) {
                       if (index == 0) {
@@ -35,26 +35,26 @@ const ProviderInfo = (props) =>
                       }
 
                     })}
-                    </div> 
+                    </div>
                   </div>
-                  
-                  <div className="modal-card-text"> 
-                    <FaPhone style={{ paddingTop: "5px" }} /> &nbsp; 
-                    <div> 
-                      {props.item.phoneNum.join(', ')}
-                    </div> 
-                  </div> 
 
-                  <div className="modal-card-text"> 
-                    {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div></div>} 
+                  <div className="modal-card-text">
+                    <FaPhone style={{ paddingTop: "5px" }} /> &nbsp;
+                    <div>
+                      {props.item.phoneNum.join(', ')}
+                    </div>
+                  </div>
+
+                  <div className="modal-card-text">
+                    {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div></div>}
                     {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a></div> : <div></div>}
-                  </div> 
+                  </div>
 
                 </Card.Text>
               </Card.Body>
-            </Card> 
+            </Card>
 
-            
+
           </Col>
 
           <Col lg={6} className="modal-hours-backdrop">
