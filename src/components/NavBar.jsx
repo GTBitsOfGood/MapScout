@@ -9,8 +9,8 @@ const logo = require('../assets/img/logo.png');
 
 const languageTitles = {
     "en": "English",
-    "es": "Spanish",
-    "zh": "Mandarin"
+    "es": "Español",
+    "zh": "中文",
 };
 
 class NavBar extends Component {

@@ -14,10 +14,8 @@ import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
-import { FaMapPin, FaPhone, FaTimesCircle } from "react-icons/fa";
+import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
-import {FormGroup} from "react-bootstrap";
-
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
@@ -534,37 +532,44 @@ class Index extends Component {
 
     renderCell(item, index) {
         return (
-            <div className = "map-cell"
-                      key = { index }
-                      onClick = {() => this.setState({ selectedIndex: index, showModal: true }) }
-                      onMouseEnter = {() => this.hoverEnter(item) }
-                      onMouseLeave = {() => this.hoverLeave(item) } >
+            <div
+                className = "map-cell padder"
+                key = { index }
+                style = {{
+                    borderTopWidth: index === 0 ? 0 : 1,
+                    paddingTop: index === 0 ? 0 : 18,
+                }}
+                onClick = {() => this.setState({ selectedIndex: index, showModal: true }) }
+                onMouseEnter = {() => this.hoverEnter(item) }
+                onMouseLeave = {() => this.hoverLeave(item) } >
                     <Flipped key = { index }
                              inverseFlipId = "list" >
                         <div>
                             <h5>
-                                <b>{ item.facilityName }</b>
+                                <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
                                 {item.therapyTypes.includes('Pri-CARE') &&
                                     <Badge
-                                        style = {{ marginLeft: 20 }}
+                                        style={{ marginRight: 20 }}
                                         variant = "primary" >Pri-CARE</Badge>
                                 }
                                 {item.therapyTypes.includes('TF-CBT') &&
                                     <Badge
-                                        style = {{ marginLeft: 20 } }
                                         variant = "primary" >TF-CBT</Badge>
                                 }
                             </h5>
                             <div style = {{ color: 'gray' }}>
-                                <FaMapPin />{ item.address[0] }
+                                <FaMapPin /> { item.address[0] }
                                 <div className = "row-spaced">
-                                <div>
-                                    <FaPhone />
-                                    { item.phoneNum.join(', ') }
-                                </div>
-                                <small>
-                                    { this.state[item.facilityName + 'Dist'] && this.state['searchZip'] ? this.state[item.facilityName + 'Dist'] + ' mi' : '' }
-                                </small>
+                                    <div>
+                                        <FaPhone /> { item.phoneNum.join(', ') }
+                                    </div>
+                                    {
+                                        this.state[item.facilityName + 'Dist'] && this.state['searchZip'] &&
+                                        <small>
+                                            <FaLocationArrow style = {{ marginRight: 8 }}/>
+                                            { this.state[item.facilityName + 'Dist'] + ' mi' }
+                                        </small>
+                                    }
                             </div>
                         </div>
                     </div>
@@ -668,7 +673,7 @@ class Index extends Component {
                                     className = "map-list"
                                     style = {{width: listView ? '50%' : '100%'}}>
                                     <Flipped inverseFlipId = "list" >
-                                        <div className = "filter-row" >
+                                        <div className = "filter-row padder" >
                                             { this.renderDropdown(languagesLabel, "languages") }
                                             { this.renderDropdown(agesLabel, "ages") }
                                             { this.renderDropdown(insuranceLabel, "insurance") }
@@ -692,7 +697,7 @@ class Index extends Component {
                                         </div>
                                     </Flipped>
                                     <Flipped inverseFlipId = "list" >
-                                        <div className = "tag-row" >
+                                        <div className = "tag-row padder" >
                                             {this.state.filters.map(this.renderTag)}
                                             {
                                                 this.evaluateFilters() &&
@@ -707,7 +712,7 @@ class Index extends Component {
                                     </Flipped>
                                     <div className = "count" >
                                         <Flipped inverseFlipId = "list" >
-                                            <span >
+                                            <span>
                                                 {
                                                     isEmpty(providers) ?
                                                         'No' : providers.length
@@ -735,7 +740,7 @@ class Index extends Component {
                                                         <h2>
                                                             <b>
                                                                 { providers[selectedIndex].facilityName }
-                                                                </b>
+                                                            </b>
                                                         </h2>
                                                     </Modal.Title>
                                                 </Modal.Header>

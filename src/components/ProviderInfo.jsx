@@ -47,7 +47,7 @@ const ProviderInfo = (props) =>
 
                   <div className="modal-card-text">
                     {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div></div>}
-                    {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a></div> : <div></div>}
+                    {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">Website</a></div> : <div></div>}
                   </div>
 
                 </Card.Text>

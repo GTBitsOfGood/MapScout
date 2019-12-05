@@ -33,6 +33,7 @@ class AddProvider extends Component {
             item: this.props.selected || {},
             isLoading: false
         };
+        console.log(this.props.selected);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
@@ -95,7 +96,7 @@ class AddProvider extends Component {
             }
         }
         let firestore = this.props.firestore;
-        await firestore.get({collection: 'providers', where: ['facilityName', '==', item.facilityName]}).then(function(querySnapshot) {
+        await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
                 firestore.update({collection: 'providers', doc: doc.id}, item)
             });
