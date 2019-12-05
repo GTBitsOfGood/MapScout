@@ -33,7 +33,7 @@ class ProviderRoutes extends Component {
 
         return (
             <Fragment>
-                <NavBar />
+                <NavBar update={() => this.forceUpdate()}/>
                 { isLoaded(this.props.auth) &&
                     <Switch>
                         <PrivateRoute exact path={providerRoute} component={Dashboard} />

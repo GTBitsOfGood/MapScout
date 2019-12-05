@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import NavBar from './NavBar';
+import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Badge from "react-bootstrap/Badge";
@@ -15,6 +16,7 @@ import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
+import {FormGroup} from "react-bootstrap";
 
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
@@ -127,7 +129,6 @@ class Index extends Component {
     filterNormalFilters = async(e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
-
         if (e.target.type === "checkbox" && e.target.checked) {
             await this.setState({
                 [filterName]: [...this.state[filterName], filterVal]
@@ -216,12 +217,12 @@ class Index extends Component {
             center: new google.maps.LatLng(39.9526, -75.1652),
             mapTypeId: 'roadmap',
             styles: [{
-                    "featureType": "administrative.land_parcel",
-                    "elementType": "labels",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
+                "featureType": "administrative.land_parcel",
+                "elementType": "labels",
+                "stylers": [{
+                    "visibility": "off"
+                }]
+            },
                 {
                     "featureType": "poi",
                     "elementType": "labels.text",
@@ -442,7 +443,7 @@ class Index extends Component {
             anchor: new google.maps.Point(0, 0),
         }
         if (current) {
-            // console.log(current.getPosition()); 
+            // console.log(current.getPosition());
             current.setIcon(pressedIcon);
         }
     }
@@ -459,18 +460,18 @@ class Index extends Component {
             anchor: new google.maps.Point(0, 0),
         }
         var iconMarkerGreyOut = {
-                path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-                fillColor: "#C4C4C4",
-                fillOpacity: 1,
-                strokeColor: "white",
-                strokeWeight: 2,
-                anchor: new google.maps.Point(0, 0),
-            }
-            // redraw green for QA
-            // markers.forEach(function(marker) {
-            //   marker.setIcon()
-            // });
-            // convert appropriate ones to grey
+            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
+            fillColor: "#C4C4C4",
+            fillOpacity: 1,
+            strokeColor: "white",
+            strokeWeight: 2,
+            anchor: new google.maps.Point(0, 0),
+        }
+        // redraw green for QA
+        // markers.forEach(function(marker) {
+        //   marker.setIcon()
+        // });
+        // convert appropriate ones to grey
         var match = false;
         markers.forEach(function(marker) {
             match = false;
@@ -514,105 +515,104 @@ class Index extends Component {
 
     renderTag(item, index) {
         return this.state[item].map((title, key) =>
-            <
-            div className = "tag"
-            style = {
-                { borderColor: colors[item], color: colors[item] } }
-            key = { `${index}${key}` } > { title } <
-            span className = "remove-tag"
-            onClick = {
-                async() => {
-                    this.setState({
-                        [item]: this.state[item].filter((i) => i !== title)
-                    });
-                    setTimeout(() => this.filterProviders(), 100);
-                }
-            } >
-            <
-            FaTimesCircle / >
-            <
-            /span> <
-            /div>
+            <div
+                className = "tag"
+                style = {{ borderColor: colors[item], color: colors[item] } }
+                key = { `${index}${key}` }>
+                { title } <span className = "remove-tag"
+                                onClick = {
+                                    async () => {
+                                        this.setState({
+                                            [item]: this.state[item].filter((i) => i !== title)
+                                        });
+                                        setTimeout(() => this.filterProviders(), 100);
+                                    }}> <FaTimesCircle />
+                </span>
+            </div>
         )
     }
 
     renderCell(item, index) {
-        return ( <
-            div className = "map-cell"
-            key = { index }
-            onClick = {
-                () => this.setState({ selectedIndex: index, showModal: true }) }
-            onMouseEnter = {
-                () => this.hoverEnter(item) }
-            onMouseLeave = {
-                () => this.hoverLeave(item) } >
-            <
-            Flipped key = { index }
-            inverseFlipId = "list" >
-            <
-            div >
-            <
-            h5 >
-            <
-            b > { item.facilityName } < /b> {
-                item.therapyTypes.includes('Pri-CARE') &&
-                    <
-                    Badge
-                style = {
-                    { marginLeft: 20 } }
-                variant = "primary" > Pri - CARE < /Badge>
-            } {
-                item.therapyTypes.includes('TF-CBT') &&
-                    <
-                    Badge
-                style = {
-                    { marginLeft: 20 } }
-                variant = "primary" > TF - CBT < /Badge>
-            } <
-            /h5> <
-            div style = {
-                { color: 'gray' } } >
-            <
-            FaMapPin / > { item.address[0] } <
-            div className = "row-spaced" >
-            <
-            div > < FaPhone / > { item.phoneNum.join(', ') } < /div> <
-            small > { this.state[item.facilityName + 'Dist'] && this.state['searchZip'] ? this.state[item.facilityName + 'Dist'] + ' mi' : '' } < /small> <
-            /div> <
-            /div> <
-            /div> <
-            /Flipped> <
-            /div>
+        return (
+            <div className = "map-cell"
+                      key = { index }
+                      onClick = {() => this.setState({ selectedIndex: index, showModal: true }) }
+                      onMouseEnter = {() => this.hoverEnter(item) }
+                      onMouseLeave = {() => this.hoverLeave(item) } >
+                    <Flipped key = { index }
+                             inverseFlipId = "list" >
+                        <div>
+                            <h5>
+                                <b>{ item.facilityName }</b>
+                                {item.therapyTypes.includes('Pri-CARE') &&
+                                    <Badge
+                                        style = {{ marginLeft: 20 }}
+                                        variant = "primary" >Pri-CARE</Badge>
+                                }
+                                {item.therapyTypes.includes('TF-CBT') &&
+                                    <Badge
+                                        style = {{ marginLeft: 20 } }
+                                        variant = "primary" >TF-CBT</Badge>
+                                }
+                            </h5>
+                            <div style = {{ color: 'gray' }}>
+                                <FaMapPin />{ item.address[0] }
+                                <div className = "row-spaced">
+                                <div>
+                                    <FaPhone />
+                                    { item.phoneNum.join(', ') }
+                                </div>
+                                <small>
+                                    { this.state[item.facilityName + 'Dist'] && this.state['searchZip'] ? this.state[item.facilityName + 'Dist'] + ' mi' : '' }
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </Flipped>
+            </div>
         );
     }
 
     renderDropdown(title, key) {
-        return ( <
-            Dropdown >
-            <
-            Dropdown.Toggle variant = "light"
-            alignLeft style = {
-                { marginRight: 5, marginBottom: 5 } } >
-            { title } < /Dropdown.Toggle> <
-            Dropdown.Menu > {
-                options[key].map((item, index) =>
-                    <
-                    Form.Check name = { key }
-                    key = { index }
-                    onChange = { this.filterProviders }
-                    className = "dropdown-item"
-                    type = "checkbox"
-                    checked = { this.state[key].includes(item.value) }
-                    value = { item.value }
-                    label = { item.label }
-                    filtertype = "normalfilter" / >
-                )
-            } <
-            /Dropdown.Menu> <
-            /Dropdown>
-        )
+        return (
+            <Dropdown>
+                <Dropdown.Toggle
+                    variant = "light"
+                    alignLeft
+                    style = {{ marginRight: 5, marginBottom: 5 }}>
+                    { title }
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {
+                        options[key].map((item, index) =>
+                            <div
+                                onClick={
+                                    () => this.filterProviders({
+                                        target: {
+                                            name: key,
+                                            value: item.value,
+                                            type: "checkbox",
+                                            checked: !this.state[key].includes(item.value),
+                                            getAttribute: (param) => "normalfilter"
+                                        }
+                                    })
+                            }>
+                                <Form.Check
+                                    className="dropdown-item"
+                                    name = { key }
+                                    key = { index }
+                                    type = "checkbox"
+                                    checked = { this.state[key].includes(item.value) }
+                                    value = { item.value }
+                                    label = { item.label }
+                                    filtertype = "normalfilter" />
+                            </div>
+                        )
+                    }
+                </Dropdown.Menu>
+            </Dropdown>
+        );
     }
-
     render() {
         let {
             searchProviderName,
@@ -624,174 +624,147 @@ class Index extends Component {
             insuranceLabel,
             serviceTypeLabel,
             specializationsLabel,
-            therapyTypeLabel
+            therapyTypeLabel,
+            lessFilters,
+            moreFilters
         } = localizationStrings;
         const { isLoading, data, selectedIndex, showModal, listView } = this.state;
         const providers = this.state.activeProviders;
-
         if (isLoading || !isLoaded(providers))
-            return <div className = "spinner" / > ;
+            return <div className = "spinner" />;
 
-        return ( <
-            div className = "bg-white" >
-            <
-            NavBar / >
-            <
-            div >
-            <
-            div className = "row-spaced ml-2" >
-            <
-            div className = "w-75" >
-            <
-            Form.Row >
-            <
-            Col >
-            <
-            Form.Control placeholder = { searchZipcode }
-            filtertype = 'zipcode'
-            onChange = { this.filterProviders }
-            /> <
-            /Col> <
-            Col >
-            <
-            Form.Control placeholder = { searchProviderName }
-            filtertype = 'search'
-            onChange = { this.filterProviders }
-            /> <
-            /Col> <
-            /Form.Row> <
-            /div> <
-            Button variant = "primary"
-            onClick = { this.switchView }
-            className = "switch-view-button" > { this.state.listView ? hideLabel : showLabel } <
-            /Button> <
-            /div> <
-            Flipper flipKey = { listView } >
-            <
-            div className = "row-nowrap" >
-            <
-            Flipped flipId = "list" >
-            <
-            div className = "map-list"
-            style = {
-                {
-                    width: listView ? '50%' : '100%'
-                }
-            } >
-            <
-            Flipped inverseFlipId = "list" >
-            <
-            div className = "filter-row" > { this.renderDropdown(languagesLabel, "languages") } { this.renderDropdown(agesLabel, "ages") } { this.renderDropdown(insuranceLabel, "insurance") } {
-                this.state.moreFilter ?
-                    <
-                    Fragment > { this.renderDropdown(serviceTypeLabel, "serviceType") } { this.renderDropdown(specializationsLabel, "specializations") } { this.renderDropdown(therapyTypeLabel, "therapyTypes") } <
-                    Button
-                variant = "link"
-                style = {
-                    { color: 'red' } }
-                onClick = {
-                        () => this.setState({ moreFilter: false }) } >
-                    -Less Filters <
-                    /Button> <
-                    /Fragment>:
-                    <
-                    Button
-                variant = "link"
-                onClick = {
-                        () => this.setState({ moreFilter: true }) } >
-                    +More Filters <
-                    /Button>
-            } <
-            /div> <
-            /Flipped> <
-            Flipped inverseFlipId = "list" >
-            <
-            div className = "tag-row" > {
-                this.state.filters.map(this.renderTag)
-            } {
-                this.evaluateFilters() &&
-                    <
-                    div
-                onClick = {
-                    () => this.clearFilters() }
-                className = "tag clear-all"
-                style = {
-                        { borderColor: 'red', color: 'red' } } >
-                    Clear All <
-                    /div>
-            } <
-            /div> <
-            /Flipped> <
-            div className = "count" >
-            <
-            Flipped inverseFlipId = "list" >
-            <
-            span > {
-                isEmpty(providers) ?
-                'No' : providers.length
-            }
-            providers found < /span> <
-            /Flipped> <
-            /div> {
-                !isEmpty(providers) &&
-                    providers.map(this.renderCell)
-            } <
-            div > {
-                providers && providers[selectedIndex] &&
-                <
-                Modal
-                show = { showModal }
-                onHide = {
-                    () => this.setState({ showModal: false }) }
-                size = "lg"
-                scrollable >
-                <
-                Modal.Header className = "modal-header"
-                style = {
-                    { backgroundImage: `url(${providers[selectedIndex].imageURL})` } }
-                closeButton >
-                <
-                Modal.Title id = "contained-modal-title-vcenter" >
-                <
-                h2 > < b > { providers[selectedIndex].facilityName } < /b></h
-                2 >
-                <
-                /Modal.Title> <
-                /Modal.Header> <
-                Modal.Body className = "modal-body" >
-                <
-                ProviderInfo item = { providers[selectedIndex] }
-                /> <
-                /Modal.Body> <
-                /Modal>
-            } <
-            /div> <
-            /div> <
-            /Flipped> <
-            Flipped flipId = "map" >
-            <
-            div style = {
-                { width: '50%', marginRight: listView ? 0 : -1000, } } >
-            <
-            div ref = "map"
-            id = "map"
-            className = "map-view"
-            style = {
-                { height: 'calc(100vh - 130px)' } }
-            /> <
-            /div> <
-            /Flipped> <
-            /div> <
-            /Flipper> <
-            /div> <
-            /div>);
-        }
-
+        return (
+            <div className = "bg-white" >
+                <NavBar update={() => this.forceUpdate()}/>
+                <div >
+                    <div className = "row-spaced ml-2 mb-3" >
+                        <div className = "w-75" >
+                            <Row >
+                                <Col >
+                                    <Form.Control
+                                        placeholder = { searchZipcode }
+                                        filtertype = 'zipcode'
+                                        onChange = { this.filterProviders } />
+                                </Col>
+                                <Col >
+                                    <Form.Control
+                                        placeholder = { searchProviderName }
+                                        filtertype = 'search'
+                                        onChange = { this.filterProviders } />
+                                </Col>
+                            </Row>
+                        </div>
+                        <Button
+                            variant = "primary"
+                            onClick = { this.switchView }
+                            className = "switch-view-button" >
+                            { this.state.listView ? hideLabel : showLabel }
+                        </Button>
+                    </div>
+                    <Flipper flipKey = { listView } >
+                        <div className = "row-nowrap" >
+                            <Flipped flipId = "list" >
+                                <div
+                                    className = "map-list"
+                                    style = {{width: listView ? '50%' : '100%'}}>
+                                    <Flipped inverseFlipId = "list" >
+                                        <div className = "filter-row" >
+                                            { this.renderDropdown(languagesLabel, "languages") }
+                                            { this.renderDropdown(agesLabel, "ages") }
+                                            { this.renderDropdown(insuranceLabel, "insurance") }
+                                            { this.state.moreFilter
+                                                ? <Fragment >
+                                                    { this.renderDropdown(serviceTypeLabel, "serviceType") }
+                                                    { this.renderDropdown(specializationsLabel, "specializations") }
+                                                    { this.renderDropdown(therapyTypeLabel, "therapyTypes") }
+                                                    <Button
+                                                        variant = "link"
+                                                        style = {{ color: 'red' }}
+                                                        onClick = {() => this.setState({ moreFilter: false }) } >- {lessFilters}
+                                                    </Button>
+                                                </Fragment>
+                                                : <Button
+                                                    variant = "link"
+                                                    onClick = {() => this.setState({ moreFilter: true }) }>
+                                                    + {moreFilters}
+                                                </Button>
+                                            }
+                                        </div>
+                                    </Flipped>
+                                    <Flipped inverseFlipId = "list" >
+                                        <div className = "tag-row" >
+                                            {this.state.filters.map(this.renderTag)}
+                                            {
+                                                this.evaluateFilters() &&
+                                                <div
+                                                    onClick = {() => this.clearFilters()}
+                                                    className = "tag clear-all"
+                                                    style = {{ borderColor: 'red', color: 'red' }}>
+                                                    Clear All
+                                                </div>
+                                            }
+                                        </div>
+                                    </Flipped>
+                                    <div className = "count" >
+                                        <Flipped inverseFlipId = "list" >
+                                            <span >
+                                                {
+                                                    isEmpty(providers) ?
+                                                        'No' : providers.length
+                                                } providers found
+                                            </span>
+                                        </Flipped>
+                                    </div>
+                                    {
+                                        !isEmpty(providers) &&
+                                        providers.map(this.renderCell)
+                                    }
+                                    <div >
+                                        {
+                                            providers && providers[selectedIndex] &&
+                                            <Modal
+                                                show = { showModal }
+                                                onHide = {() => this.setState({ showModal: false })}
+                                                size = "lg"
+                                                scrollable >
+                                                <Modal.Header
+                                                    className = "image-cover"
+                                                    style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }}
+                                                    closeButton >
+                                                    <Modal.Title id = "contained-modal-title-vcenter" >
+                                                        <h2>
+                                                            <b>
+                                                                { providers[selectedIndex].facilityName }
+                                                                </b>
+                                                        </h2>
+                                                    </Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body
+                                                    className = "modal-body" >
+                                                    <ProviderInfo item = { providers[selectedIndex] }/>
+                                                </Modal.Body>
+                                            </Modal>
+                                        }
+                                    </div>
+                                </div>
+                            </Flipped>
+                            <Flipped flipId = "map" >
+                                <div style = {{ width: '50%', marginRight: listView ? 0 : -1000, }}>
+                                    <div
+                                        ref = "map"
+                                        id = "map"
+                                        className = "map-view"
+                                        style = {{ height: 'calc(100vh - 115px)' } }/>
+                                </div>
+                            </Flipped>
+                        </div>
+                    </Flipper>
+                </div>
+            </div>);
     }
+}
 
-    export default compose(
-        withFirestore,
-        connect((state) => ({
-            providers: state.firestore.ordered.providers,
-            firebase: state.firebase
-        })))(Index);
+export default compose(withFirestore, connect((state) => ({
+    providers: state.firestore.ordered.providers,
+    firebase: state.firebase
+})))(Index);

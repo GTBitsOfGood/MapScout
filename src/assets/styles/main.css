@@ -56,7 +56,7 @@ body {
 }
 
 .map-list {
-    max-height: calc(100vh - 130px);
+    max-height: calc(100vh - 115px);
     overflow-y: scroll;
     padding: 0 12px;
 }
@@ -419,9 +419,12 @@ body {
     background-size: cover;
     -webkit-filter: grayscale(100%);
     filter: gray;
-    color: white;
     object-fit: cover;
-    text-shadow: black 10px 10px 10px;
+}
+
+.image-cover h2 {
+    color: white;
+    text-shadow: black 0 0 12px, 0 0 20px black;
 }
 
 .view-container {
@@ -435,7 +438,11 @@ body {
 }
 
 .switch-view-button {
-    margin: 15px;
+    margin: 0 15px;
+}
+
+.filter-toggle {
+    padding: 12;
 }
 
 .view-row {
