@@ -32,7 +32,7 @@ const rrfConfig = {
 
 firebase.initializeApp(firebaseConfig);
 firebase.firestore();
-const storage = firebase.storage()
+const storage = firebase.storage();
 
 const createStoreWithFirebase = compose(
     reactReduxFirebase(firebase, rrfConfig),
