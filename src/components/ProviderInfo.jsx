@@ -6,13 +6,13 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 
 const ProviderInfo = (props) =>
-    <div>
-        <Container>
-        <Row>
+  <div>
+    <Container>
+      <Row>
             <Col lg={6} className="modal-col-flex-center">
 
             <Card>
-              <Card.Img  src={"https://maps.googleapis.com/maps/api/staticmap?center="+props.item.latitude+","+props.item.longitude+"&zoom=13&scale=3&size=335x167&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true" +
+              <Card.Img  src={'https://maps.googleapis.com/maps/api/staticmap?center='+props.item.latitude+","+props.item.longitude+'&zoom=13&scale=3&size=335x167&maptype=roadmap&key=AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ&format=png&visual_refresh=true' +
               "&markers="+props.item.latitude+","+props.item.longitude}
             alt="Google Map of bethanna">
               </Card.Img>
@@ -23,12 +23,12 @@ const ProviderInfo = (props) =>
                   <FaMapPin style={{ paddingTop: "5px" }} /> &nbsp;
                     <div>
                     {props.item.address.toString().split(',').map(function (value, index) {
-                      if (index == 0) {
+                      if (index === 0) {
                         return <div>{value}</div>;
-                      } else if (index == props.item.address.toString().split(',').length - 1) {
+                      } else if (index === props.item.address.toString().split(',').length - 1) {
                         return <div style={{ "display": "inline" }}>{value}<div><a href={"https://maps.google.com/?q=" + props.item.address.toString()} target="_blank">View on Maps</a></div></div>;
                       } else {
-                        if (index == 1) {
+                        if (index === 1) {
                           return <div style={{ "display": "inline" }}>{value + ','}</div>;
                         }
                         return value + ',';
@@ -46,8 +46,8 @@ const ProviderInfo = (props) =>
                   </div>
 
                   <div className="modal-card-text">
-                    {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div></div>}
-                    {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a></div> : <div></div>}
+                    {props.item.website[0] ? <FaGlobe style={{ paddingTop: "5px" }} /> : <div />}
+                    {props.item.website[0] ? <div> &nbsp;<a href={props.item.website[0]} target="_blank">Website</a></div> : <div />}
                   </div>
 
                 </Card.Text>
@@ -170,7 +170,7 @@ const ProviderInfo = (props) =>
           <hr className="modal-hr"/>
           <div>
           {props.item.languages.map(function(location, index) {
-            if(index != props.item.languages.length - 1){
+            if(index !== props.item.languages.length - 1){
               return <div className="modal-text">{location}, </div>;
             } else {
               return <div className="modal-text">{location}</div>;
@@ -184,7 +184,7 @@ const ProviderInfo = (props) =>
           <h5><b>Ages</b></h5>
           <hr className="modal-hr" />
           {props.item.ages.map(function (age, index) {
-            if (index != props.item.ages.length - 1) {
+            if (index !== props.item.ages.length - 1) {
               return <div className="modal-text">{age}, </div>;
             } else {
               return <div className="modal-text">{age}</div>;
@@ -197,7 +197,7 @@ const ProviderInfo = (props) =>
           <h5><b>Insurance Type Accepted</b></h5>
           <hr className="modal-hr" />
           {props.item.insurance.map(function (insur, index) {
-            if (index != props.item.insurance.length - 1) {
+            if (index !== props.item.insurance.length - 1) {
               return <div className="modal-text">{insur}, </div>;
             } else {
               return <div className="modal-text">{insur}</div>;
@@ -210,7 +210,7 @@ const ProviderInfo = (props) =>
           <h5><b>Service Types</b></h5>
           <hr className="modal-hr" />
           {props.item.serviceType.map(function (service, index) {
-            if (index != props.item.serviceType.length - 1) {
+            if (index !== props.item.serviceType.length - 1) {
               return <div className="modal-text">{service}; </div>;
             } else {
               return <div className="modal-text">{service}</div>;
@@ -223,7 +223,7 @@ const ProviderInfo = (props) =>
           <h5><b>Therapy Types</b></h5>
           <hr className="modal-hr" />
           {props.item.therapyTypes.map(function (therapy, index) {
-            if (index != props.item.therapyTypes.length - 1) {
+            if (index !== props.item.therapyTypes.length - 1) {
               return <div className="modal-text">{therapy}; </div>;
             } else {
               return <div className="modal-text">{therapy}</div>;
@@ -236,7 +236,7 @@ const ProviderInfo = (props) =>
           <h5><b>Specializations</b></h5>
           <hr className="modal-hr" />
           {props.item.specializations.map(function (special, index) {
-            if (index != props.item.specializations.length - 1) {
+            if (index !== props.item.specializations.length - 1) {
               return <div className="modal-text">{special}; </div>;
             } else {
               return <div className="modal-text">{special}</div>;
@@ -246,14 +246,14 @@ const ProviderInfo = (props) =>
         <br />
 
         {/* TODO checkmarks for EPIC and Childcare change from alerts */}
-        {props.item.childcare[0] ? <h5>ChildCare Available <FaCheck/><br /></h5> : <div></div>}
-        {props.item.epic[0] ? <h5>EPIC Designation <FaCheck /><br /></h5> : <div></div>}
+        {props.item.childcare[0] ? <h5>ChildCare Available <FaCheck/><br /></h5> : <div />}
+        {props.item.epic[0] ? <h5>EPIC Designation <FaCheck /><br /></h5> : <div />}
     </div>;
 
 
 function formatTime(arr, time, index) {
   if (time == null) {
-    if (index != arr.length - 1) {
+    if (index !== arr.length - 1) {
       return <div className="modal-text">CLOSED - </div>;
     } else {
       return <div className="modal-text">CLOSED</div>;
@@ -264,7 +264,7 @@ function formatTime(arr, time, index) {
   let mins = seconds / 60 % 60
   let endtime_ending = hours < 12 ? "AM" : "PM"
   hours = hours % 12
-  if(hours == 0) {
+  if(hours === 0) {
     hours = 12
   }
   if(mins < 10) {
@@ -278,7 +278,7 @@ function formatTime(arr, time, index) {
   // let timestr = time.toString()
   // let timeformat = timestr.substring(0, timestr.length - 2) + ":" + timestr.substring(timestr.length - 2) + endtime_ending;
   let timeformat = `${hours}:${mins}${endtime_ending}`
-  if (index != arr.length - 1) {
+  if (index !== arr.length - 1) {
     return <div className="modal-text">{timeformat} - </div>;
   } else {
     return <div className="modal-text">{timeformat}</div>;
