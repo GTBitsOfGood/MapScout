@@ -1,13 +1,13 @@
-import React, {Component, Fragment} from 'react';
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import {compose} from "redux";
-import {withFirestore} from "react-redux-firebase";
-import ProviderInfo from "./ProviderInfo";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
-import Modal from "react-bootstrap/Modal";
-import {Link} from "react-router-dom";
-import {formRoute} from "./ProviderRoutes";
+import React, { Component, Fragment } from 'react';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import { compose } from 'redux';
+import { withFirestore } from 'react-redux-firebase';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import Modal from 'react-bootstrap/Modal';
+import { Link } from 'react-router-dom';
+import ProviderInfo from './ProviderInfo';
+import { formRoute } from './ProviderRoutes';
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update
@@ -15,38 +15,45 @@ import {formRoute} from "./ProviderRoutes";
 //     await this.props.firestore.get('providers')
 // };
 
-const SingleProvider = (props) => <div>
+const SingleProvider = (props) => (
+  <div>
     <div
-        className="image-cover row-spaced mb-3"
-        style={{ backgroundImage: `url(${props.item.imageURL
-            || require('../assets/img/modalimage.png')})`}}>
-        <h2>{props.item.facilityName}</h2>
-        <div>
-            <ButtonToolbar>
-                <Button
-                    onClick={props.editProvider}
-                    as={Link}
-                    to={formRoute}
-                    variant="info"
-                    className="mr-2">
+      className="image-cover row-spaced mb-3"
+      style={{
+        backgroundImage: `url(${props.item.imageURL
+            || require('../assets/img/modalimage.png')})`,
+      }}
+    >
+      <h2>{props.item.facilityName}</h2>
+      <div>
+        <ButtonToolbar>
+          <Button
+            onClick={props.editProvider}
+            as={Link}
+            to={formRoute}
+            variant="info"
+            className="mr-2"
+          >
                     Edit
-                </Button>
-                <Button
-                    variant="danger"
-                    onClick={async () => {
-                        props.setLoading();
-                        await props.firestore.delete({collection: 'providers', doc: props.item['facilityName']});
-                        await props.firestore.get('providers');
-                        props.resetIndex();
-                    }}>
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              props.setLoading();
+              await props.firestore.delete({ collection: 'providers', doc: props.item.facilityName });
+              await props.firestore.get('providers');
+              props.resetIndex();
+            }}
+          >
                     Delete
-                </Button>
-            </ButtonToolbar>
-        </div>
+          </Button>
+        </ButtonToolbar>
+      </div>
     </div>
     <Container>
-        <ProviderInfo item={props.item} />
+      <ProviderInfo item={props.item} />
     </Container>
-</div>;
+  </div>
+);
 
-export default compose(withFirestore)(SingleProvider)
+export default compose(withFirestore)(SingleProvider);
