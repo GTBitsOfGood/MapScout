@@ -277,6 +277,11 @@ body {
     overflow-x: hidden;
 }
 
+@media only screen and (min-width: 900px) {
+    .row-nowrap {
+        flex-direction: column-reverse;
+    }
+}
 
 /*Loading Spinner, Temporary*/
 
