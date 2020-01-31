@@ -1,7 +1,7 @@
 import React from 'react';
 import Popup from 'reactjs-popup';
 
-export default ({ selected, name, address }) => {
+export default ({ index, selectedIndex, name, address, onShowMoreClick }) => {
     return (
         <Popup
             trigger={
@@ -18,11 +18,12 @@ export default ({ selected, name, address }) => {
             position="top center"
             closeOnDocumentClick
             on="focus"
-            open={selected}
+            open={selectedIndex === index}
         >
             <div>
                 <div>{name}</div>
                 <div>{address}</div>
+                <button onClick={() => onShowMoreClick(index)}>Show More Info</button>
             </div>
         </Popup>
     );

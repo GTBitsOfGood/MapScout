@@ -3,7 +3,7 @@ import GoogleMapReact from 'google-map-react';
 
 import MapMarker from './MapMarker';
 
-export default ({ providers, defaultZoom, defaultCenter, highlightedId, onMarkerClick }) => {
+export default ({ providers, defaultZoom, defaultCenter, onShowMoreClick }) => {
     const [selected, setSelected] = useState(-1);
 
     const handleApiLoaded = (map, maps) => {
@@ -22,6 +22,7 @@ export default ({ providers, defaultZoom, defaultCenter, highlightedId, onMarker
                 defaultZoom={defaultZoom}
                 onChildClick={(hoverKey, childProps) => {
                     setSelected(hoverKey == selected ? -1 : hoverKey);
+                    console.log(childProps)
                 }}
                 yesIWantToUseGoogleMapApiInternals
                 onGoogleApiLoaded={({ map, maps }) =>
@@ -35,7 +36,9 @@ export default ({ providers, defaultZoom, defaultCenter, highlightedId, onMarker
                             lng={longitude}
                             name={facilityName}
                             address={address[0]}
-                            selected={selected == i}
+                            index={i}
+                            selectedIndex={selected}
+                            onShowMoreClick={onShowMoreClick}
                         />
                     )
                 )}

@@ -54,6 +54,7 @@ class Index extends Component {
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
+        this.handleCellClick = this.handleCellClick.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
         this.renderTag = this.renderTag.bind(this);
         this.filterZipcode = this.filterZipcode.bind(this);
@@ -235,6 +236,10 @@ class Index extends Component {
         )
     }
 
+    handleCellClick(index) {
+        this.setState({ selectedIndex: index, showModal: true });
+    }
+
     renderCell(item, index) {
         return (
             <div
@@ -244,7 +249,7 @@ class Index extends Component {
                     borderTopWidth: index === 0 ? 0 : 1,
                     paddingTop: index === 0 ? 0 : 18,
                 }}
-                onClick = {() => this.setState({ selectedIndex: index, showModal: true }) } >
+                onClick = {() => this.handleCellClick(index)} >
                     <Flipped key = { index }
                              inverseFlipId = "list" >
                         <div>
@@ -470,6 +475,7 @@ class Index extends Component {
                                             lat: 39.9526,
                                             lng: -75.1652
                                         }}
+                                        onShowMoreClick={this.handleCellClick}
                                     />
                                 </div>
                             </Flipped>
