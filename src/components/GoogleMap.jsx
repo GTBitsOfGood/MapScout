@@ -20,10 +20,6 @@ export default ({ providers, defaultZoom, defaultCenter, onShowMoreClick }) => {
                 }}
                 defaultCenter={defaultCenter}
                 defaultZoom={defaultZoom}
-                onChildClick={(hoverKey, childProps) => {
-                    setSelected(hoverKey == selected ? -1 : hoverKey);
-                    console.log(childProps);
-                }}
                 options={getMapOptions}
             >
                 {providers.map(
@@ -35,7 +31,8 @@ export default ({ providers, defaultZoom, defaultCenter, onShowMoreClick }) => {
                             address={address[0]}
                             index={i}
                             selectedIndex={selected}
-                            onShowMoreClick={onShowMoreClick}
+                            onShowMoreClick={() => onShowMoreClick(i)}
+                            onMarkerClick={() => setSelected(selected === i ? -1 : i)}
                         />
                     )
                 )}

@@ -1,11 +1,14 @@
-import React from 'react';
-import Popup from 'reactjs-popup';
+import React from "react";
+import Popup from "reactjs-popup";
 
-export default ({ index, selectedIndex, name, address, onShowMoreClick }) => {
+export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarkerClick }) => {
     return (
         <Popup
             trigger={
-                <div style={{ cursor: 'pointer', width: '18px', height: '18px' }}>
+                <div
+                    style={{ cursor: "pointer", width: "18px", height: "18px" }}
+                    onClick={onMarkerClick}
+                >
                     <svg
                         fill="#5EB63B"
                         stroke="white"
@@ -19,14 +22,14 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick }) => {
             }
             position="top center"
             closeOnDocumentClick
-            on="click"
+            on="focus"
             open={selectedIndex === index}
         >
             <div>
                 <div>{name}</div>
                 <div>{address}</div>
-                <button onClick={() => onShowMoreClick(index)}>Show More Info</button>
+                <button onClick={onShowMoreClick}>Show More Info</button>
             </div>
         </Popup>
     );
-}
+};
