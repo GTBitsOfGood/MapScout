@@ -4,25 +4,42 @@ import GoogleMapReact from 'google-map-react';
 import MapMarker from './MapMarker';
 
 export default ({ providers, defaultZoom, defaultCenter, highlightedId, onMarkerClick }) => {
-    console.log(providers);
+    const [selected, setSelected] = useState(-1);
+
+    const handleApiLoaded = (map, maps) => {
+        map.setOptions({
+            clickableIcons: false
+        })
+    }
+
     return (
-        <div style={{ height: '100vh', width: '100%' }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: 'AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ' }}
-          defaultCenter={defaultCenter}
-          defaultZoom={defaultZoom}
-          onChildClick={(hoverKey, childProps) => {
-              console.log(hoverKey);
-              console.log(childProps);
-          }}
-        >
-            {providers.map(({ latitude, longitude }) => 
-                <MapMarker
-                    lat={latitude}
-                    lng={longitude}
-                />
-            )}
-        </GoogleMapReact>
-      </div>
-    )
+        <div style={{ height: "100vh", width: "100%" }}>
+            <GoogleMapReact
+                bootstrapURLKeys={{
+                    key: "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ"
+                }}
+                defaultCenter={defaultCenter}
+                defaultZoom={defaultZoom}
+                onChildClick={(hoverKey, childProps) => {
+                    setSelected(hoverKey == selected ? -1 : hoverKey);
+                }}
+                yesIWantToUseGoogleMapApiInternals
+                onGoogleApiLoaded={({ map, maps }) =>
+                    handleApiLoaded(map, maps)
+                }
+            >
+                {providers.map(
+                    ({ latitude, longitude, facilityName, address }, i) => (
+                        <MapMarker
+                            lat={latitude}
+                            lng={longitude}
+                            name={facilityName}
+                            address={address[0]}
+                            selected={selected == i}
+                        />
+                    )
+                )}
+            </GoogleMapReact>
+        </div>
+    );
 }
