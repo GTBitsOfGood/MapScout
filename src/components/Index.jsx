@@ -463,11 +463,6 @@ class Index extends Component {
                             </Flipped>
                             <Flipped flipId = "map" >
                                 <div style = {{ width: '50%', marginRight: listView ? 0 : -1000, }}>
-                                    {/* <div
-                                        ref = "map"
-                                        id = "map"
-                                        className = "map-view"
-                                        style = {{ height: 'calc(100vh - 115px)' } }/> */}
                                     <GoogleMap
                                         providers={providers}
                                         defaultZoom={12}

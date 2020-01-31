@@ -5,19 +5,21 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick }) => {
     return (
         <Popup
             trigger={
-                <svg
-                    fill="#5EB63B"
-                    stroke="white"
-                    strokeWidth="2"
-                    width="18px"
-                    height="18px"
-                >
-                    <path d="M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0" />
-                </svg>
+                <div style={{ cursor: 'pointer', width: '18px', height: '18px' }}>
+                    <svg
+                        fill="#5EB63B"
+                        stroke="white"
+                        strokeWidth="2"
+                        width="18px"
+                        height="18px"
+                    >
+                        <path d="M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0" />
+                    </svg>
+                </div>
             }
             position="top center"
             closeOnDocumentClick
-            on="focus"
+            on="click"
             open={selectedIndex === index}
         >
             <div>

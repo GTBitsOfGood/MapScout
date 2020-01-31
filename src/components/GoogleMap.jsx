@@ -6,14 +6,14 @@ import MapMarker from './MapMarker';
 export default ({ providers, defaultZoom, defaultCenter, onShowMoreClick }) => {
     const [selected, setSelected] = useState(-1);
 
-    const handleApiLoaded = (map, maps) => {
-        map.setOptions({
+    const getMapOptions = (maps) => {
+        return {
             clickableIcons: false
-        })
+        };
     }
 
     return (
-        <div style={{ height: "100vh", width: "100%" }}>
+        <div style={{ height: "calc(100vh - 115px)", width: "100%" }}>
             <GoogleMapReact
                 bootstrapURLKeys={{
                     key: "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ"
@@ -22,12 +22,9 @@ export default ({ providers, defaultZoom, defaultCenter, onShowMoreClick }) => {
                 defaultZoom={defaultZoom}
                 onChildClick={(hoverKey, childProps) => {
                     setSelected(hoverKey == selected ? -1 : hoverKey);
-                    console.log(childProps)
+                    console.log(childProps);
                 }}
-                yesIWantToUseGoogleMapApiInternals
-                onGoogleApiLoaded={({ map, maps }) =>
-                    handleApiLoaded(map, maps)
-                }
+                options={getMapOptions}
             >
                 {providers.map(
                     ({ latitude, longitude, facilityName, address }, i) => (
