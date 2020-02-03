@@ -151,6 +151,13 @@ body {
     padding: 20px;
 }
 
+.row-nowrap {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
@@ -161,6 +168,12 @@ body {
     }
     .step-wrapper {
         padding: 20px 0 20px 60px;
+    }
+    .row-nowrap {
+        flex-direction: row;
+    }
+    .map-view {
+        height: calc(100vh - 115px);
     }
 }
 
@@ -270,18 +283,6 @@ body {
     flex-direction: row;
 }
 
-.row-nowrap {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: hidden;
-}
-
-@media only screen and (min-width: 900px) {
-    .row-nowrap {
-        flex-direction: column-reverse;
-    }
-}
 
 /*Loading Spinner, Temporary*/
 
@@ -463,4 +464,5 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
+    height: calc(100vh - 115px);
 }

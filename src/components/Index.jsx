@@ -670,7 +670,7 @@ class Index extends Component {
                             <Flipped flipId = "list" >
                                 <div
                                     className = "map-list"
-                                    style = {{width: listView ? '50%' : '100%'}}>
+                                    style = {{width: listView ? '100vw' : '100%'}}>
                                     <Flipped inverseFlipId = "list" >
                                         <div className = "filter-row padder" >
                                             { this.renderDropdown(languagesLabel, "languages") }
@@ -753,11 +753,11 @@ class Index extends Component {
                                 </div>
                             </Flipped>
                             <Flipped flipId = "map" >
-                                <div style = {{ width: '50%', marginRight: listView ? 0 : -1000, }}>
+                                <div style = {{ width: '100vw', marginRight: listView ? 0 : '-100%', }}>
                                     <div
                                         ref = "map"
                                         id = "map"
-                                        className = "map-view"
+                                        class = "map-view"
                                         style = {{ height: 'calc(100vh - 115px)' } }/>
                                 </div>
                             </Flipped>
