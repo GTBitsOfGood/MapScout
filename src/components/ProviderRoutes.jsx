@@ -8,7 +8,7 @@ import NavBar from './NavBar';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
-import PasswordForgetPage from "./PasswordForget";
+import { PasswordForgetPage, PasswordForgetForm } from "./PasswordForget";
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
@@ -49,7 +49,7 @@ class ProviderRoutes extends Component {
                       />
                       <Route
                             exact path={pwdRoute}
-                            component={PasswordForgetPage}
+                            component={PasswordForgetForm}
                       />
                     </Switch>
                     )}
