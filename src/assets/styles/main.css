@@ -55,11 +55,6 @@ body {
     border-bottom: solid 1px lightgray;
 }
 
-.map-list {
-    max-height: calc(100vh - 115px);
-    overflow-y: scroll;
-}
-
 .no-span {
     display: table;
     white-space: nowrap;
@@ -107,6 +102,7 @@ body {
 }
 
 .filter-row {
+    padding-top: 20px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -158,6 +154,14 @@ body {
     overflow-x: hidden;
 }
 
+.map-view {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(70vh - 115px);
+}
+
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
@@ -174,6 +178,13 @@ body {
     }
     .map-view {
         height: calc(100vh - 115px);
+    }
+    .map-list {
+        max-height: calc(100vh - 115px);
+        overflow-y: scroll;
+    }
+    .filter-row {
+        padding-top: 0px;
     }
 }
 
@@ -457,12 +468,4 @@ body {
 
 .list-view-text-body {
     margin-bottom: 0;
-}
-
-.map-view {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: calc(100vh - 115px);
 }
