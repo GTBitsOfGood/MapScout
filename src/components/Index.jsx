@@ -753,12 +753,12 @@ class Index extends Component {
                                 </div>
                             </Flipped>
                             <Flipped flipId = "map" >
-                                <div style = {{ width: '100vw', marginRight: listView ? 0 : '-100%', }}>
+                                <div
+                                    className = "map-view"
+                                    style = {{ width: '100vw', marginRight: listView ? 0 : '-100%', }}>
                                     <div
                                         ref = "map"
-                                        id = "map"
-                                        class = "map-view"
-                                        style = {{ height: 'calc(100vh - 115px)' } }/>
+                                        id = "map"/>
                                 </div>
                             </Flipped>
                         </div>
