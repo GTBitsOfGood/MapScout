@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import Dropdown from 'react-bootstrap/Dropdown';
+import Collapse from 'react-bootstrap/Collapse';
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
@@ -15,6 +16,8 @@ import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
+
+var classNames = require('classnames');
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
@@ -753,13 +756,14 @@ class Index extends Component {
                                 </div>
                             </Flipped>
                             <Flipped flipId = "map" >
-                                <div
-                                    className = "map-view"
-                                    style = {{ width: '100vw', marginRight: listView ? 0 : '-100%', }}>
+                                <Collapse in={listView}>
                                     <div
-                                        ref = "map"
-                                        id = "map"/>
-                                </div>
+                                        className = {classNames("map-view", {"map-mobile": !listView})}>
+                                        <div
+                                            ref = "map"
+                                            id = "map"/>
+                                    </div>
+                                </Collapse>
                             </Flipped>
                         </div>
                     </Flipper>

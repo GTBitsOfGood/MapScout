@@ -160,11 +160,13 @@ body {
     right: 0;
     bottom: 0;
     height: calc(70vh - 115px);
+    width: 100vw;
 }
 .map-list {
     max-height: calc(30vh);
     overflow-y: scroll;
 }
+
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
@@ -184,6 +186,9 @@ body {
     }
     .map-list {
         max-height: calc(100vh);
+    }
+    .map-mobile {
+        margin-right: -100%;
     }
     .filter-row {
         padding-top: 0px;
