@@ -19,7 +19,7 @@ class PasswordForgetFormBase extends Component {
     onSubmit = event => {
         console.log(this.state.email);
         const { email } = this.state;
-        firebase.auth().useDeviceLanguage();
+        this.props.firebase.auth().useDeviceLanguage();
         this.props.firebase.auth()
             .sendPasswordResetEmail(this.state.email)
             .then(() => {
