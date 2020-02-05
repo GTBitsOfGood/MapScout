@@ -49,6 +49,8 @@ class Auth extends Component {
                 this.setState({error: err.message, isLoading: false});
             }
         };
+
+        
     }
 
     render() {

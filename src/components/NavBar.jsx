@@ -5,6 +5,8 @@ import Nav from 'react-bootstrap/Nav';
 import {Link} from "react-router-dom";
 import { providerRoute } from "./ProviderRoutes";
 import localizationStrings from '../utils/Localization';
+import Auth from './Auth';
+import { auth } from 'firebase';
 const logo = require('../assets/img/logo.png');
 
 const languageTitles = {

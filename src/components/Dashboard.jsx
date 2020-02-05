@@ -8,7 +8,10 @@ import { Link } from "react-router-dom";
 import {formRoute, providerRoute} from "./ProviderRoutes";
 import Button from "react-bootstrap/Button";
 import SingleProvider from "./SingleProvider";
-import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import { withFirestore, isEmpty, isLoaded, withFirebase } from "react-redux-firebase";
+
+import { authRoute } from "./ProviderRoutes";
+
 var classNames = require('classnames');
 
 export const SELECT_ITEM = 'SELECT_ITEM';
@@ -42,6 +45,17 @@ class Dashboard extends Component {
 
     componentDidUpdate(){
         console.log(this.props);
+    }
+    
+    logout = () => {
+        console.log(this)
+        this.props.firebase.logout()
+        .then(function() {
+            this.props.history.push(authRoute)
+        })
+          .catch(function(error) {
+         // An error happeneds
+         });
     }
 
     render() {
@@ -90,6 +104,7 @@ class Dashboard extends Component {
                         </div>
                     </Col>
                     <Col sm={9}>
+                        <button type="button" class="btn btn-primary" onClick={this.logout}>Log Out</button>
                         <div className="scroll-container"
                             style={{ maxHeight: 'calc(100vh - 64px)' }}>
                             <div className="bg-white">
@@ -115,11 +130,11 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
     providers: state.firestore.ordered.providers,
-    firebase: state.firebase,
 });
 
 export default compose(
     withFirestore,
+    withFirebase,
     connect(
         mapStateToProps,
         mapDispatchToProps,
