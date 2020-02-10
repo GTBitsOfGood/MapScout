@@ -672,7 +672,7 @@ class Index extends Component {
                         <div className = "row-nowrap" >
                             <Flipped flipId = "list" >
                                 <div
-                                    className = "map-list"
+                                    className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
                                     style = {{width: listView ? '100vw' : '100%'}}>
                                     <Flipped inverseFlipId = "list" >
                                         <div className = "filter-row padder" >

@@ -162,8 +162,12 @@ body {
     height: calc(70vh - 115px);
     width: 100vw;
 }
-.map-list {
+.map-list-show-map {
     max-height: calc(30vh);
+    overflow-y: scroll;
+}
+.map-list-no-map {
+    max-height: calc(100vh);
     overflow-y: scroll;
 }
 
@@ -184,7 +188,10 @@ body {
     .map-view {
         height: calc(100vh - 115px);
     }
-    .map-list {
+    .map-list-show-map {
+        max-height: calc(100vh);
+    }
+    .map-list-no-map {
         max-height: calc(100vh);
     }
     .map-mobile {
