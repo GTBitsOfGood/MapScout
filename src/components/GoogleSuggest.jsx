@@ -1,45 +1,40 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import ReactGoogleMapLoader from 'react-google-maps-loader';
 import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import Form from 'react-bootstrap/Form';
 
 const API_KEY = 'AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ';
 
-class GoogleSuggest extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: '',
-      value: this.props.value,
-    };
+const GoogleSuggest = (props) => {
+  const [search, setSearch] = useState('');
+  const [value, setValue] = useState(props.value);
+
+  function handleInputChange(e) {
+    setSearch(e.target.value);
+    setValue(e.target.value);
+    props.update(e.target.value);
   }
 
-  handleInputChange(e) {
-    this.setState({ search: e.target.value, value: e.target.value });
-    this.props.update(e.target.value);
+  function handleSelectSuggest(suggest) {
+    setSearch('');
+    setValue(suggest.description);
+    props.update(suggest.description);
   }
 
-  handleSelectSuggest(suggest) {
-    this.setState({ search: '', value: suggest.description });
-    this.props.update(suggest.description);
-  }
-
-  render() {
-    const { search, value } = this.state;
-    return (
-      <ReactGoogleMapLoader
-        params={{
-          key: API_KEY,
-          libraries: 'places,geocode',
-        }}
-        render={(googleMaps) => googleMaps && (
+  return (
+    <ReactGoogleMapLoader
+      params={{
+        key: API_KEY,
+        libraries: 'places,geocode',
+      }}
+      render={(googleMaps) => googleMaps && (
         <ReactGooglePlacesSuggest
           autocompletionRequest={{ input: search }}
           googleMaps={googleMaps}
-              // onSelectSuggest={this.handleSelectSuggest.bind(this)}
+                    // onSelectSuggest={handleSelectSuggest.bind(this)}
           customRender={(prediction) => (
-            <div onClick={() => this.handleSelectSuggest(prediction)}>
+            <div onClick={() => handleSelectSuggest(prediction)}>
               {prediction
                 ? prediction.description
                 : 'No results text'}
@@ -48,14 +43,17 @@ class GoogleSuggest extends React.Component {
         >
           <Form.Group>
             <Form.Label>Address</Form.Label>
-            <Form.Control placeholder="123 Main St." value={value} onChange={this.handleInputChange.bind(this)} />
+            <Form.Control
+              placeholder="123 Main St."
+              value={value}
+              onChange={(e) => handleInputChange(e)}
+            />
           </Form.Group>
         </ReactGooglePlacesSuggest>
-        )}
-      />
-    );
-  }
-}
+      )}
+    />
+  );
+};
 
 GoogleSuggest.propTypes = {
   googleMaps: PropTypes.object,
