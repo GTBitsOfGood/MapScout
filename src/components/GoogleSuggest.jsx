@@ -57,6 +57,7 @@ const GoogleSuggest = (props) => {
 
 GoogleSuggest.propTypes = {
   googleMaps: PropTypes.object,
+  update: PropTypes.func,
 };
 
 export default GoogleSuggest;
