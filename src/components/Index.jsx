@@ -16,6 +16,7 @@ import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
+import API_KEY from '../config/keys';
 
 const colors = {
     serviceType: '#DC8665',

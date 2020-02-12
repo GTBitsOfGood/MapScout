@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import ReactGoogleMapLoader from 'react-google-maps-loader';
 import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import Form from 'react-bootstrap/Form';
-
-const API_KEY = 'AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ';
+import API_KEY from '../config/keys';
 
 const GoogleSuggest = (props) => {
   const [search, setSearch] = useState('');
