@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import Dropdown from 'react-bootstrap/Dropdown';
+import Collapse from 'react-bootstrap/Collapse';
 import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
@@ -16,6 +17,7 @@ import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
+var classNames = require('classnames');
 import API_KEY from '../config/keys';
 
 const colors = {
@@ -378,102 +380,106 @@ class Index extends Component {
                     <Flipper flipKey = { listView } >
                         <div className = "row-nowrap" >
                             <Flipped flipId = "list" >
-                                <div
-                                    className = "map-list"
-                                    style = {{width: listView ? '50%' : '100%'}}>
-                                    <Flipped inverseFlipId = "list" >
-                                        <div className = "filter-row padder" >
-                                            { this.renderDropdown(languagesLabel, "languages") }
-                                            { this.renderDropdown(agesLabel, "ages") }
-                                            { this.renderDropdown(insuranceLabel, "insurance") }
-                                            { this.state.moreFilter
-                                                ? <Fragment >
-                                                    { this.renderDropdown(serviceTypeLabel, "serviceType") }
-                                                    { this.renderDropdown(specializationsLabel, "specializations") }
-                                                    { this.renderDropdown(therapyTypeLabel, "therapyTypes") }
-                                                    <Button
+                                <div className = {listView ? 'list-padding-show-map' : 'list-padding-no-map'}>
+                                    <div
+                                        className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
+                                        style = {{width: listView ? '100vw' : '100%'}}>
+                                        <Flipped inverseFlipId = "list">
+                                            <div className = "filter-row">
+                                                { this.renderDropdown(languagesLabel, "languages") }
+                                                { this.renderDropdown(agesLabel, "ages") }
+                                                { this.renderDropdown(insuranceLabel, "insurance") }
+                                                { this.state.moreFilter
+                                                    ? <Fragment >
+                                                        { this.renderDropdown(serviceTypeLabel, "serviceType") }
+                                                        { this.renderDropdown(specializationsLabel, "specializations") }
+                                                        { this.renderDropdown(therapyTypeLabel, "therapyTypes") }
+                                                        <Button
+                                                            variant = "link"
+                                                            style = {{ color: 'red' }}
+                                                            onClick = {() => this.setState({ moreFilter: false }) } >- {lessFilters}
+                                                        </Button>
+                                                    </Fragment>
+                                                    : <Button
                                                         variant = "link"
-                                                        style = {{ color: 'red' }}
-                                                        onClick = {() => this.setState({ moreFilter: false }) } >- {lessFilters}
+                                                        onClick = {() => this.setState({ moreFilter: true }) }>
+                                                        + {moreFilters}
                                                     </Button>
-                                                </Fragment>
-                                                : <Button
-                                                    variant = "link"
-                                                    onClick = {() => this.setState({ moreFilter: true }) }>
-                                                    + {moreFilters}
-                                                </Button>
-                                            }
-                                        </div>
-                                    </Flipped>
-                                    <Flipped inverseFlipId = "list" >
-                                        <div className = "tag-row padder" >
-                                            {this.state.filters.map(this.renderTag)}
-                                            {
-                                                this.evaluateFilters() &&
-                                                <div
-                                                    onClick = {() => this.clearFilters()}
-                                                    className = "tag clear-all"
-                                                    style = {{ borderColor: 'red', color: 'red' }}>
-                                                    Clear All
-                                                </div>
-                                            }
-                                        </div>
-                                    </Flipped>
-                                    <div className = "count" >
-                                        <Flipped inverseFlipId = "list" >
-                                            <span>
-                                                {
-                                                    isEmpty(providers) ?
-                                                        'No' : providers.length
-                                                } providers found
-                                            </span>
+                                                }
+                                            </div>
                                         </Flipped>
-                                    </div>
-                                    {
-                                        !isEmpty(providers) &&
-                                        providers.map(this.renderCell)
-                                    }
-                                    <div >
+                                        <Flipped inverseFlipId = "list" >
+                                            <div className = "tag-row padder" >
+                                                {this.state.filters.map(this.renderTag)}
+                                                {
+                                                    this.evaluateFilters() &&
+                                                    <div
+                                                        onClick = {() => this.clearFilters()}
+                                                        className = "tag clear-all"
+                                                        style = {{ borderColor: 'red', color: 'red' }}>
+                                                        Clear All
+                                                    </div>
+                                                }
+                                            </div>
+                                        </Flipped>
+                                        <div className = "count" >
+                                            <Flipped inverseFlipId = "list" >
+                                                <span>
+                                                    {
+                                                        isEmpty(providers) ?
+                                                            'No' : providers.length
+                                                    } providers found
+                                                </span>
+                                            </Flipped>
+                                        </div>
+                                        <div className = {listView? "hide":"fade-in"}>
                                         {
-                                            providers && providers[selectedIndex] &&
-                                            <Modal
-                                                show = { showModal }
-                                                onHide = {() => this.setState({ showModal: false })}
-                                                size = "lg"
-                                                scrollable >
-                                                <Modal.Header
-                                                    className = "image-cover"
-                                                    style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }}
-                                                    closeButton >
-                                                    <Modal.Title id = "contained-modal-title-vcenter" >
-                                                        <h2>
-                                                            <b>
-                                                                { providers[selectedIndex].facilityName }
-                                                            </b>
-                                                        </h2>
-                                                    </Modal.Title>
-                                                </Modal.Header>
-                                                <Modal.Body
-                                                    className = "modal-body" >
-                                                    <ProviderInfo item = { providers[selectedIndex] }/>
-                                                </Modal.Body>
-                                            </Modal>
+                                            !isEmpty(providers) &&
+                                            providers.map(this.renderCell)
                                         }
+                                        </div>
+                                        <div >
+                                            {
+                                                providers && providers[selectedIndex] &&
+                                                <Modal
+                                                    show = { showModal }
+                                                    onHide = {() => this.setState({ showModal: false })}
+                                                    size = "lg"
+                                                    scrollable >
+                                                    <Modal.Header
+                                                        className = "image-cover"
+                                                        style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }}
+                                                        closeButton >
+                                                        <Modal.Title id = "contained-modal-title-vcenter" >
+                                                            <h2>
+                                                                <b>
+                                                                    { providers[selectedIndex].facilityName }
+                                                                </b>
+                                                            </h2>
+                                                        </Modal.Title>
+                                                    </Modal.Header>
+                                                    <Modal.Body
+                                                        className = "modal-body" >
+                                                        <ProviderInfo item = { providers[selectedIndex] }/>
+                                                    </Modal.Body>
+                                                </Modal>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </Flipped>
                             <Flipped flipId = "map" >
-                                <div style = {{ width: '50%', marginRight: listView ? 0 : -1000, }}>
-                                    <GoogleMap
-                                        providers={providers}
-                                        defaultZoom={12}
-                                        defaultCenter={{
-                                            lat: 39.9526,
-                                            lng: -75.1652
-                                        }}
-                                        onShowMoreClick={this.handleCellClick}
-                                    />
-                                </div>
+                                    <div className = {classNames("map-view", {"map-mobile": !listView})}>
+                                        <GoogleMap
+                                            providers={providers}
+                                            defaultZoom={12}
+                                            defaultCenter={{
+                                                lat: 39.9526,
+                                                lng: -75.1652
+                                            }}
+                                            onShowMoreClick={this.handleCellClick}
+                                        />
+                                    </div>
                             </Flipped>
                         </div>
                     </Flipper>

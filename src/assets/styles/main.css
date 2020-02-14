@@ -55,11 +55,6 @@ body {
     border-bottom: solid 1px lightgray;
 }
 
-.map-list {
-    max-height: calc(100vh - 115px);
-    overflow-y: scroll;
-}
-
 .no-span {
     display: table;
     white-space: nowrap;
@@ -107,6 +102,7 @@ body {
 }
 
 .filter-row {
+    padding-top: 20px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -151,6 +147,46 @@ body {
     padding: 20px;
 }
 
+.row-nowrap {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+.list-padding-no-map{
+    margin-top: 100px;
+    z-index: 2;
+    background-color: white;
+}
+.list-padding-show-map {
+    margin-top: calc(90vh - 115px);
+    z-index: 2;
+    background-color: white;
+}
+.map-view {
+    top: 115px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(100vh - 115px);
+    width: 100vw;
+    position: fixed;
+    z-index: 1;
+}
+
+.map-list-show-map {
+    max-height: calc(10vh);
+    overflow-y: hidden;
+    z-index: 3;
+}
+.map-list-no-map {
+    max-height: calc(100vh - 215px);
+    overflow-y: scroll;
+    z-index: 3;
+    
+}
+
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
@@ -161,6 +197,31 @@ body {
     }
     .step-wrapper {
         padding: 20px 0 20px 60px;
+    }
+    .row-nowrap {
+        flex-direction: row;
+    }
+    .map-view {
+        height: calc(100vh - 115px);
+        position: static;
+    }
+    .map-list-show-map {
+        max-height: calc(100vh - 115px);
+    }
+    .map-list-no-map {
+        max-height: calc(100vh - 115px);
+    }
+    .map-mobile {
+        margin-right: -100%;
+    }
+    .filter-row {
+        padding-top: 0px;
+    }
+    .list-padding-no-map{
+        margin-top: 0px;
+    }
+    .list-padding-show-map {
+        margin-top: 0px;
     }
 }
 
@@ -268,13 +329,6 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-}
-
-.row-nowrap {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: hidden;
 }
 
 
@@ -451,11 +505,4 @@ body {
 
 .list-view-text-body {
     margin-bottom: 0;
-}
-
-.map-view {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
 }
