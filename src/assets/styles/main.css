@@ -217,6 +217,12 @@ body {
     .filter-row {
         padding-top: 0px;
     }
+    .list-padding-no-map{
+        margin-top: 0px;
+    }
+    .list-padding-show-map {
+        margin-top: 0px;
+    }
 }
 
 @-webkit-keyframes translate {

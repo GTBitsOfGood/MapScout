@@ -384,8 +384,8 @@ class Index extends Component {
                                     <div
                                         className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
                                         style = {{width: listView ? '100vw' : '100%'}}>
-                                        <Flipped inverseFlipId = "list" >
-                                            <div className = "filter-row" >
+                                        <Flipped inverseFlipId = "list">
+                                            <div className = "filter-row">
                                                 { this.renderDropdown(languagesLabel, "languages") }
                                                 { this.renderDropdown(agesLabel, "ages") }
                                                 { this.renderDropdown(insuranceLabel, "insurance") }
@@ -432,10 +432,12 @@ class Index extends Component {
                                                 </span>
                                             </Flipped>
                                         </div>
+                                        <div className = {listView? "hide":"fade-in"}>
                                         {
                                             !isEmpty(providers) &&
                                             providers.map(this.renderCell)
                                         }
+                                        </div>
                                         <div >
                                             {
                                                 providers && providers[selectedIndex] &&
