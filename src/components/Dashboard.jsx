@@ -58,7 +58,7 @@ class Dashboard extends Component {
     }
 
     return (
-      <>
+      <React.Fragment>
         <Row noGutters>
           <Col sm={3}>
             <div className="list-wrapper">
@@ -116,7 +116,7 @@ class Dashboard extends Component {
             </div>
           </Col>
         </Row>
-      </>
+      </React.Fragment>
     );
   }
 }
