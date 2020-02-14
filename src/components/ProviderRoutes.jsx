@@ -8,10 +8,12 @@ import NavBar from './NavBar';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
+import PasswordForgetPage from "./PasswordForget";
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
 export const authRoute = '/providers/auth';
+export const pwdRoute = '';
 
 class ProviderRoutes extends Component {
   render() {
@@ -45,6 +47,8 @@ class ProviderRoutes extends Component {
                         path={authRoute}
                         render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />}
                       />
+                      <Route path={'/providers/forgotpwd'}
+                          component={PasswordForgetPage} />
                     </Switch>
                     )}
       </div>
