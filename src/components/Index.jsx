@@ -1,5 +1,6 @@
 import React, { Component, Fragment, useState } from 'react';
 import NavBar from './NavBar';
+import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -16,10 +17,7 @@ import options from "../utils/options";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
-
 var classNames = require('classnames');
-
-const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 
 const colors = {
     serviceType: '#DC8665',
@@ -29,14 +27,6 @@ const colors = {
     languages: '#240E8B',
     therapyTypes: '#787FF6'
 };
-
-function loadJS(src) {
-    var ref = window.document.getElementsByTagName("script")[0];
-    var script = window.document.createElement("script");
-    script.src = src;
-    script.async = true;
-    ref.parentNode.insertBefore(script, ref);
-}
 
 class Index extends Component {
     constructor(props) {
@@ -66,6 +56,7 @@ class Index extends Component {
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
+        this.handleCellClick = this.handleCellClick.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
         this.renderTag = this.renderTag.bind(this);
         this.filterZipcode = this.filterZipcode.bind(this);
@@ -204,291 +195,6 @@ class Index extends Component {
         });
 
         this.setState({ isLoading: false });
-        window.initMap = () => this.initMap(this.refs.map);
-        // Asynchronously load the Google Maps script, passing in the callback reference
-        // API from Penn team: AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI
-        loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyCdmgfV3yrYNIJ8p77YEPCT8BbRQU82lJI&callback=initMap')
-        this.setState({ isLoading: false });
-    }
-
-    initMap(mapDOMNode) {
-        var mapOptions = {
-            zoom: 12,
-            center: new google.maps.LatLng(39.9526, -75.1652),
-            mapTypeId: 'roadmap',
-            styles: [{
-                "featureType": "administrative.land_parcel",
-                "elementType": "labels",
-                "stylers": [{
-                    "visibility": "off"
-                }]
-            },
-                {
-                    "featureType": "poi",
-                    "elementType": "labels.text",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "poi.attraction",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "poi.business",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "poi.medical",
-                    "stylers": [{
-                        "visibility": "on"
-                    }]
-                },
-                {
-                    "featureType": "poi.medical",
-                    "elementType": "labels.icon",
-                    "stylers": [{
-                        "visibility": "simplified"
-                    }]
-                },
-                {
-                    "featureType": "poi.place_of_worship",
-                    "elementType": "labels.icon",
-                    "stylers": [{
-                        "visibility": "on"
-                    }]
-                },
-                {
-                    "featureType": "poi.school",
-                    "elementType": "labels.icon",
-                    "stylers": [{
-                        "visibility": "on"
-                    }]
-                },
-                {
-                    "featureType": "poi.school",
-                    "elementType": "labels.text",
-                    "stylers": [{
-                        "visibility": "on"
-                    }]
-                },
-                {
-                    "featureType": "road",
-                    "elementType": "labels.icon",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "road.arterial",
-                    "elementType": "labels",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "road.highway",
-                    "elementType": "labels",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "road.local",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                },
-                {
-                    "featureType": "road.local",
-                    "elementType": "labels",
-                    "stylers": [{
-                        "visibility": "off"
-                    }]
-                }
-            ]
-        }; // styles from https://mapstyle.withgoogle.com
-        var map = new google.maps.Map(mapDOMNode, mapOptions);
-        var geocoder = new google.maps.Geocoder();
-        // TODO: add locations from firebase: DS can obvs change but rn its [string, lat, long]
-        var locations = []; //for each location ['string for onclick', num(lat), num(long)]
-        let temp = [];
-        const providers = this.props.providers;
-        if (!isEmpty(providers)) {
-            for (let i = 0; i < providers.length; i++) {
-                temp = [providers[i].facilityName.toString(), providers[i].address.toString(), providers[i].latitude, providers[i].longitude];
-                locations.push(temp);
-            }
-        }
-        var markers = [];
-        // for each location create a marker
-        this.setMarkers(map, markers, locations)
-    }
-
-    setMarkers(map, markers, locations) {
-        var self = this; //needed to access other self stuuff before this gets changed
-        var i;
-        var iconMarker = {
-            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-            fillColor: "#5EB63B",
-            fillOpacity: 1,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-
-        for (i = 0; i < locations.length; i++) {
-            var contentStr = '<h6>' + locations[i][0] + '</h6>' + "\n <div>" + locations[i][1] + "</div>"; //TODO more details button? yep so self.state.
-            var infoWindow = new google.maps.InfoWindow({
-                content: contentStr,
-            });
-
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(locations[i][2], locations[i][3]),
-                map: map,
-                icon: iconMarker,
-                infowindow: infoWindow,
-            });
-            markers.push(marker);
-
-            google.maps.event.addListener(marker, 'click', function(marker, i) {
-                // this makes sure that only one info window is open
-                markers.forEach(function(marker) {
-                    marker.infowindow.close(map, marker);
-                    marker.setIcon(iconMarker)
-                });
-                self.greyOutMarkers();
-                self.setState({ currmarker: this });
-                var pressedIcon = {
-                    path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
-                    fillColor: '#FFB930',
-                    fillOpacity: 1.0,
-                    strokeColor: "white",
-                    strokeWeight: 2,
-                    anchor: new google.maps.Point(0, 0),
-                }
-                this.infowindow.open(map, this);
-                this.setIcon(pressedIcon);
-                map.panTo(this.getPosition());
-            })
-
-            google.maps.event.addListener(infoWindow, 'closeclick', function() {
-                markers.forEach(function(marker) {
-                    marker.infowindow.close(map, marker);
-                    marker.setIcon(iconMarker)
-                });
-                self.greyOutMarkers();
-                self.setState({ currmarker: null });
-            })
-        };
-        this.setState({ markers: markers });
-    }
-
-    hoverEnter(item) {
-        var markers = this.state.markers;
-        var openedMarker = this.state.currmarker;
-        var hover_lat = Math.ceil(item.latitude * 100000) / 100000;
-        var hover_lng = Math.ceil(item.longitude * 100000) / 100000;
-        var marker_lat;
-        var marker_lng;
-        var hoverIcon = {
-            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-            fillColor: "#FFB930",
-            fillOpacity: 1,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-        markers.forEach(function(marker) {
-            if (marker != openedMarker) {
-                marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
-                marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
-                if ((marker_lng == hover_lng) && (marker_lat == hover_lat)) {
-                    // console.log("match exists")
-                    marker.setIcon(hoverIcon)
-                }
-            }
-        });
-    }
-
-    hoverLeave(item) {
-        var markers = this.state.markers;
-        var iconMarker = {
-            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-            fillColor: "#5EB63B",
-            fillOpacity: 1,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-        markers.forEach(function(marker) {
-            marker.setIcon(iconMarker)
-        });
-        this.greyOutMarkers();
-        this.openMarker();
-    }
-
-    openMarker() {
-        var current = this.state.currmarker;
-        var pressedIcon = {
-            path: 'M1 12.5C1 7.5 5 1 13 1C21 1 25 7.5 25 12.5C25 21.5 17 26.3333 13 31C9 26.5 1 21.1115 1 12.5Z,M8,12.5a5,5 0 1,0 10,0a5,5 0 1,0 -10,0',
-            fillColor: '#FFB930',
-            fillOpacity: 1.0,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-        if (current) {
-            // console.log(current.getPosition());
-            current.setIcon(pressedIcon);
-        }
-    }
-
-    greyOutMarkers() {
-        var markers = this.state.markers;
-        var listOfProviders = this.state.tempProviders;
-        var iconMarker = {
-            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-            fillColor: "#5EB63B",
-            fillOpacity: 1,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-        var iconMarkerGreyOut = {
-            path: "M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0",
-            fillColor: "#C4C4C4",
-            fillOpacity: 1,
-            strokeColor: "white",
-            strokeWeight: 2,
-            anchor: new google.maps.Point(0, 0),
-        }
-        // redraw green for QA
-        // markers.forEach(function(marker) {
-        //   marker.setIcon()
-        // });
-        // convert appropriate ones to grey
-        var match = false;
-        markers.forEach(function(marker) {
-            match = false;
-            listOfProviders.forEach(function(provider) {
-                var provider_lat = Math.ceil(provider.latitude * 100000) / 100000;
-                var provider_lng = Math.ceil(provider.longitude * 100000) / 100000;
-                var marker_lat = Math.ceil(marker.getPosition().lat() * 100000) / 100000;
-                var marker_lng = Math.ceil(marker.getPosition().lng() * 100000) / 100000;
-                if ((marker_lng == provider_lng) && (marker_lat == provider_lat)) {
-                    match = true;
-                    marker.setIcon(iconMarker)
-                }
-            });
-            if (!match) {
-                marker.setIcon(iconMarkerGreyOut)
-            }
-        });
     }
 
     switchView() {
@@ -532,6 +238,10 @@ class Index extends Component {
         )
     }
 
+    handleCellClick(index) {
+        this.setState({ selectedIndex: index, showModal: true });
+    }
+
     renderCell(item, index) {
         return (
             <div
@@ -541,9 +251,7 @@ class Index extends Component {
                     borderTopWidth: index === 0 ? 0 : 1,
                     paddingTop: index === 0 ? 0 : 18,
                 }}
-                onClick = {() => this.setState({ selectedIndex: index, showModal: true }) }
-                onMouseEnter = {() => this.hoverEnter(item) }
-                onMouseLeave = {() => this.hoverLeave(item) } >
+                onClick = {() => this.handleCellClick(index)} >
                     <Flipped key = { index }
                              inverseFlipId = "list" >
                         <div>
@@ -757,11 +465,16 @@ class Index extends Component {
                             </Flipped>
                             <Flipped flipId = "map" >
                                 <Collapse in={listView}>
-                                    <div
-                                        className = {classNames("map-view", {"map-mobile": !listView})}>
-                                        <div
-                                            ref = "map"
-                                            id = "map"/>
+                                    <div className = {classNames("map-view", {"map-mobile": !listView})}>
+                                        <GoogleMap
+                                            providers={providers}
+                                            defaultZoom={12}
+                                            defaultCenter={{
+                                                lat: 39.9526,
+                                                lng: -75.1652
+                                            }}
+                                            onShowMoreClick={this.handleCellClick}
+                                        />
                                     </div>
                                 </Collapse>
                             </Flipped>
