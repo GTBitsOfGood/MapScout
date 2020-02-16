@@ -30,18 +30,32 @@ class Dashboard extends Component {
             selectedIndex: 0,
             isLoading: true
         };
+        this.changeLanguageToFalse = this.changeLanguageToFalse.bind(this);
     }
 
     async componentDidMount(){
         const { firestore, providers } = this.props;
         if ( !isLoaded(providers) ) {
             await firestore.get('providers')
+            await firestore.get('categories')
         }
         this.setState({isLoading: false});
     }
 
     componentDidUpdate(){
         console.log(this.props);
+    }
+
+    changeLanguageToFalse = async() => {
+        console.log("hi")
+        let firestore = this.props.firestore;
+        console.log(firestore)
+        await firestore.update({collection: 'categories', doc: 'languages'},{active: false})
+        // await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
+        //     querySnapshot.forEach(function(doc) {
+        //         firestore.update({collection: 'providers', doc: doc.id}, item)
+        //     });
+        // });
     }
 
     render() {
@@ -66,6 +80,14 @@ class Dashboard extends Component {
                                     as={Link}
                                     to={formRoute}>
                                     Add new provider
+                                </Button>
+                            </div>
+                            <div>
+                                <Button 
+                                    block
+                                    variant="primary"
+                                    onClick={() => this.changeLanguageToFalse()}>
+                                    Change Language active to false
                                 </Button>
                             </div>
                             <div className="scroll-container">
@@ -116,6 +138,7 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
+    categories: state.firestore.ordered.categories,
 });
 
 export default compose(
