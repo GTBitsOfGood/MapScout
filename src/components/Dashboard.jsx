@@ -24,27 +24,41 @@ export function selectItem(data) {
 }
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      selectedIndex: 0,
-      isLoading: true,
-    };
-  }
-
-  async componentDidMount() {
-    const { firestore, providers } = this.props;
-    if (!isLoaded(providers)) {
-      await firestore.get('providers');
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            selectedIndex: 0,
+            isLoading: true
+        };
+        this.changeLanguageToFalse = this.changeLanguageToFalse.bind(this);
     }
-    this.setState({ isLoading: false });
+
+    async componentDidMount(){
+        const { firestore, providers } = this.props;
+        if ( !isLoaded(providers) ) {
+            await firestore.get('providers')
+            await firestore.get('categories')
+        }
+        this.setState({isLoading: false});
   }
 
   componentDidUpdate() {
     console.log(this.props);
   }
 
+  changeLanguageToFalse = async() => {
+      console.log("hi")
+      let firestore = this.props.firestore;
+      console.log(firestore)
+      await firestore.update({collection: 'categories', doc: 'languages'},{active: false})
+      // await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
+      //     querySnapshot.forEach(function(doc) {
+      //         firestore.update({collection: 'providers', doc: doc.id}, item)
+      //     });
+      // });
+  }
+    
   render() {
     const { isLoading, data, selectedIndex } = this.state;
     const { providers } = this.props;
@@ -70,27 +84,34 @@ class Dashboard extends Component {
                   as={Link}
                   to={formRoute}
                 >
-                                    Add new provider
+                    Add new provider
                 </Button>
-              </div>
-              <div className="scroll-container">
+            </div>
+            <div>
+                <Button 
+                    block
+                    variant="primary"
+                    onClick={() => this.changeLanguageToFalse()}>
+                    Change Language active to false
+                </Button>
+            </div>
+            <div className="scroll-container">
                 <ListGroup variant="flush">
-                  {
-                                        !isEmpty(providers)
-                                        && providers.map((item, index) => (
-                                          <ListGroup.Item
-                                            href={item.id}
-                                            key={index}
-                                            className="point"
-                                            onClick={() => this.setState({ selectedIndex: index })}
-                                            active={selectedIndex === index}
-                                          >
-                                            <b>{item.facilityName}</b>
-                                            <br />
-                                            <small>{item.address[0]}</small>
-                                          </ListGroup.Item>
-                                        ))
-                                    }
+                    {
+                        !isEmpty(providers) &&
+                        providers.map((item, index) =>
+                            <ListGroup.Item
+                                href={item.id}
+                                key={index}
+                                className="point"
+                                onClick={() => this.setState({selectedIndex: index})}
+                                active={selectedIndex === index}>
+                                <b>{item.facilityName}</b>
+                                <br />
+                                <small>{item.address[0]}</small>
+                            </ListGroup.Item>
+                        )
+                    }
                 </ListGroup>
               </div>
             </div>
@@ -126,8 +147,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-  providers: state.firestore.ordered.providers,
-  firebase: state.firebase,
+    providers: state.firestore.ordered.providers,
+    firebase: state.firebase,
+    categories: state.firestore.ordered.categories,
 });
 
 export default compose(

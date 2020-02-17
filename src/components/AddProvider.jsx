@@ -104,7 +104,6 @@ class AddProvider extends Component {
         await this.props.firestore.get('providers');
         this.setState({isLoading: false});
         this.props.history.push(providerRoute);
-        //Hello
     };
 
     next = () => {
