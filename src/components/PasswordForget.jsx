@@ -18,8 +18,9 @@ class PasswordForgetFormBase extends Component {
     }
     onSubmit = event => {
         const { email } = this.state;
-        this.props.firebase
-            .doPasswordReset(email)
+        this.props.firebase.auth().useDeviceLanguage();
+        this.props.firebase.auth()
+            .sendPasswordResetEmail(this.state.email)
             .then(() => {
                 this.setState({ ...INITIAL_STATE });
             })
@@ -51,6 +52,11 @@ class PasswordForgetFormBase extends Component {
         );
     }
 }
+const PasswordForgetLink = () => (
+    <p>
+        <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
+    </p>
+);
 export default PasswordForgetPage;
 const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
-export { PasswordForgetForm };
+export { PasswordForgetForm, PasswordForgetLink };
