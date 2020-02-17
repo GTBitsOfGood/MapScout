@@ -49,8 +49,6 @@ class Auth extends Component {
                 this.setState({error: err.message, isLoading: false});
             }
         };
-
-        
     }
 
     render() {
@@ -87,7 +85,7 @@ class Auth extends Component {
                             {isLoading&&<div className="loader"/>} {login}
                         </Button>
                         <div className="mt-2">
-                            <a href="#">
+                            <a href="#/providers/forgotpwd">
                                 <small>{forgotPassword}</small>
                             </a>
                         </div>
