@@ -186,6 +186,7 @@ class Index extends Component {
     async componentDidMount() {
         const { firestore, providers } = this.props;
         if (!isLoaded(providers)) {
+            console.log("Meow");
             await firestore.get('providers');
         }
         await this.setState({
