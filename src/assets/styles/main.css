@@ -101,12 +101,34 @@ body {
     cursor: pointer;
 }
 
-.filter-row {
+.filter-row-show-map {
     padding-top: 20px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+    position: absolute;
+    z-index: 4;
+    background-color: white;
+    width: 100vw;
+    padding-bottom: 10px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    max-height: 10vh;
+    overflow-y: hidden;
+}
+.filter-row-no-map {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    position: absolute;
+    z-index: 4;
+    background-color: white;
+    padding-bottom: 10px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }
 
 .form-wrapper {
@@ -158,11 +180,15 @@ body {
     margin-top: 100px;
     z-index: 2;
     background-color: white;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }
 .list-padding-show-map {
     margin-top: calc(90vh - 115px);
     z-index: 2;
     background-color: white;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }
 .map-view {
     top: 115px;
@@ -176,7 +202,7 @@ body {
 }
 
 .map-list-show-map {
-    max-height: calc(10vh);
+    height: 0;
     overflow-y: hidden;
     z-index: 3;
 }
@@ -184,9 +210,33 @@ body {
     max-height: calc(100vh - 215px);
     overflow-y: scroll;
     z-index: 3;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    width: 100vw;
     
 }
+.filter-list-padding {
+    padding-top: 15vh;
+}
 
+.w-75 {
+    z-index: 5;
+    background-color: white;
+    width: 100vw;
+}
+
+.hide {
+    opacity: 0;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
@@ -204,24 +254,51 @@ body {
     .map-view {
         height: calc(100vh - 115px);
         position: static;
+        width: 50vw;
     }
     .map-list-show-map {
         max-height: calc(100vh - 115px);
+        height: 100vh;
+        max-width: 50vw;
+        overflow-y: scroll;
     }
     .map-list-no-map {
         max-height: calc(100vh - 115px);
     }
-    .map-mobile {
-        margin-right: -100%;
+    .map-hide {
+        margin-right: -50vw;
     }
-    .filter-row {
+    .filter-row-show-map {
         padding-top: 0px;
+        position: absolute;
+        width: 50vw;
+        max-height: none;
+        overflow-y: visible;
+    }
+    .filter-row-no-map {
+        padding-top: 0px;
+        position: absolute;
+        width: 100vw;
     }
     .list-padding-no-map{
         margin-top: 0px;
     }
     .list-padding-show-map {
         margin-top: 0px;
+    }
+    .hide {
+        opacity: 1;
+    }
+    @keyframes fade-in {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .filter-list-padding {
+        padding-top: 60px;
     }
 }
 
@@ -265,15 +342,6 @@ body {
     }
 }
 
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
 .translate {
     -webkit-animation-duration: 400ms;
     animation-duration: 400ms;
@@ -293,16 +361,12 @@ body {
 }
 
 .fade-in {
-    -webkit-animation-duration: 600ms;
-    animation-duration: 600ms;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     -webkit-animation-name: fade-in;
     animation-name: fade-in;
-}
-
-.hide {
-    opacity: 0;
 }
 
 .react-bootstrap-table th {
@@ -506,3 +570,4 @@ body {
 .list-view-text-body {
     margin-bottom: 0;
 }
+

@@ -383,9 +383,9 @@ class Index extends Component {
                                 <div className = {listView ? 'list-padding-show-map' : 'list-padding-no-map'}>
                                     <div
                                         className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
-                                        style = {{width: listView ? '100vw' : '100%'}}>
+                                        style = {{width: listView ? '100vw' : '100vw'}}>
                                         <Flipped inverseFlipId = "list">
-                                            <div className = "filter-row">
+                                            <div className = {listView? "filter-row-show-map" : "filter-row-no-map"}>
                                                 { this.renderDropdown(languagesLabel, "languages") }
                                                 { this.renderDropdown(agesLabel, "ages") }
                                                 { this.renderDropdown(insuranceLabel, "insurance") }
@@ -409,7 +409,7 @@ class Index extends Component {
                                             </div>
                                         </Flipped>
                                         <Flipped inverseFlipId = "list" >
-                                            <div className = "tag-row padder" >
+                                            <div className = {classNames("tag-row padder", "filter-list-padding")}>
                                                 {this.state.filters.map(this.renderTag)}
                                                 {
                                                     this.evaluateFilters() &&
@@ -422,7 +422,7 @@ class Index extends Component {
                                                 }
                                             </div>
                                         </Flipped>
-                                        <div className = "count" >
+                                        <div className = "count">
                                             <Flipped inverseFlipId = "list" >
                                                 <span>
                                                     {
@@ -469,7 +469,7 @@ class Index extends Component {
                                 </div>
                             </Flipped>
                             <Flipped flipId = "map" >
-                                    <div className = {classNames("map-view", {"map-mobile": !listView})}>
+                                    <div className = {classNames("map-view", {"map-hide": !listView})}>
                                         <GoogleMap
                                             providers={providers}
                                             defaultZoom={12}
