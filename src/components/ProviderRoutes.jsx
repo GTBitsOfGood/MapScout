@@ -9,11 +9,13 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import { PasswordForgetPage, PasswordForgetForm } from "./PasswordForget";
+import { AddCategorypage, AddCategoryForm} from "./AddCategory";
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
 export const authRoute = '/providers/auth';
-export const pwdRoute = '/providers/forgotpwd'
+export const pwdRoute = '/providers/forgotpwd';
+export const addRoute = '/providers/addcategory';
 
 class ProviderRoutes extends Component {
   render() {
@@ -51,6 +53,10 @@ class ProviderRoutes extends Component {
                             exact path={pwdRoute}
                             component={PasswordForgetForm}
                       />
+                        <Route
+                            exact path={addRoute}
+                            component={AddCategoryForm}
+                        />
                     </Switch>
                     )}
       </div>
