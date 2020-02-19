@@ -10,6 +10,9 @@ const localizationStrings = new LocalizedStrings({
     login: 'Login',
     signUp: 'Sign up',
     forgotPassword: 'Forgot your password?',
+    resetPassword: 'Reset password',
+    submit: 'Next',
+    sent: 'Password reset email sent',
     // nav bar text
     home: 'Home',
     facilityUpload: 'Facility Upload',
@@ -38,6 +41,9 @@ const localizationStrings = new LocalizedStrings({
     login: 'Iniciar sesión',
     signUp: 'Inscribirse',
     forgotPassword: 'Olvidaste tu contraseña',
+    resetPassword: 'Restablecer la contraseña',
+    submit: 'Siguiente',
+    sent: 'correo electrónico de restablecimiento de contraseña enviado',
     // nav bar text
     home: 'Casa',
     facilityUpload: 'Facilidad de carga',
@@ -66,6 +72,9 @@ const localizationStrings = new LocalizedStrings({
     login: '登陆',
     signUp: '注册',
     forgotPassword: '忘记你的密码？',
+    resetPassword: '重设密码',
+    next: '下一个',
+    sent: '密码重置电子邮件已发送',
     // nav bar text
     home: '主页',
     facilityUpload: '设备上传',
