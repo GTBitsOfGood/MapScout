@@ -23,9 +23,13 @@ class AddCategoryFormBase extends Component {
         let firestore = this.props.firestore;
         let item = {
             "ok": "sharath",
+            "nok": "bharat",
         };
-        let x = await this.props.firestore.set({collection: 'categories', doc: this.state.name}, item);
-        console.log(x);
+        try {
+            let x = await this.props.firestore.set({collection: 'categories', doc: this.state.name}, item);
+        } catch (e) {
+            console.log(e);
+        }
 
     };
 
