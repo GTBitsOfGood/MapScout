@@ -8,12 +8,12 @@ import NavBar from './NavBar';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
-import { PasswordForgetPage, PasswordForgetForm } from "./PasswordForget";
+import PasswordForgetForm from "./PasswordForget";
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
 export const authRoute = '/providers/auth';
-export const pwdRoute = '/providers/forgotpwd'
+export const pwdRoute = '/providers/forgotpwd';
 
 class ProviderRoutes extends Component {
   render() {
