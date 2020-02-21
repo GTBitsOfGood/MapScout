@@ -21,7 +21,7 @@ class AdminListBase extends Component {
     }
     this.setState({ isLoading: false });
   };
-  
+
   render() {
     const { categories } = this.props;
     return(
@@ -42,4 +42,4 @@ class AdminListBase extends Component {
 };
 
 const AdminList = withFirebase(AdminListBase);
-export { AdminList }
+export default AdminList;

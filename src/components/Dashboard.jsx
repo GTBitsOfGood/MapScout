@@ -7,7 +7,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
-import { formRoute, providerRoute } from './ProviderRoutes';
+import {adminRoute, formRoute, providerRoute} from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
 
 const classNames = require('classnames');
@@ -58,7 +58,7 @@ class Dashboard extends Component {
       //     });
       // });
   }
-    
+
   render() {
     const { isLoading, data, selectedIndex } = this.state;
     const { providers } = this.props;
@@ -87,12 +87,21 @@ class Dashboard extends Component {
                     Add new provider
                 </Button>
             </div>
-            <div>
-                <Button 
+            <div className="fixed-container">
+                <Button
                     block
                     variant="primary"
                     onClick={() => this.changeLanguageToFalse()}>
                     Change Language active to false
+                </Button>
+            </div>
+            <div className="fixed-container">
+                <Button
+                    block
+                    variant="primary"
+                    as={Link}
+                    to={adminRoute}>
+                    Admin List
                 </Button>
             </div>
             <div className="scroll-container">
