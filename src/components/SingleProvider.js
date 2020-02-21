@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import { compose } from 'redux';
 import { withFirestore } from 'react-redux-firebase';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
 import ProviderInfo from './ProviderInfo';
 import { formRoute } from './ProviderRoutes';
