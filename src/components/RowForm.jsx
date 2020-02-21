@@ -73,7 +73,7 @@ const RowForm = (props) => {
         setTimeout(() => props.setItem(custItem), 100);
     }
 
-    handleUploadSuccess = async filename => {
+    const handleUploadSuccess = async filename => {
         await setcustItem({ image: filename });
         await storage.ref('images').child(filename).getDownloadURL()
         .then(url => setcustItem({
