@@ -22,7 +22,7 @@ function validURL(str) {
 }
 
 const RowForm = (props) => {
-    const [custItem, setcustItem] = useState(props.item.facilityName ? props.item: {
+    const [item, setItem] = useState(props.item.facilityName ? props.item: {
         facilityName: '',
         address: [],
         ages: [],
@@ -44,45 +44,49 @@ const RowForm = (props) => {
 
     function handleInputChange(e) {
         if(e.target.type === "checkbox") {
-            setcustItem({[e.target.name]: [e.target.checked]});
+            setItem({ ...item, [e.target.name]: [e.target.checked] });
         } else {
-            setcustItem({[e.target.name]: [e.target.value]});
+            setItem({ ...item, [e.target.name]: [e.target.value] });
         }
-        setTimeout(() => props.setItem(custItem), 100);
+        setTimeout(() => props.setItem(item), 100);
     }
 
     function onPhoneChange(e) {
         if (e.target.value.length === 4 && e.target.value[0] === "(") {
-            setcustItem({phoneNum: [e.target.value]});
+            setItem({ ...item, phoneNum: [e.target.value] });
         } else {
-            setcustItem({phoneNum: [new AsYouType('US').input(e.target.value)]});
+            setItem({
+                ...item,
+                phoneNum: [new AsYouType("US").input(e.target.value)]
+            });
         }
-        setTimeout(() => props.setItem(custItem), 100);
+        setTimeout(() => props.setItem(item), 100);
     }
 
     function onTimeChange(hours) {
-        setcustItem({ hours: {
-            Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
-            Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
-            Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
-            Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
-            Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
-            Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
-            Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
+        setItem({ ...item,
+            hours: {
+                Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
+                Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
+                Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
+                Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
+                Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
+                Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
+                Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
         }});
-        setTimeout(() => props.setItem(custItem), 100);
+        setTimeout(() => props.setItem(item), 100);
     }
 
     const handleUploadSuccess = async filename => {
-        await setcustItem({ image: filename });
+        await setItem({ ...item, image: filename });
         await storage.ref('images').child(filename).getDownloadURL()
-        .then(url => setcustItem({
+        .then(url => setItem({
+            ...item,
             imageURL: url
         }));
-        setTimeout(() => props.setItem(custItem), 100);
+        setTimeout(() => props.setItem(item), 100);
     }
 
-    let item = custItem;
         switch (props.step) {
             case 0:
                 return(
@@ -93,8 +97,11 @@ const RowForm = (props) => {
                                 name="facilityName"
                                 value={item.facilityName}
                                 onChange={(e) => {
-                                    setcustItem({[e.target.name]: e.target.value});
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                                 placeholder="Name" />
                         </Form.Group>
@@ -103,8 +110,11 @@ const RowForm = (props) => {
                                 <GoogleSuggest
                                     value={item.address[0]}
                                     update={(address)=> {
-                                        setcustItem({address: [address]});
-                                        setTimeout(() => props.setItem(custItem), 100);
+                                        setItem({
+                                            ...item,
+                                            address: [address]
+                                        });
+                                        setTimeout(() => props.setItem(item), 100);
                                     }}
                                 />
                             </Col>
@@ -195,10 +205,11 @@ const RowForm = (props) => {
                                 options={options.serviceType}
                                 selected={item.serviceType}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         serviceType: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -208,10 +219,11 @@ const RowForm = (props) => {
                                 options={options.specializations}
                                 selected={item.specializations}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         specializations: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -221,10 +233,11 @@ const RowForm = (props) => {
                                 options={options.therapyTypes}
                                 selected={item.therapyTypes}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         therapyTypes: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -247,10 +260,11 @@ const RowForm = (props) => {
                                 options={options.languages}
                                 selected={item.languages}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         languages: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -260,10 +274,11 @@ const RowForm = (props) => {
                                 options={options.ages}
                                 selected={item.ages}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         ages: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -281,10 +296,11 @@ const RowForm = (props) => {
                                 options={options.insurance}
                                 selected={item.insurance}
                                 onSelectedChanged={(selected) => {
-                                    setcustItem({
+                                    setItem({
+                                        ...item,
                                         insurance: selected
                                     });
-                                    setTimeout(() => props.setItem(custItem), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
