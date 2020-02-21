@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {useState, Component, Fragment} from 'react';
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,6 +9,7 @@ import options from "../utils/options";
 import MultiSelect from "@khanacademy/react-multi-select";
 import FileUploader from 'react-firebase-file-uploader';
 import {storage} from '../store';
+import idx from 'idx';
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -20,75 +21,73 @@ function validURL(str) {
     return !!pattern.test(str);
 }
 
-class RowForm extends Component {
+const RowForm = (props) => {
+    const [item, setItem] = useState(props.item.facilityName ? props.item: {
+        facilityName: '',
+        address: [],
+        ages: [],
+        buildingNum: [],
+        childcare: [false],
+        epic: [false],
+        hours: {},
+        insurance: [],
+        languages: [],
+        notes: [],
+        phoneNum: [],
+        serviceType: [],
+        specializations: [],
+        therapyTypes: [],
+        website: [],
+        image: 'modalimage.png',
+        imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
+        })
 
-    constructor(props) {
-        super(props);
-        this.state = props.item.facilityName ? props.item : {
-            facilityName: '',
-            address: [],
-            ages: [],
-            buildingNum: [],
-            childcare: [false],
-            epic: [false],
-            hours: {},
-            insurance: [],
-            languages: [],
-            notes: [],
-            phoneNum: [],
-            serviceType: [],
-            specializations: [],
-            therapyTypes: [],
-            website: [],
-            image: 'modalimage.png',
-            imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
-        };
+    function handleInputChange(e) {
+        if(e.target.type === "checkbox") {
+            setItem({ ...item, [e.target.name]: [e.target.checked] });
+        } else {
+            setItem({ ...item, [e.target.name]: [e.target.value] });
+        }
+        setTimeout(() => props.setItem(item), 100);
     }
 
-    handleInputChange = (e) => {
-        if (e.target.type === "checkbox") {
-            this.setState({[e.target.name]: [e.target.checked]});
-        } else {
-            this.setState({[e.target.name]: [e.target.value]});
-        }
-        setTimeout(() => this.props.setItem(this.state), 100);
-    };
-
-    onPhoneChange = (e) => {
+    function onPhoneChange(e) {
         if (e.target.value.length === 4 && e.target.value[0] === "(") {
-            this.setState({phoneNum: [e.target.value]});
+            setItem({ ...item, phoneNum: [e.target.value] });
         } else {
-            this.setState({phoneNum: [new AsYouType('US').input(e.target.value)]});
+            setItem({
+                ...item,
+                phoneNum: [new AsYouType("US").input(e.target.value)]
+            });
         }
-        setTimeout(() => this.props.setItem(this.state), 100);
-    };
+        setTimeout(() => props.setItem(item), 100);
+    }
 
-    onTimeChange = (hours) => {
-        this.setState({ hours: {
-            Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
-            Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
-            Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
-            Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
-            Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
-            Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
-            Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
+    function onTimeChange(hours) {
+        setItem({ ...item,
+            hours: {
+                Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
+                Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
+                Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
+                Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
+                Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
+                Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
+                Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
         }});
-        setTimeout(() => this.props.setItem(this.state), 100);
-    };
+        setTimeout(() => props.setItem(item), 100);
+    }
 
-    handleUploadSuccess = async filename => {
-        await this.setState({ image: filename });
+    const handleUploadSuccess = async filename => {
+        await setItem({ ...item, image: filename });
         await storage.ref('images').child(filename).getDownloadURL()
-        .then(url => this.setState({
+        .then(url => setItem({
+            ...item,
             imageURL: url
         }));
-        setTimeout(() => this.props.setItem(this.state), 100);
-    };
+        setTimeout(() => props.setItem(item), 100);
+    }
 
-    render() {
-        let item = this.state;
-
-        switch (this.props.step) {
+        switch (props.step) {
             case 0:
                 return(
                     <Fragment>
@@ -98,8 +97,11 @@ class RowForm extends Component {
                                 name="facilityName"
                                 value={item.facilityName}
                                 onChange={(e) => {
-                                    this.setState({[e.target.name]: e.target.value});
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                                 placeholder="Name" />
                         </Form.Group>
@@ -108,8 +110,11 @@ class RowForm extends Component {
                                 <GoogleSuggest
                                     value={item.address[0]}
                                     update={(address)=> {
-                                        this.setState({address: [address]});
-                                        setTimeout(() => this.props.setItem(this.state), 100);
+                                        setItem({
+                                            ...item,
+                                            address: [address]
+                                        });
+                                        setTimeout(() => props.setItem(item), 100);
                                     }}
                                 />
                             </Col>
@@ -119,7 +124,7 @@ class RowForm extends Component {
                                     <Form.Control
                                         name="buildingNum"
                                         value={item.buildingNum[0]}
-                                        onChange={this.handleInputChange}
+                                        onChange={ handleInputChange }
                                         placeholder="789" />
                                 </Form.Group>
                             </Col>
@@ -129,7 +134,7 @@ class RowForm extends Component {
                             <Form.Control
                                 name="phoneNum"
                                 value={item.phoneNum[0]}
-                                onChange={this.onPhoneChange}
+                                onChange={ onPhoneChange }
                                 placeholder="(000) 000-0000" />
                             {
                                 item.phoneNum.length > 0 &&
@@ -152,7 +157,7 @@ class RowForm extends Component {
                                     <Form.Control
                                         name="website"
                                         value={item.website[0]}
-                                        onChange={this.handleInputChange}
+                                        onChange={ handleInputChange }
                                         placeholder="www.health.com" />
                                     {
                                         item.website.length > 0 &&
@@ -180,7 +185,7 @@ class RowForm extends Component {
                                             accept="image/*"
                                             name='image'
                                             storageRef={storage.ref('images')}
-                                            onUploadSuccess={this.handleUploadSuccess} />
+                                            onUploadSuccess={handleUploadSuccess} />
                                     </label>
                                 </Form.Group>
                             </Col>
@@ -189,8 +194,8 @@ class RowForm extends Component {
                 );
             case 1:
                 return <TimeTable
-                    hours={this.props.item.hours || {}}
-                    onChange={this.onTimeChange}/>;
+                    hours={props.item.hours || {}}
+                    onChange={onTimeChange}/>;
             case 2:
                 return(
                     <Fragment>
@@ -200,10 +205,11 @@ class RowForm extends Component {
                                 options={options.serviceType}
                                 selected={item.serviceType}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         serviceType: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -213,10 +219,11 @@ class RowForm extends Component {
                                 options={options.specializations}
                                 selected={item.specializations}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         specializations: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -226,10 +233,11 @@ class RowForm extends Component {
                                 options={options.therapyTypes}
                                 selected={item.therapyTypes}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         therapyTypes: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -237,7 +245,7 @@ class RowForm extends Component {
                             <Form.Check
                                 name="epic"
                                 value={item.epic[0]}
-                                onChange={this.handleInputChange}
+                                onChange={handleInputChange}
                                 type="checkbox"
                                 label="EPIC Designation" />
                         </Form.Group>
@@ -252,10 +260,11 @@ class RowForm extends Component {
                                 options={options.languages}
                                 selected={item.languages}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         languages: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -265,10 +274,11 @@ class RowForm extends Component {
                                 options={options.ages}
                                 selected={item.ages}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         ages: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -276,7 +286,7 @@ class RowForm extends Component {
                             <Form.Check
                                 name="childcare"
                                 value={item.childcare[0]}
-                                onChange={this.handleInputChange}
+                                onChange={handleInputChange}
                                 type="checkbox"
                                 label="Childcare Availability" />
                         </Form.Group>
@@ -286,10 +296,11 @@ class RowForm extends Component {
                                 options={options.insurance}
                                 selected={item.insurance}
                                 onSelectedChanged={(selected) => {
-                                    this.setState({
+                                    setItem({
+                                        ...item,
                                         insurance: selected
                                     });
-                                    setTimeout(() => this.props.setItem(this.state), 100);
+                                    setTimeout(() => props.setItem(item), 100);
                                 }}
                             />
                         </Form.Group>
@@ -298,7 +309,7 @@ class RowForm extends Component {
                             <Form.Control
                                 name="notes"
                                 value={item.notes[0]}
-                                onChange={this.handleInputChange}
+                                onChange={handleInputChange}
                                 as="textarea"
                                 rows="3" />
                         </Form.Group>
@@ -306,8 +317,7 @@ class RowForm extends Component {
                 );
             default:
                 return;
-        }
-    }
-}
+        }  
+} 
 
 export default RowForm;
