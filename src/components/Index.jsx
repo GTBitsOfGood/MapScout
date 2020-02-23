@@ -68,7 +68,7 @@ class Index extends Component {
     filterZipcode = async(filterVal) => {
         let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
         let responseJson = await response.json();
-
+        console.log(responseJson)
         // Handle illegal response
         let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
         let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
@@ -121,11 +121,11 @@ class Index extends Component {
     filterNormalFilters = async(e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
+        
         if (e.target.type === "checkbox" && e.target.checked) {
             await this.setState({
                 [filterName]: [...this.state[filterName], filterVal]
             })
-
         } else if (e.target.type === "checkbox" && !e.target.checked) {
             await this.setState({
                 [filterName]: this.state[filterName].filter(function(filter) {
@@ -143,7 +143,7 @@ class Index extends Component {
                 })
             })
         });
-        this.greyOutMarkers()
+        //this.greyOutMarkers()
     };
 
     filterSearch = async(filterVal) => {
@@ -152,6 +152,7 @@ class Index extends Component {
                 return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
             })
         })
+        console.log(this.state.tempProviders)
     };
 
     filterProviders = async(e) => {
@@ -359,7 +360,7 @@ class Index extends Component {
                                 <Col >
                                     <Form.Control
                                         placeholder = { searchZipcode }
-                                        filtertype = 'zipcode'
+                                        filtertype = 'zipcode' 
                                         onChange = { this.filterProviders } />
                                 </Col>
                                 <Col >
@@ -492,3 +493,5 @@ export default compose(withFirestore, connect((state) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase
 })))(Index);
+
+
