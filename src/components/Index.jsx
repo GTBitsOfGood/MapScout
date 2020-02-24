@@ -141,7 +141,6 @@ class Index extends Component {
                 })
             })
         });
-        this.greyOutMarkers()
     };
 
     filterSearch = async(filterVal) => {
