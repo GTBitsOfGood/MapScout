@@ -7,6 +7,7 @@ export default ({
   providers, defaultZoom, defaultCenter, onShowMoreClick,
 }) => {
   const [selected, setSelected] = useState(-1);
+  const [center, setCenter] = useState(defaultCenter);
 
   const getMapOptions = (maps) => ({
     clickableIcons: false,
@@ -21,6 +22,7 @@ export default ({
         defaultCenter={defaultCenter}
         defaultZoom={defaultZoom}
         options={getMapOptions}
+        center={center}
       >
         {providers.map(
           ({
@@ -34,7 +36,11 @@ export default ({
               index={i}
               selectedIndex={selected}
               onShowMoreClick={() => onShowMoreClick(i)}
-              onMarkerClick={() => setSelected(selected === i ? -1 : i)}
+              onMarkerClick={() => {
+                  setSelected(selected === i ? -1 : i);
+                  setCenter({ lat: latitude, lng: longitude });
+                }
+              }
             />
           ),
         )}
