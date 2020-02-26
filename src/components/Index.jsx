@@ -18,6 +18,8 @@ import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/f
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
+var debounce = require("lodash/debounce");
+
 const colors = {
     serviceType: '#DC8665',
     specializations: '#138086',
@@ -51,7 +53,7 @@ class Index extends Component {
             searchZip: null,
             name: null,
             markers: null,
-            currmarker: null,
+            currmarker: -1,
         };
         this.switchView = this.switchView.bind(this);
         this.renderCell = this.renderCell.bind(this);
@@ -249,6 +251,9 @@ class Index extends Component {
                     borderTopWidth: index === 0 ? 0 : 1,
                     paddingTop: index === 0 ? 0 : 18,
                 }}
+                onMouseEnter={debounce(() => {
+                    this.setState({currmarker: index});
+                }, 300)}
                 onClick = {() => this.handleCellClick(index)} >
                     <Flipped key = { index }
                              inverseFlipId = "list" >
@@ -470,6 +475,7 @@ class Index extends Component {
                                             lat: 39.9526,
                                             lng: -75.1652
                                         }}
+                                        selectedMarker={this.state.currmarker}
                                         onShowMoreClick={this.handleCellClick}
                                     />
                                 </div>

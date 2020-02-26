@@ -33,7 +33,6 @@ class AddProvider extends Component {
             item: this.props.selected || {},
             isLoading: false
         };
-        console.log(this.props.selected);
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
@@ -104,7 +103,6 @@ class AddProvider extends Component {
         await this.props.firestore.get('providers');
         this.setState({isLoading: false});
         this.props.history.push(providerRoute);
-        //Hello
     };
 
     next = () => {

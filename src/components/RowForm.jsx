@@ -40,7 +40,7 @@ const RowForm = (props) => {
         website: [],
         image: 'modalimage.png',
         imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
-        })
+        });
 
     function handleInputChange(e) {
         if(e.target.type === "checkbox") {
@@ -317,7 +317,7 @@ const RowForm = (props) => {
                 );
             default:
                 return;
-        }  
-} 
+        }
+}
 
 export default RowForm;
