@@ -95,11 +95,11 @@ body {
     background-color: white;
     padding-top: 18px;
     padding-bottom: 18px;
-    transition: all 0.2s;
+    transition: border-left 0.2s;
 }
 
 .map-cell:hover {
-    border-left: #0069D9 10px solid;
+    border-left: solid #0069D9 10px;
 }
 
 .padder {

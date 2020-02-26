@@ -26,7 +26,7 @@ export default ({
       setSelected(selectedMarker);
       const lat = providers[selectedMarker].latitude;
       const lng = providers[selectedMarker].longitude;
-      if (!arePointsNear({ lat, lng }, center, (40000 / Math.pow(2, zoom)) * 2 - 10)) {
+      if (!arePointsNear({ lat, lng }, center, (40000 / (2 ** zoom)) * 2 - 11)) {
         setCenter({ lat, lng });
       }
     }
