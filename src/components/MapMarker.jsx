@@ -11,15 +11,28 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarker
                     style={{ cursor: "pointer", width: "18px", height: "18px" }}
                     onClick={onMarkerClick}
                 >
-                    <svg
-                        fill="#5EB63B"
-                        stroke="white"
-                        strokeWidth="2"
-                        width="18px"
-                        height="18px"
-                    >
-                        <path d="M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0" />
-                    </svg>
+                    {selectedIndex === index ? (
+                        <svg
+                            fill="#FFB930"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="25px"
+                            height="30px"
+                            fillRule="nonzero"
+                        >
+                            <path d='M1 12.5C1 7.5 5 1 13 1 21 1 25 7.5 25 12.5 25 21.5 17 26.333 13 31 9 26.5 1 21.112 1 12.5ZM18 12.5a5 5 0 1 0-10 0 5 5 0 1 0 10 0' />
+                        </svg>
+                    ) : (
+                        <svg
+                            fill="#5EB63B"
+                            stroke="white"
+                            strokeWidth="2"
+                            width="18px"
+                            height="18px"
+                        >
+                            <path d="M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0" />
+                        </svg>
+                    )}
                 </div>
             }
             position="top center"
@@ -43,7 +56,7 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarker
                         position: "absolute",
                         top: "8px",
                         right: "8px",
-                        cursor: "pointer",
+                        cursor: "pointer"
                     }}
                     onClick={onMarkerClick}
                 />
