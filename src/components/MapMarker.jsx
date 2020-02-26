@@ -1,5 +1,7 @@
 import React from "react";
 import Popup from "reactjs-popup";
+import Button from "react-bootstrap/Button";
+import { FaInfoCircle, FaTimes } from "react-icons/fa";
 
 export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarkerClick }) => {
     return (
@@ -24,11 +26,42 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarker
             closeOnDocumentClick
             on="focus"
             open={selectedIndex === index}
+            contentStyle={{
+                borderRadius: "8px",
+                padding: "12px",
+                boxShadow: "0 2px 7px 1px rgba(0,0,0,0.3)",
+                maxWidth: "452px",
+                fontWeight: "300",
+                fontSize: "13px",
+                display: "inline-block",
+                minWidth: "300px"
+            }}
         >
             <div>
-                <div>{name}</div>
-                <div>{address}</div>
-                <button onClick={onShowMoreClick}>Show More Info</button>
+                <FaTimes
+                    style={{
+                        position: "absolute",
+                        top: "8px",
+                        right: "8px",
+                        cursor: "pointer",
+                    }}
+                    onClick={onMarkerClick}
+                />
+                <h6>{name}</h6>
+                <div className="mb-1">{address}</div>
+                <Button
+                    variant="link"
+                    onClick={onShowMoreClick}
+                    style={{
+                        padding: 0,
+                        fontWeight: "300",
+                        fontSize: "13px",
+                        margin: 0
+                    }}
+                >
+                    Show More Info
+                    <FaInfoCircle className="ml-1" />
+                </Button>
             </div>
         </Popup>
     );
