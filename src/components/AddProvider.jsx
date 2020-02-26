@@ -90,11 +90,13 @@ class AddProvider extends Component {
                 this.state.item.address[0].replace(/\s/g, '%20')
             }&key=${API_KEY}`);
             let responseJson = await response.json();
+            console.log(responseJson);
             if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
                 item.latitude = responseJson.results[0].geometry.location.lat;
                 item.longitude = responseJson.results[0].geometry.location.lng;
             }
         }
+        console.log(item);
         let firestore = this.props.firestore;
         await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
@@ -104,7 +106,6 @@ class AddProvider extends Component {
         await this.props.firestore.get('providers');
         this.setState({isLoading: false});
         this.props.history.push(providerRoute);
-        //Hello
     };
 
     next = () => {
