@@ -55,6 +55,472 @@ body {
     border-bottom: solid 1px lightgray;
 }
 
+.map-list {
+    max-height: calc(100vh - 115px);
+    overflow-y: scroll;
+}
+
+.no-span {
+    display: table;
+    white-space: nowrap;
+}
+
+.count {
+    position: relative;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.count:before {
+    content: "";
+    display: block;
+    border-top: solid 1px #E0E0E0;
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    z-index: 0;
+}
+
+.count span {
+    background: #fff;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    color: gray;
+}
+
+.map-cell {
+    border-top: solid #E0E0E0;
+    background-color: white;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    transition: border-left 0.2s;
+}
+
+.map-cell:hover {
+    border-left: solid #0069D9 10px;
+}
+
+.padder {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.point {
+    cursor: pointer;
+}
+
+.filter-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-wrapper {
+    background-color: white;
+    padding: 20px;
+    height: 100%;
+}
+
+.tag {
+    border: solid 1px;
+    border-radius: 2px;
+    padding: 0 8px 3px 8px;
+    display: inline-block;
+    margin-top: 8px;
+    margin-right: 5px;
+}
+
+.clear-all {
+    padding: 7px 8px 5px 8px;
+}
+
+.clear-all:hover {
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+.remove-tag {
+    opacity: 1;
+    margin-left: 5px;
+    font-size: 22px;
+}
+
+.remove-tag:hover {
+    opacity: 0.75;
+}
+
+.step-wrapper {
+    padding: 20px;
+}
+
+@media only screen and (min-width: 768px) {
+    /*Desktop Specific*/
+    #auth-root {
+        margin-top: 30px;
+        width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .step-wrapper {
+        padding: 20px 0 20px 60px;
+    }
+}
+
+@-webkit-keyframes translate {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px)
+    }
+}
+
+@keyframes translate {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px)
+    }
+}
+
+@-webkit-keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.translate {
+    -webkit-animation-duration: 400ms;
+    animation-duration: 400ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: translate;
+    animation-name: translate;
+}
+
+.fade-out {
+    -webkit-animation-duration: 200ms;
+    animation-duration: 200ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fade-out;
+    animation-name: fade-out;
+}
+
+.fade-in {
+    -webkit-animation-duration: 600ms;
+    animation-duration: 600ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fade-in;
+    animation-name: fade-in;
+}
+
+.hide {
+    opacity: 0;
+}
+
+.react-bootstrap-table th {
+    background-color: #F8F9FA;
+    border: 0;
+}
+
+.react-bootstrap-table tbody tr:first-child td {
+    border-top: 0;
+}
+
+@media only screen and (min-width: 900px) {
+    .scroll-container {
+        max-height: calc(100vh - 123px);
+        overflow-y: scroll;
+    }
+    .list-wrapper {
+        border-right: solid 6px #F8F9FA;
+    }
+}
+
+.row-spaced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+
+.row-nowrap {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+
+/*Loading Spinner, Temporary*/
+
+.spinner {
+    font-size: 10px;
+    margin: 50px auto;
+    text-indent: -9999em;
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    background: #ffffff;
+    background: -moz-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -webkit-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -o-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: -ms-linear-gradient(left, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    background: linear-gradient(to right, #0069D9 10%, rgba(0, 105, 217, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.spinner:before {
+    width: 50%;
+    height: 50%;
+    background: #0069D9;
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+}
+
+.spinner:after {
+    background: #F8F9FA;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+@-webkit-keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load3 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.loader {
+    display: inline-block;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    margin-left: -16px;
+    margin-right: 2px;
+    margin-bottom: -2px;
+    width: 16px;
+    height: 16px;
+    animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-col-flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal-hours-backdrop {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.modal-center-text {
+    text-align: center;
+}
+
+.modal-col-flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+ß .modal-col-flex-start {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.modal-text {
+    display: inline;
+}
+
+.modal-card-text {
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.image-cover {
+    padding: 1.5rem 2rem;
+    background-position: center center;
+    background-size: cover;
+    object-fit: cover;
+}
+
+.image-cover h2 {
+    color: white;
+    text-shadow: black 0 0 12px, 0 0 20px black;
+}
+
+.view-container {
+    overflow: hidden;
+    width: 95%;
+    height: calc(100vh - 56px);
+    height: -moz-calc(100vh - 56px);
+    height: -webkit-calc(100vh - 56px);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.switch-view-button {
+    margin: 0 15px;
+}
+
+.view-row {
+    height: 85%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.list-view-text-body {
+    margin-bottom: 0;
+}
+
+.map-view {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+#map {
+    height: 100%;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F9FA;
+}
+
+#auth-root {
+    margin-top: 10px;
+}
+
+.box {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px 20px 40px 20px;
+    box-shadow: 0 0 10px rgba(3, 215, 252, 0.2);
+    /*Blue*/
+}
+
+.splash {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 300px);
+    width: 600px;
+    height: 600px;
+    background-image: url("../img/login-hero-01.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.fixed-container {
+    padding: 10px;
+    background-color: white;
+    border-bottom: solid 1px lightgray;
+}
+
 .no-span {
     display: table;
     white-space: nowrap;
