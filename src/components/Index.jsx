@@ -385,7 +385,7 @@ class Index extends Component {
                                         className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
                                         style = {{width: listView ? '100vw' : '100vw'}}>
                                         <Flipped inverseFlipId = "list">
-                                            <div className = {listView? "filter-row-show-map" : "filter-row-no-map"}>
+                                            <div className = {classNames({"filter-row-show-map": listView}, {"filter-row-no-map": !listView}, {"drop-shadow": document.getElementById("map-list-no-map").scrollTop > 1})}>
                                                 { this.renderDropdown(languagesLabel, "languages") }
                                                 { this.renderDropdown(agesLabel, "ages") }
                                                 { this.renderDropdown(insuranceLabel, "insurance") }

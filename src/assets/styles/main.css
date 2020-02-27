@@ -111,11 +111,13 @@ body {
     z-index: 4;
     background-color: white;
     width: 100vw;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
+    bottom: 0;
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
     max-height: 10vh;
     overflow-y: hidden;
+    box-shadow: 0px 8px 5px 1px rgba(0,0,0,0.1);
 }
 .filter-row-no-map {
     padding-top: 20px;
@@ -124,11 +126,13 @@ body {
     flex-wrap: wrap;
     align-items: center;
     position: absolute;
+    width: 100vw;
     z-index: 4;
     background-color: white;
     padding-bottom: 10px;
     border-top-left-radius: 25px;
     border-top-right-radius: 25px;
+    box-shadow: 0px 8px 5px 1px rgba(0,0,0,0.1);
 }
 
 .form-wrapper {
@@ -216,7 +220,7 @@ body {
     
 }
 .filter-list-padding {
-    padding-top: 15vh;
+    padding-top: 20vh;
 }
 
 .w-75 {
@@ -235,6 +239,17 @@ body {
     }
     100% {
         opacity: 1;
+    }
+}
+@media only screen and (min-width: 370px) {
+    .filter-list-padding {
+        padding-top: 17vh;
+    }
+}
+
+@media only screen and (min-width: 500px) {
+    .filter-list-padding {
+        padding-top: 10vh;
     }
 }
 @media only screen and (min-width: 768px) {
@@ -272,13 +287,16 @@ body {
         padding-top: 0px;
         position: absolute;
         width: 50vw;
+        bottom: auto;
         max-height: none;
         overflow-y: visible;
+        box-shadow: 0px 8px 5px 1px rgba(0,0,0,0.1);
     }
     .filter-row-no-map {
         padding-top: 0px;
         position: absolute;
         width: 100vw;
+        box-shadow: 0px 8px 5px 1px rgba(0,0,0,0.1);
     }
     .list-padding-no-map{
         margin-top: 0px;
