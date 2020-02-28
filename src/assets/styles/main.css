@@ -388,6 +388,11 @@ body {
     text-align: center;
 }
 
+.modal-content  {
+    border-radius: 20px; 
+    border-color: transparent;
+}
+
 .modal-col-flex-end {
     display: flex;
     justify-content: flex-end;
@@ -417,8 +422,15 @@ body {
     padding-right: 2rem;
 }
 
+.close {
+    color: #fff; 
+    opacity: 1;
+    font-size: 50px !important;
+    font-weight: 100 !important;
+}
+
 .image-cover {
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem .5rem;
     background-position: center center;
     background-size: cover;
     object-fit: cover;
@@ -426,7 +438,6 @@ body {
 
 .image-cover h2 {
     color: white;
-    text-shadow: black 0 0 12px, 0 0 20px black;
 }
 
 .view-container {
