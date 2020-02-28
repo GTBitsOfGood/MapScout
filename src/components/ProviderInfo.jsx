@@ -9,19 +9,21 @@ import Card from 'react-bootstrap/Card';
 import API_KEY from "../config/keys";
 
 const ProviderInfo = (props) => (
-  <div>
+  <div style = {{padding: "2vh 4vw"}}>
     <Container>
       <Row>
         <Col lg={6} className="modal-col-flex-center">
 
           <Card>
+            <div style= {{border: "1.4px solid black"}}>
             <Card.Img
-              src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=13&scale=3&size=335x167&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+              src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
               + `&markers=${props.item.latitude},${props.item.longitude}`}
               alt="Google Map of bethanna"
             >
             </Card.Img>
-            <Card.Body style={{ paddingTop: '10px', paddingBottom: '10px' }}>
+            </div>
+            {/* <Card.Body style={{ paddingTop: '10px', paddingBottom: '10px' }}>
               <Card.Text>
 
                 <div className="modal-card-text">
@@ -68,13 +70,20 @@ const ProviderInfo = (props) => (
                 </div>
 
               </Card.Text>
-            </Card.Body>
+            </Card.Body> */}
           </Card>
 
 
         </Col>
 
-        <Col lg={6} className="modal-hours-backdrop">
+        <Col>
+          <div className = "desc-Box">
+            <h3>{props.item.facilityName}</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          </div>
+        </Col>
+        {/* <Col lg={6} className="modal-hours-backdrop">
           <Container>
             <h5 className="modal-center-text"><b>Hours</b></h5>
             <hr className="modal-hr" />
@@ -181,12 +190,166 @@ const ProviderInfo = (props) => (
             </Row>
           </Container>
 
+        </Col> */}
+      </Row>
+      <Row>
+        <Col>
+        <div className="modal-card-text">
+                  <FaMapPin style={{ paddingTop: '5px' }} />
+                  {' '}
+&nbsp;
+                  <div>
+                    {props.item.address.toString().split(',').map((value, index) => {
+                      if (index === 0) {
+                        return <div>{value}</div>;
+                      } if (index === props.item.address.toString().split(',').length - 1) {
+                        return (
+                              <div style={{ display: 'inline' }}>
+                                {value}
+                                <div><a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">View on Maps</a></div>
+                              </div>
+                        );
+                      }
+                      if (index === 1) {
+                        return <div style={{ display: 'inline' }}>{`${value},`}</div>;
+                      }
+                      return `${value},`;
+                    })}
+                  </div>
+                </div>
+
+                <div className="modal-card-text">
+                  <FaPhone style={{ paddingTop: '5px' }} />
+                  {' '}
+&nbsp;
+                  <div>
+                    {props.item.phoneNum.join(', ')}
+                  </div>
+                </div>
+
+                <div className="modal-card-text">
+                  {props.item.website[0] ? <FaGlobe style={{ paddingTop: '5px' }} /> : <div />}
+                  {props.item.website[0] ? (
+                    <div>
+                      {' '}
+                      <a href={props.item.website[0]} target="_blank">Website</a>
+                    </div>
+                  ) : <div />}
+                </div>
+        </Col>
+        <Col lg={6} className="modal-hours-backdrop">
+          <Container>
+            <h5 className="modal-center-text"><b>Hours</b></h5>
+            <hr className="modal-hr" />
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                    Monday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {' '}
+                  {props.item.hours.Monday ? props.item.hours.Monday.map((time, index) => formatTime(props.item.hours.Monday, time, index)) : 'CLOSED'}
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                    Tuesday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {props.item.hours.Tuesday ? props.item.hours.Tuesday.map((time, index) => formatTime(props.item.hours.Tuesday, time, index)) : 'CLOSED'}
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                  Wednesday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {' '}
+                  {props.item.hours.Wednesday ? props.item.hours.Wednesday.map((time, index) => formatTime(props.item.hours.Wednesday, time, index)) : 'CLOSED'}
+                  {' '}
+
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                   Thursday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {props.item.hours.Thursday ? props.item.hours.Thursday.map((time, index) => formatTime(props.item.hours.Thursday, time, index)) : 'CLOSED'}
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                    Friday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {' '}
+                  {props.item.hours.Friday ? props.item.hours.Friday.map((time, index) => formatTime(props.item.hours.Friday, time, index)) : 'CLOSED'}
+                  {' '}
+
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                    Saturday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {' '}
+                  {props.item.hours.Saturday ? props.item.hours.Saturday.map((time, index) => formatTime(props.item.hours.Saturday, time, index)) : 'CLOSED'}
+                  {' '}
+
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className="modal-col-flex-end">
+                <div>
+                    Sunday:
+                </div>
+              </Col>
+              <Col className="modal-col-flex-start">
+                <div>
+                  {props.item.hours.Sunday ? props.item.hours.Sunday.map((time, index) => formatTime(props.item.hours.Sunday, time, index)) : 'CLOSED'}
+                  {' '}
+
+                </div>
+              </Col>
+            </Row>
+          </Container>
         </Col>
       </Row>
 
     </Container>
     <br />
 
+    <div className = "modalHeader">
     <div>
       <h5><b>Languages Spoken</b></h5>
       <hr className="modal-hr" />
@@ -294,6 +457,7 @@ const ProviderInfo = (props) => (
         }
         return <div className="modal-text">{special}</div>;
       })}
+    </div>
     </div>
     <br />
 
