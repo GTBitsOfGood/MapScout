@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Component, Fragment, useState, useEffect } from 'react';
 import NavBar from './NavBar';
 import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
@@ -13,12 +13,12 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
-import { Flipper, Flipped } from "react-flip-toolkit";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
 var debounce = require("lodash/debounce");
+var classNames = require('classnames');
 
 const colors = {
     serviceType: '#DC8665',
@@ -26,201 +26,199 @@ const colors = {
     ages: '#534666',
     insurance: '#CD7672',
     languages: '#240E8B',
-    therapyTypes: '#787FF6'
+    therapyTypes: '#787FF6',
 };
 
-class Index extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModal: false,
-            isOpen: false,
-            moreFilter: false,
-            listView: true,
-            isLoading: true,
-            selectedIndex: 0,
-            activeProviders: null,
-            tempProviders: null,
-            serviceType: [],
-            specializations: [],
-            ages: [],
-            insurance: [],
-            languages: [],
-            therapyTypes: [],
-            filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
-            searchName: null,
-            // searchZip: 19123,
-            searchZip: null,
-            name: null,
-            markers: null,
-            currmarker: -1,
-        };
-        this.switchView = this.switchView.bind(this);
-        this.renderCell = this.renderCell.bind(this);
-        this.handleCellClick = this.handleCellClick.bind(this);
-        this.renderDropdown = this.renderDropdown.bind(this);
-        this.renderTag = this.renderTag.bind(this);
-        this.filterZipcode = this.filterZipcode.bind(this);
-        this.filterSearch = this.filterSearch.bind(this);
-        this.filterActiveProviders = this.filterActiveProviders.bind(this);
-    }
+const Index = (props) => {
 
-    filterZipcode = async(filterVal) => {
-        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
-        let responseJson = await response.json();
+    const [showModal, setShowModal] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [moreFilter, setMoreFilter] = useState(false);
+    const [listView, setListView] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [activeProviders, setActiveProviders] = useState(null);
+    const [tempProviders, setTempProviders] = useState(null);
+    const [serviceType, setServiceType] = useState([]);
+    const [specializations, setSpecializations] = useState([]);
+    const [ages, setAges] = useState([]);
+    const [insurance, setInsurance] = useState([]);
+    const [languages, setLanguages] = useState([]);
+    const [therapyTypes, setTherapyTypes] = useState([]);
+    const [filters, setFilters] = useState(['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes']);
+    const [searchName, setSearchName] = useState(null);
+    const [searchZip, setSearchZip] = useState(null);
+    const [name, setName] = useState(null);
+    const [markers, setMarkers] = useState(null);
+    const [currmarker, setCurrmarker] = useState(-1);
 
-        // Handle illegal response
-        let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
-        let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
-        var providerLat, providerLong;
-        var filteredProviders = [];
-
-
-        var R = 6371e3;
-        const pi = Math.PI;
-        const metersPerMile = 1609.344;
-        var φ1 = filterLat * (pi / 180);
-
-        this.state.tempProviders.forEach(function(provider) {
-            providerLat = provider['latitude'];
-            providerLong = provider['longitude'];
-            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
-
-            let φ2 = providerLat * (pi / 180)
-            let Δφ = (providerLat - filterLat) * (pi / 180)
-            let Δλ = (providerLong - filterLong) * (pi / 180)
-            let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2)
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-            let miDistance = (R * c) / metersPerMile
-
-            filteredProviders.push({ 'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1 });
-        });
-
-        filteredProviders.sort(function(a, b) {
-            return a.latLongdistance > b.latLongdistance ? 1 : -1
-        });
-
-        var outThis = this;
-        var filterActiveProviders = [];
-        filteredProviders.forEach(function(provider) {
-            filterActiveProviders.push(provider['provider']);
-            let distKey = provider['provider']['facilityName'] + 'Dist';
-            outThis.setState({
-                [distKey]: provider['miDistance']
-            })
-        });
-
-        await this.setState({
-            tempProviders: filterActiveProviders,
-        })
-
+    const state = {
+        serviceType, specializations, ages, insurance, languages, therapyTypes
     };
 
-    filterNormalFilters = async(e) => {
+    function setState(index, value) {
+        const setMap = {
+            serviceType: setServiceType,
+            specializations: setSpecializations,
+            ages: setAges,
+            insurance: setInsurance,
+            languages: setLanguages,
+            therapyTypes: setTherapyTypes,
+        };
+
+        setMap[index](value);
+    }
+
+    const filterByTags = () => {
+        if (!isEmpty(props.providers)) {
+            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers;
+            filters.forEach(filterName => {
+                temp = temp.filter((provider) => {
+                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0
+                });
+            });
+            if (searchName && searchName.length > 0) {
+                setTempProviders(temp);
+            }
+            setActiveProviders(temp);
+        }
+    };
+
+    const filterZipcode = async (filterVal) => {
+        // let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
+        // let responseJson = await response.json();
+        //
+        // // Handle illegal response
+        // let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
+        // let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
+        // var providerLat, providerLong;
+        // var filteredProviders = [];
+        //
+        //
+        // var R = 6371e3;
+        // const pi = Math.PI;
+        // const metersPerMile = 1609.344;
+        // var φ1 = filterLat * (pi / 180);
+        //
+        // tempProviders.forEach(function(provider) {
+        //     providerLat = provider['latitude'];
+        //     providerLong = provider['longitude'];
+        //     let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
+        //
+        //     let φ2 = providerLat * (pi / 180);
+        //     let Δφ = (providerLat - filterLat) * (pi / 180);
+        //     let Δλ = (providerLong - filterLong) * (pi / 180);
+        //     let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        //         Math.cos(φ1) * Math.cos(φ2) *
+        //         Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        //     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        //     let miDistance = (R * c) / metersPerMile;
+        //
+        //     filteredProviders.push({ 'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1 });
+        // });
+        //
+        // filteredProviders.sort(function(a, b) {
+        //     return a.latLongdistance > b.latLongdistance ? 1 : -1
+        // });
+        //
+        // var outThis = this;
+        // var filterActiveProviders = [];
+        // filteredProviders.forEach(function(provider) {
+        //     filterActiveProviders.push(provider['provider']);
+        //     let distKey = provider['provider']['facilityName'] + 'Dist';
+        //     outThis.setState({
+        //         [distKey]: provider['miDistance']
+        //     })
+        // });
+        //
+        // setTempProviders(filterActiveProviders);
+        // await setState({
+        //     tempProviders: filterActiveProviders,
+        // })
+    };
+
+    const filterNormalFilters = async(e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
         if (e.target.type === "checkbox" && e.target.checked) {
-            await this.setState({
-                [filterName]: [...this.state[filterName], filterVal]
-            })
+            await setState(filterName, [...state[filterName], filterVal]);
 
         } else if (e.target.type === "checkbox" && !e.target.checked) {
-            await this.setState({
-                [filterName]: this.state[filterName].filter(function(filter) {
+            await setState(filterName, state[filterName].filter(function(filter) {
                     return filter !== filterVal
                 })
-            })
+            )
         }
     };
 
-    filterActiveProviders = async() => {
-        await this.state.filters.forEach(filterName => {
-            this.setState({
-                tempProviders: this.state.tempProviders.filter((provider) => {
-                    return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
-                })
-            })
-        });
+    const filterSearch = (filterVal) => {
+        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
+        const temp = tempProviders || props.providers;
+        setActiveProviders(temp.filter((item) => regex.test(item.facilityName)))
     };
 
-    filterSearch = async(filterVal) => {
-        await this.setState({
-            tempProviders: this.state.tempProviders.filter((filter) => {
-                return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
-            })
-        })
-    };
-
-    filterProviders = async(e) => {
-        this.setState({
-            tempProviders: this.props.providers,
-        });
+    const filterProviders = async(e) => {
+        if (!evaluateFilters()) {
+            setTempProviders(props.providers);
+        }
         if (typeof e !== 'undefined') {
             const filtertype = e.target.getAttribute('filtertype');
             const filterVal = e.target.value;
-
-            if (filtertype === 'normalfilter') {
-                await this.filterNormalFilters(e)
-            } else if (filtertype === 'search') {
-                await this.setState({ searchName: filterVal });
+            if (filtertype === 'search') {
+                setSearchName(filterVal);
+                await filterSearch(filterVal)
             } else if (filtertype === 'zipcode') {
-                await this.setState({ searchZip: filterVal.length === 5 ? filterVal : null });
+                setSearchZip(filterVal.length === 5 ? filterVal : null);
+                await filterZipcode(filterVal)
+            } else {
+                await filterNormalFilters(e);
             }
         }
-
-        await this.filterActiveProviders();
-
-        if (this.state.searchName != null) {
-            await this.filterSearch(this.state.searchName)
-        }
-
-        if (this.state.searchZip != null) {
-            await this.filterZipcode(this.state.searchZip)
-        }
-
-        this.setState({ activeProviders: this.state.tempProviders })
     };
 
-    // creates map and firebase
-    async componentDidMount() {
-        const { firestore, providers } = this.props;
+    useEffect(() => {
+        const { firestore, providers } = props;
         if (!isLoaded(providers)) {
-            await firestore.get('providers');
+            firestore.get('providers').then(
+                () => {
+                    setActiveProviders(providers);
+                    setTempProviders(providers);
+                    setIsLoading(false)
+                }
+            )
+        } else if (isEmpty(activeProviders) && isEmpty(tempProviders) && isLoading) {
+            setActiveProviders(providers);
+            setTempProviders(providers);
+            setIsLoading(false)
         }
-        await this.setState({
-            activeProviders: this.props.providers,
-            tempProviders: this.props.providers
-        });
+    }, [props.providers]);
 
-        this.setState({ isLoading: false });
+    useEffect(() => {
+        filterByTags();
+    }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
+
+    function switchView() {
+        setListView(!listView);
     }
 
-    switchView() {
-        this.setState({ listView: !this.state.listView });
-    }
-
-    evaluateFilters() {
+    function evaluateFilters() {
         let isFiltersEmpty = true;
-        this.state.filters.map(item => {
-            if (this.state[item].length > 0) {
+        filters.map(item => {
+            if (state[item].length > 0) {
                 isFiltersEmpty = false;
             }
         });
         return !isFiltersEmpty;
     }
 
-    clearFilters() {
-        this.state.filters.map(item =>
-            this.setState({
-                [item]: [] })
+    function clearFilters() {
+        filters.map(item =>
+            setState(item, [])
         );
-        setTimeout(() => this.filterProviders(), 100);
     }
 
-    renderTag(item, index) {
-        return this.state[item].map((title, key) =>
+    function renderTag(item, index) {
+        return state[item].map((title, key) =>
             <div
                 className = "tag"
                 style = {{ borderColor: colors[item], color: colors[item] } }
@@ -228,21 +226,20 @@ class Index extends Component {
                 { title } <span className = "remove-tag"
                                 onClick = {
                                     async () => {
-                                        this.setState({
-                                            [item]: this.state[item].filter((i) => i !== title)
-                                        });
-                                        setTimeout(() => this.filterProviders(), 100);
+                                        setState(item, state[item].filter((i) => i !== title));
+                                        setTimeout(() => filterProviders(), 100);
                                     }}> <FaTimesCircle />
                 </span>
             </div>
         )
     }
 
-    handleCellClick(index) {
-        this.setState({ selectedIndex: index, showModal: true });
+    function handleCellClick(index) {
+        setSelectedIndex(index);
+        setShowModal(true);
     }
 
-    renderCell(item, index) {
+    function renderCell(item, index) {
         return (
             <div
                 className = "map-cell padder"
@@ -252,46 +249,44 @@ class Index extends Component {
                     paddingTop: index === 0 ? 0 : 18,
                 }}
                 onMouseEnter={debounce(() => {
-                    this.setState({currmarker: index});
+                    if (listView)
+                        setCurrmarker(index);
                 }, 300)}
-                onClick = {() => this.handleCellClick(index)} >
-                    <Flipped key = { index }
-                             inverseFlipId = "list" >
-                        <div>
-                            <h5>
-                                <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
-                                {item.therapyTypes.includes('Pri-CARE') &&
-                                    <Badge
-                                        style={{ marginRight: 20 }}
-                                        variant = "primary" >Pri-CARE</Badge>
-                                }
-                                {item.therapyTypes.includes('TF-CBT') &&
-                                    <Badge
-                                        variant = "primary" >TF-CBT</Badge>
-                                }
-                            </h5>
-                            <div style = {{ color: 'gray' }}>
-                                <FaMapPin /> { item.address[0] }
-                                <div className = "row-spaced">
-                                    <div>
-                                        <FaPhone /> { item.phoneNum.join(', ') }
-                                    </div>
-                                    {
-                                        this.state[item.facilityName + 'Dist'] && this.state['searchZip'] &&
-                                        <small>
-                                            <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                            { this.state[item.facilityName + 'Dist'] + ' mi' }
-                                        </small>
-                                    }
+                onClick = {() => handleCellClick(index)} >
+                <div>
+                    <h5>
+                        <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
+                        {item.therapyTypes.includes('Pri-CARE') &&
+                        <Badge
+                            style={{ marginRight: 20 }}
+                            variant = "primary" >Pri-CARE</Badge>
+                        }
+                        {item.therapyTypes.includes('TF-CBT') &&
+                        <Badge
+                            variant = "primary" >TF-CBT</Badge>
+                        }
+                    </h5>
+                    <div style = {{ color: 'gray' }}>
+                        <FaMapPin /> { item.address[0] }
+                        <div className = "row-spaced">
+                            <div>
+                                <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
+                            {/*{*/}
+                            {/*    state[item.facilityName + 'Dist'] && state['searchZip'] &&*/}
+                            {/*    <small>*/}
+                            {/*        <FaLocationArrow style = {{ marginRight: 8 }}/>*/}
+                            {/*        { state[item.facilityName + 'Dist'] + ' mi' }*/}
+                            {/*    </small>*/}
+                            {/*}*/}
                         </div>
                     </div>
-                </Flipped>
+                </div>
             </div>
         );
     }
 
-    renderDropdown(title, key) {
+    function renderDropdown(title, key) {
         return (
             <Dropdown>
                 <Dropdown.Toggle
@@ -305,22 +300,22 @@ class Index extends Component {
                         options[key].map((item, index) =>
                             <div
                                 onClick={
-                                    () => this.filterProviders({
+                                    () => filterProviders({
                                         target: {
                                             name: key,
                                             value: item.value,
                                             type: "checkbox",
-                                            checked: !this.state[key].includes(item.value),
+                                            checked: !state[key].includes(item.value),
                                             getAttribute: (param) => "normalfilter"
                                         }
                                     })
-                            }>
+                                }>
                                 <Form.Check
                                     className="dropdown-item"
                                     name = { key }
                                     key = { index }
                                     type = "checkbox"
-                                    checked = { this.state[key].includes(item.value) }
+                                    checked = { state[key].includes(item.value) }
                                     value = { item.value }
                                     label = { item.label }
                                     filtertype = "normalfilter" />
@@ -331,654 +326,144 @@ class Index extends Component {
             </Dropdown>
         );
     }
-    render() {
-        let {
-            searchProviderName,
-            searchZipcode,
-            hideLabel,
-            showLabel,
-            languagesLabel,
-            agesLabel,
-            insuranceLabel,
-            serviceTypeLabel,
-            specializationsLabel,
-            therapyTypeLabel,
-            lessFilters,
-            moreFilters
-        } = localizationStrings;
-        const { isLoading, data, selectedIndex, showModal, listView } = this.state;
-        const providers = this.state.activeProviders;
-        if (isLoading || !isLoaded(providers))
-            return <div className = "spinner" />;
 
-        return (
-            <div className = "bg-white" >
-                <NavBar update={() => this.forceUpdate()}/>
-                <div >
-                    <div className = "row-spaced ml-2 mb-3" >
-                        <div className = "w-75" >
-                            <Row >
-                                <Col >
-                                    <Form.Control
-                                        placeholder = { searchZipcode }
-                                        filtertype = 'zipcode'
-                                        onChange = { this.filterProviders } />
-                                </Col>
-                                <Col >
-                                    <Form.Control
-                                        placeholder = { searchProviderName }
-                                        filtertype = 'search'
-                                        onChange = { this.filterProviders } />
-                                </Col>
-                            </Row>
-                        </div>
-                        <Button
-                            variant = "primary"
-                            onClick = { this.switchView }
-                            className = "switch-view-button" >
-                            { this.state.listView ? hideLabel : showLabel }
-                        </Button>
+    let {
+        searchProviderName,
+        searchZipcode,
+        hideLabel,
+        showLabel,
+        languagesLabel,
+        agesLabel,
+        insuranceLabel,
+        serviceTypeLabel,
+        specializationsLabel,
+        therapyTypeLabel,
+        lessFilters,
+        moreFilters
+    } = localizationStrings;
+
+    if (isLoading || !isLoaded(activeProviders))
+        return <div className = "spinner" />;
+
+    return (
+        <div className = "bg-white" >
+            <NavBar />
+            <div >
+                <div className = "row-spaced ml-2 mb-3" >
+                    <div className = "w-75" >
+                        <Row noGutters={false}>
+                            <Col >
+                                <Form.Control
+                                    placeholder = { searchZipcode }
+                                    filtertype = 'zipcode'
+                                    onChange = { filterProviders } />
+                            </Col>
+                            <Col >
+                                <Form.Control
+                                    placeholder = { searchProviderName }
+                                    filtertype = 'search'
+                                    onChange = { filterProviders } />
+                            </Col>
+                        </Row>
                     </div>
-                    <Flipper flipKey = { listView } >
-                        <div className = "row-nowrap" >
-                            <Flipped flipId = "list" >
+                    <Button
+                        variant = "primary"
+                        onClick = { switchView }
+                        className = "switch-view-button" >
+                        { listView ? hideLabel : showLabel }
+                    </Button>
+                </div>
+                <div className = "row-nowrap" >
+                    <div className = {classNames("map-list", { "expand": !listView })}>
+                        <div className = "filter-row padder" >
+                            { renderDropdown(languagesLabel, "languages") }
+                            { renderDropdown(agesLabel, "ages") }
+                            { renderDropdown(insuranceLabel, "insurance") }
+                            { moreFilter
+                                ? <Fragment >
+                                    { renderDropdown(serviceTypeLabel, "serviceType") }
+                                    { renderDropdown(specializationsLabel, "specializations") }
+                                    { renderDropdown(therapyTypeLabel, "therapyTypes") }
+                                    <Button
+                                        variant = "link"
+                                        style = {{ color: 'red' }}
+                                        onClick = {() => setMoreFilter(false) } >- {lessFilters}
+                                    </Button>
+                                </Fragment>
+                                : <Button
+                                    variant = "link"
+                                    onClick = {() => setMoreFilter(true) }>
+                                    + {moreFilters}
+                                </Button>
+                            }
+                        </div>
+                        <div className = "tag-row padder" >
+                            {filters.map(renderTag)}
+                            {
+                                evaluateFilters() &&
                                 <div
-                                    className = "map-list"
-                                    style = {{width: listView ? '50%' : '100%'}}>
-                                    <Flipped inverseFlipId = "list" >
-                                        <div className = "filter-row padder" >
-                                            { this.renderDropdown(languagesLabel, "languages") }
-                                            { this.renderDropdown(agesLabel, "ages") }
-                                            { this.renderDropdown(insuranceLabel, "insurance") }
-                                            { this.state.moreFilter
-                                                ? <Fragment >
-                                                    { this.renderDropdown(serviceTypeLabel, "serviceType") }
-                                                    { this.renderDropdown(specializationsLabel, "specializations") }
-                                                    { this.renderDropdown(therapyTypeLabel, "therapyTypes") }
-                                                    <Button
-                                                        variant = "link"
-                                                        style = {{ color: 'red' }}
-                                                        onClick = {() => this.setState({ moreFilter: false }) } >- {lessFilters}
-                                                    </Button>
-                                                </Fragment>
-                                                : <Button
-                                                    variant = "link"
-                                                    onClick = {() => this.setState({ moreFilter: true }) }>
-                                                    + {moreFilters}
-                                                </Button>
-                                            }
-                                        </div>
-                                    </Flipped>
-                                    <Flipped inverseFlipId = "list" >
-                                        <div className = "tag-row padder" >
-                                            {this.state.filters.map(this.renderTag)}
-                                            {
-                                                this.evaluateFilters() &&
-                                                <div
-                                                    onClick = {() => this.clearFilters()}
-                                                    className = "tag clear-all"
-                                                    style = {{ borderColor: 'red', color: 'red' }}>
-                                                    Clear All
-                                                </div>
-                                            }
-                                        </div>
-                                    </Flipped>
-                                    <div className = "count" >
-                                        <Flipped inverseFlipId = "list" >
-                                            <span>
-                                                {
-                                                    isEmpty(providers) ?
-                                                        'No' : providers.length
-                                                } providers found
-                                            </span>
-                                        </Flipped>
-                                    </div>
-                                    {
-                                        !isEmpty(providers) &&
-                                        providers.map(this.renderCell)
-                                    }
-                                    <div >
-                                        {
-                                            providers && providers[selectedIndex] &&
-                                            <Modal
-                                                show = { showModal }
-                                                onHide = {() => this.setState({ showModal: false })}
-                                                size = "lg"
-                                                scrollable >
-                                                <Modal.Header
-                                                    className = "image-cover"
-                                                    style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }}
-                                                    closeButton >
-                                                    <Modal.Title id = "contained-modal-title-vcenter" >
-                                                        <h2>
-                                                            <b>
-                                                                { providers[selectedIndex].facilityName }
-                                                            </b>
-                                                        </h2>
-                                                    </Modal.Title>
-                                                </Modal.Header>
-                                                <Modal.Body
-                                                    className = "modal-body" >
-                                                    <ProviderInfo item = { providers[selectedIndex] }/>
-                                                </Modal.Body>
-                                            </Modal>
-                                        }
-                                    </div>
+                                    onClick = {() => clearFilters()}
+                                    className = "tag clear-all"
+                                    style = {{ borderColor: 'red', color: 'red' }}>
+                                    Clear All
                                 </div>
-                            </Flipped>
-                            <Flipped flipId = "map" >
-                                <div style = {{ width: '50%', marginRight: listView ? 0 : -1000, }}>
-                                    <GoogleMap
-                                        providers={providers}
-                                        defaultZoom={12}
-                                        defaultCenter={{
-                                            lat: 39.9526,
-                                            lng: -75.1652
-                                        }}
-                                        selectedMarker={this.state.currmarker}
-                                        onShowMoreClick={this.handleCellClick}
-                                    />
-                                </div>
-                            </Flipped>
+                            }
                         </div>
-                    </Flipper>
-                </div>
-            </div>);
-    }
-}
-
-export default compose(withFirestore, connect((state) => ({
-    providers: state.firestore.ordered.providers,
-    firebase: state.firebase
-})))(Index);
-import React, { Component, Fragment, useState } from 'react';
-import NavBar from './NavBar';
-import GoogleMap from './GoogleMap';
-import Row from "react-bootstrap/Row";
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import Badge from "react-bootstrap/Badge";
-import Form from "react-bootstrap/Form";
-import Dropdown from 'react-bootstrap/Dropdown';
-import Collapse from 'react-bootstrap/Collapse';
-import { compose } from "redux";
-import { connect } from 'react-redux';
-import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
-import ProviderInfo from "./ProviderInfo";
-import Modal from "react-bootstrap/Modal";
-import options from "../utils/options";
-import { Flipper, Flipped } from "react-flip-toolkit";
-import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
-import localizationStrings from '../utils/Localization';
-var classNames = require('classnames');
-import API_KEY from '../config/keys';
-
-const colors = {
-    serviceType: '#DC8665',
-    specializations: '#138086',
-    ages: '#534666',
-    insurance: '#CD7672',
-    languages: '#240E8B',
-    therapyTypes: '#787FF6'
-};
-
-class Index extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showModal: false,
-            isOpen: false,
-            moreFilter: false,
-            listView: true,
-            isLoading: true,
-            selectedIndex: 0,
-            activeProviders: null,
-            tempProviders: null,
-            serviceType: [],
-            specializations: [],
-            ages: [],
-            insurance: [],
-            languages: [],
-            therapyTypes: [],
-            filters: ['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes'],
-            searchName: null,
-            // searchZip: 19123,
-            searchZip: null,
-            name: null,
-            markers: null,
-            currmarker: null,
-        };
-        this.switchView = this.switchView.bind(this);
-        this.renderCell = this.renderCell.bind(this);
-        this.handleCellClick = this.handleCellClick.bind(this);
-        this.renderDropdown = this.renderDropdown.bind(this);
-        this.renderTag = this.renderTag.bind(this);
-        this.filterZipcode = this.filterZipcode.bind(this);
-        this.filterSearch = this.filterSearch.bind(this);
-        this.filterActiveProviders = this.filterActiveProviders.bind(this);
-    }
-
-    filterZipcode = async(filterVal) => {
-        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
-        let responseJson = await response.json();
-
-        // Handle illegal response
-        let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
-        let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
-        var providerLat, providerLong;
-        var filteredProviders = [];
-
-
-        var R = 6371e3;
-        const pi = Math.PI;
-        const metersPerMile = 1609.344;
-        var φ1 = filterLat * (pi / 180);
-
-        this.state.tempProviders.forEach(function(provider) {
-            providerLat = provider['latitude'];
-            providerLong = provider['longitude'];
-            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
-
-            let φ2 = providerLat * (pi / 180)
-            let Δφ = (providerLat - filterLat) * (pi / 180)
-            let Δλ = (providerLong - filterLong) * (pi / 180)
-            let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2)
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-            let miDistance = (R * c) / metersPerMile
-
-            filteredProviders.push({ 'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1 });
-        });
-
-        filteredProviders.sort(function(a, b) {
-            return a.latLongdistance > b.latLongdistance ? 1 : -1
-        });
-
-        var outThis = this;
-        var filterActiveProviders = [];
-        filteredProviders.forEach(function(provider) {
-            filterActiveProviders.push(provider['provider']);
-            let distKey = provider['provider']['facilityName'] + 'Dist';
-            outThis.setState({
-                [distKey]: provider['miDistance']
-            })
-        });
-
-        await this.setState({
-            tempProviders: filterActiveProviders,
-        })
-
-    };
-
-    filterNormalFilters = async(e) => {
-        const filterName = e.target.name;
-        const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) {
-            await this.setState({
-                [filterName]: [...this.state[filterName], filterVal]
-            })
-
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
-            await this.setState({
-                [filterName]: this.state[filterName].filter(function(filter) {
-                    return filter !== filterVal
-                })
-            })
-        }
-    };
-
-    filterActiveProviders = async() => {
-        await this.state.filters.forEach(filterName => {
-            this.setState({
-                tempProviders: this.state.tempProviders.filter((provider) => {
-                    return provider[filterName].some(r => this.state[filterName].includes(r)) || this.state[filterName].length === 0
-                })
-            })
-        });
-        this.greyOutMarkers()
-    };
-
-    filterSearch = async(filterVal) => {
-        await this.setState({
-            tempProviders: this.state.tempProviders.filter((filter) => {
-                return filter.facilityName.toLowerCase().includes(filterVal.toLowerCase())
-            })
-        })
-    };
-
-    filterProviders = async(e) => {
-        this.setState({
-            tempProviders: this.props.providers,
-        });
-        if (typeof e !== 'undefined') {
-            const filtertype = e.target.getAttribute('filtertype');
-            const filterVal = e.target.value;
-
-            if (filtertype === 'normalfilter') {
-                await this.filterNormalFilters(e)
-            } else if (filtertype === 'search') {
-                await this.setState({ searchName: filterVal });
-            } else if (filtertype === 'zipcode') {
-                await this.setState({ searchZip: filterVal.length === 5 ? filterVal : null });
-            }
-        }
-
-        await this.filterActiveProviders();
-
-        if (this.state.searchName != null) {
-            await this.filterSearch(this.state.searchName)
-        }
-
-        if (this.state.searchZip != null) {
-            await this.filterZipcode(this.state.searchZip)
-        }
-
-        this.setState({ activeProviders: this.state.tempProviders })
-    };
-
-    // creates map and firebase
-    async componentDidMount() {
-        const { firestore, providers } = this.props;
-        if (!isLoaded(providers)) {
-            await firestore.get('providers');
-        }
-        await this.setState({
-            activeProviders: this.props.providers,
-            tempProviders: this.props.providers
-        });
-
-        this.setState({ isLoading: false });
-    }
-
-    switchView() {
-        this.setState({ listView: !this.state.listView });
-    }
-
-    evaluateFilters() {
-        let isFiltersEmpty = true;
-        this.state.filters.map(item => {
-            if (this.state[item].length > 0) {
-                isFiltersEmpty = false;
-            }
-        });
-        return !isFiltersEmpty;
-    }
-
-    clearFilters() {
-        this.state.filters.map(item =>
-            this.setState({
-                [item]: [] })
-        );
-        setTimeout(() => this.filterProviders(), 100);
-    }
-
-    renderTag(item, index) {
-        return this.state[item].map((title, key) =>
-            <div
-                className = "tag"
-                style = {{ borderColor: colors[item], color: colors[item] } }
-                key = { `${index}${key}` }>
-                { title } <span className = "remove-tag"
-                                onClick = {
-                                    async () => {
-                                        this.setState({
-                                            [item]: this.state[item].filter((i) => i !== title)
-                                        });
-                                        setTimeout(() => this.filterProviders(), 100);
-                                    }}> <FaTimesCircle />
-                </span>
-            </div>
-        )
-    }
-
-    handleCellClick(index) {
-        this.setState({ selectedIndex: index, showModal: true });
-    }
-
-    renderCell(item, index) {
-        return (
-            <div
-                className = "map-cell padder"
-                key = { index }
-                style = {{
-                    borderTopWidth: index === 0 ? 0 : 1,
-                    paddingTop: index === 0 ? 0 : 18,
-                }}
-                onClick = {() => this.handleCellClick(index)} >
-                    <Flipped key = { index }
-                             inverseFlipId = "list" >
-                        <div>
-                            <h5>
-                                <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
-                                {item.therapyTypes.includes('Pri-CARE') &&
-                                    <Badge
-                                        style={{ marginRight: 20 }}
-                                        variant = "primary" >Pri-CARE</Badge>
-                                }
-                                {item.therapyTypes.includes('TF-CBT') &&
-                                    <Badge
-                                        variant = "primary" >TF-CBT</Badge>
-                                }
-                            </h5>
-                            <div style = {{ color: 'gray' }}>
-                                <FaMapPin /> { item.address[0] }
-                                <div className = "row-spaced">
-                                    <div>
-                                        <FaPhone /> { item.phoneNum.join(', ') }
-                                    </div>
-                                    {
-                                        this.state[item.facilityName + 'Dist'] && this.state['searchZip'] &&
-                                        <small>
-                                            <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                            { this.state[item.facilityName + 'Dist'] + ' mi' }
-                                        </small>
-                                    }
-                            </div>
+                        <div className = "count" >
+                            <span>
+                                {
+                                    isEmpty(activeProviders) ?
+                                        'No' : activeProviders.length
+                                } providers found
+                            </span>
+                        </div>
+                        {
+                            !isEmpty(activeProviders) &&
+                            activeProviders.map(renderCell)
+                        }
+                        <div >
+                            {
+                                activeProviders && activeProviders[selectedIndex] &&
+                                <Modal
+                                    show = { showModal }
+                                    onHide = {() => setShowModal(false)}
+                                    size = "lg"
+                                    scrollable >
+                                    <Modal.Header
+                                        className = "image-cover"
+                                        style = {{ backgroundImage: `url(${activeProviders[selectedIndex].imageURL})` }}
+                                        closeButton >
+                                        <Modal.Title id = "contained-modal-title-vcenter" >
+                                            <h2>
+                                                <b>
+                                                    { activeProviders[selectedIndex].facilityName }
+                                                </b>
+                                            </h2>
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body
+                                        className = "modal-body" >
+                                        <ProviderInfo item = { activeProviders[selectedIndex] }/>
+                                    </Modal.Body>
+                                </Modal>
+                            }
                         </div>
                     </div>
-                </Flipped>
-            </div>
-        );
-    }
-
-    renderDropdown(title, key) {
-        return (
-            <Dropdown>
-                <Dropdown.Toggle
-                    variant = "light"
-                    alignLeft
-                    style = {{ marginRight: 5, marginBottom: 5 }}>
-                    { title }
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {
-                        options[key].map((item, index) =>
-                            <div
-                                onClick={
-                                    () => this.filterProviders({
-                                        target: {
-                                            name: key,
-                                            value: item.value,
-                                            type: "checkbox",
-                                            checked: !this.state[key].includes(item.value),
-                                            getAttribute: (param) => "normalfilter"
-                                        }
-                                    })
-                            }>
-                                <Form.Check
-                                    className="dropdown-item"
-                                    name = { key }
-                                    key = { index }
-                                    type = "checkbox"
-                                    checked = { this.state[key].includes(item.value) }
-                                    value = { item.value }
-                                    label = { item.label }
-                                    filtertype = "normalfilter" />
-                            </div>
-                        )
-                    }
-                </Dropdown.Menu>
-            </Dropdown>
-        );
-    }
-    render() {
-        let {
-            searchProviderName,
-            searchZipcode,
-            hideLabel,
-            showLabel,
-            languagesLabel,
-            agesLabel,
-            insuranceLabel,
-            serviceTypeLabel,
-            specializationsLabel,
-            therapyTypeLabel,
-            lessFilters,
-            moreFilters
-        } = localizationStrings;
-        const { isLoading, data, selectedIndex, showModal, listView } = this.state;
-        const providers = this.state.activeProviders;
-        if (isLoading || !isLoaded(providers))
-            return <div className = "spinner" />;
-
-        return (
-            <div className = "bg-white" >
-                <NavBar update={() => this.forceUpdate()}/>
-                <div >
-                    <div className = "row-spaced ml-2 mb-3" >
-                        <div className = "w-75" >
-                            <Row >
-                                <Col >
-                                    <Form.Control
-                                        placeholder = { searchZipcode }
-                                        filtertype = 'zipcode'
-                                        onChange = { this.filterProviders } />
-                                </Col>
-                                <Col >
-                                    <Form.Control
-                                        placeholder = { searchProviderName }
-                                        filtertype = 'search'
-                                        onChange = { this.filterProviders } />
-                                </Col>
-                            </Row>
-                        </div>
-                        <Button
-                            variant = "primary"
-                            onClick = { this.switchView }
-                            className = "switch-view-button" >
-                            { this.state.listView ? hideLabel : showLabel }
-                        </Button>
+                    <div id="map" className={classNames({'map-hide': !listView})}>
+                        <GoogleMap
+                            providers={activeProviders}
+                            defaultZoom={12}
+                            defaultCenter={{
+                                lat: 39.9526,
+                                lng: -75.1652
+                            }}
+                            selectedMarker={currmarker}
+                            onShowMoreClick={handleCellClick}
+                        />
                     </div>
-                    <Flipper flipKey = { listView } >
-                        <div className = "row-nowrap" >
-                            <Flipped flipId = "list" >
-                                <div className = {listView ? 'list-padding-show-map' : 'list-padding-no-map'}>
-                                    <div
-                                        className = {listView ? 'map-list-show-map' : 'map-list-no-map'}
-                                        style = {{width: listView ? '100vw' : '100vw'}}>
-                                        <Flipped inverseFlipId = "list">
-                                            <div className = {listView? "filter-row-show-map" : "filter-row-no-map"}>
-                                                { this.renderDropdown(languagesLabel, "languages") }
-                                                { this.renderDropdown(agesLabel, "ages") }
-                                                { this.renderDropdown(insuranceLabel, "insurance") }
-                                                { this.state.moreFilter
-                                                    ? <Fragment >
-                                                        { this.renderDropdown(serviceTypeLabel, "serviceType") }
-                                                        { this.renderDropdown(specializationsLabel, "specializations") }
-                                                        { this.renderDropdown(therapyTypeLabel, "therapyTypes") }
-                                                        <Button
-                                                            variant = "link"
-                                                            style = {{ color: 'red' }}
-                                                            onClick = {() => this.setState({ moreFilter: false }) } >- {lessFilters}
-                                                        </Button>
-                                                    </Fragment>
-                                                    : <Button
-                                                        variant = "link"
-                                                        onClick = {() => this.setState({ moreFilter: true }) }>
-                                                        + {moreFilters}
-                                                    </Button>
-                                                }
-                                            </div>
-                                        </Flipped>
-                                        <Flipped inverseFlipId = "list" >
-                                            <div className = {classNames("tag-row padder", "filter-list-padding")}>
-                                                {this.state.filters.map(this.renderTag)}
-                                                {
-                                                    this.evaluateFilters() &&
-                                                    <div
-                                                        onClick = {() => this.clearFilters()}
-                                                        className = "tag clear-all"
-                                                        style = {{ borderColor: 'red', color: 'red' }}>
-                                                        Clear All
-                                                    </div>
-                                                }
-                                            </div>
-                                        </Flipped>
-                                        <div className = "count">
-                                            <Flipped inverseFlipId = "list" >
-                                                <span>
-                                                    {
-                                                        isEmpty(providers) ?
-                                                            'No' : providers.length
-                                                    } providers found
-                                                </span>
-                                            </Flipped>
-                                        </div>
-                                        <div className = {listView? "hide":"fade-in"}>
-                                        {
-                                            !isEmpty(providers) &&
-                                            providers.map(this.renderCell)
-                                        }
-                                        </div>
-                                        <div >
-                                            {
-                                                providers && providers[selectedIndex] &&
-                                                <Modal
-                                                    show = { showModal }
-                                                    onHide = {() => this.setState({ showModal: false })}
-                                                    size = "lg"
-                                                    scrollable >
-                                                    <Modal.Header
-                                                        className = "image-cover"
-                                                        style = {{ backgroundImage: `url(${providers[selectedIndex].imageURL})` }}
-                                                        closeButton >
-                                                        <Modal.Title id = "contained-modal-title-vcenter" >
-                                                            <h2>
-                                                                <b>
-                                                                    { providers[selectedIndex].facilityName }
-                                                                </b>
-                                                            </h2>
-                                                        </Modal.Title>
-                                                    </Modal.Header>
-                                                    <Modal.Body
-                                                        className = "modal-body" >
-                                                        <ProviderInfo item = { providers[selectedIndex] }/>
-                                                    </Modal.Body>
-                                                </Modal>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </Flipped>
-                            <Flipped flipId = "map" >
-                                    <div className = {classNames("map-view", {"map-hide": !listView})}>
-                                        <GoogleMap
-                                            providers={providers}
-                                            defaultZoom={12}
-                                            defaultCenter={{
-                                                lat: 39.9526,
-                                                lng: -75.1652
-                                            }}
-                                            onShowMoreClick={this.handleCellClick}
-                                        />
-                                    </div>
-                            </Flipped>
-                        </div>
-                    </Flipper>
                 </div>
-            </div>);
-    }
+            </div>
+        </div>);
 }
 
 export default compose(withFirestore, connect((state) => ({
