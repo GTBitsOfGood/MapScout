@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState, useEffect } from 'react';
+import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
 import NavBar from './NavBar';
 import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
@@ -13,7 +13,7 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
-import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow } from "react-icons/fa";
+import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -28,6 +28,10 @@ const colors = {
     languages: '#240E8B',
     therapyTypes: '#787FF6',
 };
+
+const getWidth = () => window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
 
 const Index = (props) => {
 
@@ -51,9 +55,47 @@ const Index = (props) => {
     const [name, setName] = useState(null);
     const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
+    const [point, setPoint] = useState(true);
 
     const state = {
         serviceType, specializations, ages, insurance, languages, therapyTypes
+    };
+
+    let [width, setWidth] = useState(getWidth());
+
+    useEffect(() => {
+        const resizeListener = () => {
+            if (width > 768 && getWidth() <= 768) {
+                setSticky(false)
+            }
+            setWidth(getWidth());
+        };
+        window.addEventListener('resize', resizeListener);
+        return () => {
+            window.removeEventListener('resize', resizeListener);
+        }
+    }, []);
+
+    const [isSticky, setSticky] = useState(false);
+    const ref = useRef(null);
+    const cellScrollRef = useRef(null);
+    const listScrollRef = useRef(null);
+    const handleScroll = (flip) => {
+        if (flip || width <= 768) {
+            if (ref.current.getBoundingClientRect().top <= 70) {
+                setSticky(true);
+            } else if (isSticky) {
+                setSticky(false);
+            }
+        }
+    };
+
+    const resetSticky = () => {
+        setSticky(false);
+        setTimeout(() => {
+            listScrollRef.current.scrollTop = -1;
+            cellScrollRef.current.scrollTop = 0;
+        }, 100);
     };
 
     function setState(index, value) {
@@ -249,7 +291,7 @@ const Index = (props) => {
                     paddingTop: index === 0 ? 0 : 18,
                 }}
                 onMouseEnter={debounce(() => {
-                    if (listView)
+                    if (listView && width > 768)
                         setCurrmarker(index);
                 }, 300)}
                 onClick = {() => handleCellClick(index)} >
@@ -285,6 +327,38 @@ const Index = (props) => {
             </div>
         );
     }
+
+    const renderTagControl = () => {
+        return <Fragment>
+            {
+                !condition && !isSticky &&
+                <div ref={ref} className = "scroll-indicator"/>
+            }
+            <div className = {classNames("filter-row", "padder")}>
+
+                { renderDropdown(languagesLabel, "languages") }
+                { renderDropdown(agesLabel, "ages") }
+                { renderDropdown(insuranceLabel, "insurance") }
+                { moreFilter
+                    ? <Fragment >
+                        { renderDropdown(serviceTypeLabel, "serviceType") }
+                        { renderDropdown(specializationsLabel, "specializations") }
+                        { renderDropdown(therapyTypeLabel, "therapyTypes") }
+                        <Button
+                            variant = "link"
+                            style = {{ color: 'red' }}
+                            onClick = {() => setMoreFilter(false) } >- {lessFilters}
+                        </Button>
+                    </Fragment>
+                    : <Button
+                        variant = "link"
+                        onClick = {() => setMoreFilter(true) }>
+                        + {moreFilters}
+                    </Button>
+                }
+            </div>
+        </Fragment>
+    };
 
     function renderDropdown(title, key) {
         return (
@@ -342,125 +416,144 @@ const Index = (props) => {
         moreFilters
     } = localizationStrings;
 
+    const condition = width > 768;
+
     if (isLoading || !isLoaded(activeProviders))
         return <div className = "spinner" />;
 
     return (
-        <div className = "bg-white" >
-            <NavBar />
+        <div className = {classNames("bg-white", {"overflow-scroll": !condition})} >
+            {/*<NavBar />*/}
             <div >
-                <div className = "row-spaced ml-2 mb-3" >
-                    <div className = "w-75" >
-                        <Row noGutters={false}>
-                            <Col >
-                                <Form.Control
-                                    placeholder = { searchZipcode }
-                                    filtertype = 'zipcode'
-                                    onChange = { filterProviders } />
-                            </Col>
-                            <Col >
-                                <Form.Control
-                                    placeholder = { searchProviderName }
-                                    filtertype = 'search'
-                                    onChange = { filterProviders } />
-                            </Col>
-                        </Row>
-                    </div>
-                    <Button
-                        variant = "primary"
-                        onClick = { switchView }
-                        className = "switch-view-button" >
-                        { listView ? hideLabel : showLabel }
-                    </Button>
-                </div>
-                <div className = "row-nowrap" >
-                    <div className = {classNames("map-list", { "expand": !listView })}>
-                        <div className = "filter-row padder" >
-                            { renderDropdown(languagesLabel, "languages") }
-                            { renderDropdown(agesLabel, "ages") }
-                            { renderDropdown(insuranceLabel, "insurance") }
-                            { moreFilter
-                                ? <Fragment >
-                                    { renderDropdown(serviceTypeLabel, "serviceType") }
-                                    { renderDropdown(specializationsLabel, "specializations") }
-                                    { renderDropdown(therapyTypeLabel, "therapyTypes") }
-                                    <Button
-                                        variant = "link"
-                                        style = {{ color: 'red' }}
-                                        onClick = {() => setMoreFilter(false) } >- {lessFilters}
-                                    </Button>
-                                </Fragment>
-                                : <Button
-                                    variant = "link"
-                                    onClick = {() => setMoreFilter(true) }>
-                                    + {moreFilters}
-                                </Button>
-                            }
-                        </div>
-                        <div className = "tag-row padder" >
-                            {filters.map(renderTag)}
-                            {
-                                evaluateFilters() &&
-                                <div
-                                    onClick = {() => clearFilters()}
-                                    className = "tag clear-all"
-                                    style = {{ borderColor: 'red', color: 'red' }}>
-                                    Clear All
-                                </div>
-                            }
-                        </div>
-                        <div className = "count" >
-                            <span>
-                                {
-                                    isEmpty(activeProviders) ?
-                                        'No' : activeProviders.length
-                                } providers found
-                            </span>
+                <div>
+                    <div
+                        className = {classNames("row-spaced", "ml-2", "mb-3", "pt-3", {"mr-2": !condition})} >
+                        <div className = "w-75" >
+                            <Row noGutters={!condition}>
+                                <Col >
+                                    <Form.Control
+                                        placeholder = { searchZipcode }
+                                        filtertype = 'zipcode'
+                                        onChange = { filterProviders } />
+                                </Col>
+                                <Col >
+                                    <Form.Control
+                                        placeholder = { searchProviderName }
+                                        filtertype = 'search'
+                                        onChange = { filterProviders } />
+                                </Col>
+                            </Row>
                         </div>
                         {
-                            !isEmpty(activeProviders) &&
-                            activeProviders.map(renderCell)
+                            condition ?
+                            <Button
+                                variant = "primary"
+                                onClick = { switchView }
+                                className = "switch-view-button" >
+                                { listView ? hideLabel : showLabel }
+                            </Button>
+                                :
+                                isSticky &&
+                                <Button
+                                    variant = "outline-primary"
+                                    onClick = {resetSticky}>
+                                    <FaMap/>
+                                </Button>
                         }
-                        <div >
-                            {
-                                activeProviders && activeProviders[selectedIndex] &&
-                                <Modal
-                                    show = { showModal }
-                                    onHide = {() => setShowModal(false)}
-                                    size = "lg"
-                                    scrollable >
-                                    <Modal.Header
-                                        className = "image-cover"
-                                        style = {{ backgroundImage: `url(${activeProviders[selectedIndex].imageURL})` }}
-                                        closeButton >
-                                        <Modal.Title id = "contained-modal-title-vcenter" >
-                                            <h2>
-                                                <b>
-                                                    { activeProviders[selectedIndex].facilityName }
-                                                </b>
-                                            </h2>
-                                        </Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body
-                                        className = "modal-body" >
-                                        <ProviderInfo item = { activeProviders[selectedIndex] }/>
-                                    </Modal.Body>
-                                </Modal>
-                            }
+                    </div>
+                    {isSticky && renderTagControl()}
+                </div>
+                <div className = {classNames({"row-nowrap": condition})} >
+                    <div
+                        ref={listScrollRef}
+                        onScroll={handleScroll}
+                        style={{ pointerEvents: point || condition || isSticky ? "all" : "none" }}
+                        className = {classNames("map-list", { "expand": !listView, "sticky": isSticky && !condition })}>
+                        {
+                            !isSticky && !condition &&
+                            <div
+                                className="map-overlay"
+                                onMouseEnter={() => setPoint(false)}
+                            />
+                        }
+                        <div
+                            className="map-container">
+                            {!isSticky && renderTagControl()}
+                            <div ref={cellScrollRef} className = {classNames("cell-container", {"sticky": isSticky && !condition})}>
+                                <div className = "tag-row padder" >
+                                    {filters.map(renderTag)}
+                                    {
+                                        evaluateFilters() &&
+                                        <div
+                                            onClick = {() => clearFilters()}
+                                            className = "tag clear-all"
+                                            style = {{ borderColor: 'red', color: 'red' }}>
+                                            Clear All
+                                        </div>
+                                    }
+                                </div>
+                                <div className = "count" >
+                                <span>
+                                    {
+                                        isEmpty(activeProviders) ?
+                                            'No' : activeProviders.length
+                                    } providers found
+                                </span>
+                                </div>
+                                {
+                                    !isEmpty(activeProviders) &&
+                                    activeProviders.map(renderCell)
+                                }
+                            </div>
+                            <div >
+                                {
+                                    activeProviders && activeProviders[selectedIndex] &&
+                                    <Modal
+                                        show = { showModal }
+                                        onHide = {() => setShowModal(false)}
+                                        size = "lg"
+                                        scrollable >
+                                        <Modal.Header
+                                            className = "image-cover"
+                                            style = {{ backgroundImage: `url(${activeProviders[selectedIndex].imageURL})` }}
+                                            closeButton >
+                                            <Modal.Title id = "contained-modal-title-vcenter" >
+                                                <h2>
+                                                    <b>
+                                                        { activeProviders[selectedIndex].facilityName }
+                                                    </b>
+                                                </h2>
+                                            </Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body
+                                            className = "modal-body" >
+                                            <ProviderInfo item = { activeProviders[selectedIndex] }/>
+                                        </Modal.Body>
+                                    </Modal>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <div id="map" className={classNames({'map-hide': !listView})}>
-                        <GoogleMap
-                            providers={activeProviders}
-                            defaultZoom={12}
-                            defaultCenter={{
-                                lat: 39.9526,
-                                lng: -75.1652
-                            }}
-                            selectedMarker={currmarker}
-                            onShowMoreClick={handleCellClick}
-                        />
-                    </div>
+                    {
+                        !(isSticky && !condition) &&
+                        <div id="map"
+                             className={classNames({'map-hide': condition && !listView})}>
+                            <div
+                                onMouseLeave={() => setPoint(true)}
+                                style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}>
+                                <GoogleMap
+                                    providers={activeProviders}
+                                    defaultZoom={12}
+                                    defaultCenter={{
+                                        lat: 39.9526,
+                                        lng: -75.1652
+                                    }}
+                                    selectedMarker={currmarker}
+                                    onShowMoreClick={handleCellClick}
+                                />
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>);
