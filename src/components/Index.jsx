@@ -127,56 +127,54 @@ const Index = (props) => {
     };
 
     const filterZipcode = async (filterVal) => {
-        // let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
-        // let responseJson = await response.json();
-        //
-        // // Handle illegal response
-        // let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
-        // let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
-        // var providerLat, providerLong;
-        // var filteredProviders = [];
-        //
-        //
-        // var R = 6371e3;
-        // const pi = Math.PI;
-        // const metersPerMile = 1609.344;
-        // var φ1 = filterLat * (pi / 180);
-        //
-        // tempProviders.forEach(function(provider) {
-        //     providerLat = provider['latitude'];
-        //     providerLong = provider['longitude'];
-        //     let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
-        //
-        //     let φ2 = providerLat * (pi / 180);
-        //     let Δφ = (providerLat - filterLat) * (pi / 180);
-        //     let Δλ = (providerLong - filterLong) * (pi / 180);
-        //     let a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        //         Math.cos(φ1) * Math.cos(φ2) *
-        //         Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        //     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        //     let miDistance = (R * c) / metersPerMile;
-        //
-        //     filteredProviders.push({ 'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1 });
-        // });
-        //
-        // filteredProviders.sort(function(a, b) {
-        //     return a.latLongdistance > b.latLongdistance ? 1 : -1
-        // });
-        //
-        // var outThis = this;
-        // var filterActiveProviders = [];
-        // filteredProviders.forEach(function(provider) {
-        //     filterActiveProviders.push(provider['provider']);
-        //     let distKey = provider['provider']['facilityName'] + 'Dist';
-        //     outThis.setState({
-        //         [distKey]: provider['miDistance']
-        //     })
-        // });
-        //
-        // setTempProviders(filterActiveProviders);
-        // await setState({
-        //     tempProviders: filterActiveProviders,
-        // })
+        let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
+        let responseJson = await response.json();
+        console.log(responseJson);
+
+        // Handle illegal response
+        let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
+        let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
+        var providerLat, providerLong;
+        var filteredProviders = [];
+
+
+        var R = 6371e3;
+        const pi = Math.PI;
+        const metersPerMile = 1609.344;
+        var theta1 = filterLat * (pi / 180);
+
+        tempProviders.forEach(function(provider) {
+            providerLat = provider['latitude'];
+            providerLong = provider['longitude'];
+            let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
+
+            let theta2 = providerLat * (pi / 180);
+            let deltaTheta = (providerLat - filterLat) * (pi / 180);
+            let deltaLambda = (providerLong - filterLong) * (pi / 180);
+            let a = Math.sin(deltaTheta / 2) * Math.sin(deltaTheta / 2) +
+                Math.cos(theta1) * Math.cos(theta2) *
+                Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            let miDistance = (R * c) / metersPerMile;
+
+            filteredProviders.push({ 'provider': provider, 'latLongdistance': distance, 'miDistance': Math.round(miDistance) + 1 });
+        });
+
+        filteredProviders.sort(function(a, b) {
+            return a.latLongdistance > b.latLongdistance ? 1 : -1
+        });
+
+        var filterActiveProviders = [];
+        filteredProviders.forEach(function(provider) {
+            filterActiveProviders.push(provider['provider']);
+            let distKey = provider['provider']['facilityName'] + 'Dist';
+            setState(distKey, provider['miDistance'])
+        });
+
+        setTempProviders(filterActiveProviders);
+        await setState({
+            tempProviders: filterActiveProviders,
+        })
     };
 
     const filterNormalFilters = async(e) => {
@@ -210,8 +208,9 @@ const Index = (props) => {
                 setSearchName(filterVal);
                 await filterSearch(filterVal)
             } else if (filtertype === 'zipcode') {
-                setSearchZip(filterVal.length === 5 ? filterVal : null);
-                await filterZipcode(filterVal)
+                setSearchZip(filterVal);
+                if (filterVal.length === 5)
+                    await filterZipcode(filterVal)
             } else {
                 await filterNormalFilters(e);
             }
@@ -314,13 +313,13 @@ const Index = (props) => {
                             <div>
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
-                            {/*{*/}
-                            {/*    state[item.facilityName + 'Dist'] && state['searchZip'] &&*/}
-                            {/*    <small>*/}
-                            {/*        <FaLocationArrow style = {{ marginRight: 8 }}/>*/}
-                            {/*        { state[item.facilityName + 'Dist'] + ' mi' }*/}
-                            {/*    </small>*/}
-                            {/*}*/}
+                            {
+                                state[item.facilityName + 'Dist'] && state['searchZip'] &&
+                                <small>
+                                    <FaLocationArrow style = {{ marginRight: 8 }}/>
+                                    { state[item.facilityName + 'Dist'] + ' mi' }
+                                </small>
+                            }
                         </div>
                     </div>
                 </div>
