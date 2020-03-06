@@ -8,8 +8,8 @@ import NavBar from './NavBar';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
-import { PasswordForgetPage, PasswordForgetForm } from "./PasswordForget";
-import { AddCategorypage, AddCategoryForm} from "./AddCategory";
+import PasswordForgetForm from "./PasswordForget";
+import AddCategoryForm from "./AddCategory";
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
