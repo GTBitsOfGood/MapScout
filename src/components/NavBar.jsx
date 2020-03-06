@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Navbar from 'react-bootstrap/NavBar';
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from 'react-bootstrap/Nav';
@@ -13,24 +13,15 @@ const languageTitles = {
     "zh": "中文",
 };
 
-class NavBar extends Component {
-    constructor(props) {
-        super(props);
-        this.toggle = this.toggle.bind(this);
-        this.state = {
-            isOpen: false,
-        };
+const NavBar = (props) => {
+    const [isOpen, setIsOpen] = useState(false);
+    let { home, admin } = localizationStrings;
+  
+    const toggle = () => {
+      setIsOpen(!isOpen);
     }
-
-    toggle() {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    }
-
-    render() {
-        let { home, admin } = localizationStrings;
-        return (
+  
+    return (
             <div>
                 <Navbar expand="lg">
                     <Navbar.Brand as={Link} to="/"><img src={logo} style={{width:100}} /></Navbar.Brand>
@@ -46,7 +37,7 @@ class NavBar extends Component {
                                         <NavDropdown.Item onClick={
                                             () => {
                                                 localizationStrings.setLanguage(key);
-                                                this.props.update();
+                                                props.update();
                                             }
                                         }>
                                             {languageTitles[key]}
@@ -58,8 +49,7 @@ class NavBar extends Component {
                     </Navbar.Collapse>
                 </Navbar>
             </div>
-        )
-    }
-}
+          )
+  }
 
 export default NavBar;
