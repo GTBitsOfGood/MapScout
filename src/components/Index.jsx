@@ -56,6 +56,7 @@ const Index = (props) => {
     const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
     const [point, setPoint] = useState(true);
+    const [distances, setDistances] = useState({});
 
     const state = {
         serviceType, specializations, ages, insurance, languages, therapyTypes
@@ -164,17 +165,15 @@ const Index = (props) => {
             return a.latLongdistance > b.latLongdistance ? 1 : -1
         });
 
-        var filterActiveProviders = [];
+        const filterActiveProviders = [];
+        const filterDistances = [];
         filteredProviders.forEach(function(provider) {
             filterActiveProviders.push(provider['provider']);
-            let distKey = provider['provider']['facilityName'] + 'Dist';
-            setState(distKey, provider['miDistance'])
+            let distKey = provider['provider']['facilityName'];
+            filterDistances.push({[distKey]: provider['miDistance']})
         });
-
+        setDistances(filterDistances);
         setTempProviders(filterActiveProviders);
-        await setState({
-            tempProviders: filterActiveProviders,
-        })
     };
 
     const filterNormalFilters = async(e) => {
@@ -241,6 +240,8 @@ const Index = (props) => {
     function switchView() {
         setListView(!listView);
     }
+
+    console.log(distances);
 
     function evaluateFilters() {
         let isFiltersEmpty = true;
@@ -314,10 +315,10 @@ const Index = (props) => {
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                state[item.facilityName + 'Dist'] && state['searchZip'] &&
+                                distances[item.facilityName] &&
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                    { state[item.facilityName + 'Dist'] + ' mi' }
+                                    { distances[item.facilityName] + ' mi' }
                                 </small>
                             }
                         </div>
