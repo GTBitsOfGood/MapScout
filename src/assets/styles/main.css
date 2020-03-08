@@ -547,3 +547,15 @@ html {
     right: 0;
     bottom: 0;
 }
+
+.not-found-oops {
+    color: black;  /* Fallback: assume this color ON TOP of image */
+    background-image: url("../img/blue-stars.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 15em;
+}
