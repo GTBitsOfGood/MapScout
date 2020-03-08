@@ -41,8 +41,8 @@ const Index = (props) => {
     const [listView, setListView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [activeProviders, setActiveProviders] = useState(null);
-    const [tempProviders, setTempProviders] = useState(null);
+    const [activeProviders, setActiveProviders] = useState(null); //What shows up on search
+    const [tempProviders, setTempProviders] = useState(null); //Memory (last search)
     const [serviceType, setServiceType] = useState([]);
     const [specializations, setSpecializations] = useState([]);
     const [ages, setAges] = useState([]);
@@ -114,10 +114,10 @@ const Index = (props) => {
 
     const filterByTags = () => {
         if (!isEmpty(props.providers)) {
-            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers;
+            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers; //If there is a search term, use tempProviders, otherwise use all providers
             filters.forEach(filterName => {
                 temp = temp.filter((provider) => {
-                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0
+                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0 //Actual filtering stuff
                 });
             });
             if (searchName && searchName.length > 0) {
@@ -170,47 +170,47 @@ const Index = (props) => {
         filteredProviders.forEach(function(provider) {
             filterActiveProviders.push(provider['provider']);
             let distKey = provider['provider']['facilityName'];
-            filterDistances.push({[distKey]: provider['miDistance']})
+            filterDistances.push({[distKey]: provider['miDistance']}) //TODO: Figure out if we are keying this wrong cause we can't access it
         });
         setDistances(filterDistances);
         setTempProviders(filterActiveProviders);
     };
 
-    const filterNormalFilters = async(e) => {
+    const filterNormalFilters = async(e) => { //Change the filters, but not the providers
         const filterName = e.target.name;
         const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) {
-            await setState(filterName, [...state[filterName], filterVal]);
-
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
+        if (e.target.type === "checkbox" && e.target.checked) { //If checked
+            await setState(filterName, [...state[filterName], filterVal]); //Apply filter to state
+        } else if (e.target.type === "checkbox" && !e.target.checked) { //If it is not checked
             await setState(filterName, state[filterName].filter(function(filter) {
-                    return filter !== filterVal
+                    return filter !== filterVal //Removes from state
                 })
             )
         }
     };
 
     const filterSearch = (filterVal) => {
-        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
-        const temp = tempProviders || props.providers;
-        setActiveProviders(temp.filter((item) => regex.test(item.facilityName)))
+        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi"); //if facilityName includes search term
+        //TODO: Find out why tempProviders is not what it is supposed to be
+        const temp = tempProviders || props.providers; //available set of providers
+        setActiveProviders(temp.filter((item) => regex.test(item.facilityName))) //set active providers to regex
     };
 
-    const filterProviders = async(e) => {
+    const filterProviders = async(e) => { //Step 1
         if (!evaluateFilters()) {
             setTempProviders(props.providers);
         }
         if (typeof e !== 'undefined') {
             const filtertype = e.target.getAttribute('filtertype');
             const filterVal = e.target.value;
-            if (filtertype === 'search') {
-                setSearchName(filterVal);
+            if (filtertype === 'search') { //if searching provider name
+                setSearchName(filterVal); //setting the state
                 await filterSearch(filterVal)
-            } else if (filtertype === 'zipcode') {
-                setSearchZip(filterVal);
+            } else if (filtertype === 'zipcode') { //if searching zip
+                setSearchZip(filterVal); //setting the state
                 if (filterVal.length === 5)
                     await filterZipcode(filterVal)
-            } else {
+            } else { //if tags
                 await filterNormalFilters(e);
             }
         }
@@ -234,14 +234,12 @@ const Index = (props) => {
     }, [props.providers]);
 
     useEffect(() => {
-        filterByTags();
+        filterByTags(); //Whenever the filter changes, this function is called
     }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
 
     function switchView() {
         setListView(!listView);
     }
-
-    console.log(distances);
 
     function evaluateFilters() {
         let isFiltersEmpty = true;
@@ -315,7 +313,7 @@ const Index = (props) => {
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                distances[item.facilityName] &&
+                                distances[item.facilityName] && //Not getting detected
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
                                     { distances[item.facilityName] + ' mi' }
