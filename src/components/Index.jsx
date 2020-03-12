@@ -447,15 +447,8 @@ class Index extends Component {
                                                 scrollable >
                                                 <Modal.Header
                                                     className = "image-cover"
-                                                    style = {{ backgroundColor: "#007bff" }}
+                                                    style = {{ backgroundColor: "#2F80ED" }}
                                                     closeButton >
-                                                    <Modal.Title id = "contained-modal-title-vcenter" >
-                                                        <h2>
-                                                            <b>
-                                                                { providers[selectedIndex].facilityName }
-                                                            </b>
-                                                        </h2>
-                                                    </Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body
                                                     className = "modal-body" >
