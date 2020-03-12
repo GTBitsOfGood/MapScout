@@ -9,8 +9,8 @@ const routes = (
   <AppWrapper>
     <HashRouter basename="/">
       <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/providers" component={ProviderRoutes} />
+        <Route path="/pacts" component={App} />
+        <ProviderRoutes/>
         <Route component={NotFound} />
       </Switch>
     </HashRouter>
