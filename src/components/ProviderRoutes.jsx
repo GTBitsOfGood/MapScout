@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
@@ -11,11 +11,11 @@ import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
 import AddCategoryForm from "./AddCategory";
 
-export const providerRoute = '/providers/dash';
-export const formRoute = '/providers/dash/add';
-export const authRoute = '/providers/auth';
-export const pwdRoute = '/providers/forgotpwd';
-export const addRoute = '/providers/addcategory';
+export const providerRoute = '/';
+export const formRoute = '/add';
+export const authRoute = '/auth';
+export const pwdRoute = '/forgotpwd';
+export const addRoute = '/addcategory';
 
 class ProviderRoutes extends Component {
   render() {
@@ -42,21 +42,28 @@ class ProviderRoutes extends Component {
         { isLoaded(this.props.auth)
                     && (
                     <Switch>
-                      <PrivateRoute exact path={providerRoute} component={Dashboard} />
-                      <PrivateRoute path={formRoute} component={AddProvider} />
+                      <PrivateRoute
+                          exact
+                          path={providerRoute}
+                          component={Dashboard} />
+                      <PrivateRoute
+                          path={formRoute}
+                          component={AddProvider} />
                       <Route
                         exact
                         path={authRoute}
                         render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />}
                       />
                       <Route
-                            exact path={pwdRoute}
-                            component={PasswordForgetForm}
+                          exact
+                          path={pwdRoute}
+                          component={PasswordForgetForm}
                       />
-                        <Route
-                            exact path={addRoute}
-                            component={AddCategoryForm}
-                        />
+                      <Route
+                          exact
+                          path={addRoute}
+                          component={AddCategoryForm}
+                      />
                     </Switch>
                     )}
       </div>
