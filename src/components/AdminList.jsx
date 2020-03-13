@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
-import { withFirebase, categories } from 'react-redux-firebase';
-
-const INITIAL_STATE = {
-    dataset: {},
-};
+import { withFirestore } from 'react-redux-firebase';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
 class AdminListBase extends Component {
   constructor(props) {
-      super(props);
-      this.state = { ...INITIAL_STATE };
-  };
+    super(props);
+  }
 
   async componentDidMount() {
-    const { firestore, categories } = this.props;
-    let toStore = await firestore.get('categories');
-    console.log(toStore);
-  };
+    const toStore = await firestore.get('categories');
+    this.setState({
+      categories: toStore,
+    });
+  }
 
   render() {
-    const { categories } = this.props;
-    return(
+    const { categories } = this.state;
+
+    return (
       <div>
-      {
-        categories.map((item) => (
+        {
+        this.props.categories.map((item) => (
           <ul>
             <li>{ item.id }</li>
             <li>{ item.active }</li>
@@ -33,8 +32,12 @@ class AdminListBase extends Component {
       }
       </div>
     );
-  };
-};
+  }
+}
 
-const AdminList = withFirebase(AdminListBase);
-export default AdminList;
+export default compose(
+  withFirestore,
+  connect((state) => ({
+    categories: state.firestore.ordered.providers,
+  })),
+)(AdminListBase);
