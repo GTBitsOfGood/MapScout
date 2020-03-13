@@ -14,6 +14,7 @@ import ProviderInfo from "./ProviderInfo";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
+import { AiOutlineFileSearch } from "react-icons/ai";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -502,6 +503,31 @@ const Index = (props) => {
                                     !isEmpty(activeProviders) &&
                                     activeProviders.map(renderCell)
                                 }
+                                {
+                                        evaluateFilters() && isEmpty(activeProviders) && (
+                                            <div style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "center",
+                                                alignItems: "flex-end",
+                                                color: "gray",
+                                                paddingTop: "50px"
+                                            }}>
+                                                <div>
+                                                    <AiOutlineFileSearch size={128}/>
+                                                </div>
+                                                <div>
+                                                    <span style={{ fontWeight: 700, fontSize: "20px" }}>Whoops!</span>
+                                                    <div>
+                                                        Sorry that we don't have providers that match your search.
+                                                    </div>
+                                                    <div>
+                                                        Adjust the filters or try different keywords to see more results.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                             </div>
                             <div >
                                 {
