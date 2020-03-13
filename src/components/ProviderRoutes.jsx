@@ -9,7 +9,7 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from './PasswordForget';
-import AdminList from "./AdminList";
+import AdminList from './AdminList';
 
 export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
@@ -55,7 +55,7 @@ class ProviderRoutes extends Component {
                         )}
                       />
                       <Route path={pwdRoute} component={PasswordForgetForm} />
-                      <Route path={'providers/adminList'} component={AdminList} />
+                      <Route path="providers/adminList" component={AdminList} />
                     </Switch>
                     )}
       </div>

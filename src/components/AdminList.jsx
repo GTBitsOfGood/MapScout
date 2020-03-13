@@ -1,32 +1,46 @@
 import React, { Component } from 'react';
-import { withFirestore } from 'react-redux-firebase';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 
-class AdminListBase extends Component {
+import { withFirestore, isLoaded } from 'react-redux-firebase';
+
+import { compose } from 'redux';
+
+import { connect } from 'react-redux';
+import { providerRoute } from './ProviderRoutes';
+
+const INITIAL_STATE = {
+  dataset: {},
+};
+
+class AdminList extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isLoading: true,
+      categories: null,
+    };
   }
 
   async componentDidMount() {
-    const toStore = await firestore.get('categories');
-    this.setState({
-      categories: toStore,
+    const { firestore, categories } = this.props;
+    if (!isLoaded(categories)) {
+      console.log('ligma');
+      await firestore.get('categories');
+    }
+    await this.setState({
+      categories: this.props.categories,
     });
+
+    this.setState({ isLoading: false });
   }
 
   render() {
-    const { categories } = this.state;
-
+    const { categories } = this.props;
     return (
       <div>
-        {
-        this.props.categories.map((item) => (
+        { categories &&
+        categories.map((item) => (
           <ul>
             <li>{ item.id }</li>
-            <li>{ item.active }</li>
-            <li>{ item.select_type }</li>
-            <li>{ item.values }</li>
           </ul>
         ))
       }
@@ -35,9 +49,7 @@ class AdminListBase extends Component {
   }
 }
 
-export default compose(
-  withFirestore,
-  connect((state) => ({
-    categories: state.firestore.ordered.providers,
-  })),
-)(AdminListBase);
+export default compose(withFirestore, connect((state) => ({
+  categories: state.firestore.ordered.categories,
+  firebase: state.firebase,
+})))(AdminList);
