@@ -30,7 +30,6 @@ class AdminListBase extends Component {
             <li>{ item.values }</li>
           </ul>
         ))
-        console.log(categories)
       }
       </div>
     );
