@@ -15,7 +15,7 @@ export const providerRoute = '/providers/dash';
 export const formRoute = '/providers/dash/add';
 export const authRoute = '/providers/auth';
 export const pwdRoute = '/providers/forgotpwd';
-export const adminRoute = '/providers/admin/list';
+export const adminRoute = '/providers/adminList';
 
 class ProviderRoutes extends Component {
   render() {
@@ -55,6 +55,7 @@ class ProviderRoutes extends Component {
                         )}
                       />
                       <Route path={pwdRoute} component={PasswordForgetForm} />
+                      <Route path={'providers/adminList'} component={AdminList} />
                     </Switch>
                     )}
       </div>

@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { withFirebase, categories } from 'react-redux-firebase';
-import {storage} from '../store';
-import { render } from 'react-dom';
 
 const INITIAL_STATE = {
     dataset: {},
-    isLoading: true,
 };
 
 class AdminListBase extends Component {
@@ -16,10 +13,8 @@ class AdminListBase extends Component {
 
   async componentDidMount() {
     const { firestore, categories } = this.props;
-    if (!isLoaded(categories)) {
-      await firestore.get('categories');
-    }
-    this.setState({ isLoading: false });
+    let toStore = await firestore.get('categories');
+    console.log(toStore);
   };
 
   render() {
@@ -35,6 +30,7 @@ class AdminListBase extends Component {
             <li>{ item.values }</li>
           </ul>
         ))
+        console.log(categories)
       }
       </div>
     );
