@@ -20,6 +20,7 @@ class AdminList extends Component {
     console.log("Deleted" + item);
     const { firestore } = this.props;
     firestore.collection('categories').doc(item).delete();
+    window.location.reload(false);
   }
 
   async componentDidMount() {
