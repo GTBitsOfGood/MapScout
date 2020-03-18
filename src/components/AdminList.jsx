@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-
 import { withFirestore, isLoaded } from 'react-redux-firebase';
-
 import { compose } from 'redux';
-
 import { connect } from 'react-redux';
-import { providerRoute } from './ProviderRoutes';
 
 const INITIAL_STATE = {
   dataset: {},
@@ -20,10 +16,15 @@ class AdminList extends Component {
     };
   }
 
+  deleteItem = (item) => {
+    console.log("Deleted" + item);
+    const { firestore } = this.props;
+    firestore.collection('categories').doc(item).delete();
+  }
+
   async componentDidMount() {
     const { firestore, categories } = this.props;
     if (!isLoaded(categories)) {
-      console.log('ligma');
       await firestore.get('categories');
     }
     await this.setState({
@@ -39,9 +40,13 @@ class AdminList extends Component {
       <div>
         { categories &&
         categories.map((item) => (
-          <ul>
+          <div>
+          <ol>
             <li>{ item.id }</li>
-          </ul>
+            <li>{item.ok}</li>
+          </ol>
+          <button onClick={(e) => this.deleteItem(item.id)}>Delete</button>
+          </div>
         ))
       }
       </div>
