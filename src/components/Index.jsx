@@ -534,7 +534,7 @@ const Index = (props) => {
                                     activeProviders && activeProviders[selectedIndex] &&
                                     <Modal
                                               show = { showModal }
-                                              onHide = {() => this.setState({ showModal: false })}
+                                              onHide = {() => setShowModal(false)}
                                               dialogClassName = "myModal"
                                               scrollable >
                                               <Modal.Header
@@ -544,7 +544,7 @@ const Index = (props) => {
                                               </Modal.Header>
                                               <Modal.Body
                                                   className = "modal-body" >
-                                                  <ProviderInfo item = { providers[selectedIndex] }/>
+                                                  <ProviderInfo item = { activeProviders[selectedIndex] }/>
                                               </Modal.Body>
                                    </Modal>
                                 }
