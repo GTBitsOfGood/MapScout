@@ -33,38 +33,36 @@ export default ({
   }, [selectedMarker]);
 
   return (
-    <div style={{ height: 'calc(100vh - 115px)', width: '100%' }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{
-          key: API_KEY,
-        }}
-        defaultCenter={defaultCenter}
-        defaultZoom={defaultZoom}
-        options={getMapOptions}
-        zoom={zoom}
-        center={center}
-        onZoomAnimationEnd={(val) => setZoom(val)}
-      >
-        {providers.map(
-          ({
-            latitude, longitude, facilityName, address,
-          }, i) => (
-            <MapMarker
-              lat={latitude}
-              lng={longitude}
-              name={facilityName}
-              address={address[0]}
-              index={i}
-              selectedIndex={selected}
-              onShowMoreClick={() => onShowMoreClick(i)}
-              onMarkerClick={() => {
-                setSelected(selected === i ? -1 : i);
-                setCenter({ lat: latitude, lng: longitude });
-              }}
-            />
-          ),
-        )}
-      </GoogleMapReact>
-    </div>
+  <GoogleMapReact
+    bootstrapURLKeys={{
+      key: API_KEY,
+    }}
+    defaultCenter={defaultCenter}
+    defaultZoom={defaultZoom}
+    options={getMapOptions}
+    zoom={zoom}
+    center={center}
+    onZoomAnimationEnd={(val) => setZoom(val)}
+  >
+    {providers.map(
+      ({
+        latitude, longitude, facilityName, address,
+      }, i) => (
+        <MapMarker
+          lat={latitude}
+          lng={longitude}
+          name={facilityName}
+          address={address[0]}
+          index={i}
+          selectedIndex={selected}
+          onShowMoreClick={() => onShowMoreClick(i)}
+          onMarkerClick={() => {
+            setSelected(selected === i ? -1 : i);
+            setCenter({ lat: latitude, lng: longitude });
+          }}
+        />
+      ),
+    )}
+  </GoogleMapReact>
   );
 };

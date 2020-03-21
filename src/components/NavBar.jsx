@@ -16,15 +16,15 @@ const languageTitles = {
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     let { home, admin } = localizationStrings;
-  
+
     const toggle = () => {
       setIsOpen(!isOpen);
     }
-  
+
     return (
             <div>
                 <Navbar expand="lg">
-                    <Navbar.Brand as={Link} to="/"><img src={logo} style={{width:100}} /></Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/pacts"><img src={logo} style={{width:100}} /></Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbar-nav" />
                     <Navbar.Collapse id="navbar-nav">
                         <Nav className="ml-auto">
