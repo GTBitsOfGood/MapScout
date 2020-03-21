@@ -27,7 +27,7 @@ const colors = {
     ages: '#534666',
     insurance: '#CD7672',
     languages: '#240E8B',
-    therapyTypes: '#787FF6',
+    therapyTypes: '#787FF6'
 };
 
 const getWidth = () => window.innerWidth
@@ -533,27 +533,20 @@ const Index = (props) => {
                                 {
                                     activeProviders && activeProviders[selectedIndex] &&
                                     <Modal
-                                        show = { showModal }
-                                        onHide = {() => setShowModal(false)}
-                                        size = "lg"
-                                        scrollable >
-                                        <Modal.Header
-                                            className = "image-cover"
-                                            style = {{ backgroundImage: `url(${activeProviders[selectedIndex].imageURL})` }}
-                                            closeButton >
-                                            <Modal.Title id = "contained-modal-title-vcenter" >
-                                                <h2>
-                                                    <b>
-                                                        { activeProviders[selectedIndex].facilityName }
-                                                    </b>
-                                                </h2>
-                                            </Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body
-                                            className = "modal-body" >
-                                            <ProviderInfo item = { activeProviders[selectedIndex] }/>
-                                        </Modal.Body>
-                                    </Modal>
+                                              show = { showModal }
+                                              onHide = {() => this.setState({ showModal: false })}
+                                              dialogClassName = "myModal"
+                                              scrollable >
+                                              <Modal.Header
+                                                  className = "image-cover"
+                                                  style = {{ backgroundColor: "#2F80ED" }}
+                                                  closeButton >
+                                              </Modal.Header>
+                                              <Modal.Body
+                                                  className = "modal-body" >
+                                                  <ProviderInfo item = { providers[selectedIndex] }/>
+                                              </Modal.Body>
+                                   </Modal>
                                 }
                             </div>
                         </div>

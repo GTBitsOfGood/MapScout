@@ -458,27 +458,53 @@ html {
     }
 }
 
+.myModal {
+    width: 70% !important;
+    max-width: 70% !important;
+}
+
 .modal-col-flex-center {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.modal-hours-backdrop {
-    padding-top: 15px;
+.modalImage {
+    padding-left: 30px;
+    padding-top: 20px;
+}
+
+.modal-hours {
     padding-bottom: 15px;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-hours-container {
     display: flex;
     flex-direction: column;
-    text-align: center;
+    width: 20vw;
+    font-size: 16px;
+}
+
+.modal-hours-container h5 {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .modal-center-text {
     text-align: center;
 }
 
+.modal-content  {
+    border-radius: 20px; 
+    border-color: transparent;
+}
+
 .modal-col-flex-end {
-    display: flex;
-    justify-content: flex-end;
+    font-weight: 600;
+    color: #4F4F4F;
 }
 
 ß .modal-col-flex-start {
@@ -493,6 +519,9 @@ html {
 .modal-card-text {
     display: flex;
     flex-direction: row;
+    padding-left: 10px;
+    font-size: 16px;
+    padding-bottom: 10px;
 }
 
 .modal-hr {
@@ -505,24 +534,48 @@ html {
     padding-right: 2rem;
 }
 
+.close {
+    color: #fff; 
+    opacity: 1;
+    font-size: 50px !important;
+    font-weight: 100 !important;
+    padding-top: 0.3rem!important;
+    padding-bottom: 1rem !important;
+}
+
 .image-cover {
-    padding: 1.5rem 2rem;
+    padding: 1rem 2rem .5rem;
     background-position: center center;
     background-size: cover;
     object-fit: cover;
 }
 
+.modalHeader h5 {
+    font-family: Avenir Heavy;
+    font-size: 20px;
+}
+
 .image-cover h2 {
     color: white;
-    text-shadow: black 0 0 12px, 0 0 20px black;
+    font-family: Avenir;
+    padding-left: 2vw;
+}
+
+.desc-Box {
+    padding-top: 20px;
+}
+.desc-Box h3{
+    font-family: Avenir Heavy;
+    font-size: 33px; 
+    font-weight: 800;
 }
 
 .view-container {
     overflow: hidden;
     width: 95%;
-    height: calc(100vh - 70px);
-    height: -moz-calc(100vh - 70px);
-    height: -webkit-calc(100vh - 70px);
+    height: calc(100vh - 56px);
+    height: -moz-calc(100vh - 56px);
+    height: -webkit-calc(100vh - 56px);
     padding-left: 15px;
     padding-right: 15px;
 }
@@ -546,6 +599,15 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.label {
+    background-color: #56CCF2 !important;
+    border-radius: 14px !important;
+    padding: 4px  13px !important;
+    margin-right: 5px !important;
+    font-weight: bold !important;
+    font-size: 14px;
 }
 
 .not-found-oops {
