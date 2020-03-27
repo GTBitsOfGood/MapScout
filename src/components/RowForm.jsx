@@ -203,7 +203,7 @@ const RowForm = (props) => {
                     <Fragment>
                         {
                             Object.entries(props.filters).map(([key, { name, options }]) => 
-                                <Form.Group>
+                                <Form.Group key={key}>
                                     <Form.Label>{name}</Form.Label>
                                     <MultiSelect
                                         options={options}

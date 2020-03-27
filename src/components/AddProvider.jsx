@@ -41,8 +41,11 @@ class AddProvider extends Component {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
 
-        const filters = await this.props.firestore
-            .get({ collection: "categories", where: ["active", "==", true] })
+        const collections = this.props.firestore.collection('categories');
+        const filters = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 2)
+            .get()
             .then((querySnapshot) => {
                 const ids = [];
                 const idToData = {};
