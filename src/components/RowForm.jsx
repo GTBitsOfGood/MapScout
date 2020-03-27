@@ -209,11 +209,12 @@ const RowForm = (props) => {
                                         options={options}
                                         selected={item[key]}
                                         onSelectedChanged={(selected) => {
-                                            setItem({
+                                            const newItem = {
                                                 ...item,
                                                 [key]: selected
-                                            });
-                                            setTimeout(() => props.setItem(item), 100);
+                                            };
+                                            setItem(newItem);
+                                            props.setItem(newItem);
                                         }}
                                     />
                                 </Form.Group>
