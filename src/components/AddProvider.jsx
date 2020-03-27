@@ -47,10 +47,8 @@ class AddProvider extends Component {
             .where('select_type', '==', 2)
             .get()
             .then((querySnapshot) => {
-                const ids = [];
                 const idToData = {};
                 querySnapshot.forEach((doc) => {
-                    ids.push(doc.id);
                     const data = doc.data();
                     idToData[doc.id] = {
                         name: data.name,
