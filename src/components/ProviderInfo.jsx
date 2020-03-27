@@ -225,7 +225,8 @@ const ProviderInfo = (props) => (
       })}
     </div>
     <br />
-
+    {console.log("hello")}
+    {console.log(props)}
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
