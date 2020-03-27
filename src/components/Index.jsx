@@ -11,6 +11,7 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
+import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
@@ -531,7 +532,7 @@ const Index = (props) => {
                             </div>
                             <div >
                                 {
-                                    activeProviders && activeProviders[selectedIndex] &&
+                                    width >= 768 && activeProviders && activeProviders[selectedIndex] &&
                                     <Modal
                                               show = { showModal }
                                               onHide = {() => setShowModal(false)}
@@ -546,7 +547,26 @@ const Index = (props) => {
                                                   className = "modal-body" >
                                                   <ProviderInfo item = { activeProviders[selectedIndex] }/>
                                               </Modal.Body>
-                                   </Modal>
+                                   </Modal> 
+                                }
+                                {
+                                    width < 768 && activeProviders && activeProviders[selectedIndex] &&
+                                    <Modal
+                                                show = { showModal }
+                                                onHide = {() => setShowModal(false)}
+                                                dialogClassName = "modalMobile"
+                                                scrollable >
+                                                <Modal.Header
+                                                    className = "image-cover"
+                                                    style = {{ backgroundColor: "#2F80ED" }}
+                                                    closeButton >
+                                                    <h2>Search</h2>
+                                                </Modal.Header>
+                                                <Modal.Body
+                                                    className = "modal-body" >
+                                                    <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
+                                                </Modal.Body>
+                                    </Modal>  
                                 }
                             </div>
                         </div>

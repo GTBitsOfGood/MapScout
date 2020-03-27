@@ -1,4 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url(//db.onlinewebfonts.com/c/901497541657a2f24e42848bcf7fad52?family=Avenir+Heavy);
+@font-face {
+    font-family: 'Avenir';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Avenir LT Pro 45 Book'), local('AvenirLTPro-Book'), url(https://fonts.gstatic.com/l/font?kit=ijwUs5PnXdA4ZZUA55d-&skey=8887f17a62203d44&v=v3) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  };
 * {
     margin: 0;
     padding: 0;
@@ -208,43 +216,6 @@ html {
     padding: 20px;
 }
 
-@media only screen and (min-width: 768px) {
-    /*Desktop Specific*/
-    #auth-root {
-        margin-top: 30px;
-        width: 400px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .step-wrapper {
-        padding: 20px 0 20px 60px;
-    }
-    .map-list {
-        padding-top: 0;
-        width: 50vw;
-        transition: width 200ms;
-        max-height: calc(100vh - 70px);
-    }
-    .map-list.expand {
-        width: 100vw;
-    }
-    .map-container {
-        padding-top: 0;
-        border-radius: 0;
-    }
-    #map {
-        width: 50vw;
-        transition: width 200ms;
-        position: relative;
-        top: 0;
-    }
-    #map.map-hide {
-        width: 0;
-    }
-    .cell-container {
-        padding-bottom: 30px;
-    }
-}
 
 @-webkit-keyframes translate {
     0% {
@@ -463,6 +434,14 @@ html {
     max-width: 70% !important;
 }
 
+.modalMobile {
+    height: 100vh !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+
 .modal-col-flex-center {
     display: flex;
     flex-direction: column;
@@ -484,12 +463,12 @@ html {
 .modal-hours-container {
     display: flex;
     flex-direction: column;
-    width: 20vw;
-    font-size: 16px;
+    font-size: 13px;
+    padding-left: 15px;
 }
 
 .modal-hours-container h5 {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -498,7 +477,7 @@ html {
 }
 
 .modal-content  {
-    border-radius: 20px; 
+    border-radius: 0px; 
     border-color: transparent;
 }
 
@@ -520,7 +499,7 @@ html {
     display: flex;
     flex-direction: row;
     padding-left: 10px;
-    font-size: 16px;
+    font-size: 13px;
     padding-bottom: 10px;
 }
 
@@ -550,23 +529,32 @@ html {
     object-fit: cover;
 }
 
+.modalHeader {
+    font-size: 13px;
+}
+
 .modalHeader h5 {
     font-family: Avenir Heavy;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .image-cover h2 {
     color: white;
     font-family: Avenir;
     padding-left: 2vw;
+    font-size: 20px;
 }
 
 .desc-Box {
     padding-top: 20px;
 }
+
+.desc-Box p {
+    font-size: 13px;
+}
 .desc-Box h3{
     font-family: Avenir Heavy;
-    font-size: 33px; 
+    font-size: 20px; 
     font-weight: 800;
 }
 
@@ -620,4 +608,78 @@ html {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 15em;
+}
+
+.modal-map {
+    position: absolute;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    top: 0;
+}
+.modal-info {
+    overflow-y: scroll;
+    padding: 0vh 4vw;
+}
+
+@media only screen and (min-width: 768px) {
+    /*Desktop Specific*/
+    #auth-root {
+        margin-top: 30px;
+        width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .step-wrapper {
+        padding: 20px 0 20px 60px;
+    }
+    .map-list {
+        padding-top: 0;
+        width: 50vw;
+        transition: width 200ms;
+        max-height: calc(100vh - 70px);
+    }
+    .map-list.expand {
+        width: 100vw;
+    }
+    .map-container {
+        padding-top: 0;
+        border-radius: 0;
+    }
+    .modal-hours-container {
+        font-size: 16px;
+    }
+    .desc-Box p {
+        font-size: 16px;
+    }
+    .desc-Box h3{
+        font-size: 33px; 
+    }
+    .modal-card-text {
+        font-size: 16px;
+    }
+    .modalHeader {
+        font-size: 16px;
+    }
+    .modalHeader h5 {
+        font-size: 20px;
+    }
+    .modal-hours-container h5 {
+        font-size: 1px;
+    }
+    .modal-content  {
+        border-radius: 20px; 
+    }
+    #map {
+        width: 50vw;
+        transition: width 200ms;
+        position: relative;
+        top: 0;
+    }
+    #map.map-hide {
+        width: 0;
+    }
+    .cell-container {
+        padding-bottom: 30px;
+    }
 }
