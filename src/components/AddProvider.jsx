@@ -18,7 +18,7 @@ import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumb
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 const steps = [
-    "Map", "Hours", "Service", "More"
+    "Map", "Hours", "Filters", "More"
 ];
 
 class AddProvider extends Component {
@@ -31,7 +31,8 @@ class AddProvider extends Component {
             completed: false,
             animate: true,
             item: this.props.selected || {},
-            isLoading: false
+            isLoading: false,
+            filters: {},
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
@@ -39,6 +40,23 @@ class AddProvider extends Component {
     async componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
+
+        const filters = await this.props.firestore
+            .get({ collection: "categories", where: ["active", "==", true] })
+            .then((querySnapshot) => {
+                const ids = [];
+                const idToData = {};
+                querySnapshot.forEach((doc) => {
+                    ids.push(doc.id);
+                    const data = doc.data();
+                    idToData[doc.id] = {
+                        name: data.name,
+                        options: data.options
+                    };
+                });
+                return idToData;
+            });
+        this.setState({ filters });
     }
 
     componentWillUnmount() {
@@ -134,7 +152,7 @@ class AddProvider extends Component {
                                 <Step
                                     title="Hours"/>
                                 <Step
-                                    title="Service"/>
+                                    title="Filters"/>
                                 <Step
                                     title="More"/>
                             </Steps>
@@ -186,17 +204,20 @@ class AddProvider extends Component {
                                             </Col>
                                         </Row>
                                         <hr />
-                                        <div className={animate ? "fade-in" : "hide"}>
-                                            <RowForm
-                                                step={step}
-                                                item={this.state.item}
-                                                setItem={(item) => {
-                                                    let completed =
-                                                        item.facilityName.length > 0
-                                                        && isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), "US");
-                                                    this.setState({item, completed})
-                                                }}
-                                            />
+                                        <div className="overflow-y-auto">
+                                            <div className={animate ? "fade-in" : "hide"}>
+                                                <RowForm
+                                                    step={step}
+                                                    item={this.state.item}
+                                                    setItem={(item) => {
+                                                        let completed =
+                                                            item.facilityName.length > 0
+                                                            && isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), "US");
+                                                        this.setState({item, completed})
+                                                    }}
+                                                    filters={this.state.filters}
+                                                />
+                                            </div>
                                         </div>
                                     </Form>
                                 </Flipped>
