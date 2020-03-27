@@ -7,31 +7,18 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import API_KEY from "../config/keys";
-import modalimage from "../assets/img/modalimage.png";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
 const ProviderInfo = (props) => (
-  <div style = {{padding: "1vh 4vw"}}>
-    {console.log(API_KEY)}
-    <Row>
+  <div>
+      <div class = "modal-map">
+    <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x150&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+            + `&markers=${props.item.latitude},${props.item.longitude}`}/>
+            </div>
+  <div style = {{padding: "0vh 4vw"}}>
+    <Row style = {{paddingTop: "150px"}}>
       <Row>
-        <Col className = "modalImage">
-          <Card>
-            <Card.Img
-              //src={modalimage}
-              // src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=13&scale=3&size=335x167&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
-              // + `&markers=${props.item.latitude},${props.item.longitude}`}
-              //src={`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&key=${API_KEY}`}
-              alt="child therapy"
-              // src = {`https://maps.googleapis.com/maps/api/streetview?size=600x300&location=46.414382,10.013988&heading=151.78&pitch=-0.76&key=${API_KEY}`}
-            >
-            </Card.Img>
-          </Card>
-          <img src={`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=47.5763831,-122.4211769&fov=80&heading=70&pitch=0&key=${API_KEY}&signature=oyp9fmZzaCuPV6SMyIYNqIexgkg= `}/>>
-        </Col>
-
-        <Col xs = {7}>
           <div className = "desc-Box">
             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
               <div style = {{paddingBottom: "25px"}}>
@@ -49,71 +36,63 @@ const ProviderInfo = (props) => (
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
           </div>
-        </Col>
       </Row>
       <Row style = {{paddingTop: "15px"}}>
-        <Col xs = {7}>
-        <div className="modal-card-text">
-          <FaMapMarkerAlt size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
-          <div style = {{paddingLeft: "15px"}}>
-            {props.item.address.toString().split(',').map((value, index) => {
-              if (index === 0) {
-                return <div style = {{display: 'inline'}}>{value},</div>;
-              } if (index === props.item.address.toString().split(',').length - 1) {
-                return (
-                      <div style={{ display: 'inline' }}>
-                        {value}
-                      </div>
-                );
-              }
-              if (index === 1) {
-                return <div style={{ display: 'inline' }}>{`${value},`}</div>;
-              }
-              return `${value},`;
-            })}
-          </div>
-        </div>
-
-        <div className="modal-card-text">
-          <FiPhone size = '20px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
-          <div style = {{paddingLeft: "15px"}}>
-            {props.item.phoneNum.join(', ')}
-          </div>
-        </div>
-
-        <div className="modal-card-text">
-          {props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} /> : <div />}
-          {props.item.website[0] ? (
+          <Col>
+          <Row>
+            <div className="modal-card-text"> 
+            <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
             <div style = {{paddingLeft: "15px"}}>
-              <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+                {props.item.address.toString().split(',').map((value, index) => {
+                if (index === 0) {
+                    return <div style = {{display: 'inline'}}>{value},</div>;
+                } if (index === props.item.address.toString().split(',').length - 1) {
+                    return (
+                        <div style={{ display: 'inline' }}>
+                            {value}
+                        </div>
+                    );
+                }
+                if (index === 1) {
+                    return <div style={{ display: 'inline' }}>{`${value},`}</div>;
+                }
+                return `${value},`;
+                })}
             </div>
-          ) : <div />}
-        </div>
-        <div className = "modal-card-text">
-          <FaRegClock size = '20px'style = {{paddingTop: '5px'}, {color: "#007bff"}}/>
-          <div className = 'modal-hours-container'>
-          <Container>
-            <h5>Hours</h5>
-            <hr className="modal-hr" />
-            {calculateHours(props)}
-          </Container>
-          </div>
-          </div>
-        </Col>
-        <Col>
-        <Card>
-            <div>
-            <a href = {`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">
-            <Card.Img
-              src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
-              + `&markers=${props.item.latitude},${props.item.longitude}`}
-              alt="Google Map of bethanna"
-            >
-            </Card.Img>
-            </a>
             </div>
-          </Card>
-        </Col>
+          </Row>
+          
+          <Row>
+            <div className="modal-card-text">
+            <FiPhone size = '25px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
+            <div style = {{paddingLeft: "15px"}}>
+                {props.item.phoneNum.join(', ')}
+            </div>
+            </div>
+          </Row>
+
+          <Row>
+            <div className="modal-card-text">
+            {props.item.website[0] ? <FiGlobe size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} /> : <div />}
+            {props.item.website[0] ? (
+                <div style = {{paddingLeft: "15px"}}>
+                <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+                </div>
+            ) : <div />}
+            </div>
+          </Row>
+
+          <Row>
+            <div className = "modal-card-text">
+            <FaRegClock size = '25px' style = {{paddingTop: '5px'}, {color: "#007bff"}}/>
+            <div className = 'modal-hours-container'>
+                <h5>Hours</h5>
+                <hr className="modal-hr" />
+                {calculateHours(props)}
+            </div>
+            </div>
+          </Row>
+          </Col>
       </Row>
 
     </Row>
@@ -229,8 +208,7 @@ const ProviderInfo = (props) => (
       })}
     </div>
     <br />
-    {console.log("hello")}
-    {console.log(props)}
+
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
@@ -246,6 +224,7 @@ EPIC Designation
         <br />
       </h5>
     ) : <div />}
+  </div>
   </div>
   </div>
 );
