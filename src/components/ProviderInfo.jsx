@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   FaMapMarkerAlt, FaCheck, FaRegClock
 } from 'react-icons/fa';
@@ -11,24 +11,28 @@ import modalimage from "../assets/img/modalimage.png";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
-const ProviderInfo = (props) => (
+const ProviderInfo = (props) => {
+  const [image, setImage] = useState("bog")
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
+      setImage(res.url) // how would I handle the errors???
+    }
+    fetchData();
+  })
+  
+  return (
   <div style = {{padding: "1vh 4vw"}}>
-    {console.log(API_KEY)}
     <Row>
       <Row>
         <Col className = "modalImage">
           <Card>
             <Card.Img
-              //src={modalimage}
-              // src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=13&scale=3&size=335x167&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
-              // + `&markers=${props.item.latitude},${props.item.longitude}`}
-              //src={`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&key=${API_KEY}`}
+              src={image}
               alt="child therapy"
-              // src = {`https://maps.googleapis.com/maps/api/streetview?size=600x300&location=46.414382,10.013988&heading=151.78&pitch=-0.76&key=${API_KEY}`}
             >
             </Card.Img>
           </Card>
-          <img src={`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=47.5763831,-122.4211769&fov=80&heading=70&pitch=0&key=${API_KEY}&signature=oyp9fmZzaCuPV6SMyIYNqIexgkg= `}/>>
         </Col>
 
         <Col xs = {7}>
@@ -229,8 +233,6 @@ const ProviderInfo = (props) => (
       })}
     </div>
     <br />
-    {console.log("hello")}
-    {console.log(props)}
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
@@ -248,7 +250,7 @@ EPIC Designation
     ) : <div />}
   </div>
   </div>
-);
+)};
 
 function calculateHours(props) {
   var rows = []
