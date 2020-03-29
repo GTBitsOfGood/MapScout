@@ -43,48 +43,75 @@ const RowForm = (props) => {
         });
 
     function handleInputChange(e) {
-        if(e.target.type === "checkbox") {
+        let newItem = {};
+        if (e.target.type === "checkbox") {
             setItem({ ...item, [e.target.name]: [e.target.checked] });
+            newItem = { ...item, [e.target.name]: [e.target.checked] };
         } else {
             setItem({ ...item, [e.target.name]: [e.target.value] });
+            newItem = { ...item, [e.target.name]: [e.target.value] };
         }
-        setTimeout(() => props.setItem(item), 100);
+        props.setItem(newItem);
     }
 
     function onPhoneChange(e) {
+        let newItem = {};
         if (e.target.value.length === 4 && e.target.value[0] === "(") {
             setItem({ ...item, phoneNum: [e.target.value] });
+            newItem = { ...item, phoneNum: [e.target.value] };
         } else {
             setItem({
                 ...item,
                 phoneNum: [new AsYouType("US").input(e.target.value)]
             });
+            newItem = {
+                ...item,
+                phoneNum: [new AsYouType("US").input(e.target.value)]
+            };
         }
-        setTimeout(() => props.setItem(item), 100);
+        props.setItem(newItem);
     }
 
     function onTimeChange(hours) {
-        setItem({ ...item,
+        const newItem = {
+            ...item,
             hours: {
-                Monday: hours[0].selected ? [hours[0].start, hours[0].end] : null,
-                Tuesday: hours[1].selected ? [hours[1].start, hours[1].end] : null,
-                Wednesday: hours[2].selected ? [hours[2].start, hours[2].end] : null,
-                Thursday: hours[3].selected ? [hours[3].start, hours[3].end] : null,
-                Friday: hours[4].selected ? [hours[4].start, hours[4].end] : null,
-                Saturday: hours[5].selected ? [hours[5].start, hours[5].end] : null,
-                Sunday: hours[6].selected ? [hours[6].start, hours[6].end] : null,
-        }});
-        setTimeout(() => props.setItem(item), 100);
+                Monday: hours[0].selected
+                    ? [hours[0].start, hours[0].end]
+                    : null,
+                Tuesday: hours[1].selected
+                    ? [hours[1].start, hours[1].end]
+                    : null,
+                Wednesday: hours[2].selected
+                    ? [hours[2].start, hours[2].end]
+                    : null,
+                Thursday: hours[3].selected
+                    ? [hours[3].start, hours[3].end]
+                    : null,
+                Friday: hours[4].selected
+                    ? [hours[4].start, hours[4].end]
+                    : null,
+                Saturday: hours[5].selected
+                    ? [hours[5].start, hours[5].end]
+                    : null,
+                Sunday: hours[6].selected
+                    ? [hours[6].start, hours[6].end]
+                    : null
+            }
+        };
+        setItem(newItem);
+        props.setItem(newItem);
     }
 
     const handleUploadSuccess = async filename => {
-        await setItem({ ...item, image: filename });
+        let newItem = { ...item, image: filename };
+        setItem(newItem);
         await storage.ref('images').child(filename).getDownloadURL()
-        .then(url => setItem({
-            ...item,
-            imageURL: url
-        }));
-        setTimeout(() => props.setItem(item), 100);
+        .then(url => {
+            newItem = { ...newItem, imageURL: url };
+            setItem(newItem);
+        })
+        props.setItem(newItem);
     }
 
         switch (props.step) {
@@ -101,7 +128,10 @@ const RowForm = (props) => {
                                         ...item,
                                         [e.target.name]: e.target.value
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
                                 }}
                                 placeholder="Name" />
                         </Form.Group>
@@ -114,7 +144,10 @@ const RowForm = (props) => {
                                             ...item,
                                             address: [address]
                                         });
-                                        setTimeout(() => props.setItem(item), 100);
+                                        props.setItem({
+                                            ...item,
+                                            address: [address]
+                                        });
                                     }}
                                 />
                             </Col>
@@ -209,7 +242,10 @@ const RowForm = (props) => {
                                         ...item,
                                         serviceType: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        serviceType: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
@@ -223,7 +259,10 @@ const RowForm = (props) => {
                                         ...item,
                                         specializations: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        specializations: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
@@ -237,7 +276,10 @@ const RowForm = (props) => {
                                         ...item,
                                         therapyTypes: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        therapyTypes: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
@@ -264,7 +306,10 @@ const RowForm = (props) => {
                                         ...item,
                                         languages: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        languages: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
@@ -278,7 +323,10 @@ const RowForm = (props) => {
                                         ...item,
                                         ages: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        ages: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
@@ -300,7 +348,10 @@ const RowForm = (props) => {
                                         ...item,
                                         insurance: selected
                                     });
-                                    setTimeout(() => props.setItem(item), 100);
+                                    props.setItem({
+                                        ...item,
+                                        insurance: selected
+                                    });
                                 }}
                             />
                         </Form.Group>
