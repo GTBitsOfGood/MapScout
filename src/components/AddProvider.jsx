@@ -20,7 +20,7 @@ import promiseWithTimeout from '../utils/PromiseWithTimeout';
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 const steps = [
-    "Map", "Hours", "Service", "More"
+    "Map", "Hours", "Filters", "More"
 ];
 
 class AddProvider extends Component {
@@ -34,6 +34,7 @@ class AddProvider extends Component {
             animate: true,
             item: this.props.selected || {},
             isLoading: false,
+            filters: {},
             error: ''
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -42,6 +43,24 @@ class AddProvider extends Component {
     async componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
+
+        const collections = this.props.firestore.collection('categories');
+        const filters = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 2)
+            .get()
+            .then((querySnapshot) => {
+                const idToData = {};
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    idToData[doc.id] = {
+                        name: data.name,
+                        options: data.options
+                    };
+                });
+                return idToData;
+            });
+        this.setState({ filters });
     }
 
     componentWillUnmount() {
@@ -153,19 +172,15 @@ class AddProvider extends Component {
                 <Row>
                     <Col xs={12} md={4} lg={3}>
                         <div className="step-wrapper">
-                            <Steps
-                                current={step}
-                                direction={
-                                    width > 768 ? "vertical" : "horizontal"
-                                }
-                                labelPlacement={
-                                    width > 768 ? "horizontal" : "vertical"
-                                }
-                            >
-                                <Step title="Map" />
-                                <Step title="Hours" />
-                                <Step title="Service" />
-                                <Step title="More" />
+                            <Steps current={step} direction={width > 768 ? "vertical" : "horizontal"} labelPlacement={width > 768 ? "horizontal" : "vertical"} >
+                                <Step
+                                    title="Map"/>
+                                <Step
+                                    title="Hours"/>
+                                <Step
+                                    title="Filters"/>
+                                <Step
+                                    title="More"/>
                             </Steps>
                             {width > 768 && (
                                 <Fragment>
@@ -200,82 +215,52 @@ class AddProvider extends Component {
                     </Col>
                     <Col xs={12} md={8} lg={9}>
                         <Flipper flipKey={step}>
-                            <Flipped flipId="form">
-                                <div className="bg-white p-3">
-                                    <Flipped inverseFlipId="form" scale>
-                                        <Form>
-                                            <Row>
-                                                <Col>
-                                                    <h2>{steps[step]} Info</h2>
-                                                </Col>
-                                                <Col xs="auto">
-                                                    <ButtonToolbar>
-                                                        {step > 0 && (
-                                                            <Button
-                                                                onClick={
-                                                                    this.prev
-                                                                }
-                                                                variant="link"
-                                                            >
-                                                                Back
-                                                            </Button>
-                                                        )}
-                                                        <Button
-                                                            onClick={
-                                                                step === 3
-                                                                    ? this
-                                                                          .addFirestore
-                                                                    : this.next
-                                                            }
-                                                            disabled={
-                                                                !completed &&
-                                                                step === 3
-                                                            }
-                                                            variant="primary"
-                                                        >
-                                                            {step === 3
-                                                                ? this.props
-                                                                      .selected &&
-                                                                  this.props
-                                                                      .selected
-                                                                      .facilityName
-                                                                    ? "Edit Provider"
-                                                                    : "Add Provider"
-                                                                : "Next"}
-                                                        </Button>
-                                                    </ButtonToolbar>
-                                                </Col>
-                                            </Row>
-                                            <hr />
-                                            <div
-                                                className={
-                                                    animate ? "fade-in" : "hide"
-                                                }
-                                            >
+                            <Flipped flipId='form'>
+                            <div className="bg-white p-3">
+                                <Flipped inverseFlipId='form' scale>
+                                    <Form>
+                                        <Row>
+                                            <Col>
+                                                <h2>{steps[step]} Info</h2>
+                                            </Col>
+                                            <Col xs="auto">
+                                                <ButtonToolbar>
+                                                    {
+                                                        step > 0 &&
+                                                        <Button onClick={this.prev} variant="link">Back</Button>
+                                                    }
+                                                    <Button
+                                                        onClick={ step === 3 ? this.addFirestore : this.next}
+                                                        disabled={ !completed && step === 3 }
+                                                        variant="primary">
+                                                        {step === 3 ?
+                                                            this.props.selected && this.props.selected.facilityName
+                                                                ? "Edit Provider"
+                                                                : "Add Provider"
+                                                            : "Next"}
+                                                    </Button>
+                                                </ButtonToolbar>
+                                            </Col>
+                                        </Row>
+                                        <hr />
+                                        <div className="overflow-y-auto">
+                                            <div className={animate ? "fade-in" : "hide"}>
                                                 <RowForm
                                                     step={step}
                                                     item={this.state.item}
-                                                    setItem={item => {
+                                                    setItem={(item) => {
                                                         let completed =
-                                                            item.facilityName
-                                                                .length > 0 &&
-                                                            isValidNumberForRegion(
-                                                                parseIncompletePhoneNumber(
-                                                                    item
-                                                                        .phoneNum[0]
-                                                                ),
-                                                                "US"
-                                                            );
-                                                        this.setState({
-                                                            item,
-                                                            completed
-                                                        });
+                                                            item.facilityName.length > 0
+                                                            && isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), "US");
+                                                        this.setState({item, completed})
                                                     }}
+                                                    filters={this.state.filters}
                                                 />
                                             </div>
-                                        </Form>
-                                    </Flipped>
-                                </div>
+                                        </div>
+                                    </Form>
+                                </Flipped>
+                            </div>
                             </Flipped>
                         </Flipper>
                     </Col>

@@ -1,4 +1,4 @@
-import React, {useState, Component, Fragment} from 'react';
+import React, {useState, Fragment, useEffect} from 'react';
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -22,25 +22,27 @@ function validURL(str) {
 }
 
 const RowForm = (props) => {
-    const [item, setItem] = useState(props.item.facilityName ? props.item: {
+    const defaultItem = {
         facilityName: '',
         address: [],
-        ages: [],
         buildingNum: [],
         childcare: [false],
         epic: [false],
         hours: {},
-        insurance: [],
-        languages: [],
         notes: [],
         phoneNum: [],
-        serviceType: [],
-        specializations: [],
-        therapyTypes: [],
         website: [],
         image: 'modalimage.png',
         imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
-        });
+    };
+    
+    const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
+    
+    useEffect(() => {
+        const itemFields = Object.keys(props.filters);
+        itemFields.forEach((field) => { defaultItem[field] = []; });
+        setItem(props.item.facilityName ? props.item : defaultItem);
+    }, [props.filters]);
 
     function handleInputChange(e) {
         let newItem = {};
@@ -232,57 +234,25 @@ const RowForm = (props) => {
             case 2:
                 return(
                     <Fragment>
-                        <Form.Group>
-                            <Form.Label>Service Type</Form.Label>
-                            <MultiSelect
-                                options={options.serviceType}
-                                selected={item.serviceType}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        serviceType: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        serviceType: selected
-                                    });
-                                }}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Specializations</Form.Label>
-                            <MultiSelect
-                                options={options.specializations}
-                                selected={item.specializations}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        specializations: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        specializations: selected
-                                    });
-                                }}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Types of Therapy</Form.Label>
-                            <MultiSelect
-                                options={options.therapyTypes}
-                                selected={item.therapyTypes}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        therapyTypes: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        therapyTypes: selected
-                                    });
-                                }}
-                            />
-                        </Form.Group>
+                        {
+                            Object.entries(props.filters).map(([key, { name, options }]) => 
+                                <Form.Group key={key}>
+                                    <Form.Label>{name}</Form.Label>
+                                    <MultiSelect
+                                        options={options}
+                                        selected={item[key]}
+                                        onSelectedChanged={(selected) => {
+                                            const newItem = {
+                                                ...item,
+                                                [key]: selected
+                                            };
+                                            setItem(newItem);
+                                            props.setItem(newItem);
+                                        }}
+                                    />
+                                </Form.Group>
+                            )
+                        }
                         <Form.Group>
                             <Form.Check
                                 name="epic"
@@ -297,63 +267,12 @@ const RowForm = (props) => {
                 return(
                     <Fragment>
                         <Form.Group>
-                            <Form.Label>Provided Language(s)</Form.Label>
-                            <MultiSelect
-                                options={options.languages}
-                                selected={item.languages}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        languages: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        languages: selected
-                                    });
-                                }}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Accepted Age(s)</Form.Label>
-                            <MultiSelect
-                                options={options.ages}
-                                selected={item.ages}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        ages: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        ages: selected
-                                    });
-                                }}
-                            />
-                        </Form.Group>
-                        <Form.Group>
                             <Form.Check
                                 name="childcare"
                                 value={item.childcare[0]}
                                 onChange={handleInputChange}
                                 type="checkbox"
                                 label="Childcare Availability" />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Accepted Insurance(s)</Form.Label>
-                            <MultiSelect
-                                options={options.insurance}
-                                selected={item.insurance}
-                                onSelectedChanged={(selected) => {
-                                    setItem({
-                                        ...item,
-                                        insurance: selected
-                                    });
-                                    props.setItem({
-                                        ...item,
-                                        insurance: selected
-                                    });
-                                }}
-                            />
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Additional Note(s)</Form.Label>

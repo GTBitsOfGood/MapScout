@@ -621,3 +621,8 @@ html {
     -webkit-text-fill-color: transparent;
     font-size: 15em;
 }
+
+.overflow-y-auto {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
