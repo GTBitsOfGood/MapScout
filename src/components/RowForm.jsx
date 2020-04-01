@@ -249,7 +249,7 @@ const RowForm = (props) => {
                                             setItem(newItem);
                                             props.setItem(newItem);
                                         }}
-                                    />
+                                    />          
                                 </Form.Group>
                             )
                         }
@@ -265,23 +265,47 @@ const RowForm = (props) => {
                 );
             case 3:
                 return(
-                    <Fragment>
+                <Fragment>
+                        {
+                            Object.entries(props.filters).map(([key, { name, options }]) => 
+                                <Form.Group key={key}>
+                                    <Form.Label>{name}</Form.Label>
+                                    <Form.Control as="textarea" />
+                                </Form.Group>
+                            )
+                        }
                         <Form.Group>
                             <Form.Check
-                                name="childcare"
-                                value={item.childcare[0]}
+                                name="epic"
+                                value={item.epic[0]}
                                 onChange={handleInputChange}
                                 type="checkbox"
-                                label="Childcare Availability" />
+                                label="EPIC Designation" />
                         </Form.Group>
+                    </Fragment>
+                );
+            case 4:
+                return(
+                <Fragment>
+                        {
+                            Object.entries(props.filters).map(([key, { name, options }]) => 
+                                <Form.Group key={key}>
+                                    <Form.Label>{name}</Form.Label>
+                                    <Form.Control as="select">
+                                        
+                                        
+                                    </Form.Control>
+                                    
+                                </Form.Group>
+                            )
+                        }
                         <Form.Group>
-                            <Form.Label>Additional Note(s)</Form.Label>
-                            <Form.Control
-                                name="notes"
-                                value={item.notes[0]}
+                            <Form.Check
+                                name="epic"
+                                value={item.epic[0]}
                                 onChange={handleInputChange}
-                                as="textarea"
-                                rows="3" />
+                                type="checkbox"
+                                label="EPIC Designation" />
                         </Form.Group>
                     </Fragment>
                 );
