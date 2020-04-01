@@ -15,11 +15,15 @@ const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog")
   useEffect(() => {
     async function fetchData() {
+     try {
       const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
       setImage(res.url) // how would I handle the errors???
+     } catch (e) {
+       console.log(e);
+     }
     }
     fetchData();
-  })
+  },[])
   
   return (
   <div style = {{padding: "1vh 4vw"}}>

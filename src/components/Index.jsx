@@ -41,8 +41,8 @@ const Index = (props) => {
     const [listView, setListView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [activeProviders, setActiveProviders] = useState(null);
-    const [tempProviders, setTempProviders] = useState(null);
+    const [activeProviders, setActiveProviders] = useState(props.providers);
+    const [tenpProviders, setTempProviders] = useState(props.providers);
     const [serviceType, setServiceType] = useState([]);
     const [specializations, setSpecializations] = useState([]);
     const [ages, setAges] = useState([]);
@@ -113,15 +113,16 @@ const Index = (props) => {
         setMap[index](value);
     }
 
-    const filterByTags = () => {
-        if (!isEmpty(props.providers)) {
-            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers;
+    const filterByTags = (temp) => {
+            setTempProviders(temp);
+            //searchName && searchName.length > 0 ? tempProviders : props.providers
             // let temp = searchName && searchName.length > 0 ? activeProviders : props.providers;
             // -----> doesn't work, filterByTags will only loop thru previous activeProviders of any actionevent
 
             // if (searchName && searchName.length > 0) {
             //     temp = activePro
             // }
+            console.log(temp)
             filters.forEach(filterName => {
                 temp = temp.filter((provider) => {
                     return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0
@@ -130,9 +131,8 @@ const Index = (props) => {
             // if (searchName && searchName.length > 0) {
             //     setTempProviders(temp);
             // }
-            setTempProviders(temp);
             setActiveProviders(temp);
-        }
+        
     };
 
     const filterZipcode = async (filterVal) => {
@@ -180,7 +180,6 @@ const Index = (props) => {
             filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
-        setTempProviders(filterActiveProviders);
     };
 
     const filterNormalFilters = async(e) => {
@@ -196,30 +195,24 @@ const Index = (props) => {
         }
     };
 
-    const filterSearch = (filterVal, callFilterByTag) => {
+    const filterSearch = (filterVal) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
-        const temp = tempProviders || props.providers;
-        setActiveProviders(temp.filter((item) => regex.test(item.facilityName)));
+        let temp = props.providers;
+        temp = temp.filter((item) => regex.test(item.facilityName))
+        //setActiveProviders(temp);
+        filterByTags(temp);
+        //setTimeout(() => filterByTags(), 500);
         console.log('filtersearch filters');
         console.log(filters);
     };
 
     const filterProviders = async(e) => {
-        if (!evaluateFilters()) {
-            setTempProviders(props.providers);
-        }
         if (typeof e !== 'undefined') {
             const filtertype = e.target.getAttribute('filtertype');
             const filterVal = e.target.value;
             if (filtertype === 'search') {
-                let callFilterByTag = false;
-                if (searchName.len > filterVal) {
-                    callFilterByTag = true;
-                }
                 setSearchName(filterVal);
-                console.log(filterVal)
-                console.log(searchName)
-                await filterSearch(filterVal, callFilterByTag)
+                await filterSearch(filterVal)
             } else if (filtertype === 'zipcode') {
                 setSearchZip(filterVal);
                 if (filterVal.length === 5)
@@ -236,19 +229,18 @@ const Index = (props) => {
             firestore.get('providers').then(
                 () => {
                     setActiveProviders(providers);
-                    setTempProviders(providers);
                     setIsLoading(false)
                 }
             )
-        } else if (isEmpty(activeProviders) && isEmpty(tempProviders) && isLoading) {
+        } else if (isEmpty(activeProviders) && isLoading) {
             setActiveProviders(providers);
-            setTempProviders(providers);
             setIsLoading(false)
         }
     }, [props.providers]);
 
     useEffect(() => {
-        filterByTags();
+        if (activeProviders)
+            filterSearch(searchName);
     }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
 
     function switchView() {
