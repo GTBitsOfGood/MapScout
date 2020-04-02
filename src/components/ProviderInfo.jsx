@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   FaMapMarkerAlt, FaCheck, FaRegClock
 } from 'react-icons/fa';
@@ -11,14 +11,28 @@ import modalimage from "../assets/img/modalimage.png";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
-const ProviderInfo = (props) => (
+const ProviderInfo = (props) => {
+  const [image, setImage] = useState("bog")
+  useEffect(() => {
+    async function fetchData() {
+     try {
+      const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
+      setImage(res.url) // how would I handle the errors???
+     } catch (e) {
+       console.log(e);
+     }
+    }
+    fetchData();
+  },[])
+  
+  return (
   <div style = {{padding: "1vh 4vw"}}>
     <Row>
       <Row>
         <Col className = "modalImage">
           <Card>
             <Card.Img
-              src={modalimage}
+              src={image}
               alt="child therapy"
             >
             </Card.Img>
@@ -223,7 +237,6 @@ const ProviderInfo = (props) => (
       })}
     </div>
     <br />
-
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
@@ -241,7 +254,7 @@ EPIC Designation
     ) : <div />}
   </div>
   </div>
-);
+)};
 
 function calculateHours(props) {
   var rows = []

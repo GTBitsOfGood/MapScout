@@ -685,3 +685,8 @@ html {
         padding-bottom: 30px;
     }
 }
+
+.overflow-y-auto {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
