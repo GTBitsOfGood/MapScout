@@ -20,7 +20,7 @@ import promiseWithTimeout from '../utils/PromiseWithTimeout';
 
 const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 const steps = [
-    "Map", "Hours", "Filters", "More"
+    "Map", "Hours", "Filters", "Descriptions", "Categories"
 ];
 
 class AddProvider extends Component {
@@ -35,6 +35,8 @@ class AddProvider extends Component {
             item: this.props.selected || {},
             isLoading: false,
             filters: {},
+            descriptions: {},
+            categories: {},
             error: ''
         };
         this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -60,7 +62,37 @@ class AddProvider extends Component {
                 });
                 return idToData;
             });
-        this.setState({ filters });
+        const descriptions = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 0)
+            .get()
+            .then((querySnapshot) => {
+                const idToData = {};
+                querySnapshot.forEach((doc) => { 
+                    const data = doc.data();
+                    idToData[doc.id] = {
+                        name: data.name,
+                        options: data.options
+                    };
+                });
+                return idToData;
+            });
+        const categories = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 1)
+            .get()
+            .then((querySnapshot) => {
+                const idToData = {};
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    idToData[doc.id] = {
+                        name: data.name,
+                        options: data.options
+                    };
+                });
+                return idToData;
+            });
+        this.setState({ filters, descriptions, categories });
     }
 
     componentWillUnmount() {
@@ -180,7 +212,9 @@ class AddProvider extends Component {
                                 <Step
                                     title="Filters"/>
                                 <Step
-                                    title="More"/>
+                                    title="Descriptions"/>
+                                <Step
+                                    title="Categories"/>
                             </Steps>
                             {width > 768 && (
                                 <Fragment>
@@ -230,10 +264,10 @@ class AddProvider extends Component {
                                                         <Button onClick={this.prev} variant="link">Back</Button>
                                                     }
                                                     <Button
-                                                        onClick={ step === 3 ? this.addFirestore : this.next}
-                                                        disabled={ !completed && step === 3 }
+                                                        onClick={ step === 4 ? this.addFirestore : this.next}
+                                                        disabled={ !completed && step === 4 }
                                                         variant="primary">
-                                                        {step === 3 ?
+                                                        {step === 4 ?
                                                             this.props.selected && this.props.selected.facilityName
                                                                 ? "Edit Provider"
                                                                 : "Add Provider"
@@ -255,6 +289,8 @@ class AddProvider extends Component {
                                                         this.setState({item, completed})
                                                     }}
                                                     filters={this.state.filters}
+                                                    descriptions={this.state.descriptions}
+                                                    categories={this.state.categories}
                                                 />
                                             </div>
                                         </div>

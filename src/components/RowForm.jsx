@@ -10,6 +10,7 @@ import MultiSelect from "@khanacademy/react-multi-select";
 import FileUploader from 'react-firebase-file-uploader';
 import {storage} from '../store';
 import idx from 'idx';
+import Select from "react-select";
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -249,7 +250,7 @@ const RowForm = (props) => {
                                             setItem(newItem);
                                             props.setItem(newItem);
                                         }}
-                                    />
+                                    />          
                                 </Form.Group>
                             )
                         }
@@ -265,25 +266,44 @@ const RowForm = (props) => {
                 );
             case 3:
                 return(
-                    <Fragment>
-                        <Form.Group>
-                            <Form.Check
-                                name="childcare"
-                                value={item.childcare[0]}
-                                onChange={handleInputChange}
-                                type="checkbox"
-                                label="Childcare Availability" />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Additional Note(s)</Form.Label>
-                            <Form.Control
-                                name="notes"
-                                value={item.notes[0]}
-                                onChange={handleInputChange}
-                                as="textarea"
-                                rows="3" />
-                        </Form.Group>
+                <Fragment>
+                        {
+                            Object.entries(props.descriptions).map(([key, { name, options }]) => 
+                                <Form.Group key={key}>
+                                    <Form.Label>{name}</Form.Label>
+                                    <Form.Control as="textarea"/>
+                                </Form.Group>
+                            )
+                        }
                     </Fragment>
+                );
+            case 4:
+                return(
+                <Fragment>
+                    {
+                    Object.entries(props.categories).map(([key, { name, options }]) => 
+                                <Form.Group key={key}>
+                                    <Form.Label>{name}</Form.Label>
+                                    <Select
+                                        options={options}
+                                        selected={item[key]}
+                                        maxMenuHeight={220}
+                                        menuPlacement="auto"
+                                        onSelectedChanged={(selected) => {
+                                            const newItem = {
+                                                ...item,
+                                                [key]: selected
+                                            };
+                                            setItem(newItem);
+                                            props.setItem(newItem);
+                                        }}
+                                    />
+                                </Form.Group>
+                            )
+                    }
+                    
+                </Fragment>
+                
                 );
             default:
                 return;
