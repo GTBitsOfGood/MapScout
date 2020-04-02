@@ -11,10 +11,10 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
+import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
 import options from "../utils/options";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
-import { AiOutlineFileSearch } from "react-icons/ai";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -27,7 +27,7 @@ const colors = {
     ages: '#534666',
     insurance: '#CD7672',
     languages: '#240E8B',
-    therapyTypes: '#787FF6'
+    therapyTypes: '#787FF6',
 };
 
 const getWidth = () => window.innerWidth
@@ -42,8 +42,8 @@ const Index = (props) => {
     const [listView, setListView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [activeProviders, setActiveProviders] = useState(null); //What shows up on search
-    const [tempProviders, setTempProviders] = useState(null); //Memory (last search)
+    const [activeProviders, setActiveProviders] = useState(props.providers);
+    const [tenpProviders, setTempProviders] = useState(props.providers);
     const [serviceType, setServiceType] = useState([]);
     const [specializations, setSpecializations] = useState([]);
     const [ages, setAges] = useState([]);
@@ -51,13 +51,14 @@ const Index = (props) => {
     const [languages, setLanguages] = useState([]);
     const [therapyTypes, setTherapyTypes] = useState([]);
     const [filters, setFilters] = useState(['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes']);
-    const [searchName, setSearchName] = useState(null);
+    const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
     const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
     const [point, setPoint] = useState(true);
     const [distances, setDistances] = useState({});
+    const [prevSearchLen, setPrevSearchLen] = useState(0);
 
     const state = {
         serviceType, specializations, ages, insurance, languages, therapyTypes
@@ -113,25 +114,31 @@ const Index = (props) => {
         setMap[index](value);
     }
 
-    const filterByTags = () => {
-        if (!isEmpty(props.providers)) {
-            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers; //If there is a search term, use tempProviders, otherwise use all providers
+    const filterByTags = (temp) => {
+            setTempProviders(temp);
+            //searchName && searchName.length > 0 ? tempProviders : props.providers
+            // let temp = searchName && searchName.length > 0 ? activeProviders : props.providers;
+            // -----> doesn't work, filterByTags will only loop thru previous activeProviders of any actionevent
+
+            // if (searchName && searchName.length > 0) {
+            //     temp = activePro
+            // }
+            console.log(temp)
             filters.forEach(filterName => {
                 temp = temp.filter((provider) => {
-                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0 //Actual filtering stuff
+                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0
                 });
             });
-            if (searchName && searchName.length > 0) {
-                setTempProviders(temp);
-            }
+            // if (searchName && searchName.length > 0) {
+            //     setTempProviders(temp);
+            // }
             setActiveProviders(temp);
-        }
+        
     };
 
     const filterZipcode = async (filterVal) => {
         let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
         let responseJson = await response.json();
-        console.log(responseJson);
 
         // Handle illegal response
         let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
@@ -171,47 +178,47 @@ const Index = (props) => {
         filteredProviders.forEach(function(provider) {
             filterActiveProviders.push(provider['provider']);
             let distKey = provider['provider']['facilityName'];
-            filterDistances.push({[distKey]: provider['miDistance']}) //TODO: Figure out if we are keying this wrong cause we can't access it
+            filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
-        setTempProviders(filterActiveProviders);
     };
 
-    const filterNormalFilters = async(e) => { //Change the filters, but not the providers
+    const filterNormalFilters = async(e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) { //If checked
-            await setState(filterName, [...state[filterName], filterVal]); //Apply filter to state
-        } else if (e.target.type === "checkbox" && !e.target.checked) { //If it is not checked
+        if (e.target.type === "checkbox" && e.target.checked) {
+            await setState(filterName, [...state[filterName], filterVal]);
+        } else if (e.target.type === "checkbox" && !e.target.checked) {
             await setState(filterName, state[filterName].filter(function(filter) {
-                    return filter !== filterVal //Removes from state
+                    return filter !== filterVal
                 })
             )
         }
     };
 
     const filterSearch = (filterVal) => {
-        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi"); //if facilityName includes search term
-        //TODO: Find out why tempProviders is not what it is supposed to be
-        const temp = tempProviders || props.providers; //available set of providers
-        setActiveProviders(temp.filter((item) => regex.test(item.facilityName))) //set active providers to regex
+        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
+        let temp = props.providers;
+        temp = temp.filter((item) => regex.test(item.facilityName))
+        //setActiveProviders(temp);
+        filterByTags(temp);
+        //setTimeout(() => filterByTags(), 500);
+        console.log('filtersearch filters');
+        console.log(filters);
     };
 
-    const filterProviders = async(e) => { //Step 1
-        if (!evaluateFilters()) {
-            setTempProviders(props.providers);
-        }
+    const filterProviders = async(e) => {
         if (typeof e !== 'undefined') {
             const filtertype = e.target.getAttribute('filtertype');
             const filterVal = e.target.value;
-            if (filtertype === 'search') { //if searching provider name
-                setSearchName(filterVal); //setting the state
+            if (filtertype === 'search') {
+                setSearchName(filterVal);
                 await filterSearch(filterVal)
-            } else if (filtertype === 'zipcode') { //if searching zip
-                setSearchZip(filterVal); //setting the state
+            } else if (filtertype === 'zipcode') {
+                setSearchZip(filterVal);
                 if (filterVal.length === 5)
                     await filterZipcode(filterVal)
-            } else { //if tags
+            } else {
                 await filterNormalFilters(e);
             }
         }
@@ -223,19 +230,18 @@ const Index = (props) => {
             firestore.get('providers').then(
                 () => {
                     setActiveProviders(providers);
-                    setTempProviders(providers);
                     setIsLoading(false)
                 }
             )
-        } else if (isEmpty(activeProviders) && isEmpty(tempProviders) && isLoading) {
+        } else if (isEmpty(activeProviders) && isLoading) {
             setActiveProviders(providers);
-            setTempProviders(providers);
             setIsLoading(false)
         }
     }, [props.providers]);
 
     useEffect(() => {
-        filterByTags(); //Whenever the filter changes, this function is called
+        if (activeProviders)
+            filterSearch(searchName);
     }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
 
     function switchView() {
@@ -314,7 +320,7 @@ const Index = (props) => {
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                distances[item.facilityName] && //Not getting detected
+                                distances[item.facilityName] && //not getting detected
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
                                     { distances[item.facilityName] + ' mi' }
@@ -503,50 +509,43 @@ const Index = (props) => {
                                     !isEmpty(activeProviders) &&
                                     activeProviders.map(renderCell)
                                 }
-                                {
-                                        evaluateFilters() && isEmpty(activeProviders) && (
-                                            <div style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "center",
-                                                alignItems: "flex-end",
-                                                color: "gray",
-                                                paddingTop: "50px"
-                                            }}>
-                                                <div>
-                                                    <AiOutlineFileSearch size={128}/>
-                                                </div>
-                                                <div>
-                                                    <span style={{ fontWeight: 700, fontSize: "20px" }}>Whoops!</span>
-                                                    <div>
-                                                        Sorry that we don't have providers that match your search.
-                                                    </div>
-                                                    <div>
-                                                        Adjust the filters or try different keywords to see more results.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    }
                             </div>
                             <div >
                                 {
-                                    activeProviders && activeProviders[selectedIndex] &&
+                                    width >= 768 && activeProviders && activeProviders[selectedIndex] &&
                                     <Modal
-                                              show = { showModal }
-                                              onHide = {() => setShowModal(false)}
-                                              dialogClassName = "myModal"
-                                              scrollable >
-                                              <Modal.Header
-                                                  className = "image-cover"
-                                                  style = {{ backgroundColor: "#2F80ED" }}
-                                                  closeButton >
-                                              </Modal.Header>
-                                              <Modal.Body
-                                                  className = "modal-body" >
-                                                  <ProviderInfo item = { activeProviders[selectedIndex] }/>
-                                              </Modal.Body>
-                                   </Modal>
+                                        show = { showModal }
+                                        onHide = {() => setShowModal(false)}
+                                        dialogClassName = "myModal"
+                                        scrollable >
+                                        <Modal.Header
+                                            className = "image-cover"
+                                            style = {{ backgroundColor: "#2F80ED" }}
+                                            closeButton >
+                                        </Modal.Header>
+                                        <Modal.Body
+                                            className = "modal-body" >
+                                            <ProviderInfo item = { activeProviders[selectedIndex] }/>
+                                        </Modal.Body>
+                                    </Modal>
+                                }
+                                {
+                                    width < 768 && activeProviders && activeProviders[selectedIndex] &&
+                                    <Modal
+                                        show = { showModal }
+                                        onHide = {() => setShowModal(false)}
+                                        dialogClassName = "modalMobile"
+                                        scrollable >
+                                            <Modal.Header
+                                                className = "image-cover"
+                                                style = {{ backgroundColor: "#2F80ED" }}
+                                                closeButton >
+                                            </Modal.Header>
+                                            <Modal.Body
+                                                className = "modal-body" >
+                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
+                                            </Modal.Body>
+                                    </Modal>  
                                 }
                             </div>
                         </div>
