@@ -7,7 +7,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import API_KEY from "../config/keys";
-import modalimage from "../assets/img/modalimage.png";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
@@ -32,8 +31,7 @@ const ProviderInfo = (props) => {
         <Col className = "modalImage">
           <Card>
             <Card.Img
-              src={image}
-              alt="child therapy"
+              src={typeof props.item.imageURL === 'string' ? props.item.imageURL : image}
             >
             </Card.Img>
           </Card>
@@ -59,7 +57,7 @@ const ProviderInfo = (props) => {
           </div>
         </Col>
       </Row>
-      <Row style = {{paddingTop: "15px"}}>
+      <Row style = {{paddingTop: "20px"}}>
         <Col xs = {7}>
         <div className="modal-card-text">
           <FaMapMarkerAlt size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />

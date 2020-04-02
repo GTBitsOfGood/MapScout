@@ -10,14 +10,17 @@ import API_KEY from "../config/keys";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
+var classNames = require('classnames');
+
 const ProviderInfo = (props) => (
   <div>
       <div class = "modal-map">
-    <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x150&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+    <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x200&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
             + `&markers=${props.item.latitude},${props.item.longitude}`}/>
             </div>
-  <div style = {{padding: "0vh 4vw"}}>
-    <Row style = {{paddingTop: "150px"}}>
+  <div className = {classNames("modal-mobile-card")}>
+    <div style = {{padding: "1vh 4vw"}}>
+    <Row>
       <Row>
           <div className = "desc-Box">
             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
@@ -94,8 +97,8 @@ const ProviderInfo = (props) => (
           </Row>
           </Col>
       </Row>
-
     </Row>
+    </div>
     <br />
 
     <div className = "modalHeader">

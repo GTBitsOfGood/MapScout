@@ -612,15 +612,28 @@ html {
 }
 
 .modal-map {
-    position: absolute;
-    left: 0;
+    position: fixed;
+    z-index: 0;
     padding: 0;
     margin: 0;
-    top: 0;
+    left: 0;
+    top: 65px;
 }
 .modal-info {
     overflow-y: scroll;
     padding: 0vh 4vw;
+}
+
+.modal-mobile-card {
+    z-index: 2;
+    position: absolute;
+    padding: 1vh 8vw;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    width: 99vw;
+    left: 0;
+    background-color: white;
+    margin-top: 150px;
 }
 
 @media only screen and (min-width: 768px) {
