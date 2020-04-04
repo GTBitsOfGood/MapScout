@@ -43,14 +43,7 @@ const Index = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeProviders, setActiveProviders] = useState(props.providers);
-    const [tenpProviders, setTempProviders] = useState(props.providers);
-    const [serviceType, setServiceType] = useState([]);
-    const [specializations, setSpecializations] = useState([]);
-    const [ages, setAges] = useState([]);
-    const [insurance, setInsurance] = useState([]);
-    const [languages, setLanguages] = useState([]);
-    const [therapyTypes, setTherapyTypes] = useState([]);
-    const [filters, setFilters] = useState(['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes']);
+    const [tempProviders, setTempProviders] = useState(props.providers);
     const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
@@ -60,9 +53,37 @@ const Index = (props) => {
     const [distances, setDistances] = useState({});
     const [prevSearchLen, setPrevSearchLen] = useState(0);
 
-    const state = {
-        serviceType, specializations, ages, insurance, languages, therapyTypes
-    };
+    const [filtersState, setFiltersState] = useState({});
+    const [filtersData, setFiltersData] = useState({});
+
+    // set filterIds from firestore in useeffect
+    useEffect(async () => {
+        const { firestore } = props;
+        const collections = firestore.collection("categories");
+        const data = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 2)
+            .get()
+            .then((querySnapshot) => {
+                const idToData = {};
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    idToData[doc.id] = {
+                        name: docData.name,
+                        options: docData.options,
+                        priority: docData.priority,
+                    };
+                });
+                return idToData;
+            });
+        const filtersObj = {};
+
+        Object.keys(data).forEach((id) => {
+            filtersObj[id] = [];
+        });
+        setFiltersState(filtersObj);
+        setFiltersData(data);
+    }, []);
 
     let [width, setWidth] = useState(getWidth());
 
@@ -101,19 +122,6 @@ const Index = (props) => {
         }, 100);
     };
 
-    function setState(index, value) {
-        const setMap = {
-            serviceType: setServiceType,
-            specializations: setSpecializations,
-            ages: setAges,
-            insurance: setInsurance,
-            languages: setLanguages,
-            therapyTypes: setTherapyTypes,
-        };
-
-        setMap[index](value);
-    }
-
     const filterByTags = (temp) => {
             setTempProviders(temp);
             //searchName && searchName.length > 0 ? tempProviders : props.providers
@@ -123,10 +131,11 @@ const Index = (props) => {
             // if (searchName && searchName.length > 0) {
             //     temp = activePro
             // }
-            console.log(temp)
-            filters.forEach(filterName => {
+            Object.keys(filtersState).forEach(filterName => {
                 temp = temp.filter((provider) => {
-                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0
+                    return provider[filterName]
+                        ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
+                        : false;
                 });
             });
             // if (searchName && searchName.length > 0) {
@@ -183,16 +192,23 @@ const Index = (props) => {
         setDistances(filterDistances);
     };
 
-    const filterNormalFilters = async(e) => {
+    const filterNormalFilters = (e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
         if (e.target.type === "checkbox" && e.target.checked) {
-            await setState(filterName, [...state[filterName], filterVal]);
+            setFiltersState({
+                ...filtersState,
+                [filterName]: [...filtersState[filterName], filterVal],
+            });
         } else if (e.target.type === "checkbox" && !e.target.checked) {
-            await setState(filterName, state[filterName].filter(function(filter) {
-                    return filter !== filterVal
-                })
-            )
+            setFiltersState({
+                ...filtersState,
+                [filterName]: filtersState[filterName].filter(function (
+                    filter
+                ) {
+                    return filter !== filterVal;
+                }),
+            });
         }
     };
 
@@ -203,8 +219,6 @@ const Index = (props) => {
         //setActiveProviders(temp);
         filterByTags(temp);
         //setTimeout(() => filterByTags(), 500);
-        console.log('filtersearch filters');
-        console.log(filters);
     };
 
     const filterProviders = async(e) => {
@@ -213,7 +227,7 @@ const Index = (props) => {
             const filterVal = e.target.value;
             if (filtertype === 'search') {
                 setSearchName(filterVal);
-                await filterSearch(filterVal)
+                filterSearch(filterVal)
             } else if (filtertype === 'zipcode') {
                 setSearchZip(filterVal);
                 if (filterVal.length === 5)
@@ -242,7 +256,7 @@ const Index = (props) => {
     useEffect(() => {
         if (activeProviders)
             filterSearch(searchName);
-    }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
+    }, [filtersState]);
 
     function switchView() {
         setListView(!listView);
@@ -250,8 +264,8 @@ const Index = (props) => {
 
     function evaluateFilters() {
         let isFiltersEmpty = true;
-        filters.map(item => {
-            if (state[item].length > 0) {
+        Object.keys(filtersState).map(item => {
+            if (filtersState[item].length > 0) {
                 isFiltersEmpty = false;
             }
         });
@@ -259,13 +273,16 @@ const Index = (props) => {
     }
 
     function clearFilters() {
-        filters.map(item =>
-            setState(item, [])
-        );
+        setFiltersState(Object.keys(filtersState).reduce((acc, cur) => {
+            return {
+                ...acc,
+                [cur]: []
+            }
+        }, {}));
     }
 
     function renderTag(item, index) {
-        return state[item].map((title, key) =>
+        return filtersState[item].map((title, key) =>
             <div
                 className = "tag"
                 style = {{ borderColor: colors[item], color: colors[item] } }
@@ -273,7 +290,12 @@ const Index = (props) => {
                 { title } <span className = "remove-tag"
                                 onClick = {
                                     async () => {
-                                        setState(item, state[item].filter((i) => i !== title));
+                                        setFiltersState({
+                                            ...filtersState,
+                                            [item]: filtersState[item].filter(
+                                                (i) => i !== title
+                                            ),
+                                        });
                                         setTimeout(() => filterProviders(), 100);
                                     }}> <FaTimesCircle />
                 </span>
@@ -334,35 +356,54 @@ const Index = (props) => {
     }
 
     const renderTagControl = () => {
-        return <Fragment>
-            {
-                !condition && !isSticky &&
-                <div ref={ref} className = "scroll-indicator"/>
-            }
-            <div className = {classNames("filter-row", "padder")}>
+        return (
+            <Fragment>
+                {!condition && !isSticky && (
+                    <div ref={ref} className="scroll-indicator" />
+                )}
+                <div className={classNames("filter-row", "padder")}>
+                    {Object.entries(filtersData)
+                        .filter(([key, value]) =>
+                            Number.isInteger(value.priority)
+                        )
+                        .sort(
+                            ([aKey, aValue], [bKey, bValue]) =>
+                                aValue.priority - bValue.priority
+                        )
+                        .map(([key, value]) => renderDropdown(value.name, key))}
 
-                { renderDropdown(languagesLabel, "languages") }
-                { renderDropdown(agesLabel, "ages") }
-                { renderDropdown(insuranceLabel, "insurance") }
-                { moreFilter
-                    ? <Fragment >
-                        { renderDropdown(serviceTypeLabel, "serviceType") }
-                        { renderDropdown(specializationsLabel, "specializations") }
-                        { renderDropdown(therapyTypeLabel, "therapyTypes") }
+                    {moreFilter ? (
+                        <Fragment>
+                            {Object.entries(filtersData)
+                                .filter(
+                                    ([key, value]) =>
+                                        !Number.isInteger(value.priority)
+                                )
+                                .sort(([aKey, aValue], [bKey, bValue]) =>
+                                    aValue.name.localeCompare(bValue.name)
+                                )
+                                .map(([key, value]) =>
+                                    renderDropdown(value.name, key)
+                                )}
+                            <Button
+                                variant="link"
+                                style={{ color: "red" }}
+                                onClick={() => setMoreFilter(false)}
+                            >
+                                - {lessFilters}
+                            </Button>
+                        </Fragment>
+                    ) : (
                         <Button
-                            variant = "link"
-                            style = {{ color: 'red' }}
-                            onClick = {() => setMoreFilter(false) } >- {lessFilters}
+                            variant="link"
+                            onClick={() => setMoreFilter(true)}
+                        >
+                            + {moreFilters}
                         </Button>
-                    </Fragment>
-                    : <Button
-                        variant = "link"
-                        onClick = {() => setMoreFilter(true) }>
-                        + {moreFilters}
-                    </Button>
-                }
-            </div>
-        </Fragment>
+                    )}
+                </div>
+            </Fragment>
+        );
     };
 
     function renderDropdown(title, key) {
@@ -376,36 +417,37 @@ const Index = (props) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {
-                        options[key].map((item, index) =>
-                            <div
-                                onClick={
-                                    () => filterProviders({
-                                        target: {
-                                            name: key,
-                                            value: item.value,
-                                            type: "checkbox",
-                                            checked: !state[key].includes(item.value),
-                                            getAttribute: (param) => "normalfilter"
-                                        }
-                                    })
-                                }>
-                                <Form.Check
-                                    className="dropdown-item"
-                                    name = { key }
-                                    key = { index }
-                                    type = "checkbox"
-                                    checked = { state[key].includes(item.value) }
-                                    value = { item.value }
-                                    label = { item.label }
-                                    filtertype = "normalfilter" />
-                            </div>
-                        )
+                        filtersData[key].options.map((item, index) =>
+                                <div
+                                    onClick={
+                                        () => filterProviders({
+                                            target: {
+                                                name: key,
+                                                value: item.value,
+                                                type: "checkbox",
+                                                checked: !filtersState[key].includes(item.value),
+                                                getAttribute: (param) => "normalfilter"
+                                            }
+                                        })
+                                    }>
+                                    <Form.Check
+                                        className="dropdown-item"
+                                        name = { key }
+                                        key = { index }
+                                        type = "checkbox"
+                                        checked = { filtersState[key].includes(item.value) }
+                                        value = { item.value }
+                                        label = { item.label }
+                                        filtertype = "normalfilter" />
+                                </div>
+                            )
                     }
                 </Dropdown.Menu>
             </Dropdown>
         );
     }
 
+    // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
         searchProviderName,
         searchZipcode,
@@ -486,7 +528,7 @@ const Index = (props) => {
                             {!isSticky && renderTagControl()}
                             <div ref={cellScrollRef} className = {classNames("cell-container", {"sticky": isSticky && !condition})}>
                                 <div className = "tag-row padder" >
-                                    {filters.map(renderTag)}
+                                    {Object.keys(filtersState).map(renderTag)}
                                     {
                                         evaluateFilters() &&
                                         <div
