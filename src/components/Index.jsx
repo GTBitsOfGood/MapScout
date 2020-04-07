@@ -1,5 +1,4 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
-import NavBar from './NavBar';
 import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
@@ -13,7 +12,6 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
-import options from "../utils/options";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
