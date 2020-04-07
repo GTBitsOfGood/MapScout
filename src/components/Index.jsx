@@ -57,8 +57,12 @@ const Index = (props) => {
     const [filtersData, setFiltersData] = useState({});
 
     // set filterIds from firestore in useeffect
-    useEffect(async () => {
-        const { firestore } = props;
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    async function fetchData() {
+        const {firestore} = props;
         const collections = firestore.collection("categories");
         const data = await collections
             .where('active', '==', true)
@@ -76,6 +80,7 @@ const Index = (props) => {
                 });
                 return idToData;
             });
+        console.log(data);
         const filtersObj = {};
 
         Object.keys(data).forEach((id) => {
@@ -83,7 +88,7 @@ const Index = (props) => {
         });
         setFiltersState(filtersObj);
         setFiltersData(data);
-    }, []);
+    }
 
     let [width, setWidth] = useState(getWidth());
 
@@ -142,7 +147,7 @@ const Index = (props) => {
             //     setTempProviders(temp);
             // }
             setActiveProviders(temp);
-        
+
     };
 
     const filterZipcode = async (filterVal) => {
@@ -587,7 +592,7 @@ const Index = (props) => {
                                                 className = "modal-body" >
                                                 <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
                                             </Modal.Body>
-                                    </Modal>  
+                                    </Modal>
                                 }
                             </div>
                         </div>
