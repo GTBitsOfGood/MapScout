@@ -1,0 +1,86 @@
+#root {
+    display: fixed;
+    z-index: 1000;
+    
+}
+  
+  #sidebar {
+    display: flex;
+    padding: 20px;
+    height: 100vh;
+    width: 110px;
+    background: linear-gradient(354.31deg, #4A537A 7.7%, #5C648D 98.05%);
+    transition: all 500ms;
+  }
+  
+  #sidebar:hover {
+    width: 200px;
+  }
+  
+  #content {
+    padding: 30px;
+    background-color: azure;
+  }
+  
+  .cell {
+    color: white;
+    transition: all 300ms;
+  }
+  
+  .cell:hover {
+    border-left: white solid 5px;
+    cursor: pointer;
+    height: 60px;
+    padding-left: 12px;
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    border-radius: 30px;
+  }
+  
+  .cell-title {
+    opacity: 1;
+    font-size: 30px;
+    font-weight: bold;
+    margin-left: 20px;
+    transition: all 500ms;
+  }
+  
+  .cell-title.hidden {
+    margin-left: 0;
+    opacity: 0;
+  }
+  
+  .cell-label {
+    opacity: 1;
+    font-size: medium;
+    padding-left: 10px;
+    padding-top: 6px;
+    transition: all 500ms;
+  }
+  
+  .cell-label.hidden {
+    padding-top: 0;
+    opacity: 0;
+  }
+  .gray-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(196, 196, 196, 0.4);
+    z-index: 1;
+  }

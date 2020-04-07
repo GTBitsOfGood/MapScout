@@ -9,6 +9,8 @@ import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import { formRoute, providerRoute } from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
+import NavBar from './NavBar';
+import NewNavBar from './NewNavBar';
 
 const classNames = require('classnames');
 
@@ -74,6 +76,9 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <Row noGutters>
+          <Col sm ={1}>
+            <NewNavBar/>>
+          </Col>
           <Col sm={3}>
             <div className="list-wrapper">
               <div className="fixed-container">
@@ -84,17 +89,9 @@ class Dashboard extends Component {
                   as={Link}
                   to={formRoute}
                 >
-                    Add new provider
+                    +Add New Provider
                 </Button>
-            </div>
-            <div>
-                <Button 
-                    block
-                    variant="primary"
-                    onClick={() => this.changeLanguageToFalse()}>
-                    Change Language active to false
-                </Button>
-            </div>
+              </div>
             <div className="scroll-container">
                 <ListGroup variant="flush">
                     {
@@ -106,9 +103,7 @@ class Dashboard extends Component {
                                 className="point"
                                 onClick={() => this.setState({selectedIndex: index})}
                                 active={selectedIndex === index}>
-                                <b>{item.facilityName}</b>
-                                <br />
-                                <small>{item.address[0]}</small>
+                                  <h2>{item.facilityName}</h2>
                             </ListGroup.Item>
                         )
                     }
@@ -116,12 +111,12 @@ class Dashboard extends Component {
               </div>
             </div>
           </Col>
-          <Col sm={9}>
+          <Col sm={8}>
             <div
               className="scroll-container"
               style={{ maxHeight: 'calc(100vh - 64px)' }}
             >
-              <div className="bg-white">
+              <div className="admin-provider">
                 {
                                     providers && providers[selectedIndex]
                                     && (

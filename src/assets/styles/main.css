@@ -64,8 +64,7 @@ html {
 
 .fixed-container {
     padding: 10px;
-    background-color: white;
-    border-bottom: solid 1px lightgray;
+    padding-top: 0px;
 }
 
 .no-span {
@@ -168,6 +167,18 @@ html {
 
 .point {
     cursor: pointer;
+    background:white;
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 20px;
+    border-color: white;
+    margin-left: 10px;
+}
+.point h2 {
+    font-family: Avenir Heavy;
+    font-size: 18px;
 }
 
 .filter-row {
@@ -216,6 +227,11 @@ html {
     padding: 20px;
 }
 
+.admin-provider {
+    background: white;
+    border-radius: 20px;
+    border-color: white;
+}
 
 @-webkit-keyframes translate {
     0% {
@@ -636,6 +652,21 @@ html {
     margin-top: 150px;
 }
 
+.btn-primary {
+    background: #979797;
+    border-color: #979797;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: Avenir Heavy;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.admin-list-container {
+    background: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {

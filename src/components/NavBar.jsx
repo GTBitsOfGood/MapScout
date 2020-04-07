@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import { providerRoute } from "./ProviderRoutes";
 import localizationStrings from '../utils/Localization';
 const logo = require('../assets/img/logo.png');
+import './NavBar.css';
 
 const languageTitles = {
     "en": "English",
