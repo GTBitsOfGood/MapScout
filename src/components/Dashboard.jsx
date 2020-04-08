@@ -10,7 +10,6 @@ import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import { formRoute, providerRoute } from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
 import NavBar from './NavBar';
-import NewNavBar from './NewNavBar';
 
 const classNames = require('classnames');
 
@@ -75,7 +74,7 @@ class Dashboard extends Component {
 
     return (
       <React.Fragment>
-          <NewNavBar/>
+          <NavBar/>
           <div className = "admin-dashboard">
             <div className="admin-list-container">
               <div className="list-wrapper">
