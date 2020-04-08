@@ -231,6 +231,8 @@ html {
     background: white;
     border-radius: 20px;
     border-color: white;
+    position: relative;
+    flex: 2;
 }
 
 @-webkit-keyframes translate {
@@ -324,8 +326,10 @@ html {
 
 @media only screen and (min-width: 900px) {
     .scroll-container {
-        max-height: calc(100vh - 123px);
+        max-height: calc(100vh - 90px);
         overflow-y: scroll;
+        position: relative;
+        z-index: 1;
     }
     .list-wrapper {
         border-right: solid 6px #F8F9FA;
@@ -661,11 +665,24 @@ html {
     padding-top: 15px;
     padding-bottom: 15px;
 }
+.admin-dashboard {
+    display: flex;
+    flex-direction: row;
+    padding-top: 10px;
+}
 
 .admin-list-container {
     background: white;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.gray-overlay {
+    width: 100vw;
+    height: 100vw;
+    position: fixed;
+    background: rgba(196, 196, 196, 0.4);
+    z-index: 10;
 }
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/

@@ -16,7 +16,7 @@ import { formRoute } from './ProviderRoutes';
 
 const SingleProvider = (props) => (
   <div>
-    {/* <div
+    <div
       className="image-cover row-spaced mb-3"
       style={{
         background: 'linear-gradient(354.31deg, #4A537A 7.7%, #5C648D 98.05%)'
@@ -46,7 +46,7 @@ const SingleProvider = (props) => (
           </Button>
         </ButtonToolbar>
       </div>
-    </div> */}
+    </div>
     <Container>
       <ProviderInfo item={props.item} />
     </Container>

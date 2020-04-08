@@ -38,7 +38,6 @@ class ProviderRoutes extends Component {
 
     return (
       <div>
-        <NavBar update={() => this.forceUpdate()} />
         { isLoaded(this.props.auth)
                     && (
                     <Switch>

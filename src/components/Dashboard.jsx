@@ -75,10 +75,59 @@ class Dashboard extends Component {
 
     return (
       <React.Fragment>
-        <Row noGutters>
-          <Col sm ={1}>
-            <NewNavBar/>>
-          </Col>
+        <div className = "admin-dashboard">
+          <NewNavBar/>
+          <div className="list-wrapper">
+              <div className="fixed-container">
+                <Button
+                  block
+                  variant="primary"
+                  onClick={() => this.props.selectItem({})}
+                  as={Link}
+                  to={formRoute}
+                >
+                    +Add New Provider
+                </Button>
+              </div>
+            <div className="scroll-container">
+                <ListGroup variant="flush">
+                    {
+                        !isEmpty(providers) &&
+                        providers.map((item, index) =>
+                            <ListGroup.Item
+                                href={item.id}
+                                key={index}
+                                className="point"
+                                onClick={() => this.setState({selectedIndex: index})}
+                                active={selectedIndex === index}>
+                                  <h2>{item.facilityName}</h2>
+                            </ListGroup.Item>
+                        )
+                    }
+                </ListGroup>
+            </div>
+          </div>
+          <div
+              className="scroll-container"
+              style={{ maxHeight: 'calc(100vh - 10px)' }}
+            >
+              <div className="admin-provider">
+                {
+                                    providers && providers[selectedIndex]
+                                    && (
+                                    <SingleProvider
+                                      item={providers[selectedIndex]}
+                                      editProvider={() => this.props.selectItem(providers[selectedIndex])}
+                                      setLoading={() => this.setState({ isLoading: true })}
+                                      resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}
+                                    />
+                                    )
+                                }
+              </div>
+            </div>
+        </div>
+        {/* <Row noGutters>
+            <NewNavBar/>
           <Col sm={3}>
             <div className="list-wrapper">
               <div className="fixed-container">
@@ -111,7 +160,7 @@ class Dashboard extends Component {
               </div>
             </div>
           </Col>
-          <Col sm={8}>
+          <Col>
             <div
               className="scroll-container"
               style={{ maxHeight: 'calc(100vh - 64px)' }}
@@ -131,7 +180,7 @@ class Dashboard extends Component {
               </div>
             </div>
           </Col>
-        </Row>
+        </Row> */}
       </React.Fragment>
     );
   }
