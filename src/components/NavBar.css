@@ -1,7 +1,8 @@
 @import url(//db.onlinewebfonts.com/c/901497541657a2f24e42848bcf7fad52?family=Avenir+Heavy);
 
 #root {
-    display: fixed;
+    position: fixed;
+    padding-top: 10px;
     z-index: 1000;   
 }
   
@@ -10,7 +11,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    padding-top: 25px;
+    padding-top: 75px;
     padding-left: 15px;
     height: calc(100vh - 20px);
     width: 90px;
@@ -53,6 +54,21 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+  }
+
+  .logo {
+    position: fixed;
+    padding-top: 10px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .logo-expanded {
+    position: fixed;
+    padding-left: 60px;
+    padding-top: 10px;
+    width: 60px;
+    height: 60px;
   }
   
   .icon {

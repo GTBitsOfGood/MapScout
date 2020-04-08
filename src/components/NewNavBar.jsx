@@ -11,15 +11,16 @@ function NewNavBar() {
 
   return (
   <div>
+    <div className = {classnames("gray-overlay", { "none": !expand})}></div>
     <div id="root">
+    <div className = {expand? "logo-expanded" : "logo"}>
+              <a href= "/#/pacts"><img src={Pacts}/></a>
+          </div>
       <div
         id="sidebar"
         onMouseLeave={() => setExpanded(false)}
         onMouseEnter={() => setExpanded(true)}>
         <div>
-          <div className="icon">
-              <img src={Pacts}/>
-          </div>
           <div className="cell">
             <div className="icon">
               <FiGrid/>
@@ -27,12 +28,6 @@ function NewNavBar() {
             <div className={classnames("cell-title", { "none": !expand })}>
               PROVIDERS
             </div>
-            {/* <div className="row">
-              <div className={classnames("cell-title", { "hidden": !expand })}>
-              </div>
-            </div> */}
-            {/* <div className={classnames("cell-label", { "hidden": expand })}>
-            </div> */}
           </div>
           <div className = "cell">
             <div className = "icon">

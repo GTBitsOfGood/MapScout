@@ -656,7 +656,7 @@ html {
     margin-top: 150px;
 }
 
-.btn-primary {
+.btn-secondary {
     background: #979797;
     border-color: #979797;
     border-radius: 5px;
@@ -669,12 +669,11 @@ html {
     display: flex;
     flex-direction: row;
     padding-top: 10px;
+    padding-left: 100px;
 }
 
 .admin-list-container {
-    background: white;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    width: 30vw;
 }
 
 .gray-overlay {
