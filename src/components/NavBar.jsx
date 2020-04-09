@@ -1,55 +1,80 @@
 import React, { useState } from 'react';
-import Navbar from 'react-bootstrap/NavBar';
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Nav from 'react-bootstrap/Nav';
-import {Link} from "react-router-dom";
-import { providerRoute } from "./ProviderRoutes";
-import localizationStrings from '../utils/Localization';
-const logo = require('../assets/img/logo.png');
+import Pacts from '../assets/img/pacts.png';
+import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
 
-const languageTitles = {
-    "en": "English",
-    "es": "Español",
-    "zh": "中文",
-};
+var classnames = require('classnames');
 
-const NavBar = (props) => {
-    const [isOpen, setIsOpen] = useState(false);
-    let { home, admin } = localizationStrings;
+function NavBar() {
 
-    const toggle = () => {
-      setIsOpen(!isOpen);
-    }
+  const [expand, setExpanded] = useState(false);
 
-    return (
-            <div>
-                <Navbar expand="lg">
-                    <Navbar.Brand as={Link} to="/pacts"><img src={logo} style={{width:100}} /></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="navbar-nav" />
-                    <Navbar.Collapse id="navbar-nav">
-                        <Nav className="ml-auto">
-                            <Nav.Link as={Link} to={providerRoute}>{admin}</Nav.Link>
-                            <NavDropdown
-                                alignRight
-                                title={languageTitles[localizationStrings.getLanguage()]}>
-                                {
-                                    Object.keys(languageTitles).map((key) =>
-                                        <NavDropdown.Item onClick={
-                                            () => {
-                                                localizationStrings.setLanguage(key);
-                                                props.update();
-                                            }
-                                        }>
-                                            {languageTitles[key]}
-                                        </NavDropdown.Item>
-                                    )
-                                }
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+  return (
+  <div>
+    <div className = {classnames("gray-overlay", { "none": !expand})}></div>
+    <div id="root">
+    <div className = {expand? "logo-expanded" : "logo"}>
+              <a href= "/#/pacts"><img src={Pacts}/></a>
+          </div>
+      <div
+        id="sidebar"
+        onMouseLeave={() => setExpanded(false)}
+        onMouseEnter={() => setExpanded(true)}>
+        <div>
+          <div className="cell">
+            <div className="icon">
+              <FiGrid/>
             </div>
-          )
-  }
+            <div className={classnames("cell-title", { "none": !expand })}>
+              PROVIDERS
+            </div>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiFileText/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand })}>
+              TEMPLATE
+            </div>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiMap/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand })}>
+              VIEW MAP
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiBell/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand })}>
+              HELP
+            </div>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiSettings/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand })}>
+              SETTINGS
+            </div>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiPower/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand })}>
+              LOG OUT
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  );
+}
 
 export default NavBar;
