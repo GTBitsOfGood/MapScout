@@ -1,5 +1,4 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
-import NavBar from './NavBar';
 import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
@@ -11,8 +10,8 @@ import { compose } from "redux";
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
+import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
-import options from "../utils/options";
 import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
@@ -41,26 +40,53 @@ const Index = (props) => {
     const [listView, setListView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [activeProviders, setActiveProviders] = useState(null); //What shows up on search
-    const [tempProviders, setTempProviders] = useState(null); //Memory (last search)
-    const [serviceType, setServiceType] = useState([]);
-    const [specializations, setSpecializations] = useState([]);
-    const [ages, setAges] = useState([]);
-    const [insurance, setInsurance] = useState([]);
-    const [languages, setLanguages] = useState([]);
-    const [therapyTypes, setTherapyTypes] = useState([]);
-    const [filters, setFilters] = useState(['serviceType', 'specializations', 'ages', 'insurance', 'languages', 'therapyTypes']);
-    const [searchName, setSearchName] = useState(null);
+    const [activeProviders, setActiveProviders] = useState(props.providers);
+    const [tempProviders, setTempProviders] = useState(props.providers);
+    const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
     const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
     const [point, setPoint] = useState(true);
     const [distances, setDistances] = useState({});
+    const [prevSearchLen, setPrevSearchLen] = useState(0);
 
-    const state = {
-        serviceType, specializations, ages, insurance, languages, therapyTypes
-    };
+    const [filtersState, setFiltersState] = useState({});
+    const [filtersData, setFiltersData] = useState({});
+
+    // set filterIds from firestore in useeffect
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    async function fetchData() {
+        const {firestore} = props;
+        const collections = firestore.collection("categories");
+        const data = await collections
+            .where('active', '==', true)
+            .where('select_type', '==', 2)
+            .get()
+            .then((querySnapshot) => {
+                const idToData = {};
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    idToData[doc.id] = {
+                        name: docData.name,
+                        options: docData.options,
+                        priority: docData.priority,
+                    };
+                });
+                return idToData;
+            });
+        console.log(data);
+        const filtersObj = {};
+
+        Object.keys(data).forEach((id) => {
+            filtersObj[id] = [];
+        });
+        setFiltersState(filtersObj);
+        setFiltersData(data);
+    }
 
     let [width, setWidth] = useState(getWidth());
 
@@ -99,38 +125,32 @@ const Index = (props) => {
         }, 100);
     };
 
-    function setState(index, value) {
-        const setMap = {
-            serviceType: setServiceType,
-            specializations: setSpecializations,
-            ages: setAges,
-            insurance: setInsurance,
-            languages: setLanguages,
-            therapyTypes: setTherapyTypes,
-        };
+    const filterByTags = (temp) => {
+            setTempProviders(temp);
+            //searchName && searchName.length > 0 ? tempProviders : props.providers
+            // let temp = searchName && searchName.length > 0 ? activeProviders : props.providers;
+            // -----> doesn't work, filterByTags will only loop thru previous activeProviders of any actionevent
 
-        setMap[index](value);
-    }
-
-    const filterByTags = () => {
-        if (!isEmpty(props.providers)) {
-            let temp = searchName && searchName.length > 0 ? tempProviders : props.providers; //If there is a search term, use tempProviders, otherwise use all providers
-            filters.forEach(filterName => {
+            // if (searchName && searchName.length > 0) {
+            //     temp = activePro
+            // }
+            Object.keys(filtersState).forEach(filterName => {
                 temp = temp.filter((provider) => {
-                    return provider[filterName].some(r => state[filterName].includes(r)) || state[filterName].length === 0 //Actual filtering stuff
+                    return provider[filterName]
+                        ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
+                        : false;
                 });
             });
-            if (searchName && searchName.length > 0) {
-                setTempProviders(temp);
-            }
+            // if (searchName && searchName.length > 0) {
+            //     setTempProviders(temp);
+            // }
             setActiveProviders(temp);
-        }
+
     };
 
     const filterZipcode = async (filterVal) => {
         let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
         let responseJson = await response.json();
-        console.log(responseJson);
 
         // Handle illegal response
         let filterLat = responseJson['results'][0]['geometry']['location']['lat'];
@@ -170,47 +190,52 @@ const Index = (props) => {
         filteredProviders.forEach(function(provider) {
             filterActiveProviders.push(provider['provider']);
             let distKey = provider['provider']['facilityName'];
-            filterDistances.push({[distKey]: provider['miDistance']}) //TODO: Figure out if we are keying this wrong cause we can't access it
+            filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
-        setTempProviders(filterActiveProviders);
     };
 
-    const filterNormalFilters = async(e) => { //Change the filters, but not the providers
+    const filterNormalFilters = (e) => {
         const filterName = e.target.name;
         const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) { //If checked
-            await setState(filterName, [...state[filterName], filterVal]); //Apply filter to state
-        } else if (e.target.type === "checkbox" && !e.target.checked) { //If it is not checked
-            await setState(filterName, state[filterName].filter(function(filter) {
-                    return filter !== filterVal //Removes from state
-                })
-            )
+        if (e.target.type === "checkbox" && e.target.checked) {
+            setFiltersState({
+                ...filtersState,
+                [filterName]: [...filtersState[filterName], filterVal],
+            });
+        } else if (e.target.type === "checkbox" && !e.target.checked) {
+            setFiltersState({
+                ...filtersState,
+                [filterName]: filtersState[filterName].filter(function (
+                    filter
+                ) {
+                    return filter !== filterVal;
+                }),
+            });
         }
     };
 
     const filterSearch = (filterVal) => {
-        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi"); //if facilityName includes search term
-        //TODO: Find out why tempProviders is not what it is supposed to be
-        const temp = tempProviders || props.providers; //available set of providers
-        setActiveProviders(temp.filter((item) => regex.test(item.facilityName))) //set active providers to regex
+        const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
+        let temp = props.providers;
+        temp = temp.filter((item) => regex.test(item.facilityName))
+        //setActiveProviders(temp);
+        filterByTags(temp);
+        //setTimeout(() => filterByTags(), 500);
     };
 
-    const filterProviders = async(e) => { //Step 1
-        if (!evaluateFilters()) {
-            setTempProviders(props.providers);
-        }
+    const filterProviders = async(e) => {
         if (typeof e !== 'undefined') {
             const filtertype = e.target.getAttribute('filtertype');
             const filterVal = e.target.value;
-            if (filtertype === 'search') { //if searching provider name
-                setSearchName(filterVal); //setting the state
-                await filterSearch(filterVal)
-            } else if (filtertype === 'zipcode') { //if searching zip
-                setSearchZip(filterVal); //setting the state
+            if (filtertype === 'search') {
+                setSearchName(filterVal);
+                filterSearch(filterVal)
+            } else if (filtertype === 'zipcode') {
+                setSearchZip(filterVal);
                 if (filterVal.length === 5)
                     await filterZipcode(filterVal)
-            } else { //if tags
+            } else {
                 await filterNormalFilters(e);
             }
         }
@@ -222,20 +247,19 @@ const Index = (props) => {
             firestore.get('providers').then(
                 () => {
                     setActiveProviders(providers);
-                    setTempProviders(providers);
                     setIsLoading(false)
                 }
             )
-        } else if (isEmpty(activeProviders) && isEmpty(tempProviders) && isLoading) {
+        } else if (isEmpty(activeProviders) && isLoading) {
             setActiveProviders(providers);
-            setTempProviders(providers);
             setIsLoading(false)
         }
     }, [props.providers]);
 
     useEffect(() => {
-        filterByTags(); //Whenever the filter changes, this function is called
-    }, [serviceType, specializations, ages, insurance, languages, therapyTypes]);
+        if (activeProviders)
+            filterSearch(searchName);
+    }, [filtersState]);
 
     function switchView() {
         setListView(!listView);
@@ -243,8 +267,8 @@ const Index = (props) => {
 
     function evaluateFilters() {
         let isFiltersEmpty = true;
-        filters.map(item => {
-            if (state[item].length > 0) {
+        Object.keys(filtersState).map(item => {
+            if (filtersState[item].length > 0) {
                 isFiltersEmpty = false;
             }
         });
@@ -252,13 +276,16 @@ const Index = (props) => {
     }
 
     function clearFilters() {
-        filters.map(item =>
-            setState(item, [])
-        );
+        setFiltersState(Object.keys(filtersState).reduce((acc, cur) => {
+            return {
+                ...acc,
+                [cur]: []
+            }
+        }, {}));
     }
 
     function renderTag(item, index) {
-        return state[item].map((title, key) =>
+        return filtersState[item].map((title, key) =>
             <div
                 className = "tag"
                 style = {{ borderColor: colors[item], color: colors[item] } }
@@ -266,7 +293,12 @@ const Index = (props) => {
                 { title } <span className = "remove-tag"
                                 onClick = {
                                     async () => {
-                                        setState(item, state[item].filter((i) => i !== title));
+                                        setFiltersState({
+                                            ...filtersState,
+                                            [item]: filtersState[item].filter(
+                                                (i) => i !== title
+                                            ),
+                                        });
                                         setTimeout(() => filterProviders(), 100);
                                     }}> <FaTimesCircle />
                 </span>
@@ -313,7 +345,7 @@ const Index = (props) => {
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                distances[item.facilityName] && //Not getting detected
+                                distances[item.facilityName] && //not getting detected
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
                                     { distances[item.facilityName] + ' mi' }
@@ -327,35 +359,54 @@ const Index = (props) => {
     }
 
     const renderTagControl = () => {
-        return <Fragment>
-            {
-                !condition && !isSticky &&
-                <div ref={ref} className = "scroll-indicator"/>
-            }
-            <div className = {classNames("filter-row", "padder")}>
+        return (
+            <Fragment>
+                {!condition && !isSticky && (
+                    <div ref={ref} className="scroll-indicator" />
+                )}
+                <div className={classNames("filter-row", "padder")}>
+                    {Object.entries(filtersData)
+                        .filter(([key, value]) =>
+                            Number.isInteger(value.priority)
+                        )
+                        .sort(
+                            ([aKey, aValue], [bKey, bValue]) =>
+                                aValue.priority - bValue.priority
+                        )
+                        .map(([key, value]) => renderDropdown(value.name, key))}
 
-                { renderDropdown(languagesLabel, "languages") }
-                { renderDropdown(agesLabel, "ages") }
-                { renderDropdown(insuranceLabel, "insurance") }
-                { moreFilter
-                    ? <Fragment >
-                        { renderDropdown(serviceTypeLabel, "serviceType") }
-                        { renderDropdown(specializationsLabel, "specializations") }
-                        { renderDropdown(therapyTypeLabel, "therapyTypes") }
+                    {moreFilter ? (
+                        <Fragment>
+                            {Object.entries(filtersData)
+                                .filter(
+                                    ([key, value]) =>
+                                        !Number.isInteger(value.priority)
+                                )
+                                .sort(([aKey, aValue], [bKey, bValue]) =>
+                                    aValue.name.localeCompare(bValue.name)
+                                )
+                                .map(([key, value]) =>
+                                    renderDropdown(value.name, key)
+                                )}
+                            <Button
+                                variant="link"
+                                style={{ color: "red" }}
+                                onClick={() => setMoreFilter(false)}
+                            >
+                                - {lessFilters}
+                            </Button>
+                        </Fragment>
+                    ) : (
                         <Button
-                            variant = "link"
-                            style = {{ color: 'red' }}
-                            onClick = {() => setMoreFilter(false) } >- {lessFilters}
+                            variant="link"
+                            onClick={() => setMoreFilter(true)}
+                        >
+                            + {moreFilters}
                         </Button>
-                    </Fragment>
-                    : <Button
-                        variant = "link"
-                        onClick = {() => setMoreFilter(true) }>
-                        + {moreFilters}
-                    </Button>
-                }
-            </div>
-        </Fragment>
+                    )}
+                </div>
+            </Fragment>
+        );
     };
 
     function renderDropdown(title, key) {
@@ -369,36 +420,37 @@ const Index = (props) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {
-                        options[key].map((item, index) =>
-                            <div
-                                onClick={
-                                    () => filterProviders({
-                                        target: {
-                                            name: key,
-                                            value: item.value,
-                                            type: "checkbox",
-                                            checked: !state[key].includes(item.value),
-                                            getAttribute: (param) => "normalfilter"
-                                        }
-                                    })
-                                }>
-                                <Form.Check
-                                    className="dropdown-item"
-                                    name = { key }
-                                    key = { index }
-                                    type = "checkbox"
-                                    checked = { state[key].includes(item.value) }
-                                    value = { item.value }
-                                    label = { item.label }
-                                    filtertype = "normalfilter" />
-                            </div>
-                        )
+                        filtersData[key].options.map((item, index) =>
+                                <div
+                                    onClick={
+                                        () => filterProviders({
+                                            target: {
+                                                name: key,
+                                                value: item.value,
+                                                type: "checkbox",
+                                                checked: !filtersState[key].includes(item.value),
+                                                getAttribute: (param) => "normalfilter"
+                                            }
+                                        })
+                                    }>
+                                    <Form.Check
+                                        className="dropdown-item"
+                                        name = { key }
+                                        key = { index }
+                                        type = "checkbox"
+                                        checked = { filtersState[key].includes(item.value) }
+                                        value = { item.value }
+                                        label = { item.label }
+                                        filtertype = "normalfilter" />
+                                </div>
+                            )
                     }
                 </Dropdown.Menu>
             </Dropdown>
         );
     }
 
+    // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
         searchProviderName,
         searchZipcode,
@@ -417,7 +469,9 @@ const Index = (props) => {
     const condition = width > 768;
 
     if (isLoading || !isLoaded(activeProviders))
-        return <div className = "spinner" />;
+        return <div className="spinner-wrap">
+            <div className = "spinner" />
+        </div>;
 
     return (
         <div className = {classNames("bg-white", {"overflow-scroll": !condition})} >
@@ -479,7 +533,7 @@ const Index = (props) => {
                             {!isSticky && renderTagControl()}
                             <div ref={cellScrollRef} className = {classNames("cell-container", {"sticky": isSticky && !condition})}>
                                 <div className = "tag-row padder" >
-                                    {filters.map(renderTag)}
+                                    {Object.keys(filtersState).map(renderTag)}
                                     {
                                         evaluateFilters() &&
                                         <div
@@ -505,28 +559,39 @@ const Index = (props) => {
                             </div>
                             <div >
                                 {
-                                    activeProviders && activeProviders[selectedIndex] &&
+                                    width >= 768 && activeProviders && activeProviders[selectedIndex] &&
                                     <Modal
                                         show = { showModal }
                                         onHide = {() => setShowModal(false)}
-                                        size = "lg"
+                                        dialogClassName = "myModal"
                                         scrollable >
                                         <Modal.Header
                                             className = "image-cover"
-                                            style = {{ backgroundImage: `url(${activeProviders[selectedIndex].imageURL})` }}
+                                            style = {{ backgroundColor: "#2F80ED" }}
                                             closeButton >
-                                            <Modal.Title id = "contained-modal-title-vcenter" >
-                                                <h2>
-                                                    <b>
-                                                        { activeProviders[selectedIndex].facilityName }
-                                                    </b>
-                                                </h2>
-                                            </Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body
                                             className = "modal-body" >
                                             <ProviderInfo item = { activeProviders[selectedIndex] }/>
                                         </Modal.Body>
+                                    </Modal>
+                                }
+                                {
+                                    width < 768 && activeProviders && activeProviders[selectedIndex] &&
+                                    <Modal
+                                        show = { showModal }
+                                        onHide = {() => setShowModal(false)}
+                                        dialogClassName = "modalMobile"
+                                        scrollable >
+                                            <Modal.Header
+                                                className = "image-cover"
+                                                style = {{ backgroundColor: "#2F80ED" }}
+                                                closeButton >
+                                            </Modal.Header>
+                                            <Modal.Body
+                                                className = "modal-body" >
+                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
+                                            </Modal.Body>
                                     </Modal>
                                 }
                             </div>

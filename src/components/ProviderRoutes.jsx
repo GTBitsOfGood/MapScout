@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
@@ -9,13 +9,14 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
-import AddCategoryForm from "./AddCategory";
+import Template from "./template/index";
+import NotFound from "./NotFound";
 
-export const providerRoute = '/providers/dash';
-export const formRoute = '/providers/dash/add';
-export const authRoute = '/providers/auth';
-export const pwdRoute = '/providers/forgotpwd';
-export const addRoute = '/providers/addcategory';
+export const providerRoute = '/provider';
+export const formRoute = '/provider/add';
+export const authRoute = '/';
+export const pwdRoute = '/forgot';
+export const templateRoute = '/provider/template';
 
 class ProviderRoutes extends Component {
   render() {
@@ -31,34 +32,45 @@ class ProviderRoutes extends Component {
             />
           );
         }
-        return <Component {...props} />;
+          return <Component {...props} />
       }}
       />
     );
 
     return (
       <div>
-        <NavBar update={() => this.forceUpdate()} />
         { isLoaded(this.props.auth)
-                    && (
-                    <Switch>
-                      <PrivateRoute exact path={providerRoute} component={Dashboard} />
-                      <PrivateRoute path={formRoute} component={AddProvider} />
-                      <Route
-                        exact
-                        path={authRoute}
-                        render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />}
-                      />
-                      <Route
-                            exact path={pwdRoute}
-                            component={PasswordForgetForm}
-                      />
-                        <Route
-                            exact path={addRoute}
-                            component={AddCategoryForm}
-                        />
-                    </Switch>
-                    )}
+            && (
+            <Switch>
+                <Route path={providerRoute}>
+                    <React.Fragment>
+                        <NavBar/>
+                        <div className="dashboard-content">
+                            <Switch>
+                                <PrivateRoute
+                                    exact
+                                    path={providerRoute}
+                                    component={Dashboard} />
+                                <PrivateRoute
+                                    path={formRoute}
+                                    component={AddProvider} />
+                                <PrivateRoute
+                                    path={templateRoute}
+                                    component={Template} />
+                            </Switch>
+                        </div>
+                    </React.Fragment>
+                </Route>
+                <Route
+                    exact
+                    path={authRoute}
+                    component={Auth} />
+                <Route
+                    path={pwdRoute}
+                    component={PasswordForgetForm} />
+                <Route exact path="*" component={NotFound} />
+            </Switch>
+            )}
       </div>
     );
   }
