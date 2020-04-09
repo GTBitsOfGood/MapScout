@@ -9,7 +9,7 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
-import Template from "./template";
+import Template from "./template/index";
 
 export const providerRoute = '/';
 export const formRoute = '/provider';
@@ -38,7 +38,6 @@ class ProviderRoutes extends Component {
 
     return (
       <div>
-        <NavBar update={() => this.forceUpdate()} />
         { isLoaded(this.props.auth)
                     && (
                     <Switch>
@@ -49,16 +48,13 @@ class ProviderRoutes extends Component {
                       <PrivateRoute
                           path={formRoute}
                           component={AddProvider} />
-                      <ProviderRoutes
-                          exact
+                      <PrivateRoute
                           path={templateRoute}
                           component={Template} />
                       <Route
-                          exact
                           path={authRoute}
                           render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />
                       <Route
-                          exact
                           path={pwdRoute}
                           component={PasswordForgetForm} />
                     </Switch>

@@ -703,3 +703,107 @@ html {
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+.underline {
+    border-bottom: solid gray 1px;
+}
+
+#template-root {
+    overflow-y: scroll;
+    height: 100vh;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.category-cell-wrapper {
+    margin-bottom: 12px;
+}
+
+.category-grip {
+    font-size: 30px;
+    color: #4F4F4F;
+    transition: all 200ms;
+}
+
+.category-cell-wrapper:hover .category-grip {
+    font-size: 31px;
+    color: gray;
+}
+
+.category-cell-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background-color: #F8F9FA;
+    border-radius: 5px;
+    padding: 8px 12px;
+    transition: border-left 200ms;
+}
+
+.category-cell-wrapper:hover .category-cell-container {
+    border-left: solid #0069D9 10px;
+    border-bottom-left-radius: 0;
+}
+
+.add-option {
+    margin-top: 8px;
+    width: 60%;
+}
+
+.options-wrapper {
+    height: auto;
+    min-width: 200px;
+    max-width: fit-content;
+    margin-top: 8px;
+    color: gray;
+}
+
+.options-item {
+    flex-direction: row-reverse;
+}
+
+.options-label {
+    display: inline-block;
+    position: relative;
+    transition: all 0.5s cubic-bezier(.55, 0, .1, 1);
+}
+
+.options-label:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 1px;
+    box-shadow: 0 1px gray;
+    margin-top: -0.8em;
+    background: black;
+    transform: scaleX(0);
+    transform-origin: center left;
+    animation: strikethrough 1s 0.5s cubic-bezier(.55, 0, .1, 1) 1;
+    transition: transform 0.5s cubic-bezier(.55, 0, .1, 1);
+}
+
+.options-close {
+    margin-left: 6px;
+    background-color: white;
+    transition: color 200ms;
+    cursor: pointer;
+}
+
+.options-close:hover {
+    color: red;
+}
+
+.options-item .options-close:hover + .options-label:after {
+    transform: scaleX(1);
+}
+
+.category-button-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.ReactCollapse--collapse {
+    transition: height 300ms;
+}
