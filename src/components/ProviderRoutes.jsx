@@ -9,13 +9,13 @@ import Auth from './Auth';
 import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
-import AddCategoryForm from "./AddCategory";
+import Template from "./template/index";
 
 export const providerRoute = '/';
-export const formRoute = '/add';
+export const formRoute = '/provider';
 export const authRoute = '/auth';
-export const pwdRoute = '/forgotpwd';
-export const addRoute = '/addcategory';
+export const pwdRoute = '/forgot';
+export const templateRoute = '/template';
 
 class ProviderRoutes extends Component {
   render() {
@@ -38,7 +38,6 @@ class ProviderRoutes extends Component {
 
     return (
       <div>
-        <NavBar update={() => this.forceUpdate()} />
         { isLoaded(this.props.auth)
                     && (
                     <Switch>
@@ -49,21 +48,15 @@ class ProviderRoutes extends Component {
                       <PrivateRoute
                           path={formRoute}
                           component={AddProvider} />
+                      <PrivateRoute
+                          path={templateRoute}
+                          component={Template} />
                       <Route
-                        exact
-                        path={authRoute}
-                        render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />}
-                      />
+                          path={authRoute}
+                          render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />
                       <Route
-                          exact
                           path={pwdRoute}
-                          component={PasswordForgetForm}
-                      />
-                      <Route
-                          exact
-                          path={addRoute}
-                          component={AddCategoryForm}
-                      />
+                          component={PasswordForgetForm} />
                     </Switch>
                     )}
       </div>

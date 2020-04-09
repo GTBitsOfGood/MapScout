@@ -9,6 +9,7 @@ import { withFirebase } from 'react-redux-firebase'
 import localizationStrings from '../utils/Localization';
 import Container from "react-bootstrap/Container";
 import Blur from "@animate/blur";
+import {pwdRoute} from "./ProviderRoutes";
 
 var classNames = require('classnames');
 
@@ -85,7 +86,7 @@ class Auth extends Component {
                             {isLoading&&<div className="loader"/>} {login}
                         </Button>
                         <div className="mt-2">
-                            <a href="#/providers/forgotpwd">
+                            <a href={pwdRoute}>
                                 <small>{forgotPassword}</small>
                             </a>
                         </div>
