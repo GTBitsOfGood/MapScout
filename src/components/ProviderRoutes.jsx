@@ -64,7 +64,7 @@ class ProviderRoutes extends Component {
                 <Route
                     exact
                     path={authRoute}
-                    render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />
+                    component={Auth} />
                 <Route
                     path={pwdRoute}
                     component={PasswordForgetForm} />

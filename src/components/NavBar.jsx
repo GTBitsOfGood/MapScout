@@ -3,12 +3,24 @@ import Link from "react-router-dom/Link";
 import Pacts from '../assets/img/pacts.png';
 import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
 import {providerRoute, templateRoute} from "./ProviderRoutes";
+import { authRoute } from "./ProviderRoutes";
+import { withFirebase } from "react-redux-firebase";
 
 var classnames = require('classnames');
 
-function NavBar() {
+function NavBar(props) {
 
   const [expand, setExpanded] = useState(false);
+
+  const logout = () => {
+      props.firebase.logout()
+          .then(function() {
+              props.history.push(authRoute)
+          })
+          .catch(function(error) {
+              console.log(error)
+          });
+  };
 
   return (
   <div>
@@ -49,7 +61,7 @@ function NavBar() {
             <div className = "icon">
               <FiMap/>
             </div>
-              <Link to="/pacts">
+              <Link to="/pacts" target="_blank">
                 <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
                   VIEW MAP
                 </div>
@@ -73,7 +85,7 @@ function NavBar() {
           {/*    SETTINGS*/}
           {/*  </div>*/}
           {/*</div>*/}
-          <div className = "cell">
+          <div className = "cell" onClick={logout}>
             <div className = "icon">
               <FiPower/>
             </div>
@@ -88,4 +100,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default withFirebase(NavBar);
