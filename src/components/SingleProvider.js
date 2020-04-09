@@ -18,12 +18,7 @@ const SingleProvider = (props) => (
   <div>
     <div
       className="image-cover row-spaced mb-3"
-      style={{
-        backgroundImage: `url(${props.item.imageURL
-            || require('../assets/img/modalimage.png')})`,
-      }}
     >
-      <h2>{props.item.facilityName}</h2>
       <div>
         <ButtonToolbar>
           <Button
@@ -49,9 +44,14 @@ const SingleProvider = (props) => (
         </ButtonToolbar>
       </div>
     </div>
-    <Container>
-      <ProviderInfo item={props.item} />
-    </Container>
+      <div
+          className="scroll-container"
+          style={{ maxHeight: 'calc(100vh - 66px)' }}
+      >
+        <Container>
+          <ProviderInfo item={props.item} />
+        </Container>
+      </div>
   </div>
 );
 

@@ -1,55 +1,103 @@
 import React, { useState } from 'react';
-import Navbar from 'react-bootstrap/NavBar';
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Nav from 'react-bootstrap/Nav';
-import {Link} from "react-router-dom";
-import { providerRoute } from "./ProviderRoutes";
-import localizationStrings from '../utils/Localization';
-const logo = require('../assets/img/logo.png');
+import Link from "react-router-dom/Link";
+import Pacts from '../assets/img/pacts.png';
+import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
+import {providerRoute, templateRoute} from "./ProviderRoutes";
+import { authRoute } from "./ProviderRoutes";
+import { withFirebase } from "react-redux-firebase";
 
-const languageTitles = {
-    "en": "English",
-    "es": "Español",
-    "zh": "中文",
-};
+var classnames = require('classnames');
 
-const NavBar = (props) => {
-    const [isOpen, setIsOpen] = useState(false);
-    let { home, admin } = localizationStrings;
-  
-    const toggle = () => {
-      setIsOpen(!isOpen);
-    }
-  
-    return (
-            <div>
-                <Navbar expand="lg">
-                    <Navbar.Brand as={Link} to="/"><img src={logo} style={{width:100}} /></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="navbar-nav" />
-                    <Navbar.Collapse id="navbar-nav">
-                        <Nav className="ml-auto">
-                            <Nav.Link as={Link} to={providerRoute}>{admin}</Nav.Link>
-                            <NavDropdown
-                                alignRight
-                                title={languageTitles[localizationStrings.getLanguage()]}>
-                                {
-                                    Object.keys(languageTitles).map((key) =>
-                                        <NavDropdown.Item onClick={
-                                            () => {
-                                                localizationStrings.setLanguage(key);
-                                                props.update();
-                                            }
-                                        }>
-                                            {languageTitles[key]}
-                                        </NavDropdown.Item>
-                                    )
-                                }
-                            </NavDropdown>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Navbar>
+function NavBar(props) {
+
+  const [expand, setExpanded] = useState(false);
+
+  const logout = () => {
+      props.firebase.logout()
+          .then(function() {
+              props.history.push(authRoute)
+          })
+          .catch(function(error) {
+              console.log(error)
+          });
+  };
+
+  return (
+  <div>
+    <div className = {classnames("gray-overlay", { "none": !expand, "fadeIn": expand })} />
+    <div id="root">
+      <div
+          className = {classnames("logo", { "expanded": expand })}
+          onMouseLeave={() => setExpanded(false)}
+          onMouseEnter={() => setExpanded(true)}>
+        <a href= "/"><img src={Pacts}/></a>
+      </div>
+      <div
+        id="sidebar"
+        onMouseLeave={() => setExpanded(false)}
+        onMouseEnter={() => setExpanded(true)}>
+        <div>
+          <div className="cell">
+            <div className="icon">
+              <FiGrid/>
             </div>
-          )
-  }
+              <Link to={providerRoute}>
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                  PROVIDERS
+                </div>
+              </Link>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiFileText/>
+            </div>
+            <Link to={templateRoute}>
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                    TEMPLATE
+                </div>
+            </Link>
+          </div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiMap/>
+            </div>
+              <Link to="/pacts" target="_blank">
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                  VIEW MAP
+                </div>
+              </Link>
+          </div>
+        </div>
+        <div>
+          <div className = "cell">
+            <div className = "icon">
+              <FiBell/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+              HELP
+            </div>
+          </div>
+          {/*<div className = "cell">*/}
+          {/*  <div className = "icon">*/}
+          {/*    <FiSettings/>*/}
+          {/*  </div>*/}
+          {/*  <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>*/}
+          {/*    SETTINGS*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          <div className = "cell" onClick={logout}>
+            <div className = "icon">
+              <FiPower/>
+            </div>
+            <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+              LOGOUT
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  );
+}
 
-export default NavBar;
+export default withFirebase(NavBar);
