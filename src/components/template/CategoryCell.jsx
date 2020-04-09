@@ -67,6 +67,7 @@ export default ({ item, index, deleteCat, disableCat, enableCat, addOption, remo
                                     placeholder="Category Title"
                                     disabled={!item.active}
                                     value={title}
+                                    style={{ fontWeight: '700' }}
                                     onChange={(e) => {
                                         setTitle(e.target.value);
                                         rename(e, index)
