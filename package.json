@@ -31,7 +31,7 @@
         "immutability-helper": "^3.0.1",
         "isomorphic-fetch": "^2.2.1",
         "libphonenumber-js": "^1.7.26",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.13",
         "rc-steps": "^3.5.0",
         "react": "^16.8.6",
         "react-beautiful-dnd": "^13.0.0",
