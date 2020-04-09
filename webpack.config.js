@@ -103,7 +103,7 @@ const prodSettings = {
     output: {
         path: paths.build,
         filename: 'bundle.[hash].js',
-        publicPath: '/build/'
+        publicPath: './'
     },
     plugins: [
         new webpack.DefinePlugin({ 'process.env': {

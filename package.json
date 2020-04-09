@@ -5,7 +5,7 @@
     "license": "MIT",
     "description": "PACTS Project",
     "main": "server/server.js",
-    "homepage": ".",
+    "homepage": "./build",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/duhaime/react-boilerplate.git"
