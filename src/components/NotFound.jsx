@@ -3,7 +3,6 @@ import NavBar from './NavBar';
 
 export default () => (
     <div className="bg-white" style={{ height: "100vh" }}>
-        <NavBar />
         <div className="text-center">
             <div className="not-found-oops">
                 Oops!
