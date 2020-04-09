@@ -31,7 +31,7 @@ class ProviderRoutes extends Component {
             />
           );
         }
-        return <Component {...props} />;
+          return <Component {...props} />
       }}
       />
     );
@@ -41,16 +41,23 @@ class ProviderRoutes extends Component {
         { isLoaded(this.props.auth)
                     && (
                     <Switch>
-                      <PrivateRoute
-                          exact
-                          path={providerRoute}
-                          component={Dashboard} />
-                      <PrivateRoute
-                          path={formRoute}
-                          component={AddProvider} />
-                      <PrivateRoute
-                          path={templateRoute}
-                          component={Template} />
+                        <React.Fragment>
+                            <NavBar/>
+                            <div className="dashboard-content">
+                                <Switch>
+                                    <PrivateRoute
+                                        exact
+                                        path={providerRoute}
+                                        component={Dashboard} />
+                                    <PrivateRoute
+                                        path={formRoute}
+                                        component={AddProvider} />
+                                    <PrivateRoute
+                                        path={templateRoute}
+                                        component={Template} />
+                                </Switch>
+                            </div>
+                        </React.Fragment>
                       <Route
                           path={authRoute}
                           render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />

@@ -17,7 +17,7 @@ export default ({ item, index, deleteCat, disableCat, enableCat, addOption, remo
     const myRef = useRef(null);
 
     return (
-        <div className="category-cell-wrapper row">
+        <div className="category-cell-wrapper">
             <div className="category-button-column">
                 {
                     item.active
@@ -44,6 +44,7 @@ export default ({ item, index, deleteCat, disableCat, enableCat, addOption, remo
                             fontSize: 30,
                             height: 38,
                             borderRadius: 0,
+                            marginTop: 12,
                             padding: 0 }}
                         onClick={() => {
                             item.active
@@ -56,7 +57,6 @@ export default ({ item, index, deleteCat, disableCat, enableCat, addOption, remo
             </div>
             <div className="category-cell-container" style={{
                 opacity: item.active ? 1 : 0.5,
-                borderTopLeftRadius: item.active ? 5 : 0
             }}>
                 <div className="category-cell-head">
                     <Row>

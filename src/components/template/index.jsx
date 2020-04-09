@@ -129,7 +129,7 @@ export default withFirestore((props) => {
 
     if (isLoading) {
         return (
-            <div style={{ width: '100%' }}>
+            <div className="spinner-wrap">
                 <div className="spinner" />
             </div>
         );

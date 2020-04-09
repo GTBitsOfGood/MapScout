@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Link from "react-router-dom/Link";
 import Pacts from '../assets/img/pacts.png';
 import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
+import {providerRoute, templateRoute} from "./ProviderRoutes";
 
 var classnames = require('classnames');
 
@@ -10,11 +12,14 @@ function NavBar() {
 
   return (
   <div>
-    <div className = {classnames("gray-overlay", { "none": !expand})}></div>
+    <div className = {classnames("gray-overlay", { "none": !expand, "fadeIn": expand })} />
     <div id="root">
-    <div className = {expand? "logo-expanded" : "logo"}>
-              <a href= "/#/pacts"><img src={Pacts}/></a>
-          </div>
+      <div
+          className = {classnames("logo", { "expanded": expand })}
+          onMouseLeave={() => setExpanded(false)}
+          onMouseEnter={() => setExpanded(true)}>
+        <a href= "/"><img src={Pacts}/></a>
+      </div>
       <div
         id="sidebar"
         onMouseLeave={() => setExpanded(false)}
@@ -24,25 +29,31 @@ function NavBar() {
             <div className="icon">
               <FiGrid/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
-              PROVIDERS
-            </div>
+              <Link to={providerRoute}>
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                  PROVIDERS
+                </div>
+              </Link>
           </div>
           <div className = "cell">
             <div className = "icon">
               <FiFileText/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
-              TEMPLATE
-            </div>
+            <Link to={templateRoute}>
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                    TEMPLATE
+                </div>
+            </Link>
           </div>
           <div className = "cell">
             <div className = "icon">
               <FiMap/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
-              VIEW MAP
-            </div>
+              <Link to="/pacts">
+                <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+                  VIEW MAP
+                </div>
+              </Link>
           </div>
         </div>
         <div>
@@ -50,24 +61,24 @@ function NavBar() {
             <div className = "icon">
               <FiBell/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
+            <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
               HELP
             </div>
           </div>
-          <div className = "cell">
-            <div className = "icon">
-              <FiSettings/>
-            </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
-              SETTINGS
-            </div>
-          </div>
+          {/*<div className = "cell">*/}
+          {/*  <div className = "icon">*/}
+          {/*    <FiSettings/>*/}
+          {/*  </div>*/}
+          {/*  <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>*/}
+          {/*    SETTINGS*/}
+          {/*  </div>*/}
+          {/*</div>*/}
           <div className = "cell">
             <div className = "icon">
               <FiPower/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand })}>
-              LOG OUT
+            <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+              LOGOUT
             </div>
           </div>
         </div>

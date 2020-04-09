@@ -18,11 +18,6 @@ const SingleProvider = (props) => (
   <div>
     <div
       className="image-cover row-spaced mb-3"
-      style={{
-        background: 'linear-gradient(354.31deg, #4A537A 7.7%, #5C648D 98.05%)',
-      borderTopLeftRadius: '10px',
-      borderTopRightRadius: '10px',
-      paddingBottom: '20px'}}
     >
       <div>
         <ButtonToolbar>
@@ -49,9 +44,14 @@ const SingleProvider = (props) => (
         </ButtonToolbar>
       </div>
     </div>
-    <Container>
-      <ProviderInfo item={props.item} />
-    </Container>
+      <div
+          className="scroll-container"
+          style={{ maxHeight: 'calc(100vh - 66px)' }}
+      >
+        <Container>
+          <ProviderInfo item={props.item} />
+        </Container>
+      </div>
   </div>
 );
 

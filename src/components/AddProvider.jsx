@@ -68,7 +68,7 @@ class AddProvider extends Component {
             .get()
             .then((querySnapshot) => {
                 const idToData = {};
-                querySnapshot.forEach((doc) => { 
+                querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     idToData[doc.id] = {
                         name: data.name,
@@ -185,7 +185,7 @@ class AddProvider extends Component {
         const { width, step, completed, animate, isLoading, error } = this.state;
 
         if (isLoading)
-        return <div style={{ width: '100%' }}>
+        return <div className="spinner-wrap">
             <div className="spinner" />
         </div>;
 

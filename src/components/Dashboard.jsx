@@ -59,75 +59,68 @@ class Dashboard extends Component {
       //     });
       // });
   }
-    
+
   render() {
     const { isLoading, data, selectedIndex } = this.state;
     const { providers } = this.props;
 
     if (isLoading && !isLoaded(providers)) {
-      return (
-        <div style={{ width: '100%' }}>
+      return (<div className="spinner-wrap">
           <div className="spinner" />
         </div>
       );
     }
 
     return (
-      <React.Fragment>
-          <NavBar/>
-          <div className = "admin-dashboard">
-            <div className="admin-list-container">
-              <div className="list-wrapper">
-                  <div className="fixed-container">
-                    <Button
-                      block
-                      variant="secondary"
-                      onClick={() => this.props.selectItem({})}
-                      as={Link}
-                      to={formRoute}
-                    >
-                        +Add New Provider
-                    </Button>
-                  </div>
-                <div className="scroll-container">
-                    <ListGroup variant="flush">
-                        {
-                            !isEmpty(providers) &&
-                            providers.map((item, index) =>
-                                <ListGroup.Item
-                                    href={item.id}
-                                    key={index}
-                                    className="point"
-                                    onClick={() => this.setState({selectedIndex: index})}
-                                    active={selectedIndex === index}>
-                                      <h2>{item.facilityName}</h2>
-                                </ListGroup.Item>
-                            )
-                        }
-                    </ListGroup>
-                </div>
-              </div>
+      <div className = "admin-dashboard">
+        <div className="admin-list-container">
+          <div className="list-wrapper">
+            <div className="add-button-wrapper">
+                <Button
+                    block
+                    variant="primary"
+                    onClick={() => this.props.selectItem({})}
+                    as={Link}
+                    to={formRoute}
+                >
+                    + Add New Provider
+                </Button>
             </div>
             <div
                 className="scroll-container"
-                style={{ maxHeight: 'calc(100vh - 10px)' }}
-              >
-                <div className="admin-provider">
-                  {
-                                      providers && providers[selectedIndex]
-                                      && (
-                                      <SingleProvider
-                                        item={providers[selectedIndex]}
-                                        editProvider={() => this.props.selectItem(providers[selectedIndex])}
-                                        setLoading={() => this.setState({ isLoading: true })}
-                                        resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}
-                                      />
-                                      )
-                                  }
-                </div>
-              </div>
+                style={{ maxHeight: 'calc(100vh - 66px)' }}>
+                <ListGroup variant="flush">
+                    {
+                        !isEmpty(providers) &&
+                        providers.map((item, index) =>
+                            <ListGroup.Item
+                                href={item.id}
+                                key={index}
+                                className="point"
+                                onClick={() => this.setState({selectedIndex: index})}
+                                active={selectedIndex === index}>
+                                  <h2>{item.facilityName}</h2>
+                            </ListGroup.Item>
+                        )
+                    }
+                </ListGroup>
+            </div>
           </div>
-      </React.Fragment>
+        </div>
+          <div className="admin-provider">
+              {
+                  providers && providers[selectedIndex]
+                  && (
+                  <SingleProvider
+                    item={providers[selectedIndex]}
+                    editProvider={() => this.props.selectItem(providers[selectedIndex])}
+                    setLoading={() => this.setState({ isLoading: true })}
+                    resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}
+                  />
+                  )
+              }
+          </div>
+      </div>
     );
   }
 }

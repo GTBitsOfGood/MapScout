@@ -469,7 +469,9 @@ const Index = (props) => {
     const condition = width > 768;
 
     if (isLoading || !isLoaded(activeProviders))
-        return <div className = "spinner" />;
+        return <div className="spinner-wrap">
+            <div className = "spinner" />
+        </div>;
 
     return (
         <div className = {classNames("bg-white", {"overflow-scroll": !condition})} >
