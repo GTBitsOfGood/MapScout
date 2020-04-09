@@ -1,4 +1,6 @@
 import React, { Component, Fragment, useState, useEffect, useRef } from 'react';
+import InputGroup from "react-bootstrap/InputGroup";
+import FormControl from "react-bootstrap/FormControl";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
@@ -9,13 +11,13 @@ const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-
     return result;
 };
 
 export default withFirestore((props) => {
 
     const [categories, setCategories] = useState([]);
+    const [newCatName, setNewCatName] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -54,21 +56,23 @@ export default withFirestore((props) => {
         setCategories(items);
     }
 
-    async function changeType(type, item) {
+    async function changeType(type, index) {
         setIsLoading(true);
-        let point = await categories.find(x => x === item);
+        let point = await categories[index];
         point.select_type = type;
         setIsLoading(false);
     }
 
-    function rename(e, item) {
-        let point = categories.find(x => x === item);
+    async function rename(e, index) {
+        const items = categories;
+        let point = items[index];
         point.name = e.target.value;
+        setCategories(items);
     }
 
-    async function addOption(name, item) {
+    async function addOption(name, index) {
         setIsLoading(true);
-        let point = categories.find(x => x === item);
+        let point = categories[index];
         if (point.options.findIndex(x => x.label.toLowerCase() === name.toLowerCase()) === -1) {
             await point.options.push({
                 label: name,
@@ -78,17 +82,48 @@ export default withFirestore((props) => {
         setIsLoading(false);
     }
 
-    async function removeOption(index, item) {
+    async function removeOption(i, index) {
         setIsLoading(true);
-        let point = categories.find(x => x === item);
-        await point.options.splice(index, 1);
+        let point = categories[index];
+        await point.options.splice(i, 1);
         setIsLoading(false);
     }
 
-    async function deleteCat(item) {
+    function disableCat(index) {
+        const items = reorder(
+            categories,
+            index,
+            categories.length - 1);
+        items[categories.length - 1].active = false;
+        items.map((item, i) => {
+            item.priority = i;
+        });
+        setCategories(items);
+    }
+
+    async function enableCat(index) {
         setIsLoading(true);
-        let point = categories.findIndex(x => x === item);
-        await categories.splice(point, 1);
+        let point = await categories[index];
+        point.active = true;
+        setIsLoading(false);
+    }
+
+    async function deleteCat(index) {
+        setIsLoading(true);
+        await categories.splice(index, 1);
+        setIsLoading(false);
+    }
+
+    async function createNewCat() {
+        setIsLoading(true);
+        await categories.unshift({
+            name: newCatName,
+            select_type: 2,
+            options: [],
+            active: true,
+            team: "pacts"
+        });
+        setNewCatName("");
         setIsLoading(false);
     }
 
@@ -111,6 +146,23 @@ export default withFirestore((props) => {
                     </Button>
                 </div>
                 <br />
+                <InputGroup>
+                    <FormControl
+                        value={newCatName}
+                        onChange={(e) => setNewCatName(e.target.value)}
+                        type="text"
+                        placeholder="Create New Category"/>
+                    <InputGroup.Append>
+                        <Button
+                            onClick={() => {
+                                createNewCat();
+                            }}
+                            variant="primary">
+                            Add
+                        </Button>
+                    </InputGroup.Append>
+                </InputGroup>
+                <br />
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(provided, snapshot) => (
@@ -132,6 +184,9 @@ export default withFirestore((props) => {
                                             >
                                                 <CategoryCell
                                                     item={item}
+                                                    index={index}
+                                                    disableCat={disableCat}
+                                                    enableCat={enableCat}
                                                     deleteCat={deleteCat}
                                                     changeType={changeType}
                                                     rename={rename}

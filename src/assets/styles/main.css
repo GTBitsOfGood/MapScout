@@ -735,14 +735,13 @@ html {
     flex: 1;
     flex-direction: column;
     background-color: #F8F9FA;
-    border-radius: 5px;
+    border-radius: 5px 5px 5px 0;
     padding: 8px 12px;
     transition: border-left 200ms;
 }
 
 .category-cell-wrapper:hover .category-cell-container {
     border-left: solid #0069D9 10px;
-    border-bottom-left-radius: 0;
 }
 
 .add-option {
