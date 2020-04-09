@@ -42,7 +42,7 @@ class ProviderRoutes extends Component {
         { isLoaded(this.props.auth)
             && (
             <Switch>
-                <PrivateRoute path={providerRoute}>
+                <Route path={providerRoute}>
                     <React.Fragment>
                         <NavBar/>
                         <div className="dashboard-content">
@@ -60,7 +60,7 @@ class ProviderRoutes extends Component {
                             </Switch>
                         </div>
                     </React.Fragment>
-                </PrivateRoute>
+                </Route>
                 <Route
                     exact
                     path={authRoute}
