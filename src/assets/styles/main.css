@@ -557,13 +557,11 @@ html {
 }
 
 .modalHeader h5 {
-    font-family: Avenir Heavy;
     font-size: 15px;
 }
 
 .image-cover h2 {
     color: white;
-    font-family: Avenir;
     padding-left: 2vw;
     font-size: 20px;
 }
@@ -576,7 +574,6 @@ html {
     font-size: 13px;
 }
 .desc-Box h3{
-    font-family: Avenir Heavy;
     font-size: 20px;
     font-weight: 800;
 }
