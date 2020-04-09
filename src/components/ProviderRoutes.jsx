@@ -10,12 +10,13 @@ import Dashboard from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
 import Template from "./template/index";
+import NotFound from "./NotFound";
 
-export const providerRoute = '/';
-export const formRoute = '/provider';
-export const authRoute = '/auth';
+export const providerRoute = '/provider';
+export const formRoute = '/provider/add';
+export const authRoute = '/';
 export const pwdRoute = '/forgot';
-export const templateRoute = '/template';
+export const templateRoute = '/provider/template';
 
 class ProviderRoutes extends Component {
   render() {
@@ -39,33 +40,37 @@ class ProviderRoutes extends Component {
     return (
       <div>
         { isLoaded(this.props.auth)
-                    && (
-                    <Switch>
-                        <React.Fragment>
-                            <NavBar/>
-                            <div className="dashboard-content">
-                                <Switch>
-                                    <PrivateRoute
-                                        exact
-                                        path={providerRoute}
-                                        component={Dashboard} />
-                                    <PrivateRoute
-                                        path={formRoute}
-                                        component={AddProvider} />
-                                    <PrivateRoute
-                                        path={templateRoute}
-                                        component={Template} />
-                                </Switch>
-                            </div>
-                        </React.Fragment>
-                      <Route
-                          path={authRoute}
-                          render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />
-                      <Route
-                          path={pwdRoute}
-                          component={PasswordForgetForm} />
-                    </Switch>
-                    )}
+            && (
+            <Switch>
+                <PrivateRoute path={providerRoute}>
+                    <React.Fragment>
+                        <NavBar/>
+                        <div className="dashboard-content">
+                            <Switch>
+                                <PrivateRoute
+                                    exact
+                                    path={providerRoute}
+                                    component={Dashboard} />
+                                <PrivateRoute
+                                    path={formRoute}
+                                    component={AddProvider} />
+                                <PrivateRoute
+                                    path={templateRoute}
+                                    component={Template} />
+                            </Switch>
+                        </div>
+                    </React.Fragment>
+                </PrivateRoute>
+                <Route
+                    exact
+                    path={authRoute}
+                    render={() => <Auth onSubmit={() => this.props.history.push(providerRoute)} />} />
+                <Route
+                    path={pwdRoute}
+                    component={PasswordForgetForm} />
+                <Route exact path="*" component={NotFound} />
+            </Switch>
+            )}
       </div>
     );
   }

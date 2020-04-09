@@ -11,7 +11,6 @@ const routes = (
       <Switch>
         <Route path="/pacts" component={App} />
         <ProviderRoutes/>
-        <Route component={NotFound} />
       </Switch>
     </BrowserRouter>
   </AppWrapper>
