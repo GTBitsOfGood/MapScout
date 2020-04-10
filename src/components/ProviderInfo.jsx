@@ -15,38 +15,6 @@ import {FiGlobe, FiPhone} from 'react-icons/fi';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
-  const [categories, setCategories] = useState({});
-
-  useEffect(() => {
-    async function fetchData() {
-     try {
-      const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
-      setImage(res.url) // how would I handle the errors???
-     } catch (e) {
-       console.log(e);
-     }
-     const { firestore } = props;
-     const collections = firestore.collection("categories");
-     const data = await collections
-         .where("active", "==", true)
-         .where("select_type", "in", [1, 2])
-         .get()
-         .then((querySnapshot) => {
-             const idToData = {};
-             querySnapshot.forEach((doc) => {
-                 const docData = doc.data();
-                 idToData[doc.id] = {
-                     name: docData.name,
-                     options: docData.options,
-                     priority: docData.priority,
-                 };
-             });
-             return idToData;
-         });
-     setCategories(data);
-    }
-    fetchData();
-  },[])
 
   return (
   <div style = {{padding: "1vh 4vw"}}>
@@ -151,16 +119,16 @@ const ProviderInfo = (props) => {
 
     <div className = "modalHeader">
       {
-        Object.keys(categories)
-          .filter((key) => props.item[key])
-          .map((key) => {
+        props.categories
+          .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
+          .map((category) => {
           return (
             <div>
-              <h5>{categories[key].name}</h5>
+              <h5>{category.name}</h5>
               <hr className="modal-hr" />
               <div>
-                {props.item[key].map((selected, index) => {
-                  if (index !== props.item[key].length - 1) {
+                {props.item[category.id].map((selected, index) => {
+                  if (index !== props.item[category.id].length - 1) {
                     return (
                       <div className="modal-text">
                         {`${selected}, `}

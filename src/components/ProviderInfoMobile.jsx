@@ -15,34 +15,7 @@ import {FiGlobe, FiPhone} from 'react-icons/fi';
 
 var classNames = require('classnames');
 
-const ProviderInfo = (props) => {
-  const [categories, setCategories] = useState({});
-
-  useEffect(() => {
-    async function fetchData() {
-     const { firestore } = props;
-     const collections = firestore.collection("categories");
-     const data = await collections
-         .where("active", "==", true)
-         .where("select_type", "in", [1, 2])
-         .get()
-         .then((querySnapshot) => {
-             const idToData = {};
-             querySnapshot.forEach((doc) => {
-                 const docData = doc.data();
-                 idToData[doc.id] = {
-                     name: docData.name,
-                     options: docData.options,
-                     priority: docData.priority,
-                 };
-             });
-             return idToData;
-         });
-     setCategories(data);
-    }
-    fetchData();
-  },[])
-  return (
+const ProviderInfo = (props) => (
     <div>
         <div class = "modal-map">
       <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x200&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
@@ -133,16 +106,16 @@ const ProviderInfo = (props) => {
 
       <div className = "modalHeader">
       {
-        Object.keys(categories)
-          .filter((key) => props.item[key])
-          .map((key) => {
+        props.categories
+          .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
+          .map((category) => {
           return (
             <div>
-              <h5>{categories[key].name}</h5>
+              <h5>{category.name}</h5>
               <hr className="modal-hr" />
               <div>
-                {props.item[key].map((selected, index) => {
-                  if (index !== props.item[key].length - 1) {
+                {props.item[category.id].map((selected, index) => {
+                  if (index !== props.item[category.id].length - 1) {
                     return (
                       <div className="modal-text">
                         {`${selected}, `}
@@ -176,8 +149,7 @@ const ProviderInfo = (props) => {
     </div>
     </div>
     </div>
-  );
-}
+  )
 
 function calculateHours(props) {
   var rows = []

@@ -22,7 +22,8 @@ export default withFirestore((props) => {
     const [newCatName, setNewCatName] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [dummy, setDummy] = useState({
+    const [defaultCategories, setDefaultCategories] = useState([]);
+    const staticData = {
         id:"Preview",
         address: ["123 Fake St, Philadelphia, PA 19133"],
         ages: ["Children","Adolescents","Preteens"],
@@ -38,19 +39,22 @@ export default withFirestore((props) => {
         phoneNum: ["(123) 456-7890"],
         team: "pacts",
         website: ["https://www.test.org"]
-    });
+    }
+    const [dummy, setDummy] = useState(staticData);
 
     useEffect(() => {
         fetchData();
     }, []);
 
     useEffect(() => {
-        const newDummy = { ...dummy };
+        const newDummy = { ...staticData };
         categories.forEach((category) => {
-            newDummy[category.id] = category.options.map(({ value }) => value);
+            newDummy[category.id || category.name] = category.options.map(({ value }) => value);
         })
         setDummy(newDummy);
-    }, [categories])
+        console.log(newDummy);
+        console.log(categories)
+    }, [JSON.stringify(categories)])
 
     async function fetchData() {
         const {firestore} = props;
@@ -67,6 +71,7 @@ export default withFirestore((props) => {
             });
         arr.sort((a, b) => a.priority - b.priority);
         setCategories(arr);
+        setDefaultCategories([...arr]);
         setIsLoading(false)
     }
 
@@ -150,10 +155,15 @@ export default withFirestore((props) => {
             select_type: 2,
             options: [],
             active: true,
-            team: "pacts"
+            team: "pacts",
+            id: newCatName,
         });
         setNewCatName("");
         setIsLoading(false);
+    }
+
+    function resetCategories() {
+        setCategories(defaultCategories);
     }
 
     if (isLoading) {
@@ -169,14 +179,27 @@ export default withFirestore((props) => {
             <Container className="box">
                 <div className="row-spaced">
                     <h2>Resource Template</h2>
-                    <Button
-                        variant="primary"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setShowModal(true);
-                        }}>
-                        Save Changes
-                    </Button>
+                    <div>
+                        <Button
+                            variant="outline-primary"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                resetCategories();
+                            }}
+                            className="mr-2"
+                        >
+                            Reset Changes
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setShowModal(true);
+                            }}
+                        >
+                            Preview
+                        </Button>
+                    </div>
                 </div>
                 <br />
                 <InputGroup>
@@ -184,13 +207,15 @@ export default withFirestore((props) => {
                         value={newCatName}
                         onChange={(e) => setNewCatName(e.target.value)}
                         type="text"
-                        placeholder="Create New Category"/>
+                        placeholder="Create New Category"
+                    />
                     <InputGroup.Append>
                         <Button
                             onClick={() => {
                                 createNewCat();
                             }}
-                            variant="primary">
+                            variant="primary"
+                        >
                             Add
                         </Button>
                     </InputGroup.Append>
@@ -203,17 +228,21 @@ export default withFirestore((props) => {
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
                             >
-                                {
-                                    categories.map((item, index) => <Draggable
+                                {categories.map((item, index) => (
+                                    <Draggable
                                         key={item.name}
                                         draggableId={item.name}
-                                        index={index}>
+                                        index={index}
+                                    >
                                         {(provided, snapshot) => (
                                             <div
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
-                                                style={provided.draggableProps.style}
+                                                style={
+                                                    provided.draggableProps
+                                                        .style
+                                                }
                                             >
                                                 <CategoryCell
                                                     item={item}
@@ -225,44 +254,40 @@ export default withFirestore((props) => {
                                                     rename={rename}
                                                     addOption={addOption}
                                                     removeOption={removeOption}
-                                                    isDragged={snapshot.isDragging}/>
+                                                    isDragged={
+                                                        snapshot.isDragging
+                                                    }
+                                                />
                                             </div>
-                                            )
-                                        }
-                                    </Draggable>)
-                                }
+                                        )}
+                                    </Draggable>
+                                ))}
                                 {provided.placeholder}
                             </div>
-                        )
-                        }
+                        )}
                     </Droppable>
                 </DragDropContext>
-                <Modal
-                    show = { showModal }
-                    dialogClassName = "myModal"
-                    scrollable >
+                <Modal show={showModal} dialogClassName="myModal" scrollable>
                     <Modal.Header
-                        className = "image-cover"
-                        style = {{ backgroundColor: "#2F80ED" }} >
+                        className="image-cover"
+                        style={{ backgroundColor: "#2F80ED" }}
+                    >
                         <div className="ml-auto">
-                            <Button 
-                                variant="danger"
+                            <Button
+                                variant="outline-light"
                                 onClick={() => setShowModal(false)}
-                                className="mr-2" >
+                                className="mr-2"
+                            >
                                 Cancel
                             </Button>
-                            <Button
-                                variant="light" >
-                                Accept
-                            </Button>
+                            <Button variant="light">Save Changes</Button>
                         </div>
                     </Modal.Header>
-                    <Modal.Body
-                        className = "modal-body" >
-                        <ProviderInfo item = { dummy }/>
+                    <Modal.Body className="modal-body">
+                        <ProviderInfo item={dummy} categories={categories}/>
                     </Modal.Body>
                 </Modal>
             </Container>
         </div>
-    )
+    );
 });
