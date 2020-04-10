@@ -7,11 +7,16 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import API_KEY from "../config/keys";
+import { withFirestore } from "react-redux-firebase";
+import { compose } from "redux";
+import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
 const ProviderInfo = (props) => {
-  const [image, setImage] = useState("bog")
+  const [image, setImage] = useState("bog");
+  const [categories, setCategories] = useState({});
+
   useEffect(() => {
     async function fetchData() {
      try {
@@ -20,6 +25,25 @@ const ProviderInfo = (props) => {
      } catch (e) {
        console.log(e);
      }
+     const { firestore } = props;
+     const collections = firestore.collection("categories");
+     const data = await collections
+         .where("active", "==", true)
+         .where("select_type", "in", [1, 2])
+         .get()
+         .then((querySnapshot) => {
+             const idToData = {};
+             querySnapshot.forEach((doc) => {
+                 const docData = doc.data();
+                 idToData[doc.id] = {
+                     name: docData.name,
+                     options: docData.options,
+                     priority: docData.priority,
+                 };
+             });
+             return idToData;
+         });
+     setCategories(data);
     }
     fetchData();
   },[])
@@ -126,115 +150,32 @@ const ProviderInfo = (props) => {
     <br />
 
     <div className = "modalHeader">
-    <div>
-      <h5>Languages Spoken</h5>
-      <hr className="modal-hr" />
-      <div>
-        {props.item.languages.map((location, index) => {
-          if (index !== props.item.languages.length - 1) {
-            return (
-              <div className="modal-text">
-                {location}
-,
-                {' '}
+      {
+        Object.keys(categories)
+          .filter((key) => props.item[key])
+          .map((key) => {
+          return (
+            <div>
+              <h5>{categories[key].name}</h5>
+              <hr className="modal-hr" />
+              <div>
+                {props.item[key].map((selected, index) => {
+                  if (index !== props.item[key].length - 1) {
+                    return (
+                      <div className="modal-text">
+                        {`${selected}, `}
+                      </div>
+                    );
+                  }
+                  return <div className="modal-text">{selected}</div>;
+                })}
               </div>
-            );
-          }
-          return <div className="modal-text">{location}</div>;
-        })}
-      </div>
-    </div>
-    <br />
-
-    <div>
-      <h5>Ages</h5>
-      <hr className="modal-hr" />
-      {props.item.ages.map((age, index) => {
-        if (index !== props.item.ages.length - 1) {
-          return (
-            <div className="modal-text">
-              {age}
-,
-              {' '}
+              <br />
             </div>
           );
-        }
-        return <div className="modal-text">{age}</div>;
-      })}
-    </div>
-    <br />
+        })
+      }
 
-    <div>
-      <h5>Insurance Type Accepted</h5>
-      <hr className="modal-hr" />
-      {props.item.insurance.map((insur, index) => {
-        if (index !== props.item.insurance.length - 1) {
-          return (
-            <div className="modal-text">
-              {insur}
-,
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{insur}</div>;
-      })}
-    </div>
-    <br />
-
-    <div>
-      <h5>Service Types</h5>
-      <hr className="modal-hr" />
-      {props.item.serviceType.map((service, index) => {
-        if (index !== props.item.serviceType.length - 1) {
-          return (
-            <div className="modal-text">
-              {service}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{service}</div>;
-      })}
-    </div>
-    <br />
-
-    <div>
-      <h5>Therapy Types</h5>
-      <hr className="modal-hr" />
-      {props.item.therapyTypes.map((therapy, index) => {
-        if (index !== props.item.therapyTypes.length - 1) {
-          return (
-            <div className="modal-text">
-              {therapy}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{therapy}</div>;
-      })}
-    </div>
-    <br />
-
-    <div>
-      <h5>Specializations</h5>
-      <hr className="modal-hr" />
-      {props.item.specializations.map((special, index) => {
-        if (index !== props.item.specializations.length - 1) {
-          return (
-            <div className="modal-text">
-              {special}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{special}</div>;
-      })}
-    </div>
-    <br />
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
@@ -334,4 +275,10 @@ function formatTime(arr, time, index) {
 }
 
 
-export default ProviderInfo;
+export default compose(
+    withFirestore,
+    connect((state) => ({
+        providers: state.firestore.ordered.providers,
+        firebase: state.firebase,
+    }))
+)(ProviderInfo);

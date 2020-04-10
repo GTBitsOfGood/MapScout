@@ -78,7 +78,6 @@ const Index = (props) => {
                 });
                 return idToData;
             });
-        console.log(data);
         const filtersObj = {};
 
         Object.keys(data).forEach((id) => {

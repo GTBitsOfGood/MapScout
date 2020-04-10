@@ -4,8 +4,10 @@ import FormControl from "react-bootstrap/FormControl";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 import {withFirestore} from "react-redux-firebase";
 import CategoryCell from "./CategoryCell";
+import ProviderInfo from "../ProviderInfo";
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -19,10 +21,36 @@ export default withFirestore((props) => {
     const [categories, setCategories] = useState([]);
     const [newCatName, setNewCatName] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [dummy, setDummy] = useState({
+        id:"Preview",
+        address: ["123 Fake St, Philadelphia, PA 19133"],
+        ages: ["Children","Adolescents","Preteens"],
+        buildingNum: [],
+        childcare: [false],
+        facilityName: "Preview",
+        hours: {"Friday":[28800,75600],"Monday":[28800,75600],"Saturday":[32400,61200],"Sunday":null,"Thursday":[28800,75600],"Tuesday":[28800,75600],"Wednesday":[28800,75600]},
+        image: "modalimage.png",
+        imageURL: "https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8",
+        latitude: 39.990206,
+        longitude: -75.136872,
+        notes: [],
+        phoneNum: ["(123) 456-7890"],
+        team: "pacts",
+        website: ["https://www.test.org"]
+    });
 
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const newDummy = { ...dummy };
+        categories.forEach((category) => {
+            newDummy[category.id] = category.options.map(({ value }) => value);
+        })
+        setDummy(newDummy);
+    }, [categories])
 
     async function fetchData() {
         const {firestore} = props;
@@ -33,6 +61,7 @@ export default withFirestore((props) => {
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
+                    data.id = doc.id;
                     arr.push(data);
                 });
             });
@@ -141,7 +170,11 @@ export default withFirestore((props) => {
                 <div className="row-spaced">
                     <h2>Resource Template</h2>
                     <Button
-                        variant="primary">
+                        variant="primary"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setShowModal(true);
+                        }}>
                         Save Changes
                     </Button>
                 </div>
@@ -204,6 +237,31 @@ export default withFirestore((props) => {
                         }
                     </Droppable>
                 </DragDropContext>
+                <Modal
+                    show = { showModal }
+                    dialogClassName = "myModal"
+                    scrollable >
+                    <Modal.Header
+                        className = "image-cover"
+                        style = {{ backgroundColor: "#2F80ED" }} >
+                        <div className="ml-auto">
+                            <Button 
+                                variant="danger"
+                                onClick={() => setShowModal(false)}
+                                className="mr-2" >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="light" >
+                                Accept
+                            </Button>
+                        </div>
+                    </Modal.Header>
+                    <Modal.Body
+                        className = "modal-body" >
+                        <ProviderInfo item = { dummy }/>
+                    </Modal.Body>
+                </Modal>
             </Container>
         </div>
     )
