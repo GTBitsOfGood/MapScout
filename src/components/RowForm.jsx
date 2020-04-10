@@ -36,9 +36,9 @@ const RowForm = (props) => {
         image: 'modalimage.png',
         imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
     };
-    
+
     const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
-    
+
     useEffect(() => {
         const itemFields = Object.keys(props.filters);
         itemFields.forEach((field) => { defaultItem[field] = []; });
@@ -236,7 +236,7 @@ const RowForm = (props) => {
                 return(
                     <Fragment>
                         {
-                            Object.entries(props.filters).map(([key, { name, options }]) => 
+                            Object.entries(props.filters).map(([key, { name, options }]) =>
                                 <Form.Group key={key}>
                                     <Form.Label>{name}</Form.Label>
                                     <MultiSelect
@@ -250,25 +250,17 @@ const RowForm = (props) => {
                                             setItem(newItem);
                                             props.setItem(newItem);
                                         }}
-                                    />          
+                                    />
                                 </Form.Group>
                             )
                         }
-                        <Form.Group>
-                            <Form.Check
-                                name="epic"
-                                value={item.epic[0]}
-                                onChange={handleInputChange}
-                                type="checkbox"
-                                label="EPIC Designation" />
-                        </Form.Group>
                     </Fragment>
                 );
             case 3:
                 return(
                 <Fragment>
                         {
-                            Object.entries(props.descriptions).map(([key, { name, options }]) => 
+                            Object.entries(props.descriptions).map(([key, { name, options }]) =>
                                 <Form.Group key={key}>
                                     <Form.Label>{name}</Form.Label>
                                     <Form.Control as="textarea"/>
@@ -281,7 +273,7 @@ const RowForm = (props) => {
                 return(
                 <Fragment>
                     {
-                    Object.entries(props.categories).map(([key, { name, options }]) => 
+                    Object.entries(props.categories).map(([key, { name, options }]) =>
                                 <Form.Group key={key}>
                                     <Form.Label>{name}</Form.Label>
                                     <Select
@@ -301,9 +293,9 @@ const RowForm = (props) => {
                                 </Form.Group>
                             )
                     }
-                    
+
                 </Fragment>
-                
+
                 );
             default:
                 return;
