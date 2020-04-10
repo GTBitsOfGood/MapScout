@@ -5,7 +5,7 @@
     "license": "MIT",
     "description": "PACTS Project",
     "main": "server/server.js",
-    "homepage": "./build",
+    "homepage": "www.mapscout.io",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/duhaime/react-boilerplate.git"
