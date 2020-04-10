@@ -23,7 +23,7 @@ const ProviderInfo = (props) => {
     }
     fetchData();
   },[])
-  
+
   return (
   <div style = {{padding: "1vh 4vw"}}>
     <Row>
@@ -238,18 +238,12 @@ const ProviderInfo = (props) => {
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
     {props.item.childcare[0] ? (
       <h5>
-ChildCare Available 
+ChildCare Available
         <FaCheck />
         <br />
       </h5>
     ) : <div />}
-    {props.item.epic[0] ? (
-      <h5>
-EPIC Designation
-        <FaCheck />
-        <br />
-      </h5>
-    ) : <div />}
+
   </div>
   </div>
 )};
