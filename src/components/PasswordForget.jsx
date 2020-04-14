@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
 import localizationStrings from "../utils/Localization";
+import { authRoute } from "./ProviderRoutes";
 
 const classNames = require("classnames");
 
@@ -107,7 +108,7 @@ class PasswordForgetFormBase extends Component {
                             <div className="mb-4">{sent}</div>
                             <Button
                                 variant="primary"
-                                href="#/providers/auth"
+                                href={authRoute}
                                 block
                             >
                                 {login}

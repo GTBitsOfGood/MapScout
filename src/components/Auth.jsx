@@ -58,7 +58,13 @@ class Auth extends Component {
         return(
             <Container fluid>
                 <div id="auth-root" className={classNames('box', { translate: animate })}>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form 
+                        onSubmit={this.handleSubmit}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                this.handleSubmit(e);
+                            }
+                        }}>
                         <div className="mb-4">
                             <h2>{login}</h2>
                         </div>
