@@ -193,6 +193,7 @@ h2 {
     padding-top: 20px;
     border-color: white;
     margin-left: 10px;
+    border-radius: 5px !important;
 }
 
 .point h2 {
@@ -566,8 +567,14 @@ h2 {
 }
 
 .image-cover {
-    background-color: #5C648D;
-    padding: 14px 2rem;
+    display: flex;
+    position: absolute;
+    z-index: 100;
+    right: 0;
+    flex-direction: row-reverse;
+    padding: 15px 2rem;
+    padding-bottom: 5px;
+    border-radius: 5px;
 }
 
 .modalHeader {
@@ -678,7 +685,6 @@ h2 {
 }
 
 .add-button-wrapper {
-    background-color: #5C648D;
     padding: 8px;
     width: 30vw;
 }
