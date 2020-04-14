@@ -39,7 +39,8 @@ export default withFirestore((props) => {
         phoneNum: ["(123) 456-7890"],
         team: "pacts",
         website: ["https://www.test.org"]
-    }
+    };
+
     const [dummy, setDummy] = useState(staticData);
 
     useEffect(() => {
@@ -50,11 +51,9 @@ export default withFirestore((props) => {
         const newDummy = { ...staticData };
         categories.forEach((category) => {
             newDummy[category.id || category.name] = category.options.map(({ value }) => value);
-        })
+        });
         setDummy(newDummy);
-        console.log(newDummy);
-        console.log(categories)
-    }, [JSON.stringify(categories)])
+    }, [JSON.stringify(categories)]);
 
     async function fetchData() {
         const {firestore} = props;
@@ -71,7 +70,7 @@ export default withFirestore((props) => {
             });
         arr.sort((a, b) => a.priority - b.priority);
         setCategories(arr);
-        setDefaultCategories([...arr]);
+        setDefaultCategories(arr);
         setIsLoading(false)
     }
 
@@ -180,16 +179,16 @@ export default withFirestore((props) => {
                 <div className="row-spaced">
                     <h2>Resource Template</h2>
                     <div>
-                        <Button
-                            variant="outline-primary"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                resetCategories();
-                            }}
-                            className="mr-2"
-                        >
-                            Reset Changes
-                        </Button>
+                        {/*<Button*/}
+                        {/*    variant="outline-primary"*/}
+                        {/*    onClick={(e) => {*/}
+                        {/*        e.preventDefault();*/}
+                        {/*        resetCategories();*/}
+                        {/*    }}*/}
+                        {/*    className="mr-2"*/}
+                        {/*>*/}
+                        {/*    Reset Changes*/}
+                        {/*</Button>*/}
                         <Button
                             variant="primary"
                             onClick={(e) => {
@@ -269,7 +268,6 @@ export default withFirestore((props) => {
                 </DragDropContext>
                 <Modal show={showModal} dialogClassName="myModal" scrollable>
                     <Modal.Header
-                        className="image-cover"
                         style={{ backgroundColor: "#2F80ED" }}
                     >
                         <div className="ml-auto">

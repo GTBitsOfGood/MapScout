@@ -235,12 +235,10 @@ const Index = (props) => {
     const filterSearch = (filterVal) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
         let temp = props.providers;
-        console.log(distances)
-        console.log(temp);
         if (searchZip != null && searchZip.length === 5) {
             temp = zipProviders;
         }
-        temp = temp.filter((item) => regex.test(item.facilityName))
+        temp = temp.filter((item) => regex.test(item.facilityName));
         filterByTags(temp);
     };
 
@@ -332,6 +330,10 @@ const Index = (props) => {
     }
 
     function renderCell(item, index) {
+        let myDistance = null;
+        if (distances && distances.length > 0) {
+
+        }
         return (
             <div
                 className = "map-cell padder"
@@ -365,10 +367,11 @@ const Index = (props) => {
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                distances[item.facilityName] && //not getting detected
+                                myDistance
+                                &&
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                    { distances[item.facilityName] + ' mi' }
+                                    { myDistance + ' mi' }
                                 </small>
                             }
                         </div>
@@ -586,7 +589,6 @@ const Index = (props) => {
                                         dialogClassName = "myModal"
                                         scrollable >
                                         <Modal.Header
-                                            className = "image-cover"
                                             style = {{ backgroundColor: "#2F80ED" }}
                                             closeButton >
                                         </Modal.Header>
@@ -610,7 +612,7 @@ const Index = (props) => {
                                             </Modal.Header>
                                             <Modal.Body
                                                 className = "modal-body" >
-                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width} categories={categories}/>
+                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width={width} categories={categories}/>
                                             </Modal.Body>
                                     </Modal>
                                 }

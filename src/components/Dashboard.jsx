@@ -36,9 +36,11 @@ class Dashboard extends Component {
     }
 
     async componentDidMount(){
-        const { firestore, providers } = this.props;
+        const { firestore, providers, categories } = this.props;
         if ( !isLoaded(providers) ) {
-            await firestore.get('providers')
+            await firestore.get('providers');
+        }
+        if ( !isLoaded(categories) ) {
             await firestore.get('categories')
         }
         this.setState({isLoading: false});
@@ -60,7 +62,7 @@ class Dashboard extends Component {
 
   render() {
     const { isLoading, data, selectedIndex } = this.state;
-    const { providers } = this.props;
+    const { providers, categories } = this.props;
 
     if (isLoading && !isLoaded(providers)) {
       return (<div className="spinner-wrap">
@@ -111,6 +113,7 @@ class Dashboard extends Component {
                   && (
                   <SingleProvider
                     item={providers[selectedIndex]}
+                    categories={categories}
                     editProvider={() => this.props.selectItem(providers[selectedIndex])}
                     setLoading={() => this.setState({ isLoading: true })}
                     resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}

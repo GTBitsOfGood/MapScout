@@ -25,7 +25,9 @@ const ProviderInfo = (props) => {
      }
     }
     fetchData();
-  },[])
+  },[]);
+
+  const categoriesToUse = props.categories || [];
 
   return (
   <div style = {{padding: "1vh 4vw"}}>
@@ -63,7 +65,7 @@ const ProviderInfo = (props) => {
       <Row style = {{paddingTop: "20px", paddingRight: "19px"}}>
         <Col xs = {7}>
         <div className="modal-card-text">
-          <FaMapMarkerAlt size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
+          <FaMapMarkerAlt size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} />
           <div style = {{paddingLeft: "15px"}}>
             {props.item.address.toString().split(',').map((value, index) => {
               if (index === 0) {
@@ -84,14 +86,14 @@ const ProviderInfo = (props) => {
         </div>
 
         <div className="modal-card-text">
-          <FaPhone size = '20px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
+          <FaPhone size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} />
           <div style = {{paddingLeft: "15px"}}>
             {props.item.phoneNum.join(', ')}
           </div>
         </div>
 
         <div className="modal-card-text">
-          {props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} /> : <div />}
+          {props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
           {props.item.website[0] ? (
             <div style = {{paddingLeft: "15px"}}>
               <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
@@ -99,7 +101,7 @@ const ProviderInfo = (props) => {
           ) : <div />}
         </div>
         <div className = "modal-card-text">
-          <FaRegClock size = '20px'style = {{paddingTop: '5px'}, {color: "#007bff"}}/>
+          <FaRegClock size = '20px'style = {{paddingTop: '5px', color: "#007bff"}}/>
           <div className = 'modal-hours-container'>
           <Container>
             <h5>Hours</h5>
@@ -130,7 +132,7 @@ const ProviderInfo = (props) => {
 
     <div className = "modalHeader">
       {
-        props.categories
+          categoriesToUse
           .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
           .map((category) => {
           return (
@@ -156,13 +158,6 @@ const ProviderInfo = (props) => {
       }
 
     {/* TODO checkmarks for EPIC and Childcare change from alerts */}
-    {props.item.childcare[0] ? (
-      <h5>
-ChildCare Available
-        <FaCheck />
-        <br />
-      </h5>
-    ) : <div />}
 
   </div>
   </div>
@@ -194,7 +189,7 @@ function calculateHours(props) {
       let subchild = [<div>{abbrevDays[startandFinish[i]]} - {abbrevDays[startandFinish[i + 1]]}</div>]
     children.push(<Col className="modal-col-flex-end" sm = {5}>{subchild}</Col>)
     }
-    children.push(<Col className="modal-col-flex-start">{props.item.hours[days[startandFinish[i]]] ? props.item.hours[days[startandFinish[i]]].map((time, index) => formatTime(props.item.hours[days[startandFinish[i]]], time, index)) : 'CLOSED'}</Col>)
+    children.push(<Col className="modal-col-flex-start">{props.item.hours[days[startandFinish[i]]] ? props.item.hours[days[startandFinish[i]]].map((time, index) => formatTime(props.item.hours[days[startandFinish[i]]], time, index)) : 'CLOSED'}</Col>);
     rows.push(<Row>{children}</Row>)
   }
   return rows
