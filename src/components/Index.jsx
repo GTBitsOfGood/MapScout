@@ -332,7 +332,7 @@ const Index = (props) => {
     function renderCell(item, index) {
         let myDistance = null;
         if (distances && distances.length > 0) {
-
+            myDistance = distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName];
         }
         return (
             <div
