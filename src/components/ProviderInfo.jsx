@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 import {
-  FaMapMarkerAlt, FaCheck, FaRegClock
+  FaMapMarkerAlt, FaCheck, FaRegClock, FaPhone
 } from 'react-icons/fa';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -11,7 +11,7 @@ import { withFirestore } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
-import {FiGlobe, FiPhone} from 'react-icons/fi';
+import {FiGlobe} from 'react-icons/fi';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
@@ -60,7 +60,7 @@ const ProviderInfo = (props) => {
           </div>
         </Col>
       </Row>
-      <Row style = {{paddingTop: "20px"}}>
+      <Row style = {{paddingTop: "20px", paddingRight: "19px"}}>
         <Col xs = {7}>
         <div className="modal-card-text">
           <FaMapMarkerAlt size = '20px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
@@ -84,7 +84,7 @@ const ProviderInfo = (props) => {
         </div>
 
         <div className="modal-card-text">
-          <FiPhone size = '20px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
+          <FaPhone size = '20px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
           <div style = {{paddingLeft: "15px"}}>
             {props.item.phoneNum.join(', ')}
           </div>

@@ -12,7 +12,7 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
-import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -359,7 +359,7 @@ const Index = (props) => {
                         }
                     </h5>
                     <div style = {{ color: 'gray' }}>
-                        <FaMapPin /> { item.address[0] }
+                    <FaMapMarkerAlt size = "20px"/> { item.address[0] }
                         <div className = "row-spaced">
                             <div>
                                 <FaPhone /> { item.phoneNum.join(', ') }
