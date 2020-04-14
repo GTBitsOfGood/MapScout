@@ -42,6 +42,7 @@ const Index = (props) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeProviders, setActiveProviders] = useState(props.providers);
     const [tempProviders, setTempProviders] = useState(props.providers);
+    const [zipProviders, setZipProviders] = useState(props.providers);
     const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
@@ -57,7 +58,14 @@ const Index = (props) => {
     // set filterIds from firestore in useeffect
     useEffect(() => {
         fetchData();
+        setTempProviders(props.providers);
     }, []);
+
+    useEffect(() => {
+        if (isLoaded(props.providers)) {
+            setTempProviders(props.providers);
+        }
+    }, [props.providers]);
 
     async function fetchData() {
         const {firestore} = props;
@@ -78,7 +86,6 @@ const Index = (props) => {
                 });
                 return idToData;
             });
-        console.log(data);
         const filtersObj = {};
 
         Object.keys(data).forEach((id) => {
@@ -126,26 +133,15 @@ const Index = (props) => {
     };
 
     const filterByTags = (temp) => {
-            setTempProviders(temp);
-            //searchName && searchName.length > 0 ? tempProviders : props.providers
-            // let temp = searchName && searchName.length > 0 ? activeProviders : props.providers;
-            // -----> doesn't work, filterByTags will only loop thru previous activeProviders of any actionevent
-
-            // if (searchName && searchName.length > 0) {
-            //     temp = activePro
-            // }
-            Object.keys(filtersState).forEach(filterName => {
-                temp = temp.filter((provider) => {
-                    return provider[filterName]
-                        ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
-                        : false;
-                });
+        setTempProviders(temp);
+        Object.keys(filtersState).forEach(filterName => {
+            temp = temp.filter((provider) => {
+                return provider[filterName]
+                    ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
+                    : false;
             });
-            // if (searchName && searchName.length > 0) {
-            //     setTempProviders(temp);
-            // }
-            setActiveProviders(temp);
-
+        });
+        setActiveProviders(temp);
     };
 
     const filterZipcode = async (filterVal) => {
@@ -157,7 +153,6 @@ const Index = (props) => {
         let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
         var providerLat, providerLong;
         var filteredProviders = [];
-
 
         var R = 6371e3;
         const pi = Math.PI;
@@ -193,6 +188,8 @@ const Index = (props) => {
             filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
+        setActiveProviders(filterActiveProviders);
+        setZipProviders(filterActiveProviders);
     };
 
     const filterNormalFilters = (e) => {
@@ -218,10 +215,13 @@ const Index = (props) => {
     const filterSearch = (filterVal) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
         let temp = props.providers;
+        console.log(distances)
+        console.log(temp);
+        if (searchZip != null && searchZip.length === 5) {
+            temp = zipProviders;
+        }
         temp = temp.filter((item) => regex.test(item.facilityName))
-        //setActiveProviders(temp);
         filterByTags(temp);
-        //setTimeout(() => filterByTags(), 500);
     };
 
     const filterProviders = async(e) => {
