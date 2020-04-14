@@ -12,7 +12,7 @@ import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import ProviderInfo from "./ProviderInfo";
 import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
-import { FaMapPin, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -42,6 +42,7 @@ const Index = (props) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeProviders, setActiveProviders] = useState(props.providers);
     const [tempProviders, setTempProviders] = useState(props.providers);
+    const [zipProviders, setZipProviders] = useState(props.providers);
     const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
@@ -53,11 +54,19 @@ const Index = (props) => {
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
+    const [categories, setCategories] = useState([]);
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
         fetchData();
+        setTempProviders(props.providers);
     }, []);
+
+    useEffect(() => {
+        if (isLoaded(props.providers)) {
+            setTempProviders(props.providers);
+        }
+    }, [props.providers]);
 
     async function fetchData() {
         const {firestore} = props;
@@ -78,8 +87,26 @@ const Index = (props) => {
                 });
                 return idToData;
             });
-        console.log(data);
         const filtersObj = {};
+
+        const cat = await collections
+            .where("active", "==", true)
+            .where("select_type", "in", [1, 2])
+            .get()
+            .then((querySnapshot) => {
+                const arr = [];
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    arr.push({
+                        name: docData.name,
+                        options: docData.options,
+                        priority: docData.priority,
+                        id: doc.id,
+                    });
+                });
+                return arr;
+            });
+        setCategories(cat);
 
         Object.keys(data).forEach((id) => {
             filtersObj[id] = [];
@@ -126,26 +153,15 @@ const Index = (props) => {
     };
 
     const filterByTags = (temp) => {
-            setTempProviders(temp);
-            //searchName && searchName.length > 0 ? tempProviders : props.providers
-            // let temp = searchName && searchName.length > 0 ? activeProviders : props.providers;
-            // -----> doesn't work, filterByTags will only loop thru previous activeProviders of any actionevent
-
-            // if (searchName && searchName.length > 0) {
-            //     temp = activePro
-            // }
-            Object.keys(filtersState).forEach(filterName => {
-                temp = temp.filter((provider) => {
-                    return provider[filterName]
-                        ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
-                        : false;
-                });
+        setTempProviders(temp);
+        Object.keys(filtersState).forEach(filterName => {
+            temp = temp.filter((provider) => {
+                return provider[filterName]
+                    ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
+                    : false;
             });
-            // if (searchName && searchName.length > 0) {
-            //     setTempProviders(temp);
-            // }
-            setActiveProviders(temp);
-
+        });
+        setActiveProviders(temp);
     };
 
     const filterZipcode = async (filterVal) => {
@@ -157,7 +173,6 @@ const Index = (props) => {
         let filterLong = responseJson['results'][0]['geometry']['location']['lng'];
         var providerLat, providerLong;
         var filteredProviders = [];
-
 
         var R = 6371e3;
         const pi = Math.PI;
@@ -193,6 +208,8 @@ const Index = (props) => {
             filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
+        setActiveProviders(filterActiveProviders);
+        setZipProviders(filterActiveProviders);
     };
 
     const filterNormalFilters = (e) => {
@@ -218,10 +235,11 @@ const Index = (props) => {
     const filterSearch = (filterVal) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
         let temp = props.providers;
-        temp = temp.filter((item) => regex.test(item.facilityName))
-        //setActiveProviders(temp);
+        if (searchZip != null && searchZip.length === 5) {
+            temp = zipProviders;
+        }
+        temp = temp.filter((item) => regex.test(item.facilityName));
         filterByTags(temp);
-        //setTimeout(() => filterByTags(), 500);
     };
 
     const filterProviders = async(e) => {
@@ -312,6 +330,10 @@ const Index = (props) => {
     }
 
     function renderCell(item, index) {
+        let myDistance = null;
+        if (distances && distances.length > 0) {
+
+        }
         return (
             <div
                 className = "map-cell padder"
@@ -339,16 +361,17 @@ const Index = (props) => {
                         }
                     </h5>
                     <div style = {{ color: 'gray' }}>
-                        <FaMapPin /> { item.address[0] }
+                    <FaMapMarkerAlt size = "20px"/> { item.address[0] }
                         <div className = "row-spaced">
                             <div>
                                 <FaPhone /> { item.phoneNum.join(', ') }
                             </div>
                             {
-                                distances[item.facilityName] && //not getting detected
+                                myDistance
+                                &&
                                 <small>
                                     <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                    { distances[item.facilityName] + ' mi' }
+                                    { myDistance + ' mi' }
                                 </small>
                             }
                         </div>
@@ -566,13 +589,12 @@ const Index = (props) => {
                                         dialogClassName = "myModal"
                                         scrollable >
                                         <Modal.Header
-                                            className = "image-cover"
                                             style = {{ backgroundColor: "#2F80ED" }}
                                             closeButton >
                                         </Modal.Header>
                                         <Modal.Body
                                             className = "modal-body" >
-                                            <ProviderInfo item = { activeProviders[selectedIndex] }/>
+                                            <ProviderInfo item = { activeProviders[selectedIndex] } categories={categories}/>
                                         </Modal.Body>
                                     </Modal>
                                 }
@@ -590,7 +612,7 @@ const Index = (props) => {
                                             </Modal.Header>
                                             <Modal.Body
                                                 className = "modal-body" >
-                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
+                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width={width} categories={categories}/>
                                             </Modal.Body>
                                     </Modal>
                                 }

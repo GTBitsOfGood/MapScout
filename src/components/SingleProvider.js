@@ -46,10 +46,10 @@ const SingleProvider = (props) => (
     </div>
       <div
           className="scroll-container"
-          style={{ maxHeight: 'calc(100vh - 66px)' }}
+          style={{ maxHeight: '100vh', top: '0', paddingTop: 20}}
       >
         <Container>
-          <ProviderInfo item={props.item} />
+          <ProviderInfo item={props.item} categories={props.categories}/>
         </Container>
       </div>
   </div>

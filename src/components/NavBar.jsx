@@ -37,36 +37,36 @@ function NavBar(props) {
         onMouseLeave={() => setExpanded(false)}
         onMouseEnter={() => setExpanded(true)}>
         <div>
+        <Link to={providerRoute} style={{textDecoration: 'none'}}>
           <div className="cell">
             <div className="icon">
               <FiGrid/>
             </div>
-              <Link to={providerRoute}>
                 <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
                   PROVIDERS
                 </div>
-              </Link>
           </div>
+        </Link>
+        <Link to={templateRoute} style={{textDecoration: 'none'}}>
           <div className = "cell">
             <div className = "icon">
               <FiFileText/>
             </div>
-            <Link to={templateRoute}>
                 <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
                     TEMPLATE
                 </div>
-            </Link>
           </div>
+        </Link>
+        <Link to="/pacts" target="_blank" style={{textDecoration: 'none'}}>
           <div className = "cell">
             <div className = "icon">
               <FiMap/>
             </div>
-              <Link to="/pacts" target="_blank">
                 <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
                   VIEW MAP
                 </div>
-              </Link>
           </div>
+        </Link>
         </div>
         <div>
           <div className = "cell">
