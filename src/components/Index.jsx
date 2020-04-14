@@ -54,6 +54,7 @@ const Index = (props) => {
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
+    const [categories, setCategories] = useState([]);
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
@@ -87,6 +88,25 @@ const Index = (props) => {
                 return idToData;
             });
         const filtersObj = {};
+
+        const cat = await collections
+            .where("active", "==", true)
+            .where("select_type", "in", [1, 2])
+            .get()
+            .then((querySnapshot) => {
+                const arr = [];
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    arr.push({
+                        name: docData.name,
+                        options: docData.options,
+                        priority: docData.priority,
+                        id: doc.id,
+                    });
+                });
+                return arr;
+            });
+        setCategories(cat);
 
         Object.keys(data).forEach((id) => {
             filtersObj[id] = [];
@@ -572,7 +592,7 @@ const Index = (props) => {
                                         </Modal.Header>
                                         <Modal.Body
                                             className = "modal-body" >
-                                            <ProviderInfo item = { activeProviders[selectedIndex] }/>
+                                            <ProviderInfo item = { activeProviders[selectedIndex] } categories={categories}/>
                                         </Modal.Body>
                                     </Modal>
                                 }
@@ -590,7 +610,7 @@ const Index = (props) => {
                                             </Modal.Header>
                                             <Modal.Body
                                                 className = "modal-body" >
-                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width}/>
+                                                <ProviderInfoMobile item = { activeProviders[selectedIndex] } width = {width} categories={categories}/>
                                             </Modal.Body>
                                     </Modal>
                                 }

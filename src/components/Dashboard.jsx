@@ -49,9 +49,7 @@ class Dashboard extends Component {
   }
 
   changeLanguageToFalse = async() => {
-      console.log("hi")
       let firestore = this.props.firestore;
-      console.log(firestore)
       await firestore.update({collection: 'categories', doc: 'languages'},{active: false})
       // await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
       //     querySnapshot.forEach(function(doc) {

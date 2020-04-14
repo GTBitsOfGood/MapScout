@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaMapMarkerAlt, FaCheck, FaRegClock
 } from 'react-icons/fa';
@@ -7,230 +7,149 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import API_KEY from "../config/keys";
+import { withFirestore } from "react-redux-firebase";
+import { compose } from "redux";
+import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 
 var classNames = require('classnames');
 
 const ProviderInfo = (props) => (
-  <div>
-      <div class = "modal-map">
-    <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x200&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
-            + `&markers=${props.item.latitude},${props.item.longitude}`}/>
-            </div>
-  <div className = {classNames("modal-mobile-card")}>
-    <div style = {{padding: "1vh 4vw"}}>
-    <Row>
+    <div>
+        <div class = "modal-map">
+      <img src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=1&size=${props.width - 2}x200&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+              + `&markers=${props.item.latitude},${props.item.longitude}`}/>
+              </div>
+    <div className = {classNames("modal-mobile-card")}>
+      <div style = {{padding: "1vh 4vw"}}>
       <Row>
-          <div className = "desc-Box">
-            <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
-              <div style = {{paddingBottom: "25px"}}>
-                {props.item.therapyTypes.includes('Pri-CARE') &&
-                    <Badge
-                        className= "label"
-                        variant = "primary" >Pri-CARE</Badge>
-                }
-                {props.item.therapyTypes.includes('TF-CBT') &&
-                    <Badge
-                        className = "label"
-                        variant = "primary" >TF-CBT</Badge>
-                }
-              </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          </div>
-      </Row>
-      <Row style = {{paddingTop: "15px"}}>
-          <Col>
-          <Row>
-            <div className="modal-card-text"> 
-            <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
-            <div style = {{paddingLeft: "15px"}}>
-                {props.item.address.toString().split(',').map((value, index) => {
-                if (index === 0) {
-                    return <div style = {{display: 'inline'}}>{value},</div>;
-                } if (index === props.item.address.toString().split(',').length - 1) {
-                    return (
-                        <div style={{ display: 'inline' }}>
-                            {value}
-                        </div>
-                    );
-                }
-                if (index === 1) {
-                    return <div style={{ display: 'inline' }}>{`${value},`}</div>;
-                }
-                return `${value},`;
-                })}
-            </div>
-            </div>
-          </Row>
-          
-          <Row>
-            <div className="modal-card-text">
-            <FiPhone size = '25px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
-            <div style = {{paddingLeft: "15px"}}>
-                {props.item.phoneNum.join(', ')}
-            </div>
-            </div>
-          </Row>
-
-          <Row>
-            <div className="modal-card-text">
-            {props.item.website[0] ? <FiGlobe size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} /> : <div />}
-            {props.item.website[0] ? (
-                <div style = {{paddingLeft: "15px"}}>
-                <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+        <Row>
+            <div className = "desc-Box">
+              <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
+                <div style = {{paddingBottom: "25px"}}>
+                  {props.item.therapyTypes.includes('Pri-CARE') &&
+                      <Badge
+                          className= "label"
+                          variant = "primary" >Pri-CARE</Badge>
+                  }
+                  {props.item.therapyTypes.includes('TF-CBT') &&
+                      <Badge
+                          className = "label"
+                          variant = "primary" >TF-CBT</Badge>
+                  }
                 </div>
-            ) : <div />}
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             </div>
-          </Row>
-
-          <Row>
-            <div className = "modal-card-text">
-            <FaRegClock size = '25px' style = {{paddingTop: '5px'}, {color: "#007bff"}}/>
-            <div className = 'modal-hours-container'>
-                <h5>Hours</h5>
-                <hr className="modal-hr" />
-                {calculateHours(props)}
-            </div>
-            </div>
-          </Row>
-          </Col>
-      </Row>
-    </Row>
-    </div>
-    <br />
-
-    <div className = "modalHeader">
-    <div>
-      <h5>Languages Spoken</h5>
-      <hr className="modal-hr" />
-      <div>
-        {props.item.languages.map((location, index) => {
-          if (index !== props.item.languages.length - 1) {
-            return (
-              <div className="modal-text">
-                {location}
-,
-                {' '}
+        </Row>
+        <Row style = {{paddingTop: "15px"}}>
+            <Col>
+            <Row>
+              <div className="modal-card-text"> 
+              <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} />
+              <div style = {{paddingLeft: "15px"}}>
+                  {props.item.address.toString().split(',').map((value, index) => {
+                  if (index === 0) {
+                      return <div style = {{display: 'inline'}}>{value},</div>;
+                  } if (index === props.item.address.toString().split(',').length - 1) {
+                      return (
+                          <div style={{ display: 'inline' }}>
+                              {value}
+                          </div>
+                      );
+                  }
+                  if (index === 1) {
+                      return <div style={{ display: 'inline' }}>{`${value},`}</div>;
+                  }
+                  return `${value},`;
+                  })}
               </div>
-            );
-          }
-          return <div className="modal-text">{location}</div>;
-        })}
+              </div>
+            </Row>
+            
+            <Row>
+              <div className="modal-card-text">
+              <FiPhone size = '25px' style={{ paddingTop: '5px'}, {color: "#007bff"}} />
+              <div style = {{paddingLeft: "15px"}}>
+                  {props.item.phoneNum.join(', ')}
+              </div>
+              </div>
+            </Row>
+
+            <Row>
+              <div className="modal-card-text">
+              {props.item.website[0] ? <FiGlobe size = '25px' style={{ paddingTop: '5px' }, {color: "#007bff"}} /> : <div />}
+              {props.item.website[0] ? (
+                  <div style = {{paddingLeft: "15px"}}>
+                  <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+                  </div>
+              ) : <div />}
+              </div>
+            </Row>
+
+            <Row>
+              <div className = "modal-card-text">
+              <FaRegClock size = '25px' style = {{paddingTop: '5px'}, {color: "#007bff"}}/>
+              <div className = 'modal-hours-container'>
+                  <h5>Hours</h5>
+                  <hr className="modal-hr" />
+                  {calculateHours(props)}
+              </div>
+              </div>
+            </Row>
+            </Col>
+        </Row>
+      </Row>
       </div>
-    </div>
-    <br />
+      <br />
 
-    <div>
-      <h5>Ages</h5>
-      <hr className="modal-hr" />
-      {props.item.ages.map((age, index) => {
-        if (index !== props.item.ages.length - 1) {
+      <div className = "modalHeader">
+      {
+        props.categories
+          .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
+          .map((category) => {
           return (
-            <div className="modal-text">
-              {age}
-,
-              {' '}
+            <div>
+              <h5>{category.name}</h5>
+              <hr className="modal-hr" />
+              <div>
+                {props.item[category.id].map((selected, index) => {
+                  if (index !== props.item[category.id].length - 1) {
+                    return (
+                      <div className="modal-text">
+                        {`${selected}, `}
+                      </div>
+                    );
+                  }
+                  return <div className="modal-text">{selected}</div>;
+                })}
+              </div>
+              <br />
             </div>
           );
-        }
-        return <div className="modal-text">{age}</div>;
-      })}
-    </div>
-    <br />
+        })
+      }
 
-    <div>
-      <h5>Insurance Type Accepted</h5>
-      <hr className="modal-hr" />
-      {props.item.insurance.map((insur, index) => {
-        if (index !== props.item.insurance.length - 1) {
-          return (
-            <div className="modal-text">
-              {insur}
-,
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{insur}</div>;
-      })}
+      {/* TODO checkmarks for EPIC and Childcare change from alerts */}
+      {props.item.childcare[0] ? (
+        <h5>
+  ChildCare Available 
+          <FaCheck />
+          <br />
+        </h5>
+      ) : <div />}
+      {props.item.epic[0] ? (
+        <h5>
+  EPIC Designation
+          <FaCheck />
+          <br />
+        </h5>
+      ) : <div />}
     </div>
-    <br />
-
-    <div>
-      <h5>Service Types</h5>
-      <hr className="modal-hr" />
-      {props.item.serviceType.map((service, index) => {
-        if (index !== props.item.serviceType.length - 1) {
-          return (
-            <div className="modal-text">
-              {service}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{service}</div>;
-      })}
     </div>
-    <br />
-
-    <div>
-      <h5>Therapy Types</h5>
-      <hr className="modal-hr" />
-      {props.item.therapyTypes.map((therapy, index) => {
-        if (index !== props.item.therapyTypes.length - 1) {
-          return (
-            <div className="modal-text">
-              {therapy}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{therapy}</div>;
-      })}
     </div>
-    <br />
-
-    <div>
-      <h5>Specializations</h5>
-      <hr className="modal-hr" />
-      {props.item.specializations.map((special, index) => {
-        if (index !== props.item.specializations.length - 1) {
-          return (
-            <div className="modal-text">
-              {special}
-;
-              {' '}
-            </div>
-          );
-        }
-        return <div className="modal-text">{special}</div>;
-      })}
-    </div>
-    <br />
-
-    {/* TODO checkmarks for EPIC and Childcare change from alerts */}
-    {props.item.childcare[0] ? (
-      <h5>
-ChildCare Available 
-        <FaCheck />
-        <br />
-      </h5>
-    ) : <div />}
-    {props.item.epic[0] ? (
-      <h5>
-EPIC Designation
-        <FaCheck />
-        <br />
-      </h5>
-    ) : <div />}
-  </div>
-  </div>
-  </div>
-);
+  )
 
 function calculateHours(props) {
   var rows = []
@@ -318,4 +237,10 @@ function formatTime(arr, time, index) {
 }
 
 
-export default ProviderInfo;
+export default compose(
+    withFirestore,
+    connect((state) => ({
+        providers: state.firestore.ordered.providers,
+        firebase: state.firebase,
+    }))
+)(ProviderInfo);
