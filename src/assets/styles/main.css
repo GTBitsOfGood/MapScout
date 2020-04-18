@@ -922,6 +922,13 @@ h2 {
     overflow-x: hidden;
 }
 
+.btn.btn-primary.btn-block.point {
+    display: block;
+    text-align: center;
+    width: 100px;
+    background:  #007bff;
+}
+
 .underline {
     border-bottom: solid gray 1px;
 }
