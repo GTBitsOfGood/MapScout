@@ -47,6 +47,7 @@
         "react-google-maps-loader": "^4.2.6",
         "react-google-places-suggest": "^3.8.0",
         "react-icons": "^3.8.0",
+        "react-lazy-load": "^3.0.13",
         "react-localization": "^1.0.15",
         "react-redux": "^5.0.6",
         "react-redux-firebase": "^2.4.1",
