@@ -139,7 +139,7 @@ const ProviderInfo = (props) => (
           <br />
         </h5>
       ) : <div />}
-      {props.item.epic[0] ? (
+      {(!(props.item.epic === undefined) && props.item.epic[0]) ? (
         <h5>
   EPIC Designation
           <FaCheck />
