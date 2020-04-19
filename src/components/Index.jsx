@@ -58,8 +58,9 @@ const Index = (props) => {
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
-        fetchData();
-        setTempProviders(props.providers);
+        fetchData().then(r => {
+            setTempProviders(props.providers);
+        });
     }, []);
 
     useEffect(() => {
@@ -642,7 +643,7 @@ const Index = (props) => {
                 </div>
             </div>
         </div>);
-}
+};
 
 export default compose(withFirestore, connect((state) => ({
     providers: state.firestore.ordered.providers,

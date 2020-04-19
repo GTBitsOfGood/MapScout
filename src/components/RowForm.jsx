@@ -215,7 +215,7 @@ const RowForm = (props) => {
                                 <Form.Group>
                                     <Form.Label>Image</Form.Label>
                                     <br />
-                                    <label className="btn btn-primary btn-block point">
+                                    <Button block>
                                         Upload
                                         <FileUploader
                                             hidden
@@ -223,7 +223,7 @@ const RowForm = (props) => {
                                             name='image'
                                             storageRef={storage.ref('images')}
                                             onUploadSuccess={handleUploadSuccess} />
-                                    </label>
+                                    </Button>
                                 </Form.Group>
                             </Col>
                         </Row>
