@@ -11,6 +11,7 @@ import FileUploader from 'react-firebase-file-uploader';
 import {storage} from '../store';
 import idx from 'idx';
 import Select from "react-select";
+import Button from "react-bootstrap/Button";
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
