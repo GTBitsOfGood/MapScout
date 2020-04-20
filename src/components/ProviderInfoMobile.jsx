@@ -12,6 +12,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
+import ReadMoreAndLess from "react-read-more-less";
 
 var classNames = require('classnames');
 
@@ -65,8 +66,13 @@ const ProviderInfo = (props) => {
                                     variant = "primary" >TF-CBT</Badge>
                                 }
                             </div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                            <ReadMoreAndLess
+                                charLimit={250}
+                                readMoreText="Read more"
+                                readLessText="Read less"
+                            >
+                                {props.item.description + " "}
+                            </ReadMoreAndLess>
                         </div>
                         <div className="modal-card-text">
                             <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px', color: "#007bff"}} />
