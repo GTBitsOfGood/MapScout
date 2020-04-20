@@ -18,6 +18,7 @@ const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
   const [streetView, setStreetView] = useState("bog");
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function fetchData() {
      try {

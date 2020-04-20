@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withFirebase, isEmpty, isLoaded } from 'react-redux-firebase';
+import {withFirestore, isEmpty, isLoaded, withFirebase} from 'react-redux-firebase';
 import NavBar from './NavBar';
 import Auth from './Auth';
-import Dashboard from './Dashboard';
+import Dashboard, {selectTeam} from './Dashboard';
 import AddProvider from './AddProvider';
 import PasswordForgetForm from "./PasswordForget";
 import Template from "./template/index";
@@ -18,66 +18,119 @@ export const authRoute = '/';
 export const pwdRoute = '/forgot';
 export const templateRoute = '/provider/template';
 
-class ProviderRoutes extends Component {
-  render() {
+const ProviderRoutes = (props) => {
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    async function fetchTeam() {
+        const { firestore, team, firebaseAuth } = props;
+        setIsLoading(true);
+        if (team !== "pacts" && team !== "ebp" && typeof firebaseAuth.auth.uid === 'string') {
+            await firestore
+                .collection("users")
+                .where("UID", '==', firebaseAuth.auth.uid)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const docData = doc.data();
+                        console.log(docData.team);
+                        props.selectTeam(docData.team);
+                    });
+                });
+            setIsLoading(false);
+        } else if ( isLoaded(firebaseAuth.auth) && firebaseAuth.auth.uid === undefined ) {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchTeam();
+    }, []);
+
+    useEffect(() => {
+        fetchTeam();
+    }, [props.firebaseAuth.auth]);
+
     const PrivateRoute = ({ component: Component }) => (
-      <Route render={(props) => {
-        if (isEmpty(this.props.auth)) {
-          this.setState({ key: authRoute });
+      <Route render={(prps) => {
+        if (isEmpty(props.firebaseAuth.auth)) {
           return (
             <Redirect to={{
               pathname: authRoute,
-              state: { from: props.location },
+              state: { from: prps.location },
             }}
             />
           );
         }
-          return <Component {...props} />
+          return <Component {...prps} />
       }}
       />
     );
 
+    const logout = () => {
+        props.firebase.logout()
+            .then(function() {
+                props.selectTeam("");
+                props.history.push(authRoute)
+            })
+            .catch(function(error) {
+                console.log(error)
+            });
+    };
+
+    if (isLoading || !isLoaded(props.firebaseAuth.auth)) {
+        return <div className="spinner-wrap">
+            <div className = "spinner" />
+        </div>;
+    }
+
     return (
       <div>
-        { isLoaded(this.props.auth)
-            && (
-            <Switch>
-                <Route path={providerRoute}>
-                    <React.Fragment>
-                        <NavBar/>
-                        <div className="dashboard-content">
-                            <Switch>
-                                <PrivateRoute
-                                    exact
-                                    path={providerRoute}
-                                    component={Dashboard} />
-                                <PrivateRoute
-                                    path={formRoute}
-                                    component={AddProvider} />
-                                <PrivateRoute
-                                    path={templateRoute}
-                                    component={Template} />
-                            </Switch>
-                        </div>
-                    </React.Fragment>
-                </Route>
-                <Route
-                    exact
-                    path={authRoute}
-                    component={Auth} />
-                <Route
-                    path={pwdRoute}
-                    component={PasswordForgetForm} />
-                <Route exact path="*" component={NotFound} />
-            </Switch>
-            )}
+        <Switch>
+            <Route path={providerRoute}>
+                <React.Fragment>
+                    <NavBar logout={logout}/>
+                    <div className="dashboard-content">
+                        <Switch>
+                            <PrivateRoute
+                                exact
+                                path={providerRoute}
+                                component={Dashboard} />
+                            <PrivateRoute
+                                path={formRoute}
+                                component={AddProvider} />
+                            <PrivateRoute
+                                path={templateRoute}
+                                component={Template} />
+                        </Switch>
+                    </div>
+                </React.Fragment>
+            </Route>
+            <Route
+                exact
+                path={authRoute}
+                component={Auth} />
+            <Route
+                path={pwdRoute}
+                component={PasswordForgetForm} />
+            <Route exact path="*" component={NotFound} />
+        </Switch>
       </div>
     );
-  }
-}
+};
+
+const mapDispatchToProps = {
+    selectTeam
+};
+
+const mapStateToProps = (state) => ({
+    firebaseAuth: state.firebase,
+    team: state.item.team,
+});
 
 // Need auth property to check if logged in or loading
 export default compose(
+  withFirestore,
   withFirebase,
-  connect(({ firebase: { auth } }) => ({ auth })),
+  connect(mapStateToProps, mapDispatchToProps),
 )(ProviderRoutes);

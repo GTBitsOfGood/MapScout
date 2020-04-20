@@ -12,16 +12,6 @@ function NavBar(props) {
 
   const [expand, setExpanded] = useState(false);
 
-  const logout = () => {
-      props.firebase.logout()
-          .then(function() {
-              props.history.push(authRoute)
-          })
-          .catch(function(error) {
-              console.log(error)
-          });
-  };
-
   return (
   <div>
     <div className = {classnames("gray-overlay", { "none": !expand, "fadeIn": expand })} />
@@ -85,7 +75,7 @@ function NavBar(props) {
           {/*    SETTINGS*/}
           {/*  </div>*/}
           {/*</div>*/}
-          <div className = "cell" onClick={logout}>
+          <div className = "cell" onClick={props.logout}>
             <div className = "icon">
               <FiPower/>
             </div>
@@ -100,4 +90,4 @@ function NavBar(props) {
   );
 }
 
-export default withFirebase(NavBar);
+export default NavBar;
