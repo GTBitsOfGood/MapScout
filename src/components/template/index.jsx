@@ -9,6 +9,9 @@ import {withFirestore} from "react-redux-firebase";
 import CategoryCell from "./CategoryCell";
 import ProviderInfo from "../ProviderInfo";
 import promiseWithTimeout from "../../utils/PromiseWithTimeout";
+import {compose} from "redux";
+import {connect} from "react-redux";
+import {selectItem} from "../Dashboard";
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -17,7 +20,17 @@ const reorder = (list, startIndex, endIndex) => {
     return result;
 };
 
-export default withFirestore((props) => {
+const mapStateToProps = (state) => ({
+    team: state.item.team,
+});
+
+export default compose(
+    withFirestore,
+    connect(
+        mapStateToProps,
+        {},
+    ),
+)((props) => {
 
     const [categories, setCategories] = useState([]);
     const [newCatName, setNewCatName] = useState([]);
@@ -38,8 +51,8 @@ export default withFirestore((props) => {
         longitude: -75.136872,
         notes: [],
         phoneNum: ["(123) 456-7890"],
-        team: "pacts",
-        website: ["https://www.test.org"]
+        team: props.team,
+        website: ["https://www.mapscout.io"]
     };
 
     const [dummy, setDummy] = useState(staticData);
@@ -61,6 +74,7 @@ export default withFirestore((props) => {
         const collections = firestore.collection("categories");
         const arr = [];
         await collections
+            .where("team", "==", props.team)
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -157,7 +171,7 @@ export default withFirestore((props) => {
             select_type: 2,
             options: [],
             active: true,
-            team: "pacts",
+            team: props.team,
             id: newCatName,
         });
         setNewCatName("");
@@ -172,7 +186,10 @@ export default withFirestore((props) => {
         setIsLoading(true);
         try {
             const collections = props.firestore.collection('categories');
-            const filters = await collections.get().then(async (querySnapshot) => {
+            const filters = await collections
+                .where("team", "==", props.team)
+                .get()
+                .then(async (querySnapshot) => {
                 await querySnapshot.forEach((doc) => {
                     doc.ref.delete();
                 }); //Deletes all categories
@@ -187,8 +204,6 @@ export default withFirestore((props) => {
             alert("Unable to save");
         }
     }
-
-    console.log(categories);
 
     if (isLoading) {
         return (

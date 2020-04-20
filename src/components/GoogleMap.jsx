@@ -12,7 +12,7 @@ function arePointsNear(checkPoint, centerPoint, km) {
 }
 
 export default ({
-  providers, defaultZoom, defaultCenter, onShowMoreClick, selectedMarker,
+  providers, defaultZoom, defaultCenter, onShowMoreClick, selectedMarker, primaryColor
 }) => {
   const [selected, setSelected] = useState(-1);
   const [center, setCenter] = useState(defaultCenter);
@@ -55,6 +55,7 @@ export default ({
           address={address[0]}
           index={i}
           selectedIndex={selected}
+          primaryColor={primaryColor}
           onShowMoreClick={() => onShowMoreClick(i)}
           onMarkerClick={() => {
             setSelected(selected === i ? -1 : i);

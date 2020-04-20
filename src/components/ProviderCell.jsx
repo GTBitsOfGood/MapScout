@@ -6,7 +6,7 @@ import API_KEY from "../config/keys";
 
 var classNames = require('classnames');
 
-export default ({item, index, onMouseEnter, onClick, distances}) => {
+export default ({item, index, onMouseEnter, onClick, distances, primaryColor}) => {
     let myDistance = null;
     if (distances && distances.length > 0) {
         myDistance = distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName];
@@ -37,6 +37,7 @@ export default ({item, index, onMouseEnter, onClick, distances}) => {
             className = "map-cell padder row-nowrap"
             key = { index }
             style = {{
+                borderLeftColor: primaryColor,
                 borderTopWidth: index === 0 ? 0 : 1,
                 paddingTop: index === 0 ? 0 : 18,
             }}
@@ -57,11 +58,12 @@ export default ({item, index, onMouseEnter, onClick, distances}) => {
                     <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
                     {item.therapyTypes && item.therapyTypes.includes('Pri-CARE') &&
                     <Badge
-                        style={{ marginRight: 20 }}
+                        style={{ marginRight: 20, backgroundColor: primaryColor }}
                         variant = "primary" >Pri-CARE</Badge>
                     }
                     {item.therapyTypes && item.therapyTypes.includes('TF-CBT') &&
                     <Badge
+                        style={{ backgroundColor: primaryColor }}
                         variant = "primary" >TF-CBT</Badge>
                     }
                 </h5>
