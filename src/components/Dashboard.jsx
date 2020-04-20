@@ -7,8 +7,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
-import {adminRoute, formRoute, providerRoute} from './ProviderRoutes';
+import { formRoute, providerRoute } from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
+import NavBar from './NavBar';
 
 const classNames = require('classnames');
 
@@ -35,9 +36,11 @@ class Dashboard extends Component {
     }
 
     async componentDidMount(){
-        const { firestore, providers } = this.props;
+        const { firestore, providers, categories } = this.props;
         if ( !isLoaded(providers) ) {
-            await firestore.get('providers')
+            await firestore.get('providers');
+        }
+        if ( !isLoaded(categories) ) {
             await firestore.get('categories')
         }
         this.setState({isLoading: false});
@@ -48,9 +51,7 @@ class Dashboard extends Component {
   }
 
   changeLanguageToFalse = async() => {
-      console.log("hi")
       let firestore = this.props.firestore;
-      console.log(firestore)
       await firestore.update({collection: 'categories', doc: 'languages'},{active: false})
       // await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
       //     querySnapshot.forEach(function(doc) {
@@ -61,50 +62,33 @@ class Dashboard extends Component {
 
   render() {
     const { isLoading, data, selectedIndex } = this.state;
-    const { providers } = this.props;
+    const { providers, categories } = this.props;
 
     if (isLoading && !isLoaded(providers)) {
-      return (
-        <div style={{ width: '100%' }}>
+      return (<div className="spinner-wrap">
           <div className="spinner" />
         </div>
       );
     }
 
     return (
-      <React.Fragment>
-        <Row noGutters>
-          <Col sm={3}>
-            <div className="list-wrapper">
-              <div className="fixed-container">
-                <Button
-                  block
-                  variant="primary"
-                  onClick={() => this.props.selectItem({})}
-                  as={Link}
-                  to={formRoute}
-                >
-                    Add new provider
-                </Button>
-            </div>
-            <div className="fixed-container">
+      <div className = "admin-dashboard">
+        <div className="admin-list-container">
+          <div className="list-wrapper">
+            <div className="add-button-wrapper">
                 <Button
                     block
                     variant="primary"
-                    onClick={() => this.changeLanguageToFalse()}>
-                    Change Language active to false
-                </Button>
-            </div>
-            <div className="fixed-container">
-                <Button
-                    block
-                    variant="primary"
+                    onClick={() => this.props.selectItem({})}
                     as={Link}
-                    to={adminRoute}>
-                    Admin List
+                    to={formRoute}
+                >
+                    + Add New Provider
                 </Button>
             </div>
-            <div className="scroll-container">
+            <div
+                className="scroll-container"
+                style={{ maxHeight: 'calc(100vh - 66px)' }}>
                 <ListGroup variant="flush">
                     {
                         !isEmpty(providers) &&
@@ -115,38 +99,29 @@ class Dashboard extends Component {
                                 className="point"
                                 onClick={() => this.setState({selectedIndex: index})}
                                 active={selectedIndex === index}>
-                                <b>{item.facilityName}</b>
-                                <br />
-                                <small>{item.address[0]}</small>
+                                  <h2>{item.facilityName}</h2>
                             </ListGroup.Item>
                         )
                     }
                 </ListGroup>
-              </div>
             </div>
-          </Col>
-          <Col sm={9}>
-            <div
-              className="scroll-container"
-              style={{ maxHeight: 'calc(100vh - 64px)' }}
-            >
-              <div className="bg-white">
-                {
-                                    providers && providers[selectedIndex]
-                                    && (
-                                    <SingleProvider
-                                      item={providers[selectedIndex]}
-                                      editProvider={() => this.props.selectItem(providers[selectedIndex])}
-                                      setLoading={() => this.setState({ isLoading: true })}
-                                      resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}
-                                    />
-                                    )
-                                }
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </React.Fragment>
+          </div>
+        </div>
+          <div className="admin-provider">
+              {
+                  providers && providers[selectedIndex]
+                  && (
+                  <SingleProvider
+                    item={providers[selectedIndex]}
+                    categories={categories}
+                    editProvider={() => this.props.selectItem(providers[selectedIndex])}
+                    setLoading={() => this.setState({ isLoading: true })}
+                    resetIndex={() => this.setState({ selectedIndex: 0, isLoading: false })}
+                  />
+                  )
+              }
+          </div>
+      </div>
     );
   }
 }

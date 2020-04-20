@@ -64,7 +64,7 @@ const common = {
                 })
             },
             {
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|jpg|gif|svg)$/,
                 exclude: /(node_modules)/,
                 use: [
                     {
@@ -103,7 +103,7 @@ const prodSettings = {
     output: {
         path: paths.build,
         filename: 'bundle.[hash].js',
-        publicPath: '/build/'
+        publicPath: './'
     },
     plugins: [
         new webpack.DefinePlugin({ 'process.env': {

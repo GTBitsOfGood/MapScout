@@ -9,6 +9,7 @@ import { withFirebase } from 'react-redux-firebase'
 import localizationStrings from '../utils/Localization';
 import Container from "react-bootstrap/Container";
 import Blur from "@animate/blur";
+import {providerRoute, pwdRoute} from "./ProviderRoutes";
 
 var classNames = require('classnames');
 
@@ -41,8 +42,8 @@ class Auth extends Component {
                     .signInWithEmailAndPassword(this.state.email, this.state.password);
                 this.setState({animate: true});
                 await setTimeout(() => {
-                    this.props.onSubmit();
-                    this.setState({isLoading: false})
+                    this.setState({isLoading: false});
+                    this.props.history.push(providerRoute);
                 }, 400);
             } catch (err) {
                 //TODO: Add translations
@@ -57,7 +58,13 @@ class Auth extends Component {
         return(
             <Container fluid>
                 <div id="auth-root" className={classNames('box', { translate: animate })}>
-                    <Form onSubmit={this.handleSubmit}>
+                    <Form 
+                        onSubmit={this.handleSubmit}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                this.handleSubmit(e);
+                            }
+                        }}>
                         <div className="mb-4">
                             <h2>{login}</h2>
                         </div>
@@ -85,7 +92,7 @@ class Auth extends Component {
                             {isLoading&&<div className="loader"/>} {login}
                         </Button>
                         <div className="mt-2">
-                            <a href="#/providers/forgotpwd">
+                            <a href={pwdRoute}>
                                 <small>{forgotPassword}</small>
                             </a>
                         </div>
