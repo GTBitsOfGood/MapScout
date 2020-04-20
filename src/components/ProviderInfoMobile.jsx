@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 import ReadMoreAndLess from "react-read-more-less";
+import LazyLoad from "react-lazy-load";
 
 var classNames = require('classnames');
 
@@ -22,6 +23,7 @@ const ProviderInfo = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         async function fetchData() {
+            setIsLoading(true);
             try {
                 const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
                     + `&markers=${props.item.latitude},${props.item.longitude}`);
@@ -33,7 +35,7 @@ const ProviderInfo = (props) => {
             }
         }
         fetchData();
-    },[]);
+    },[props.item]);
 
     if (isLoading) {
         return <div className="spinner-wrap">
@@ -44,10 +46,14 @@ const ProviderInfo = (props) => {
     return (
         <div>
             <div className = "modal-map">
-                <img
-                    className="mobile-cell-image"
-                    src={image}
-                    alt=""/>
+                <LazyLoad
+                    debounce={false}
+                    offsetVertical={500}>
+                    <img
+                        className="mobile-cell-image"
+                        src={image}
+                        alt=""/>
+                </LazyLoad>
             </div>
             <div className = {classNames("modal-mobile-card")}>
                 <div style = {{padding: "1vh 4vw"}}>

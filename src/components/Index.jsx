@@ -195,7 +195,7 @@ const Index = (props) => {
         const metersPerMile = 1609.344;
         var theta1 = filterLat * (pi / 180);
 
-        tempProviders.forEach(function(provider) {
+        providers.forEach(function(provider) {
             providerLat = provider['latitude'];
             providerLong = provider['longitude'];
             let distance = Math.pow(Math.abs(filterLat - providerLat), 2) + Math.pow(Math.abs(filterLong - providerLong), 2);
@@ -225,7 +225,7 @@ const Index = (props) => {
         });
         setDistances(filterDistances);
         setZipProviders(filterActiveProviders);
-        filterByTags(filterActiveProviders);
+        setTimeout(() => filterSearch(searchName, filterVal, filterActiveProviders), 100);
     };
 
     const filterNormalFilters = (e) => {
@@ -248,11 +248,11 @@ const Index = (props) => {
         }
     };
 
-    const filterSearch = (filterVal) => {
+    const filterSearch = (filterVal, zipCode, zipProvs) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
         let temp = providers;
-        if (searchZip != null && searchZip.length === 5) {
-            temp = zipProviders;
+        if (zipCode) {
+            temp = zipProvs;
         }
         temp = temp.filter((item) => regex.test(item.facilityName));
         filterByTags(temp);
@@ -267,8 +267,11 @@ const Index = (props) => {
                 filterSearch(filterVal)
             } else if (filtertype === 'zipcode') {
                 setSearchZip(filterVal);
-                if (filterVal.length === 5)
-                    await filterZipcode(filterVal)
+                if (filterVal.length === 5) {
+                    await filterZipcode(filterVal);
+                } else if (distances !== {}) {
+                    setDistances({});
+                }
             } else {
                 await filterNormalFilters(e);
             }
@@ -540,7 +543,7 @@ const Index = (props) => {
                                                 setCurrmarker(index);
                                         }, 300)}
                                         onClick={() => handleCellClick(index)}
-                                        distance={distances}
+                                        distances={distances}
                                     />)
                                 }
                             </div>
