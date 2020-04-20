@@ -27,6 +27,7 @@ const RowForm = (props) => {
     const defaultItem = {
         facilityName: '',
         address: [],
+        description: '',
         buildingNum: [],
         childcare: [false],
         epic: [false],
@@ -114,9 +115,9 @@ const RowForm = (props) => {
         .then(url => {
             newItem = { ...newItem, imageURL: url };
             setItem(newItem);
-        })
+        });
         props.setItem(newItem);
-    }
+    };
 
         switch (props.step) {
             case 0:
@@ -227,6 +228,25 @@ const RowForm = (props) => {
                                 </Form.Group>
                             </Col>
                         </Row>
+                        <Form.Group>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                name="description"
+                                value={item.description}
+                                onChange={(e) => {
+                                    setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                    props.setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                }}
+                                placeholder="Description"
+                                rows="4"
+                                as="textarea" />
+                        </Form.Group>
                     </Fragment>
                 );
             case 1:
