@@ -34,7 +34,7 @@ const SingleProvider = (props) => (
             variant="danger"
             onClick={async () => {
               props.setLoading();
-              await props.firestore.delete({ collection: 'providers', doc: props.item.facilityName });
+              await props.firestore.delete({ collection: 'providers', doc: props.item.id });
               await props.firestore.get('providers');
               props.resetIndex();
             }}

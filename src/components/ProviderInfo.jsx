@@ -61,24 +61,24 @@ const ProviderInfo = (props) => {
           <div className = "desc-Box">
             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
               <div style = {{paddingBottom: "25px"}}>
-                {props.item.therapyTypes.includes('Pri-CARE') &&
+                {props.item.therapyTypes && props.item.therapyTypes.includes('Pri-CARE') &&
                     <Badge
                         className= "label"
                         variant = "primary" >Pri-CARE</Badge>
                 }
-                {props.item.therapyTypes.includes('TF-CBT') &&
+                {props.item.therapyTypes && props.item.therapyTypes.includes('TF-CBT') &&
                     <Badge
                         className = "label"
                         variant = "primary" >TF-CBT</Badge>
                 }
               </div>
-              <ReadMoreAndLess
+              {props.item.description !== undefined && <ReadMoreAndLess
                   charLimit={250}
                   readMoreText="Read more"
                   readLessText="Read less"
               >
                   {props.item.description + " "}
-              </ReadMoreAndLess>
+              </ReadMoreAndLess>}
           </div>
         </Col>
       </Row>
@@ -108,13 +108,13 @@ const ProviderInfo = (props) => {
         <div className="modal-card-text">
           <FaPhone size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} />
           <div style = {{paddingLeft: "15px"}}>
-            {props.item.phoneNum.join(', ')}
+            {props.item.phoneNum && props.item.phoneNum.join(', ')}
           </div>
         </div>
 
         <div className="modal-card-text">
-          {props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
-          {props.item.website[0] ? (
+          {props.item.website && props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
+          {props.item.website && props.item.website[0] ? (
             <div style = {{paddingLeft: "15px"}}>
               <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
             </div>
@@ -126,7 +126,7 @@ const ProviderInfo = (props) => {
           <Container>
             <h5>Hours</h5>
             <hr className="modal-hr" />
-            {calculateHours(props)}
+            {props.item.hours && calculateHours(props)}
           </Container>
           </div>
           </div>

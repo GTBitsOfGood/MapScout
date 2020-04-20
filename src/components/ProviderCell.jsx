@@ -55,12 +55,12 @@ export default ({item, index, onMouseEnter, onClick, distances}) => {
             <div style={{ marginLeft: 12 }}>
                 <h5>
                     <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
-                    {item.therapyTypes.includes('Pri-CARE') &&
+                    {props.item.therapyTypes && item.therapyTypes.includes('Pri-CARE') &&
                     <Badge
                         style={{ marginRight: 20 }}
                         variant = "primary" >Pri-CARE</Badge>
                     }
-                    {item.therapyTypes.includes('TF-CBT') &&
+                    {props.item.therapyTypes && item.therapyTypes.includes('TF-CBT') &&
                     <Badge
                         variant = "primary" >TF-CBT</Badge>
                     }

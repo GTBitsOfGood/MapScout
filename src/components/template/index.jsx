@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import {withFirestore} from "react-redux-firebase";
 import CategoryCell from "./CategoryCell";
 import ProviderInfo from "../ProviderInfo";
+import promiseWithTimeout from "../../utils/PromiseWithTimeout";
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -165,6 +166,26 @@ export default withFirestore((props) => {
         setCategories(defaultCategories);
     }
 
+    async function saveChanges() {
+        setIsLoading(true);
+        try {
+            const collections = props.firestore.collection('categories');
+            const filters = await collections.get().then(async (querySnapshot) => {
+                await querySnapshot.forEach((doc) => {
+                    doc.ref.delete();
+                }); //Deletes all categories
+                await categories.forEach((cat) => {
+                    promiseWithTimeout(5000, props.firestore.set({collection: 'categories', doc: cat.name}, cat));
+                }); //Replaces with new data
+                setIsLoading(false);
+                setShowModal(false);
+            });
+        } catch (e) {
+            console.log(e);
+            alert("Unable to save");
+        }
+    }
+
     if (isLoading) {
         return (
             <div className="spinner-wrap">
@@ -278,7 +299,9 @@ export default withFirestore((props) => {
                             >
                                 Cancel
                             </Button>
-                            <Button variant="light">Save Changes</Button>
+                            <Button
+                                onClick={saveChanges}
+                                variant="light">Save Changes</Button>
                         </div>
                     </Modal.Header>
                     <Modal.Body className="modal-body">
