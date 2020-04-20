@@ -65,7 +65,9 @@ export default withFirestore((props) => {
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    data.id = doc.id;
+                    if (!data.id) {
+                        data.id = doc.id;
+                    }
                     arr.push(data);
                 });
             });
@@ -175,7 +177,7 @@ export default withFirestore((props) => {
                     doc.ref.delete();
                 }); //Deletes all categories
                 await categories.forEach((cat) => {
-                    promiseWithTimeout(5000, props.firestore.set({collection: 'categories', doc: cat.name}, cat));
+                    promiseWithTimeout(5000, props.firestore.set({collection: 'categories', doc: cat.id}, cat));
                 }); //Replaces with new data
                 setIsLoading(false);
                 setShowModal(false);
@@ -185,6 +187,8 @@ export default withFirestore((props) => {
             alert("Unable to save");
         }
     }
+
+    console.log(categories);
 
     if (isLoading) {
         return (
