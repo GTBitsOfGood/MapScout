@@ -20,6 +20,8 @@ import API_KEY from '../config/keys';
 var debounce = require("lodash/debounce");
 var classNames = require('classnames');
 
+const FILTER_CUTOFF = 5;
+
 const colors = {
     serviceType: '#DC8665',
     specializations: '#138086',
@@ -105,14 +107,12 @@ const Index = (props) => {
                         priority: docData.priority,
                         id: doc.id,
                     });
+                    filtersObj[doc.id] = []
                 });
                 return arr;
             });
         setCategories(cat);
 
-        Object.keys(data).forEach((id) => {
-            filtersObj[id] = [];
-        });
         setFiltersState(filtersObj);
         setFiltersData(data);
     }
@@ -156,6 +156,7 @@ const Index = (props) => {
 
     const filterByTags = (temp) => {
         setTempProviders(temp);
+        console.log(filtersState);
         Object.keys(filtersState).forEach(filterName => {
             temp = temp.filter((provider) => {
                 return provider[filterName]
@@ -341,6 +342,7 @@ const Index = (props) => {
                     {Object.entries(filtersData)
                         .filter(([key, value]) =>
                             Number.isInteger(value.priority)
+                            && value.priority < FILTER_CUTOFF
                         )
                         .sort(
                             ([aKey, aValue], [bKey, bValue]) =>
@@ -354,6 +356,7 @@ const Index = (props) => {
                                 .filter(
                                     ([key, value]) =>
                                         !Number.isInteger(value.priority)
+                                        || value.priority >= FILTER_CUTOFF
                                 )
                                 .sort(([aKey, aValue], [bKey, bValue]) =>
                                     aValue.name.localeCompare(bValue.name)
@@ -384,10 +387,9 @@ const Index = (props) => {
 
     function renderDropdown(title, key) {
         return (
-            <Dropdown>
+            <Dropdown key={key}>
                 <Dropdown.Toggle
                     variant = "light"
-                    alignLeft
                     style = {{ marginRight: 5, marginBottom: 5 }}>
                     { title }
                 </Dropdown.Toggle>
