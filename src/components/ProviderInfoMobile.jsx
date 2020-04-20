@@ -55,24 +55,24 @@ const ProviderInfo = (props) => {
                         <div className = "desc-Box">
                             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
                             <div style = {{paddingBottom: "25px"}}>
-                                {props.item.therapyTypes.includes('Pri-CARE') &&
+                                {props.item.therapyTypes && props.item.therapyTypes.includes('Pri-CARE') &&
                                 <Badge
                                     className= "label"
                                     variant = "primary" >Pri-CARE</Badge>
                                 }
-                                {props.item.therapyTypes.includes('TF-CBT') &&
+                                {props.item.therapyTypes && props.item.therapyTypes.includes('TF-CBT') &&
                                 <Badge
                                     className = "label"
                                     variant = "primary" >TF-CBT</Badge>
                                 }
                             </div>
-                            <ReadMoreAndLess
+                            {props.item.description !== undefined && <ReadMoreAndLess
                                 charLimit={250}
                                 readMoreText="Read more"
                                 readLessText="Read less"
                             >
                                 {props.item.description + " "}
-                            </ReadMoreAndLess>
+                            </ReadMoreAndLess>}
                         </div>
                         <div className="modal-card-text">
                             <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px', color: "#007bff"}} />
