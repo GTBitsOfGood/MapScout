@@ -13,6 +13,7 @@ import ProviderInfo from "./ProviderInfo";
 import ProviderInfoMobile from "./ProviderInfoMobile";
 import Modal from "react-bootstrap/Modal";
 import { FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap } from "react-icons/fa";
+import ProviderCell from './ProviderCell';
 import localizationStrings from '../utils/Localization';
 import API_KEY from '../config/keys';
 
@@ -330,58 +331,6 @@ const Index = (props) => {
         setShowModal(true);
     }
 
-    function renderCell(item, index) {
-        let myDistance = null;
-        if (distances && distances.length > 0) {
-            myDistance = distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName];
-        }
-        return (
-            <div
-                className = "map-cell padder"
-                key = { index }
-                style = {{
-                    borderTopWidth: index === 0 ? 0 : 1,
-                    paddingTop: index === 0 ? 0 : 18,
-                }}
-                onMouseEnter={debounce(() => {
-                    if (listView && width > 768)
-                        setCurrmarker(index);
-                }, 300)}
-                onClick = {() => handleCellClick(index)} >
-                <div>
-                    <h5>
-                        <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
-                        {item.therapyTypes.includes('Pri-CARE') &&
-                        <Badge
-                            style={{ marginRight: 20 }}
-                            variant = "primary" >Pri-CARE</Badge>
-                        }
-                        {item.therapyTypes.includes('TF-CBT') &&
-                        <Badge
-                            variant = "primary" >TF-CBT</Badge>
-                        }
-                    </h5>
-                    <div style = {{ color: 'gray' }}>
-                    <FaMapMarkerAlt size = "20px"/> { item.address[0] }
-                        <div className = "row-spaced">
-                            <div>
-                                <FaPhone /> { item.phoneNum.join(', ') }
-                            </div>
-                            {
-                                myDistance
-                                &&
-                                <small>
-                                    <FaLocationArrow style = {{ marginRight: 8 }}/>
-                                    { myDistance + ' mi' }
-                                </small>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     const renderTagControl = () => {
         return (
             <Fragment>
@@ -446,6 +395,7 @@ const Index = (props) => {
                     {
                         filtersData[key].options.map((item, index) =>
                                 <div
+                                    key={index}
                                     onClick={
                                         () => filterProviders({
                                             target: {
@@ -460,7 +410,6 @@ const Index = (props) => {
                                     <Form.Check
                                         className="dropdown-item"
                                         name = { key }
-                                        key = { index }
                                         type = "checkbox"
                                         checked = { filtersState[key].includes(item.value) }
                                         value = { item.value }
@@ -578,7 +527,17 @@ const Index = (props) => {
                                 </div>
                                 {
                                     !isEmpty(activeProviders) &&
-                                    activeProviders.map(renderCell)
+                                    activeProviders.map((i, index) => <ProviderCell
+                                        key={index}
+                                        item={i}
+                                        index={index}
+                                        onMouseEnter={debounce(() => {
+                                            if (listView && width > 768)
+                                                setCurrmarker(index);
+                                        }, 300)}
+                                        onClick={() => handleCellClick(index)}
+                                        distance={distances}
+                                    />)
                                 }
                             </div>
                             <div >
@@ -607,7 +566,6 @@ const Index = (props) => {
                                         dialogClassName = "modalMobile"
                                         scrollable >
                                             <Modal.Header
-                                                className = "image-cover"
                                                 style = {{ backgroundColor: "#2F80ED" }}
                                                 closeButton >
                                             </Modal.Header>
