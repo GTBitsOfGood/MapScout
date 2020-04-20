@@ -224,8 +224,8 @@ const Index = (props) => {
             filterDistances.push({[distKey]: provider['miDistance']})
         });
         setDistances(filterDistances);
-        setActiveProviders(filterActiveProviders);
         setZipProviders(filterActiveProviders);
+        filterByTags(filterActiveProviders);
     };
 
     const filterNormalFilters = (e) => {
@@ -531,7 +531,7 @@ const Index = (props) => {
                                 {
                                     !isEmpty(activeProviders) &&
                                     activeProviders.map((i, index) => <ProviderCell
-                                        key={index}
+                                        key={i.id}
                                         item={i}
                                         index={index}
                                         primaryColor={primaryColor}
