@@ -48,6 +48,7 @@ class AddProvider extends Component {
 
         const collections = this.props.firestore.collection('categories');
         const filters = await collections
+            .where("team", "==", this.props.team)
             .where('active', '==', true)
             .where('select_type', '==', 2)
             .get()
@@ -63,6 +64,7 @@ class AddProvider extends Component {
                 return idToData;
             });
         const descriptions = await collections
+            .where("team", "==", this.props.team)
             .where('active', '==', true)
             .where('select_type', '==', 0)
             .get()
@@ -78,6 +80,7 @@ class AddProvider extends Component {
                 return idToData;
             });
         const categories = await collections
+            .where("team", "==", this.props.team)
             .where('active', '==', true)
             .where('select_type', '==', 1)
             .get()
@@ -113,6 +116,7 @@ class AddProvider extends Component {
         this.setState({isLoading: true});
         let item = {
             ...this.state.item,
+            team: this.props.team,
             latitude: null,
             longitude: null,
         };
@@ -311,5 +315,6 @@ export default compose(
     connect((state) => ({
         providers: state.firestore.ordered.providers,
         firebase: state.firebase,
-        selected: state.item.selected
+        selected: state.item.selected,
+        team: state.item.team,
     })))(AddProvider)

@@ -3,7 +3,6 @@ import GoogleMap from './GoogleMap';
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { compose } from "redux";
@@ -36,16 +35,16 @@ const getWidth = () => window.innerWidth
     || document.body.clientWidth;
 
 const Index = (props) => {
-
+    const [providers, setProviders] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [moreFilter, setMoreFilter] = useState(false);
     const [listView, setListView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
-    const [activeProviders, setActiveProviders] = useState(props.providers);
-    const [tempProviders, setTempProviders] = useState(props.providers);
-    const [zipProviders, setZipProviders] = useState(props.providers);
+    const [activeProviders, setActiveProviders] = useState([]);
+    const [tempProviders, setTempProviders] = useState([]);
+    const [zipProviders, setZipProviders] = useState([]);
     const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState(null);
     const [name, setName] = useState(null);
@@ -55,47 +54,41 @@ const Index = (props) => {
     const [distances, setDistances] = useState({});
     const [prevSearchLen, setPrevSearchLen] = useState(0);
 
+    const primaryColor = getTeam() === "pacts" ? "#5FB73C" : "#144D78";
+    const secondaryColor = getTeam() === "pacts" ? "#222C65" : "#EDBF37";
+
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
+        setIsLoading(true);
         fetchData().then(r => {
-            setTempProviders(props.providers);
+            setTempProviders(providers);
         });
     }, []);
 
     useEffect(() => {
-        if (isLoaded(props.providers)) {
-            setTempProviders(props.providers);
+        if (isLoaded(providers)) {
+            setTempProviders(providers);
         }
-    }, [props.providers]);
+    }, [providers]);
+
+    function getTeam() {
+        return props.location.pathname.replace("/", "");
+    }
 
     async function fetchData() {
         const {firestore} = props;
         const collections = firestore.collection("categories");
-        const data = await collections
-            .where('active', '==', true)
-            .where('select_type', '==', 2)
-            .get()
-            .then((querySnapshot) => {
-                const idToData = {};
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    idToData[doc.id] = {
-                        name: docData.name,
-                        options: docData.options,
-                        priority: docData.priority,
-                    };
-                });
-                return idToData;
-            });
+        const data = {};
         const filtersObj = {};
 
         const cat = await collections
             .where("active", "==", true)
             .where("select_type", "in", [1, 2])
+            .where('team', '==', getTeam())
             .get()
             .then((querySnapshot) => {
                 const arr = [];
@@ -107,6 +100,11 @@ const Index = (props) => {
                         priority: docData.priority,
                         id: doc.id,
                     });
+                    data[doc.id] = {
+                        name: docData.name,
+                        options: docData.options,
+                        priority: docData.priority,
+                    };
                     filtersObj[doc.id] = []
                 });
                 return arr;
@@ -115,6 +113,22 @@ const Index = (props) => {
 
         setFiltersState(filtersObj);
         setFiltersData(data);
+
+        const collections2 = firestore.collection("providers");
+        const provs = await collections2
+            .where('team', '==', getTeam())
+            .get()
+            .then((querySnapshot) => {
+                const arr = [];
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    arr.push(docData);
+                });
+                return arr;
+            });
+        setProviders(provs);
+        setActiveProviders(provs);
+        setIsLoading(false);
     }
 
     let [width, setWidth] = useState(getWidth());
@@ -156,12 +170,11 @@ const Index = (props) => {
 
     const filterByTags = (temp) => {
         setTempProviders(temp);
-        console.log(filtersState);
         Object.keys(filtersState).forEach(filterName => {
             temp = temp.filter((provider) => {
                 return provider[filterName]
                     ? provider[filterName].some(r => filtersState[filterName].includes(r)) || filtersState[filterName].length === 0
-                    : false;
+                    : true;
             });
         });
         setActiveProviders(temp);
@@ -237,7 +250,7 @@ const Index = (props) => {
 
     const filterSearch = (filterVal) => {
         const regex = new RegExp(`${ filterVal.toLowerCase() }`, "gi");
-        let temp = props.providers;
+        let temp = providers;
         if (searchZip != null && searchZip.length === 5) {
             temp = zipProviders;
         }
@@ -261,21 +274,6 @@ const Index = (props) => {
             }
         }
     };
-
-    useEffect(() => {
-        const { firestore, providers } = props;
-        if (!isLoaded(providers)) {
-            firestore.get('providers').then(
-                () => {
-                    setActiveProviders(providers);
-                    setIsLoading(false)
-                }
-            )
-        } else if (isEmpty(activeProviders) && isLoading) {
-            setActiveProviders(providers);
-            setIsLoading(false)
-        }
-    }, [props.providers]);
 
     useEffect(() => {
         if (activeProviders)
@@ -366,7 +364,7 @@ const Index = (props) => {
                                 )}
                             <Button
                                 variant="link"
-                                style={{ color: "red" }}
+                                style={{ color: secondaryColor }}
                                 onClick={() => setMoreFilter(false)}
                             >
                                 - {lessFilters}
@@ -375,6 +373,7 @@ const Index = (props) => {
                     ) : (
                         <Button
                             variant="link"
+                            style={{ color: primaryColor }}
                             onClick={() => setMoreFilter(true)}
                         >
                             + {moreFilters}
@@ -475,6 +474,7 @@ const Index = (props) => {
                             condition ?
                             <Button
                                 variant = "primary"
+                                style={{ borderColor: primaryColor, backgroundColor: primaryColor }}
                                 onClick = { switchView }
                                 className = "switch-view-button" >
                                 { listView ? hideLabel : showLabel }
@@ -483,6 +483,7 @@ const Index = (props) => {
                                 isSticky &&
                                 <Button
                                     variant = "outline-primary"
+                                    style={{ borderColor: primaryColor, color: primaryColor }}
                                     onClick = {resetSticky}>
                                     <FaMap/>
                                 </Button>
@@ -533,6 +534,7 @@ const Index = (props) => {
                                         key={index}
                                         item={i}
                                         index={index}
+                                        primaryColor={primaryColor}
                                         onMouseEnter={debounce(() => {
                                             if (listView && width > 768)
                                                 setCurrmarker(index);
@@ -551,7 +553,7 @@ const Index = (props) => {
                                         dialogClassName = "myModal"
                                         scrollable >
                                         <Modal.Header
-                                            style = {{ backgroundColor: "#2F80ED" }}
+                                            style = {{ backgroundColor: primaryColor }}
                                             closeButton >
                                         </Modal.Header>
                                         <Modal.Body
@@ -568,7 +570,7 @@ const Index = (props) => {
                                         dialogClassName = "modalMobile"
                                         scrollable >
                                             <Modal.Header
-                                                style = {{ backgroundColor: "#2F80ED" }}
+                                                style = {{ backgroundColor: primaryColor }}
                                                 closeButton >
                                             </Modal.Header>
                                             <Modal.Body
@@ -590,6 +592,7 @@ const Index = (props) => {
                                 <GoogleMap
                                     providers={activeProviders}
                                     defaultZoom={12}
+                                    primaryColor={primaryColor}
                                     defaultCenter={{
                                         lat: 39.9526,
                                         lng: -75.1652
@@ -606,6 +609,5 @@ const Index = (props) => {
 };
 
 export default compose(withFirestore, connect((state) => ({
-    providers: state.firestore.ordered.providers,
     firebase: state.firebase
 })))(Index);
