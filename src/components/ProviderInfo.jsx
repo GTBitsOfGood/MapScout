@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react';
 import {
-  FaMapMarkerAlt, FaCheck, FaRegClock, FaPhone
+  FaMapMarkerAlt, FaRegClock, FaPhone
 } from 'react-icons/fa';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -12,22 +12,40 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe} from 'react-icons/fi';
+import ReadMoreAndLess from 'react-read-more-less';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
+  const [streetView, setStreetView] = useState("bog");
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
      try {
-      const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
-      setImage(res.url) // how would I handle the errors???
+         const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+             + `&markers=${props.item.latitude},${props.item.longitude}`);
+         setStreetView(res2.url);
+         if (typeof props.item.imageURL === 'string') {
+             await setImage(props.item.imageURL);
+         } else {
+             const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
+             setImage(res.url);
+         }
+         setIsLoading(false);
      } catch (e) {
-       console.log(e);
+         console.log(e);
+         setIsLoading(false);
      }
     }
     fetchData();
   },[]);
 
   const categoriesToUse = props.categories || [];
+
+  if (isLoading) {
+      return <div className="spinner-wrap">
+          <div className = "spinner" />
+      </div>;
+  }
 
   return (
   <div style = {{padding: "1vh 4vw"}}>
@@ -36,29 +54,31 @@ const ProviderInfo = (props) => {
         <Col className = "modalImage">
           <Card>
             <Card.Img
-              src={typeof props.item.imageURL === 'string' ? props.item.imageURL : image}
-            >
-            </Card.Img>
+                src={image} />
           </Card>
         </Col>
-
         <Col xs = {7}>
           <div className = "desc-Box">
             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
               <div style = {{paddingBottom: "25px"}}>
-                {props.item.therapyTypes.includes('Pri-CARE') &&
+                {props.item.therapyTypes && props.item.therapyTypes.includes('Pri-CARE') &&
                     <Badge
                         className= "label"
                         variant = "primary" >Pri-CARE</Badge>
                 }
-                {props.item.therapyTypes.includes('TF-CBT') &&
+                {props.item.therapyTypes && props.item.therapyTypes.includes('TF-CBT') &&
                     <Badge
                         className = "label"
                         variant = "primary" >TF-CBT</Badge>
                 }
               </div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+              {props.item.description !== undefined && <ReadMoreAndLess
+                  charLimit={250}
+                  readMoreText="Read more"
+                  readLessText="Read less"
+              >
+                  {props.item.description + " "}
+              </ReadMoreAndLess>}
           </div>
         </Col>
       </Row>
@@ -88,13 +108,13 @@ const ProviderInfo = (props) => {
         <div className="modal-card-text">
           <FaPhone size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} />
           <div style = {{paddingLeft: "15px"}}>
-            {props.item.phoneNum.join(', ')}
+            {props.item.phoneNum && props.item.phoneNum.join(', ')}
           </div>
         </div>
 
         <div className="modal-card-text">
-          {props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
-          {props.item.website[0] ? (
+          {props.item.website && props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
+          {props.item.website && props.item.website[0] ? (
             <div style = {{paddingLeft: "15px"}}>
               <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
             </div>
@@ -106,7 +126,7 @@ const ProviderInfo = (props) => {
           <Container>
             <h5>Hours</h5>
             <hr className="modal-hr" />
-            {calculateHours(props)}
+            {props.item.hours && calculateHours(props)}
           </Container>
           </div>
           </div>
@@ -116,8 +136,7 @@ const ProviderInfo = (props) => {
             <div>
             <a href = {`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">
             <Card.Img
-              src={`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
-              + `&markers=${props.item.latitude},${props.item.longitude}`}
+              src={streetView}
               alt="Google Map of bethanna"
             >
             </Card.Img>

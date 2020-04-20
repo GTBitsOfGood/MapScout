@@ -11,6 +11,7 @@ import FileUploader from 'react-firebase-file-uploader';
 import {storage} from '../store';
 import idx from 'idx';
 import Select from "react-select";
+import Button from "react-bootstrap/Button";
 
 function validURL(str) {
     const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
@@ -26,6 +27,7 @@ const RowForm = (props) => {
     const defaultItem = {
         facilityName: '',
         address: [],
+        description: '',
         buildingNum: [],
         childcare: [false],
         epic: [false],
@@ -113,9 +115,9 @@ const RowForm = (props) => {
         .then(url => {
             newItem = { ...newItem, imageURL: url };
             setItem(newItem);
-        })
+        });
         props.setItem(newItem);
-    }
+    };
 
         switch (props.step) {
             case 0:
@@ -214,7 +216,7 @@ const RowForm = (props) => {
                                 <Form.Group>
                                     <Form.Label>Image</Form.Label>
                                     <br />
-                                    <label className="btn btn-primary btn-block point">
+                                    <Button block>
                                         Upload
                                         <FileUploader
                                             hidden
@@ -222,10 +224,29 @@ const RowForm = (props) => {
                                             name='image'
                                             storageRef={storage.ref('images')}
                                             onUploadSuccess={handleUploadSuccess} />
-                                    </label>
+                                    </Button>
                                 </Form.Group>
                             </Col>
                         </Row>
+                        <Form.Group>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                name="description"
+                                value={item.description}
+                                onChange={(e) => {
+                                    setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                    props.setItem({
+                                        ...item,
+                                        [e.target.name]: e.target.value
+                                    });
+                                }}
+                                placeholder="Description"
+                                rows="4"
+                                as="textarea" />
+                        </Form.Group>
                     </Fragment>
                 );
             case 1:
