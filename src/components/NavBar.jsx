@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Link from "react-router-dom/Link";
 import Pacts from '../assets/img/pacts.png';
+import EBP from '../assets/img/ebp.png';
 import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
 import {providerRoute, templateRoute} from "./ProviderRoutes";
-import { authRoute } from "./ProviderRoutes";
-import { withFirebase } from "react-redux-firebase";
 
 var classnames = require('classnames');
 
@@ -20,7 +19,9 @@ function NavBar(props) {
           className = {classnames("logo", { "expanded": expand })}
           onMouseLeave={() => setExpanded(false)}
           onMouseEnter={() => setExpanded(true)}>
-        <a href= "/"><img src={Pacts}/></a>
+        <a href= "/"><img
+            style={{ width: 90 }}
+            src={props.team === 'ebp' ? EBP : Pacts} alt=""/></a>
       </div>
       <div
         id="sidebar"
@@ -47,7 +48,7 @@ function NavBar(props) {
                 </div>
           </div>
         </Link>
-        <Link to="/pacts" target="_blank" style={{textDecoration: 'none'}}>
+        <Link to={props.team === 'ebp' ? "/ebp" : "/pacts"} target="_blank" style={{textDecoration: 'none'}}>
           <div className = "cell">
             <div className = "icon">
               <FiMap/>

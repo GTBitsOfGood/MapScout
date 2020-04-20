@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import Button from "react-bootstrap/Button";
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 
-export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarkerClick }) => {
+export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarkerClick, primaryColor }) => {
     return (
         <Popup
             trigger={
@@ -69,7 +69,8 @@ export default ({ index, selectedIndex, name, address, onShowMoreClick, onMarker
                         padding: 0,
                         fontWeight: "300",
                         fontSize: "13px",
-                        margin: 0
+                        margin: 0,
+                        color: primaryColor
                     }}
                 >
                     Show More Info

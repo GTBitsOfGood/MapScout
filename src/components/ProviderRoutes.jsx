@@ -89,7 +89,9 @@ const ProviderRoutes = (props) => {
         <Switch>
             <Route path={providerRoute}>
                 <React.Fragment>
-                    <NavBar logout={logout}/>
+                    <NavBar
+                        team={props.team}
+                        logout={logout}/>
                     <div className="dashboard-content">
                         <Switch>
                             <PrivateRoute

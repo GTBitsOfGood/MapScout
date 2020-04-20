@@ -54,6 +54,9 @@ const Index = (props) => {
     const [distances, setDistances] = useState({});
     const [prevSearchLen, setPrevSearchLen] = useState(0);
 
+    const primaryColor = getTeam() === "pacts" ? "#5FB73C" : "#144D78";
+    const secondaryColor = getTeam() === "pacts" ? "#222C65" : "#EDBF37";
+
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
@@ -361,7 +364,7 @@ const Index = (props) => {
                                 )}
                             <Button
                                 variant="link"
-                                style={{ color: "red" }}
+                                style={{ color: secondaryColor }}
                                 onClick={() => setMoreFilter(false)}
                             >
                                 - {lessFilters}
@@ -370,6 +373,7 @@ const Index = (props) => {
                     ) : (
                         <Button
                             variant="link"
+                            style={{ color: primaryColor }}
                             onClick={() => setMoreFilter(true)}
                         >
                             + {moreFilters}
@@ -470,6 +474,7 @@ const Index = (props) => {
                             condition ?
                             <Button
                                 variant = "primary"
+                                style={{ borderColor: primaryColor, backgroundColor: primaryColor }}
                                 onClick = { switchView }
                                 className = "switch-view-button" >
                                 { listView ? hideLabel : showLabel }
@@ -478,6 +483,7 @@ const Index = (props) => {
                                 isSticky &&
                                 <Button
                                     variant = "outline-primary"
+                                    style={{ borderColor: primaryColor, color: primaryColor }}
                                     onClick = {resetSticky}>
                                     <FaMap/>
                                 </Button>
@@ -528,6 +534,7 @@ const Index = (props) => {
                                         key={index}
                                         item={i}
                                         index={index}
+                                        primaryColor={primaryColor}
                                         onMouseEnter={debounce(() => {
                                             if (listView && width > 768)
                                                 setCurrmarker(index);
@@ -546,7 +553,7 @@ const Index = (props) => {
                                         dialogClassName = "myModal"
                                         scrollable >
                                         <Modal.Header
-                                            style = {{ backgroundColor: "#2F80ED" }}
+                                            style = {{ backgroundColor: primaryColor }}
                                             closeButton >
                                         </Modal.Header>
                                         <Modal.Body
@@ -563,7 +570,7 @@ const Index = (props) => {
                                         dialogClassName = "modalMobile"
                                         scrollable >
                                             <Modal.Header
-                                                style = {{ backgroundColor: "#2F80ED" }}
+                                                style = {{ backgroundColor: primaryColor }}
                                                 closeButton >
                                             </Modal.Header>
                                             <Modal.Body
@@ -585,6 +592,7 @@ const Index = (props) => {
                                 <GoogleMap
                                     providers={activeProviders}
                                     defaultZoom={12}
+                                    primaryColor={primaryColor}
                                     defaultCenter={{
                                         lat: 39.9526,
                                         lng: -75.1652
