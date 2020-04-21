@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import Badge from 'react-bootstrap/Badge';
 import {FiGlobe} from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
+import LazyLoad from "react-lazy-load";
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
@@ -21,14 +22,15 @@ const ProviderInfo = (props) => {
 
   useEffect(() => {
     async function fetchData() {
+        setIsLoading(true);
      try {
          const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
              + `&markers=${props.item.latitude},${props.item.longitude}`);
          setStreetView(res2.url);
          if (typeof props.item.imageURL === 'string') {
-             await setImage(props.item.imageURL);
+             setImage(props.item.imageURL);
          } else {
-             const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
+             const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
              setImage(res.url);
          }
          setIsLoading(false);
@@ -38,7 +40,7 @@ const ProviderInfo = (props) => {
      }
     }
     fetchData();
-  },[]);
+  },[props.item]);
 
   const categoriesToUse = props.categories || [];
 
@@ -54,8 +56,12 @@ const ProviderInfo = (props) => {
       <Row>
         <Col className = "modalImage">
           <Card>
-            <Card.Img
-                src={image} />
+              <LazyLoad
+                  debounce={false}
+                  offsetVertical={500}>
+                <Card.Img
+                    src={image} />
+              </LazyLoad>
           </Card>
         </Col>
         <Col xs = {7}>

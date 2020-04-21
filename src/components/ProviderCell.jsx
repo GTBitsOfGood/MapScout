@@ -7,12 +7,17 @@ import API_KEY from "../config/keys";
 var classNames = require('classnames');
 
 export default ({item, index, onMouseEnter, onClick, distances, primaryColor}) => {
-    let myDistance = null;
-    if (distances && distances.length > 0) {
-        myDistance = distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName];
-    }
+
+    useEffect(() => {
+        if (distances && distances.length > 0) {
+            setMyDistance(distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName]);
+        } else if (myDistance) {
+            setMyDistance(null);
+        }
+    }, [distances]);
 
     const [image, setImage] = useState("bog");
+    const [myDistance, setMyDistance] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         async function fetchData() {
@@ -40,6 +45,7 @@ export default ({item, index, onMouseEnter, onClick, distances, primaryColor}) =
                 borderLeftColor: primaryColor,
                 borderTopWidth: index === 0 ? 0 : 1,
                 paddingTop: index === 0 ? 0 : 18,
+                width: '100%'
             }}
             onMouseEnter={onMouseEnter}
             onClick = {onClick} >
@@ -53,7 +59,7 @@ export default ({item, index, onMouseEnter, onClick, distances, primaryColor}) =
                     className={classNames("provider-cell-image", {"blur": isLoading})}
                     alt=""/>
             </LazyLoad>
-            <div style={{ marginLeft: 12 }}>
+            <div style={{ marginLeft: 12, width: '100%' }}>
                 <h5>
                     <b style={{ marginRight: 20 }}>{ item.facilityName }</b>
                     {item.therapyTypes && item.therapyTypes.includes('Pri-CARE') &&
