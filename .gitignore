@@ -9,3 +9,6 @@ server/__pycache__/*
 *.pyc
 *.iml
 build/
+
+#env
+.env
