@@ -229,7 +229,7 @@ const RowForm = (props) => {
                             </Col>
                         </Row>
                         <Form.Group>
-                            <Form.Label>Description</Form.Label>
+                            <Form.Label>About</Form.Label>
                             <Form.Control
                                 name="description"
                                 value={item.description}
@@ -243,7 +243,7 @@ const RowForm = (props) => {
                                         [e.target.name]: e.target.value
                                     });
                                 }}
-                                placeholder="Description"
+                                placeholder="About me"
                                 rows="4"
                                 as="textarea" />
                         </Form.Group>

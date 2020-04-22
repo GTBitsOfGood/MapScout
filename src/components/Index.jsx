@@ -21,15 +21,6 @@ var classNames = require('classnames');
 
 const FILTER_CUTOFF = 5;
 
-const colors = {
-    serviceType: '#DC8665',
-    specializations: '#138086',
-    ages: '#534666',
-    insurance: '#CD7672',
-    languages: '#240E8B',
-    therapyTypes: '#787FF6',
-};
-
 const getWidth = () => window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
@@ -54,8 +45,8 @@ const Index = (props) => {
     const [distances, setDistances] = useState({});
     const [prevSearchLen, setPrevSearchLen] = useState(0);
 
-    const primaryColor = getTeam() === "pacts" ? "#5FB73C" : "#144D78";
-    const secondaryColor = getTeam() === "pacts" ? "#222C65" : "#EDBF37";
+    const primaryColor = getTeam() === "pacts" ? "#5DB63C" : "#144D78";
+    const secondaryColor = getTeam() === "pacts" ? "#202C64" : "#EDBF37";
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
@@ -310,7 +301,7 @@ const Index = (props) => {
         return filtersState[item].map((title, key) =>
             <div
                 className = "tag"
-                style = {{ borderColor: colors[item], color: colors[item] } }
+                style = {{ borderColor: '#007bff', color: '#007bff' } }
                 key = { `${index}${key}` }>
                 { title } <span className = "remove-tag"
                                 onClick = {
@@ -367,7 +358,7 @@ const Index = (props) => {
                                 )}
                             <Button
                                 variant="link"
-                                style={{ color: secondaryColor }}
+                                style={{ color: 'red' }}
                                 onClick={() => setMoreFilter(false)}
                             >
                                 - {lessFilters}
@@ -376,7 +367,6 @@ const Index = (props) => {
                     ) : (
                         <Button
                             variant="link"
-                            style={{ color: primaryColor }}
                             onClick={() => setMoreFilter(true)}
                         >
                             + {moreFilters}

@@ -1,9 +1,9 @@
 {
-    "name": "PACTS",
+    "name": "MapScout",
     "version": "1.0.0",
     "author": "Hack4Impact",
     "license": "MIT",
-    "description": "PACTS Project",
+    "description": "A Bits of Good Project",
     "main": "server/server.js",
     "homepage": "www.mapscout.io",
     "repository": {

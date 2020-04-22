@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import { formRoute, providerRoute } from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
+import API_KEY from "../config/keys";
 
 const classNames = require('classnames');
 
@@ -44,6 +45,7 @@ class Dashboard extends Component {
     }
 
     async componentDidMount(){
+        console.log(API_KEY);
         const { firestore, team, firebase } = this.props;
         if (team === "pacts" || team === "ebp") {
             const collections = firestore.collection("categories");
