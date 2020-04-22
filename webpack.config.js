@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 const path = require('path');
+const dotenv = require('dotenv');
 
 const paths = {
     src: path.resolve(__dirname, 'src'),
@@ -25,6 +26,14 @@ const htmlConfig = {
         collapseWhitespace: true
     }
 };
+
+const env = dotenv.config().parsed;
+
+// create a nice object from the env variable
+const envKeys = Object.keys(env).reduce((prev, next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+}, {});
 
 const common = {
     devServer: {
@@ -79,6 +88,7 @@ const common = {
         new CleanWebpackPlugin([paths.build]),
         new HtmlWebpackPlugin(htmlConfig),
         new ExtractTextPlugin('styles.[contenthash].css'),
+        new webpack.DefinePlugin(envKeys)
     ]
 };
 
@@ -129,3 +139,5 @@ if (TARGET === 'start') {
 if (TARGET === 'build' || !TARGET) {
     module.exports = merge(common, prodSettings)
 }
+
+
