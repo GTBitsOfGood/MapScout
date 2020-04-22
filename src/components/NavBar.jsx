@@ -64,7 +64,9 @@ function NavBar(props) {
             <div className = "icon">
               <FiBell/>
             </div>
-            <div className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
+            <div
+                onClick={()=> window.open("https://www.notion.so/gtbitsofgood/MapScout-FAQs-9f6191f9571b47bc964f52a3961eb2ee", "_blank")}
+                className={classnames("cell-title", { "none": !expand, "fadeIn": expand })}>
               HELP
             </div>
           </div>

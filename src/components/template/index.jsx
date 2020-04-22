@@ -217,7 +217,7 @@ export default compose(
         <div id="template-root">
             <Container className="box">
                 <div className="row-spaced">
-                    <h2>Resource Template</h2>
+                    <h2>Template Builder</h2>
                     <div>
                         {/*<Button*/}
                         {/*    variant="outline-primary"*/}

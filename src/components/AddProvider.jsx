@@ -214,11 +214,11 @@ class AddProvider extends Component {
                                 <Step
                                     title="Hours"/>
                                 <Step
-                                    title="Filters"/>
+                                    title="Tag"/>
                                 <Step
-                                    title="Descriptions"/>
+                                    title="Text"/>
                                 <Step
-                                    title="Categories"/>
+                                    title="Toggle"/>
                             </Steps>
                             {width > 768 && (
                                 <Fragment>
@@ -281,7 +281,7 @@ class AddProvider extends Component {
                                             </Col>
                                         </Row>
                                         <hr />
-                                        <div className="overflow-y-auto">
+                                        <div>
                                             <div className={animate ? "fade-in" : "hide"}>
                                                 <RowForm
                                                     step={step}
