@@ -161,6 +161,7 @@ class AddProvider extends Component {
                 }
             }
             let firestore = this.props.firestore;
+            //here the item.id needs to be added to the google firebase console
             await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                     firestore.update({collection: 'providers', doc: doc.id}, item)
