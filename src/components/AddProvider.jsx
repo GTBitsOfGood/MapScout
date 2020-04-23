@@ -17,8 +17,8 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
 import promiseWithTimeout from '../utils/PromiseWithTimeout';
+import API_KEY from '../config/keys';
 
-const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
 const steps = [
     "Map", "Hours", "Filters", "Descriptions", "Categories"
 ];
