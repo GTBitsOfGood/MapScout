@@ -78,7 +78,7 @@ export default ({ item, index, deleteCat, disableCat, enableCat, addOption, remo
                                     as="select"
                                     disabled={!item.active}
                                     value={item.select_type}
-                                    onChange={() => changeType(myRef.current.value, index)}>
+                                    onChange={() => changeType(parseInt(myRef.current.value), index)}>
                                     <option value={0}>Description</option>
                                     <option value={1}>Single-Select</option>
                                     <option value={2}>Multi-Select</option>

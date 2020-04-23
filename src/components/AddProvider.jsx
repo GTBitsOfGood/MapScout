@@ -19,10 +19,10 @@ import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumb
 import promiseWithTimeout from '../utils/PromiseWithTimeout';
 import API_KEY from '../config/keys';
 
-const uuidv4 = require("uuid/v4")
+const uuidv4 = require("uuid/v4");
 
 const steps = [
-    "Map", "Hours", "Filters", "Descriptions", "Categories"
+    "Map", "Hours", "Tag", "Text", "Toggle"
 ];
 
 class AddProvider extends Component {
