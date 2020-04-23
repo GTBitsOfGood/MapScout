@@ -45,7 +45,6 @@ class Dashboard extends Component {
     }
 
     async componentDidMount(){
-        console.log(API_KEY);
         const { firestore, team, firebase } = this.props;
         if (team === "pacts" || team === "ebp") {
             const collections = firestore.collection("categories");
