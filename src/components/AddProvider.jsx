@@ -17,8 +17,10 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
 import promiseWithTimeout from '../utils/PromiseWithTimeout';
+import API_KEY from '../config/keys';
 
-const API_KEY = "AIzaSyCS2-Xa70z_LHWyTMvyZmHqhrYNPsDprMQ";
+const uuidv4 = require("uuid/v4")
+
 const steps = [
     "Map", "Hours", "Filters", "Descriptions", "Categories"
 ];
@@ -116,6 +118,7 @@ class AddProvider extends Component {
         this.setState({isLoading: true});
         let item = {
             ...this.state.item,
+            id: uuidv4(),
             team: this.props.team,
             latitude: null,
             longitude: null,
@@ -161,6 +164,7 @@ class AddProvider extends Component {
                 }
             }
             let firestore = this.props.firestore;
+            //here the item.id needs to be added to the google firebase console
             await firestore.get({collection: 'providers', where: ['id', '==', item.id]}).then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                     firestore.update({collection: 'providers', doc: doc.id}, item)

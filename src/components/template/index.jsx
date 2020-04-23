@@ -126,7 +126,7 @@ export default compose(
         if (point.options.findIndex(x => x.label.toLowerCase() === name.toLowerCase()) === -1) {
             await point.options.push({
                 label: name,
-                value: name.replace(/\s/g, '').toLowerCase(),
+                value: name,
             });
         }
         setIsLoading(false);
