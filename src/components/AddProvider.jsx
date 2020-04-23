@@ -19,6 +19,8 @@ import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumb
 import promiseWithTimeout from '../utils/PromiseWithTimeout';
 import API_KEY from '../config/keys';
 
+const uuidv4 = require("uuid/v4")
+
 const steps = [
     "Map", "Hours", "Filters", "Descriptions", "Categories"
 ];
@@ -116,6 +118,7 @@ class AddProvider extends Component {
         this.setState({isLoading: true});
         let item = {
             ...this.state.item,
+            id: uuidv4(),
             team: this.props.team,
             latitude: null,
             longitude: null,

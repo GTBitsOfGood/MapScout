@@ -149,6 +149,7 @@ const ProviderInfo = (props) => {
           categoriesToUse
           .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
           .map((category) => {
+              console.log(props.item[category.id]);
           return (
             <div>
               <h5>{category.name}</h5>
