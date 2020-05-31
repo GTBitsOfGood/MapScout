@@ -7,6 +7,7 @@ const merge = require('webpack-merge');
 const webpack = require('webpack');
 const path = require('path');
 const dotenv = require('dotenv');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const paths = {
     src: path.resolve(__dirname, 'src'),
@@ -119,7 +120,16 @@ const prodSettings = {
         new webpack.DefinePlugin({ 'process.env': {
                 NODE_ENV: JSON.stringify('production')
             }}),
-        new webpack.optimize.UglifyJsPlugin(uglifyConfig),
+        new UglifyJsPlugin({
+                "uglifyOptions":
+                    {
+                        compress: {
+                            warnings: false
+                        },
+                        sourceMap: true
+                    }
+            }
+        ),
         new OptimizeCssAssetsPlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
     ]

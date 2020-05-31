@@ -1,2 +1,2 @@
 # Philadelphia Pacts
-https://philadelphiapacts.github.io/#/
+https://mapscout.io

@@ -254,6 +254,7 @@ const RowForm = (props) => {
                     hours={props.item.hours || {}}
                     onChange={onTimeChange}/>;
             case 2:
+                console.log(props.filters);
                 return(
                     <Fragment>
                         {
@@ -262,7 +263,7 @@ const RowForm = (props) => {
                                     <Form.Label>{name}</Form.Label>
                                     <MultiSelect
                                         options={options}
-                                        selected={item[key]}
+                                        selected={item[key] || []}
                                         onSelectedChanged={(selected) => {
                                             const newItem = {
                                                 ...item,
@@ -299,7 +300,7 @@ const RowForm = (props) => {
                                     <Form.Label>{name}</Form.Label>
                                     <Select
                                         options={options}
-                                        selected={item[key]}
+                                        selected={item[key] || []}
                                         maxMenuHeight={220}
                                         menuPlacement="auto"
                                         onSelectedChanged={(selected) => {

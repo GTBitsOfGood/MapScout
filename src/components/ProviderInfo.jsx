@@ -132,7 +132,7 @@ const ProviderInfo = (props) => {
             <a href = {`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">
             <Card.Img
               src={streetView}
-              alt="Google Map of bethanna"
+              alt="Google Map"
             >
             </Card.Img>
             </a>
@@ -149,7 +149,6 @@ const ProviderInfo = (props) => {
           categoriesToUse
           .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
           .map((category) => {
-              console.log(props.item[category.id]);
           return (
             <div>
               <h5>{category.name}</h5>
