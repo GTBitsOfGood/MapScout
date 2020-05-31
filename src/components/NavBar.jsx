@@ -21,7 +21,7 @@ function NavBar(props) {
           onMouseEnter={() => setExpanded(true)}>
         <a href= "/"><img
             style={{ width: 90 }}
-            src={props.team === 'ebp' ? EBP : Pacts} alt=""/></a>
+            src={props.team.logoUrl} alt=""/></a>
       </div>
       <div
         id="sidebar"
@@ -48,7 +48,7 @@ function NavBar(props) {
                 </div>
           </div>
         </Link>
-        <Link to={props.team === 'ebp' ? "/ebp" : "/pacts"} target="_blank" style={{textDecoration: 'none'}}>
+        <Link to={"/" + props.team.name} target="_blank" style={{textDecoration: 'none'}}>
           <div className = "cell">
             <div className = "icon">
               <FiMap/>

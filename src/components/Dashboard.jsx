@@ -41,38 +41,37 @@ class Dashboard extends Component {
             isLoading: true,
             providers: [],
             categories: [],
+            teams: []
         };
     }
 
     async componentDidMount(){
         const { firestore, team, firebase } = this.props;
-        if (team === "pacts" || team === "ebp") {
-            const collections = firestore.collection("categories");
-            const categories = await collections
-                .where('team', '==', team)
-                .get()
-                .then((querySnapshot) => {
-                    const arr = [];
-                    querySnapshot.forEach((doc) => {
-                        const docData = doc.data();
-                        arr.push(docData);
-                    });
-                    return arr;
+        const collections = firestore.collection("categories");
+        const categories = await collections
+            .where('team', '==', team.name)
+            .get()
+            .then((querySnapshot) => {
+                const arr = [];
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    arr.push(docData);
                 });
-            const collections2 = firestore.collection("providers");
-            const providers = await collections2
-                .where('team', '==', team)
-                .get()
-                .then((querySnapshot) => {
-                    const arr = [];
-                    querySnapshot.forEach((doc) => {
-                        const docData = doc.data();
-                        arr.push(docData);
-                    });
-                    return arr;
+                return arr;
+            });
+        const collections2 = firestore.collection("providers");
+        const providers = await collections2
+            .where('team', '==', team.name)
+            .get()
+            .then((querySnapshot) => {
+                const arr = [];
+                querySnapshot.forEach((doc) => {
+                    const docData = doc.data();
+                    arr.push(docData);
                 });
-            this.setState({providers, categories, isLoading: false});
-        }
+                return arr;
+            });
+        this.setState({providers, categories, isLoading: false});
   }
 
   render() {

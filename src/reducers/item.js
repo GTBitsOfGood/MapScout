@@ -3,7 +3,12 @@ import { SELECT_ITEM, SELECT_TEAM } from '../components/Dashboard';
 
 const initialState = {
   selected: null,
-  team: ""
+  team: {
+    name: "",
+    logoUrl: "",
+    primaryColor: "",
+    secondaryColor: ""
+  }
 };
 
 export default function (state = initialState, action) {

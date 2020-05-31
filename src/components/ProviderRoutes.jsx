@@ -34,7 +34,12 @@ const ProviderRoutes = (props) => {
                     querySnapshot.forEach((doc) => {
                         const docData = doc.data();
                         console.log(docData.team);
-                        props.selectTeam(docData.team);
+                        props.selectTeam({
+                            name: docData.team,
+                            logoUrl: "https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2FCGRC.png?alt=media&token=37ed7df3-fb45-4177-856e-357b50fb5266",
+                            primaryColor: "blue",
+                            secondaryColor: "red"
+                        });
                     });
                 });
             setIsLoading(false);
