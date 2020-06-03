@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Link from "react-router-dom/Link";
-import Pacts from '../assets/img/pacts.png';
-import EBP from '../assets/img/ebp.png';
 import { FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower} from "react-icons/fi";
 import {providerRoute, templateRoute} from "./ProviderRoutes";
 
@@ -10,7 +8,7 @@ var classnames = require('classnames');
 function NavBar(props) {
 
   const [expand, setExpanded] = useState(false);
-
+  console.log(props.team.logoUrl);
   return (
   <div>
     <div className = {classnames("gray-overlay", { "none": !expand, "fadeIn": expand })} />
