@@ -50,7 +50,7 @@ class AddProvider extends Component {
 
         const collections = this.props.firestore.collection('categories');
         const filters = await collections
-            .where("team", "==", this.props.team)
+            .where("team", "==", this.props.team.name)
             .where('active', '==', true)
             .where('select_type', '==', 2)
             .get()
@@ -66,7 +66,7 @@ class AddProvider extends Component {
                 return idToData;
             });
         const descriptions = await collections
-            .where("team", "==", this.props.team)
+            .where("team", "==", this.props.team.name)
             .where('active', '==', true)
             .where('select_type', '==', 0)
             .get()
@@ -82,7 +82,7 @@ class AddProvider extends Component {
                 return idToData;
             });
         const categories = await collections
-            .where("team", "==", this.props.team)
+            .where("team", "==", this.props.team.name)
             .where('active', '==', true)
             .where('select_type', '==', 1)
             .get()
@@ -119,7 +119,7 @@ class AddProvider extends Component {
         let item = {
             ...this.state.item,
             id: uuidv4(),
-            team: this.props.team,
+            team: this.props.team.name,
             latitude: null,
             longitude: null,
         };

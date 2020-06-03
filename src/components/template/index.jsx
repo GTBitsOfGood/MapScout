@@ -51,7 +51,7 @@ export default compose(
         longitude: -75.136872,
         notes: [],
         phoneNum: ["(123) 456-7890"],
-        team: props.team,
+        team: props.team.name,
         website: ["https://www.mapscout.io"]
     };
 
@@ -74,7 +74,7 @@ export default compose(
         const collections = firestore.collection("categories");
         const arr = [];
         await collections
-            .where("team", "==", props.team)
+            .where("team", "==", props.team.name)
             .get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -171,7 +171,7 @@ export default compose(
             select_type: 2,
             options: [],
             active: true,
-            team: props.team,
+            team: props.team.name,
             id: newCatName,
         });
         setNewCatName("");
@@ -187,7 +187,7 @@ export default compose(
         try {
             const collections = props.firestore.collection('categories');
             const filters = await collections
-                .where("team", "==", props.team)
+                .where("team", "==", props.team.name)
                 .get()
                 .then(async (querySnapshot) => {
                 await querySnapshot.forEach((doc) => {

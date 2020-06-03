@@ -7,12 +7,26 @@ import { store, history } from './store';
 import { routes } from './routes';
 import './assets/styles/style';
 
-// render the main component
-ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      {routes}
-    </ConnectedRouter>
-  </Provider>,
-  document.getElementById('app'),
-);
+const getRoutes = async () => {
+  const strRoutes = await store.firestore.collection("teams")
+    .get()
+    .then((doc) => {
+      const arr = [];
+      doc.forEach((team) => {
+        arr.push("/" + team.id);
+      });
+      return arr;
+    })
+  
+  // render the main component
+  ReactDOM.render(
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        {routes(strRoutes)}
+      </ConnectedRouter>
+    </Provider>,
+    document.getElementById('app'),
+  );
+}
+
+getRoutes();

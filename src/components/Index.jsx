@@ -45,8 +45,8 @@ const Index = (props) => {
     const [distances, setDistances] = useState({});
     const [prevSearchLen, setPrevSearchLen] = useState(0);
 
-    const primaryColor = getTeam() === "pacts" ? "#5DB63C" : "#144D78";
-    const secondaryColor = getTeam() === "pacts" ? "#202C64" : "#EDBF37";
+    const [primaryColor, setPrimaryColor] = useState("");
+    const [secondaryColor, setSecondaryColor] = useState("");
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
@@ -119,6 +119,15 @@ const Index = (props) => {
             });
         setProviders(provs);
         setActiveProviders(provs);
+
+        const teamCollection = firestore.collection("teams").doc(getTeam());
+        const teamData = await teamCollection
+            .get()
+            .then((doc) => {
+                return doc.data();
+            });
+        setPrimaryColor(teamData.primaryColor);
+        setSecondaryColor(teamData.secondaryColor);
         setIsLoading(false);
     }
 
