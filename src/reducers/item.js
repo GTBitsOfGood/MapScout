@@ -7,7 +7,8 @@ const initialState = {
     name: "",
     logoUrl: "",
     primaryColor: "",
-    secondaryColor: ""
+    secondaryColor: "",
+    label: "",
   }
 };
 
