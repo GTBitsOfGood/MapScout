@@ -54,6 +54,7 @@ const Index = (props) => {
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
+        document.title = getTeam().toUpperCase();
         setIsLoading(true);
         fetchData().then(r => {
             setTempProviders(providers);
