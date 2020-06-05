@@ -36,7 +36,7 @@ const RowForm = (props) => {
         phoneNum: [],
         website: [],
         image: 'modalimage.png',
-        imageURL: 'https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8'
+        imageURL: null
     };
 
     const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
@@ -110,7 +110,6 @@ const RowForm = (props) => {
 
     const handleUploadSuccess = async filename => {
         let newItem = { ...item, image: filename };
-        setItem(newItem);
         await storage.ref('images').child(filename).getDownloadURL()
         .then(url => {
             newItem = { ...newItem, imageURL: url };
@@ -216,7 +215,7 @@ const RowForm = (props) => {
                                 <Form.Group>
                                     <Form.Label>Image</Form.Label>
                                     <br />
-                                    <Button block>
+                                    <label className="btn btn-primary btn-block">
                                         Upload
                                         <FileUploader
                                             hidden
@@ -224,7 +223,7 @@ const RowForm = (props) => {
                                             name='image'
                                             storageRef={storage.ref('images')}
                                             onUploadSuccess={handleUploadSuccess} />
-                                    </Button>
+                                    </label>
                                 </Form.Group>
                             </Col>
                         </Row>
