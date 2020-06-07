@@ -76,8 +76,7 @@
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-react": "^7.18.0",
         "eslint-plugin-react-hooks": "^1.7.0",
-        "prop-types": "^15.7.2",
-        "react-test-renderer": "^15.2.0"
+        "prop-types": "^15.7.2"
     },
     "babel": {
         "presets": [
