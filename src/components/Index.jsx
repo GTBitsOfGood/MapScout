@@ -47,6 +47,9 @@ const Index = (props) => {
 
     const [primaryColor, setPrimaryColor] = useState("");
     const [secondaryColor, setSecondaryColor] = useState("");
+    const [defaultLat, setDefaultLat] = useState(0);
+    const [defaultLong, setDefaultLong] = useState(0);
+    const [defaultZoom, setDefaultZoom] = useState(1);
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
@@ -130,6 +133,9 @@ const Index = (props) => {
             });
         setPrimaryColor(teamData.primaryColor);
         setSecondaryColor(teamData.secondaryColor);
+        setDefaultLat(teamData.latitude);
+        setDefaultLong(teamData.longitude);
+        setDefaultZoom(teamData.zoom);
         setIsLoading(false);
     }
 
@@ -434,12 +440,6 @@ const Index = (props) => {
         searchZipcode,
         hideLabel,
         showLabel,
-        languagesLabel,
-        agesLabel,
-        insuranceLabel,
-        serviceTypeLabel,
-        specializationsLabel,
-        therapyTypeLabel,
         lessFilters,
         moreFilters
     } = localizationStrings;
@@ -595,11 +595,11 @@ const Index = (props) => {
                                 style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}>
                                 <GoogleMap
                                     providers={activeProviders}
-                                    defaultZoom={12}
+                                    defaultZoom={defaultZoom}
                                     primaryColor={primaryColor}
                                     defaultCenter={{
-                                        lat: 39.9526,
-                                        lng: -75.1652
+                                        lat: defaultLat,
+                                        lng: defaultLong
                                     }}
                                     selectedMarker={currmarker}
                                     onShowMoreClick={handleCellClick}
