@@ -41,16 +41,14 @@ export default compose(
     const staticData = {
         id:"Preview",
         address: ["123 Fake St, Philadelphia, PA 19133"],
-        ages: ["Children","Adolescents","Preteens"],
         buildingNum: [],
-        childcare: [false],
+        description: "This is an example provider showcasing all enabled categories",
         facilityName: "Preview",
         hours: {"Friday":[28800,75600],"Monday":[28800,75600],"Saturday":[32400,61200],"Sunday":null,"Thursday":[28800,75600],"Tuesday":[28800,75600],"Wednesday":[28800,75600]},
         image: "modalimage.png",
         imageURL: "https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8",
         latitude: 39.990206,
         longitude: -75.136872,
-        notes: [],
         phoneNum: ["(123) 456-7890"],
         team: props.team.name,
         website: ["https://www.mapscout.io"]
@@ -68,7 +66,11 @@ export default compose(
             setMessage(null);
         }
         categories.forEach((category) => {
-            newDummy[category.id || category.name] = category.options.map(({ value }) => value);
+            if (category.select_type === 0) {
+                newDummy[category.id || category.name] = "This is an example description."
+            } else {
+                newDummy[category.id || category.name] = category.options.map(({ value }) => value);
+            }
         });
         setDummy(newDummy);
     }, [JSON.stringify(categories)]);

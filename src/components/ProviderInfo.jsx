@@ -149,7 +149,6 @@ const ProviderInfo = (props) => {
         categoriesToUse
         .filter((category) => props.item[category.id] && props.item[category.id].length)
         .map((category) => {
-          console.log(category)
           return (
             <div>
               <h5>{category.name}</h5>
@@ -168,7 +167,7 @@ const ProviderInfo = (props) => {
                     return <div className="modal-text">{selected}</div>;
                   })
                   :
-                  <p>{props.item[category.id].value}</p>
+                  <p>{props.item[category.id]}</p>
                 }
               </div>
               <br />

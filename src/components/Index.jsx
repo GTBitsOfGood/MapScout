@@ -76,10 +76,8 @@ const Index = (props) => {
         const collections = firestore.collection("categories");
         const data = {};
         const filtersObj = {};
-
         const cat = await collections
             .where("active", "==", true)
-            .where("select_type", "in", [1, 2])
             .where('team', '==', getTeam())
             .get()
             .then((querySnapshot) => {
@@ -90,14 +88,17 @@ const Index = (props) => {
                         name: docData.name,
                         options: docData.options,
                         priority: docData.priority,
+                        select_type: docData.select_type,
                         id: doc.id,
                     });
-                    data[doc.id] = {
-                        name: docData.name,
-                        options: docData.options,
-                        priority: docData.priority,
-                    };
-                    filtersObj[doc.id] = []
+                    if (docData.select_type !== 0 && docData.options.length) {
+                        data[doc.id] = {
+                            name: docData.name,
+                            options: docData.options,
+                            priority: docData.priority,
+                        };
+                        filtersObj[doc.id] = []
+                    }
                 });
                 return arr;
             });
@@ -153,7 +154,7 @@ const Index = (props) => {
     const listScrollRef = useRef(null);
     const handleScroll = (flip) => {
         if (flip || width <= 768) {
-            if (ref.current.getBoundingClientRect().top <= 70) {
+            if (ref.current && ref.current.getBoundingClientRect().top <= 70) {
                 setSticky(true);
             } else if (isSticky) {
                 setSticky(false);

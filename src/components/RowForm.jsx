@@ -285,15 +285,11 @@ const RowForm = (props) => {
                                     <Form.Label>{name}</Form.Label>
                                     <Form.Control 
                                         as="textarea"
-                                        value={item[key] ? item[key].value : ""}
+                                        value={item[key]}
                                         onChange={(e) => {
                                             const newItem = {
                                                 ...item,
-                                                [key]: {
-                                                    name,
-                                                    options,
-                                                    value: e.target.value
-                                                }
+                                                [key]: e.target.value
                                             }
                                             setItem(newItem);
                                             props.setItem(newItem);
