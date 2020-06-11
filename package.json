@@ -46,6 +46,7 @@
         "react-google-places-suggest": "^3.8.0",
         "react-icons": "^3.8.0",
         "react-lazy-load": "^3.0.13",
+        "react-linkify": "^1.0.0-alpha",
         "react-localization": "^1.0.15",
         "react-read-more-less": "^0.1.6",
         "react-redux": "^5.0.6",

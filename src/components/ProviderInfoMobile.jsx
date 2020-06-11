@@ -14,6 +14,7 @@ import Badge from 'react-bootstrap/Badge';
 import {FiGlobe, FiPhone} from 'react-icons/fi';
 import ReadMoreAndLess from "react-read-more-less";
 import LazyLoad from "react-lazy-load";
+import Linkify from 'react-linkify';
 
 var classNames = require('classnames');
 
@@ -46,14 +47,10 @@ const ProviderInfo = (props) => {
     return (
         <div>
             <div className = "modal-map">
-                <LazyLoad
-                    debounce={false}
-                    offsetVertical={500}>
-                    <img
-                        className="mobile-cell-image"
-                        src={image}
-                        alt=""/>
-                </LazyLoad>
+                <img
+                    className="mobile-cell-image"
+                    src={image}
+                    alt=""/>
             </div>
             <div className = {classNames("modal-mobile-card")}>
                 <div style = {{padding: "1vh 4vw"}}>
@@ -62,13 +59,16 @@ const ProviderInfo = (props) => {
                             <h3 style = {{paddingBottom: "0px"}}>{props.item.facilityName}</h3>
                             <div style = {{paddingBottom: "25px"}}>
                             </div>
-                            {props.item.description !== undefined && <ReadMoreAndLess
+                            {props.item.description !== undefined && <div>
+                                <ReadMoreAndLess
                                 charLimit={250}
                                 readMoreText="Read more"
                                 readLessText="Read less"
                             >
                                 {props.item.description + " "}
-                            </ReadMoreAndLess>}
+                            </ReadMoreAndLess>
+                            <hr />
+                            </div>}
                         </div>
                         <div className="modal-card-text">
                             <FaMapMarkerAlt size = '25px' style={{ paddingTop: '5px', color: "#007bff"}} />
@@ -102,7 +102,7 @@ const ProviderInfo = (props) => {
                             {props.item.website[0] ? <FiGlobe size = '25px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
                             {props.item.website[0] ? (
                                 <div style = {{paddingLeft: "15px"}}>
-                                    <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+                                    <a href={props.item.website[0]} target="_blank">Visit Website</a>
                                 </div>
                             ) : <div />}
                         </div>
@@ -122,14 +122,16 @@ const ProviderInfo = (props) => {
                 <div className = "modalHeader">
                     {
                         props.categories
-                            .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
+                            .filter((category) => props.item[category.id] && props.item[category.id].length)
                             .map((category) => {
                                 return (
                                     <div>
                                         <h5>{category.name}</h5>
                                         <hr className="modal-hr" />
                                         <div>
-                                            {props.item[category.id].map((selected, index) => {
+                                            {
+                                            category.select_type !== 0 ?
+                                            props.item[category.id].map((selected, index) => {
                                                 if (index !== props.item[category.id].length - 1) {
                                                     return (
                                                         <div className="modal-text">
@@ -138,7 +140,12 @@ const ProviderInfo = (props) => {
                                                     );
                                                 }
                                                 return <div className="modal-text">{selected}</div>;
-                                            })}
+                                            })
+                                            :
+                                            <Linkify>
+                                                <p>{props.item[category.id]}</p>
+                                            </Linkify>
+                                            }
                                         </div>
                                         <br />
                                     </div>

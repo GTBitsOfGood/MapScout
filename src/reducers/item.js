@@ -9,6 +9,9 @@ const initialState = {
     primaryColor: "",
     secondaryColor: "",
     label: "",
+    latitude: 0,
+    longitude: 0,
+    zoom: 0,
   }
 };
 
