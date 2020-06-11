@@ -253,7 +253,6 @@ const RowForm = (props) => {
                     hours={props.item.hours || {}}
                     onChange={onTimeChange}/>;
             case 2:
-                console.log(props.filters);
                 return(
                     <Fragment>
                         {
@@ -284,7 +283,21 @@ const RowForm = (props) => {
                             Object.entries(props.descriptions).map(([key, { name, options }]) =>
                                 <Form.Group key={key}>
                                     <Form.Label>{name}</Form.Label>
-                                    <Form.Control as="textarea"/>
+                                    <Form.Control 
+                                        as="textarea"
+                                        value={item[key] ? item[key].value : ""}
+                                        onChange={(e) => {
+                                            const newItem = {
+                                                ...item,
+                                                [key]: {
+                                                    name,
+                                                    options,
+                                                    value: e.target.value
+                                                }
+                                            }
+                                            setItem(newItem);
+                                            props.setItem(newItem);
+                                        }}/>
                                 </Form.Group>
                             )
                         }

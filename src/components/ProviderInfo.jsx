@@ -146,24 +146,30 @@ const ProviderInfo = (props) => {
 
     <div className = "modalHeader">
       {
-          categoriesToUse
-          .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
-          .map((category) => {
+        categoriesToUse
+        .filter((category) => props.item[category.id] && props.item[category.id].length)
+        .map((category) => {
+          console.log(category)
           return (
             <div>
               <h5>{category.name}</h5>
               <hr className="modal-hr" />
               <div>
-                {props.item[category.id].map((selected, index) => {
-                  if (index !== props.item[category.id].length - 1) {
-                    return (
-                      <div className="modal-text">
-                        {`${selected}, `}
-                      </div>
-                    );
-                  }
-                  return <div className="modal-text">{selected}</div>;
-                })}
+                {
+                  category.select_type !== 0 ?
+                  props.item[category.id].map((selected, index) => {
+                    if (index !== props.item[category.id].length - 1) {
+                      return (
+                        <div className="modal-text">
+                          {`${selected}, `}
+                        </div>
+                      );
+                    }
+                    return <div className="modal-text">{selected}</div>;
+                  })
+                  :
+                  <p>{props.item[category.id].value}</p>
+                }
               </div>
               <br />
             </div>
