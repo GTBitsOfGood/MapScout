@@ -8,7 +8,6 @@ var classnames = require('classnames');
 function NavBar(props) {
 
   const [expand, setExpanded] = useState(false);
-  console.log(props.team.logoUrl);
   return (
   <div>
     <div className = {classnames("gray-overlay", { "none": !expand, "fadeIn": expand })} />

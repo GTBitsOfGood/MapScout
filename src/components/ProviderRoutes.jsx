@@ -138,6 +138,10 @@ const ProviderRoutes = (props) => {
   );
 };
 
+function areEqual(prevProps, nextProps) {
+  return prevProps.location === nextProps.location && prevProps.team === nextProps.team;
+}
+
 const mapDispatchToProps = {
   selectTeam,
 };
@@ -152,4 +156,4 @@ export default compose(
   withFirestore,
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps),
-)(ProviderRoutes);
+)(React.memo(ProviderRoutes, areEqual));

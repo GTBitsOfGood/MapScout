@@ -33,6 +33,7 @@ export default compose(
 )((props) => {
 
     const [categories, setCategories] = useState([]);
+    const [message, setMessage] = useState(null);
     const [newCatName, setNewCatName] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -40,16 +41,14 @@ export default compose(
     const staticData = {
         id:"Preview",
         address: ["123 Fake St, Philadelphia, PA 19133"],
-        ages: ["Children","Adolescents","Preteens"],
         buildingNum: [],
-        childcare: [false],
+        description: "This is an example provider showcasing all enabled categories",
         facilityName: "Preview",
         hours: {"Friday":[28800,75600],"Monday":[28800,75600],"Saturday":[32400,61200],"Sunday":null,"Thursday":[28800,75600],"Tuesday":[28800,75600],"Wednesday":[28800,75600]},
         image: "modalimage.png",
         imageURL: "https://firebasestorage.googleapis.com/v0/b/gtbog-pacts.appspot.com/o/images%2Fmodalimage.png?alt=media&token=89e30d02-02ff-40c5-bcc5-177eebd9ccc8",
         latitude: 39.990206,
         longitude: -75.136872,
-        notes: [],
         phoneNum: ["(123) 456-7890"],
         team: props.team.name,
         website: ["https://www.mapscout.io"]
@@ -63,8 +62,15 @@ export default compose(
 
     useEffect(() => {
         const newDummy = { ...staticData };
+        if (message != null) {
+            setMessage(null);
+        }
         categories.forEach((category) => {
-            newDummy[category.id || category.name] = category.options.map(({ value }) => value);
+            if (category.select_type === 0) {
+                newDummy[category.id || category.name] = "This is an example description."
+            } else {
+                newDummy[category.id || category.name] = category.options.map(({ value }) => value);
+            }
         });
         setDummy(newDummy);
     }, [JSON.stringify(categories)]);
@@ -190,18 +196,37 @@ export default compose(
                 .where("team", "==", props.team.name)
                 .get()
                 .then(async (querySnapshot) => {
-                await querySnapshot.forEach((doc) => {
-                    doc.ref.delete();
-                }); //Deletes all categories
-                await categories.forEach((cat) => {
-                    promiseWithTimeout(5000, props.firestore.set({collection: 'categories', doc: cat.id}, cat));
-                }); //Replaces with new data
-                setIsLoading(false);
-                setShowModal(false);
-            });
+                    promiseWithTimeout(10000, categories.forEach((cat) => {
+                        props.firestore.set({collection: 'categories', doc: cat.id}, cat)
+                    })).then( 
+                        function(complete) {
+                            // code that executes after the timeout has completed.
+                            promiseWithTimeout(10000, querySnapshot.forEach((doc) => {
+                                if (categories.findIndex((x) => x.id === doc.id) === -1)
+                                    doc.ref.delete();
+                            })).then(
+                                function(complete) {
+                                    setMessage(
+                                        "Your changes have been saved. You may need to refresh this page to see them."
+                                    );
+                                    setShowModal(false);
+                                    setIsLoading(false);
+                                },
+                                function (error) {
+                                    alert("Unable to delete removed categories");
+                                }
+                            );
+                        },
+                        function (error) {
+                            // code that takes care of the canceled promise. 
+                            // Note that .then rather than .done should be used in this case.
+                            console.log(error);
+                            alert("Unable to save categories");
+                        });
+                });
         } catch (e) {
             console.log(e);
-            alert("Unable to save");
+            alert("Unable to load categories");
         }
     }
 
@@ -241,6 +266,12 @@ export default compose(
                     </div>
                 </div>
                 <br />
+                {
+                    message != null &&
+                    <p style={{color: "green"}}>
+                        {message}
+                    </p>
+                }
                 <InputGroup>
                     <FormControl
                         value={newCatName}
@@ -254,6 +285,10 @@ export default compose(
                                 createNewCat();
                             }}
                             variant="primary"
+                            disabled={
+                                newCatName == "" 
+                                || newCatName == null
+                                || categories.findIndex((x) => x.name == newCatName) > -1}
                         >
                             Add
                         </Button>

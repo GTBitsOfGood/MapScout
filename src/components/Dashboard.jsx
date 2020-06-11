@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import { formRoute, providerRoute } from './ProviderRoutes';
 import SingleProvider from './SingleProvider';
-import API_KEY from "../config/keys";
 
 const classNames = require('classnames');
 

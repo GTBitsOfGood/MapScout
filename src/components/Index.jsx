@@ -47,6 +47,9 @@ const Index = (props) => {
 
     const [primaryColor, setPrimaryColor] = useState("");
     const [secondaryColor, setSecondaryColor] = useState("");
+    const [defaultLat, setDefaultLat] = useState(0);
+    const [defaultLong, setDefaultLong] = useState(0);
+    const [defaultZoom, setDefaultZoom] = useState(1);
 
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
@@ -76,10 +79,8 @@ const Index = (props) => {
         const collections = firestore.collection("categories");
         const data = {};
         const filtersObj = {};
-
         const cat = await collections
             .where("active", "==", true)
-            .where("select_type", "in", [1, 2])
             .where('team', '==', getTeam())
             .get()
             .then((querySnapshot) => {
@@ -90,14 +91,17 @@ const Index = (props) => {
                         name: docData.name,
                         options: docData.options,
                         priority: docData.priority,
+                        select_type: docData.select_type,
                         id: doc.id,
                     });
-                    data[doc.id] = {
-                        name: docData.name,
-                        options: docData.options,
-                        priority: docData.priority,
-                    };
-                    filtersObj[doc.id] = []
+                    if (docData.select_type !== 0 && docData.options.length) {
+                        data[doc.id] = {
+                            name: docData.name,
+                            options: docData.options,
+                            priority: docData.priority,
+                        };
+                        filtersObj[doc.id] = []
+                    }
                 });
                 return arr;
             });
@@ -129,6 +133,9 @@ const Index = (props) => {
             });
         setPrimaryColor(teamData.primaryColor);
         setSecondaryColor(teamData.secondaryColor);
+        setDefaultLat(teamData.latitude);
+        setDefaultLong(teamData.longitude);
+        setDefaultZoom(teamData.zoom);
         setIsLoading(false);
     }
 
@@ -153,7 +160,7 @@ const Index = (props) => {
     const listScrollRef = useRef(null);
     const handleScroll = (flip) => {
         if (flip || width <= 768) {
-            if (ref.current.getBoundingClientRect().top <= 70) {
+            if (ref.current && ref.current.getBoundingClientRect().top <= 70) {
                 setSticky(true);
             } else if (isSticky) {
                 setSticky(false);
@@ -433,12 +440,6 @@ const Index = (props) => {
         searchZipcode,
         hideLabel,
         showLabel,
-        languagesLabel,
-        agesLabel,
-        insuranceLabel,
-        serviceTypeLabel,
-        specializationsLabel,
-        therapyTypeLabel,
         lessFilters,
         moreFilters
     } = localizationStrings;
@@ -594,11 +595,11 @@ const Index = (props) => {
                                 style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}>
                                 <GoogleMap
                                     providers={activeProviders}
-                                    defaultZoom={12}
+                                    defaultZoom={defaultZoom}
                                     primaryColor={primaryColor}
                                     defaultCenter={{
-                                        lat: 39.9526,
-                                        lng: -75.1652
+                                        lat: defaultLat,
+                                        lng: defaultLong
                                     }}
                                     selectedMarker={currmarker}
                                     onShowMoreClick={handleCellClick}

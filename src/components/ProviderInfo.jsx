@@ -14,6 +14,7 @@ import Badge from 'react-bootstrap/Badge';
 import {FiGlobe} from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from "react-lazy-load";
+import Linkify from 'react-linkify';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState("bog");
@@ -111,7 +112,7 @@ const ProviderInfo = (props) => {
           {props.item.website && props.item.website[0] ? <FiGlobe size = '20px' style={{ paddingTop: '5px', color: "#007bff"}} /> : <div />}
           {props.item.website && props.item.website[0] ? (
             <div style = {{paddingLeft: "15px"}}>
-              <a href={props.item.website[0]} target="_blank">{props.item.website[0]}</a>
+              <a href={props.item.website[0]} target="_blank">Visit Website</a>
             </div>
           ) : <div />}
         </div>
@@ -146,24 +147,31 @@ const ProviderInfo = (props) => {
 
     <div className = "modalHeader">
       {
-          categoriesToUse
-          .filter((category) => props.item[category.id] && props.item[category.id].length && category.select_type !== 0)
-          .map((category) => {
+        categoriesToUse
+        .filter((category) => props.item[category.id] && props.item[category.id].length)
+        .map((category) => {
           return (
             <div>
               <h5>{category.name}</h5>
               <hr className="modal-hr" />
               <div>
-                {props.item[category.id].map((selected, index) => {
-                  if (index !== props.item[category.id].length - 1) {
-                    return (
-                      <div className="modal-text">
-                        {`${selected}, `}
-                      </div>
-                    );
-                  }
-                  return <div className="modal-text">{selected}</div>;
-                })}
+                {
+                  category.select_type !== 0 ?
+                  props.item[category.id].map((selected, index) => {
+                    if (index !== props.item[category.id].length - 1) {
+                      return (
+                        <div className="modal-text">
+                          {`${selected}, `}
+                        </div>
+                      );
+                    }
+                    return <div className="modal-text">{selected}</div>;
+                  })
+                  :
+                  <Linkify>
+                    <p>{props.item[category.id]}</p>
+                  </Linkify>
+                }
               </div>
               <br />
             </div>
