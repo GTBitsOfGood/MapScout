@@ -13,7 +13,7 @@ import { FiGlobe } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
 import Linkify from 'react-linkify';
-import API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../config/keys';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');
@@ -24,13 +24,13 @@ const ProviderInfo = (props) => {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${API_KEY}&format=png&visual_refresh=true`
+        const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${GOOGLE_API_KEY}&format=png&visual_refresh=true`
              + `&markers=${props.item.latitude},${props.item.longitude}`);
         setStreetView(res2.url);
         if (typeof props.item.imageURL === 'string') {
           setImage(props.item.imageURL);
         } else {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${API_KEY}`);
+          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
           setImage(res.url);
         }
         setIsLoading(false);

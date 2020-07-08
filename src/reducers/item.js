@@ -1,18 +1,18 @@
 import update from 'immutability-helper';
-import { SELECT_ITEM, SELECT_TEAM } from '../components/Dashboard';
+import { SELECT_ITEM, SELECT_TEAM } from '../components/dashboard/Dashboard';
 
 const initialState = {
   selected: null,
   team: {
-    name: "",
-    logoUrl: "",
-    primaryColor: "",
-    secondaryColor: "",
-    label: "",
+    name: '',
+    logoUrl: '',
+    primaryColor: '',
+    secondaryColor: '',
+    label: '',
     latitude: 0,
     longitude: 0,
     zoom: 0,
-  }
+  },
 };
 
 export default function (state = initialState, action) {
@@ -22,9 +22,9 @@ export default function (state = initialState, action) {
         selected: { $set: action.data },
       });
     case SELECT_TEAM:
-       return update(state, {
-         team: { $set: action.data },
-       });
+      return update(state, {
+        team: { $set: action.data },
+      });
     default:
       return state;
   }
