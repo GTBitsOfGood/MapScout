@@ -189,7 +189,7 @@ const Index = (props) => {
   };
 
   const filterZipcode = async (filterVal) => {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`);
     const responseJson = await response.json();
 
     // Handle illegal response
