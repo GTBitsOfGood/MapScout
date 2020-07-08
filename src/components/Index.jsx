@@ -189,7 +189,7 @@ const Index = (props) => {
   };
 
   const filterZipcode = async (filterVal) => {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`);
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
     const responseJson = await response.json();
 
     // Handle illegal response
@@ -271,7 +271,7 @@ const Index = (props) => {
         setSearchName(filterVal);
         filterSearch(filterVal);
       } else if (filtertype === 'zipcode') {
-        setSearchZip(filterVal);
+        setSearchZip(filterVal.replace(/\D/g, ''));
         if (filterVal.length === 5) {
           await filterZipcode(filterVal);
         } else if (distances !== {}) {
@@ -369,7 +369,7 @@ const Index = (props) => {
               style={{ color: 'red' }}
               onClick={() => setMoreFilter(false)}
             >
-                                -
+              -
               {' '}
               {lessFilters}
             </Button>
@@ -379,7 +379,7 @@ const Index = (props) => {
             variant="link"
             onClick={() => setMoreFilter(true)}
           >
-                            +
+            +
             {' '}
             {moreFilters}
           </Button>
@@ -463,17 +463,18 @@ const Index = (props) => {
               <Row noGutters={!condition}>
                 <Col>
                   <Form.Control
-                      placeholder={searchZipcode}
-                      filtertype="zipcode"
-                      onChange={filterProviders}
-                    />
+                    placeholder={searchZipcode}
+                    filtertype="zipcode"
+                    value={searchZip}
+                    onChange={filterProviders}
+                  />
                 </Col>
                 <Col>
                   <Form.Control
-                      placeholder={searchProviderName}
-                      filtertype="search"
-                      onChange={filterProviders}
-                    />
+                    placeholder={searchProviderName}
+                    filtertype="search"
+                    onChange={filterProviders}
+                  />
                 </Col>
               </Row>
             </div>
@@ -534,20 +535,20 @@ const Index = (props) => {
                                           className="tag clear-all"
                                           style={{ borderColor: 'red', color: 'red' }}
                                         >
-                                            Clear All
+                                          Clear All
                                         </div>
                                         )
                                     }
                 </div>
                 <div className="count">
                   <span>
-                      {
+                    {
                                         isEmpty(activeProviders)
                                           ? 'No' : activeProviders.length
                                     }
-                      {' '}
-providers found
-                    </span>
+                    {' '}
+                    providers found
+                  </span>
                 </div>
                 {
                                     !isEmpty(activeProviders)
@@ -579,8 +580,7 @@ providers found
                                       <Modal.Header
                                         style={{ backgroundColor: primaryColor }}
                                         closeButton
-                                      >
-                                      </Modal.Header>
+                                      />
                                       <Modal.Body
                                         className="modal-body"
                                       >
@@ -601,8 +601,7 @@ providers found
                                       <Modal.Header
                                         style={{ backgroundColor: primaryColor }}
                                         closeButton
-                                      >
-                                      </Modal.Header>
+                                      />
                                       <Modal.Body
                                         className="modal-body"
                                       >
