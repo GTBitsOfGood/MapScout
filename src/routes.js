@@ -1,17 +1,27 @@
+/* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import AppWrapper from './components/AppWrapper';
 import App from './components/App';
 import ProviderRoutes from './components/ProviderRoutes';
+import SentryWrapper from './components/SentryWrapper';
 
-const routes = (routes) => (
+function renderComponentWithErrorBoundary(Component) {
+  return (props) => (
+    <SentryWrapper>
+      <Component {...props} />
+    </SentryWrapper>
+  );
+}
+
+const routes = (allRoutes) => (
   <AppWrapper>
     <BrowserRouter basename="/">
       <Switch>
-        {routes.map((route) => (
-          <Route path={route} component={App} />
+        {allRoutes.map((route) => (
+          <Route path={route} component={renderComponentWithErrorBoundary(App)} />
         ))}
-        <ProviderRoutes/>
+        <ProviderRoutes />
       </Switch>
     </BrowserRouter>
   </AppWrapper>

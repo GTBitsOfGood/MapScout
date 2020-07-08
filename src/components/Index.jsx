@@ -18,7 +18,7 @@ import ProviderInfoMobile from './ProviderInfoMobile';
 import GoogleMap from './GoogleMap';
 import ProviderCell from './ProviderCell';
 import localizationStrings from '../utils/Localization';
-import API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../config/keys';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -189,7 +189,7 @@ const Index = (props) => {
   };
 
   const filterZipcode = async (filterVal) => {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${API_KEY}`);
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`);
     const responseJson = await response.json();
 
     // Handle illegal response
@@ -320,17 +320,15 @@ const Index = (props) => {
         <span
           className="remove-tag"
           onClick={
-                                    async () => {
-                                      setFiltersState({
-                                        ...filtersState,
-                                        [item]: filtersState[item].filter(
-                                          (i) => i !== title,
-                                        ),
-                                      });
-                                      setTimeout(() => filterProviders(), 100);
-                                    }
-}
-        >
+            async () => {
+              setFiltersState({
+                ...filtersState,
+                [item]: filtersState[item].filter(
+                  (i) => i !== title,
+                ),
+              });
+              setTimeout(() => filterProviders(), 100);
+            }}>
           {' '}
           <FaTimesCircle />
         </span>

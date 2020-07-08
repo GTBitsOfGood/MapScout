@@ -23,54 +23,56 @@ export function selectItem(data) {
 }
 
 export function selectTeam(data) {
-    return function (dispatch) {
-        dispatch({
-            type: SELECT_TEAM,
-            data,
-        });
-    };
+  return function (dispatch) {
+    dispatch({
+      type: SELECT_TEAM,
+      data,
+    });
+  };
 }
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: [],
-            selectedIndex: 0,
-            isLoading: true,
-            providers: [],
-            categories: [],
-            teams: []
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      selectedIndex: 0,
+      isLoading: true,
+      providers: [],
+      categories: [],
+      teams: [],
+    };
+  }
 
-    async componentDidMount(){
-        const { firestore, team, firebase } = this.props;
-        const collections = firestore.collection("categories");
-        const categories = await collections
-            .where('team', '==', team.name)
-            .get()
-            .then((querySnapshot) => {
-                const arr = [];
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    arr.push(docData);
-                });
-                return arr;
-            });
-        const collections2 = firestore.collection("providers");
-        const providers = await collections2
-            .where('team', '==', team.name)
-            .get()
-            .then((querySnapshot) => {
-                const arr = [];
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    arr.push(docData);
-                });
-                return arr;
-            });
-        this.setState({providers, categories, isLoading: false});
+  async componentDidMount() {
+    const { firestore, team, firebase } = this.props;
+    if (team && team.name) {
+      const collections = firestore.collection('categories');
+      const categories = await collections
+        .where('team', '==', team.name)
+        .get()
+        .then((querySnapshot) => {
+          const arr = [];
+          querySnapshot.forEach((doc) => {
+            const docData = doc.data();
+            arr.push(docData);
+          });
+          return arr;
+        });
+      const collections2 = firestore.collection('providers');
+      const providers = await collections2
+        .where('team', '==', team.name)
+        .get()
+        .then((querySnapshot) => {
+          const arr = [];
+          querySnapshot.forEach((doc) => {
+            const docData = doc.data();
+            arr.push(docData);
+          });
+          return arr;
+        });
+      this.setState({ providers, categories, isLoading: false });
+    }
   }
 
   render() {
@@ -78,50 +80,53 @@ class Dashboard extends Component {
     const { providers, categories } = this.state;
 
     if (isLoading) {
-      return (<div className="spinner-wrap">
+      return (
+        <div className="spinner-wrap">
           <div className="spinner" />
         </div>
       );
     }
 
     return (
-      <div className = "admin-dashboard">
+      <div className="admin-dashboard">
         <div className="admin-list-container">
           <div className="list-wrapper">
             <div className="add-button-wrapper">
-                <Button
-                    block
-                    variant="primary"
-                    onClick={() => this.props.selectItem({})}
-                    as={Link}
-                    to={formRoute}
-                >
-                    + Add New Provider
-                </Button>
+              <Button
+                block
+                variant="primary"
+                onClick={() => this.props.selectItem({})}
+                as={Link}
+                to={formRoute}
+              >
+                + Add New Provider
+              </Button>
             </div>
             <div
-                className="scroll-container"
-                style={{ maxHeight: 'calc(100vh - 66px)' }}>
-                <ListGroup variant="flush">
-                    {
-                        !isEmpty(providers) &&
-                        providers.map((item, index) =>
-                            <ListGroup.Item
-                                href={item.id}
-                                key={index}
-                                className="point"
-                                onClick={() => this.setState({selectedIndex: index})}
-                                active={selectedIndex === index}>
-                                  <h2>{item.facilityName}</h2>
-                            </ListGroup.Item>
-                        )
+              className="scroll-container"
+              style={{ maxHeight: 'calc(100vh - 66px)' }}
+            >
+              <ListGroup variant="flush">
+                {
+                        !isEmpty(providers)
+                        && providers.map((item, index) => (
+                          <ListGroup.Item
+                            href={item.id}
+                            key={index}
+                            className="point"
+                            onClick={() => this.setState({ selectedIndex: index })}
+                            active={selectedIndex === index}
+                          >
+                            <h2>{item.facilityName}</h2>
+                          </ListGroup.Item>
+                        ))
                     }
-                </ListGroup>
+              </ListGroup>
             </div>
           </div>
         </div>
-          <div className="admin-provider">
-              {
+        <div className="admin-provider">
+          {
                   providers && providers[selectedIndex]
                   && (
                   <SingleProvider
@@ -133,7 +138,7 @@ class Dashboard extends Component {
                   />
                   )
               }
-          </div>
+        </div>
       </div>
     );
   }
@@ -144,8 +149,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => ({
-    firebase: state.firebase,
-    team: state.item.team,
+  firebase: state.firebase,
+  team: state.item.team,
 });
 
 export default compose(

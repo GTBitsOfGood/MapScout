@@ -17,7 +17,7 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
 import promiseWithTimeout from '../utils/PromiseWithTimeout';
-import API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../config/keys';
 
 const uuidv4 = require("uuid/v4");
 
@@ -26,7 +26,6 @@ const steps = [
 ];
 
 class AddProvider extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -128,7 +127,7 @@ class AddProvider extends Component {
             if (this.state.item.address[0] && this.state.item.address[0].length > 0) {
                 let response = await promiseWithTimeout(5000, fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
                     this.state.item.address[0].replace(/\s/g, '%20')
-                }&key=${API_KEY}`));
+                }&key=${GOOGLE_API_KEY}`));
                 let responseJson = await response.json();
                 if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
                     item.latitude = responseJson.results[0].geometry.location.lat;
@@ -156,7 +155,7 @@ class AddProvider extends Component {
             if (this.state.item.address[0] && this.state.item.address[0].length > 0) {
                 let response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
                     this.state.item.address[0].replace(/\s/g, '%20')
-                }&key=${API_KEY}`);
+                }&key=${GOOGLE_API_KEY}`);
                 let responseJson = await response.json();
                 if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
                     item.latitude = responseJson.results[0].geometry.location.lat;

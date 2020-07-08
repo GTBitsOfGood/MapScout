@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
-import API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../config/keys';
 import MapMarker from './MapMarker';
 
 function arePointsNear(checkPoint, centerPoint, km) {
@@ -12,7 +12,7 @@ function arePointsNear(checkPoint, centerPoint, km) {
 }
 
 export default ({
-  providers, defaultZoom, defaultCenter, onShowMoreClick, selectedMarker, primaryColor
+  providers, defaultZoom, defaultCenter, onShowMoreClick, selectedMarker, primaryColor,
 }) => {
   const [selected, setSelected] = useState(-1);
   const [center, setCenter] = useState(defaultCenter);
@@ -33,37 +33,37 @@ export default ({
   }, [selectedMarker]);
 
   return (
-  <GoogleMapReact
-    bootstrapURLKeys={{
-      key: API_KEY,
-    }}
-    defaultCenter={defaultCenter}
-    defaultZoom={defaultZoom}
-    options={getMapOptions}
-    zoom={zoom}
-    center={center}
-    onZoomAnimationEnd={(val) => setZoom(val)}
-  >
-    {providers.map(
-      ({
-        latitude, longitude, facilityName, address,
-      }, i) => (
-        <MapMarker
-          lat={latitude}
-          lng={longitude}
-          name={facilityName}
-          address={address[0]}
-          index={i}
-          selectedIndex={selected}
-          primaryColor={primaryColor}
-          onShowMoreClick={() => onShowMoreClick(i)}
-          onMarkerClick={() => {
-            setSelected(selected === i ? -1 : i);
-            setCenter({ lat: latitude, lng: longitude });
-          }}
-        />
-      ),
-    )}
-  </GoogleMapReact>
+    <GoogleMapReact
+      bootstrapURLKeys={{
+        key: GOOGLE_API_KEY,
+      }}
+      defaultCenter={defaultCenter}
+      defaultZoom={defaultZoom}
+      options={getMapOptions}
+      zoom={zoom}
+      center={center}
+      onZoomAnimationEnd={(val) => setZoom(val)}
+    >
+      {providers.map(
+        ({
+          latitude, longitude, facilityName, address,
+        }, i) => (
+          <MapMarker
+            lat={latitude}
+            lng={longitude}
+            name={facilityName}
+            address={address[0]}
+            index={i}
+            selectedIndex={selected}
+            primaryColor={primaryColor}
+            onShowMoreClick={() => onShowMoreClick(i)}
+            onMarkerClick={() => {
+              setSelected(selected === i ? -1 : i);
+              setCenter({ lat: latitude, lng: longitude });
+            }}
+          />
+        ),
+      )}
+    </GoogleMapReact>
   );
 };

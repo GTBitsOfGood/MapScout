@@ -13,6 +13,7 @@ import AddProvider from './AddProvider';
 import PasswordForgetForm from './PasswordForget';
 import Template from './template/index';
 import NotFound from './NotFound';
+import SentryWrapper from './SentryWrapper';
 
 export const providerRoute = '/provider';
 export const formRoute = '/provider/add';
@@ -96,10 +97,10 @@ const ProviderRoutes = (props) => {
   }
 
   return (
-    <div>
+    <SentryWrapper>
       <Switch>
         <Route path={providerRoute}>
-          <React.Fragment>
+          <>
             <NavBar
               team={props.team}
               logout={logout}
@@ -121,7 +122,7 @@ const ProviderRoutes = (props) => {
                 />
               </Switch>
             </div>
-            </React.Fragment>
+          </>
         </Route>
         <Route
           exact
@@ -134,7 +135,7 @@ const ProviderRoutes = (props) => {
         />
         <Route exact path="*" component={NotFound} />
       </Switch>
-    </div>
+    </SentryWrapper>
   );
 };
 
