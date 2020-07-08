@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const mapStateToProps = (state) => state;
 
 const App = connect(
-    mapStateToProps,
+  mapStateToProps,
 )(Index);
 
 export default App;
