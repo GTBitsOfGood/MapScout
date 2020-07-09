@@ -1100,14 +1100,39 @@ h2 {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
 }
 
+.team-marker.active {
+    z-index: 2;
+}
+
 .team-marker:hover {
     z-index: 1;
 }
 
 .team-marker:hover .team-marker-image {
+    transform: scale(1.2);
+}
+
+.team-marker.active .team-marker-image {
     border-radius: 0;
     transform: scale(4);
     box-shadow: none;
+}
+
+.team-marker.active .team-marker-link {
+    color: #2867B2;
+}
+
+.team-marker-label {
+    display: none;
+    font-size: 0.8rem;
+    background-color: #F8F9FA;
+    width: 100px;
+}
+
+.team-marker:hover .team-marker-label {
+    display: inherit;
+    transform: translateX(-25px);
+    text-align: center;
 }
 
 .team-marker-content {
@@ -1121,7 +1146,7 @@ h2 {
     transform: translateX(-75px);
 }
 
-.team-marker:hover .team-marker-content {
+.team-marker.active .team-marker-content {
     opacity: 1;
     width: 200px;
     color: black;

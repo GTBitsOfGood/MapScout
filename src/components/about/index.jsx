@@ -14,19 +14,27 @@ function AboutUs() {
     styles: mapConfig,
   };
 
+  const [activeItem, setActiveItem] = useState(-1);
+  const [center, setCenter] = useState(coords);
+
   return (
     <div id="about-root">
       <GoogleMapReact
         bootstrapURLKeys={{
           key: GOOGLE_API_KEY,
         }}
-        zoom={17.8}
-        defaultCenter={coords}
+        zoom={17}
+        center={center}
         options={mapOptions}
       >
         {
-          markersConfig.map((member) => (
+          markersConfig.map((member, index) => (
             <TeamMarker
+              active={index === activeItem}
+              onClick={() => {
+                setActiveItem(index);
+                setCenter({ lat: member.lat, lng: member.lng });
+              }}
               key={member.name}
               lat={member.lat}
               lng={member.lng}
