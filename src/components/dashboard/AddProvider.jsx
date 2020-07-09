@@ -10,14 +10,14 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import {Link} from "react-router-dom";
-import {providerRoute} from "./ProviderRoutes";
+import {providerRoute} from "../ProviderRoutes";
 import RowForm from "./RowForm";
 import {Flipper, Flipped} from "react-flip-toolkit";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { withFirestore } from "react-redux-firebase";
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js'
-import promiseWithTimeout from '../utils/PromiseWithTimeout';
-import GOOGLE_API_KEY from '../config/keys';
+import promiseWithTimeout from '../../utils/PromiseWithTimeout';
+import GOOGLE_API_KEY from '../../config/keys';
 
 const uuidv4 = require("uuid/v4");
 

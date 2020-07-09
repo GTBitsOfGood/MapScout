@@ -8,8 +8,8 @@ import {
 } from 'react-redux-firebase';
 import NavBar from './NavBar';
 import Auth from './Auth';
-import Dashboard, { selectTeam } from './Dashboard';
-import AddProvider from './AddProvider';
+import Dashboard, { selectTeam } from './dashboard/Dashboard';
+import AddProvider from './dashboard/AddProvider';
 import PasswordForgetForm from './PasswordForget';
 import Template from './template/index';
 import NotFound from './NotFound';

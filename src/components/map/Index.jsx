@@ -1,5 +1,5 @@
 import React, {
-  Component, Fragment, useState, useEffect, useRef,
+  useState, useEffect, useRef,
 } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,14 +11,14 @@ import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import Modal from 'react-bootstrap/Modal';
 import {
-  FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap,
+  FaTimesCircle, FaMap,
 } from 'react-icons/fa';
-import ProviderInfo from './ProviderInfo';
-import ProviderInfoMobile from './ProviderInfoMobile';
+import ProviderInfo from '../ProviderInfo';
+import ProviderInfoMobile from '../ProviderInfoMobile';
 import GoogleMap from './GoogleMap';
 import ProviderCell from './ProviderCell';
-import localizationStrings from '../utils/Localization';
-import GOOGLE_API_KEY from '../config/keys';
+import localizationStrings from '../../utils/Localization';
+import GOOGLE_API_KEY from '../../config/keys';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
