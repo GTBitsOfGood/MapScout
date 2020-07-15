@@ -13,6 +13,7 @@ import Modal from 'react-bootstrap/Modal';
 import {
   FaTimesCircle, FaMap,
 } from 'react-icons/fa';
+import debounce from 'lodash.debounce';
 import ProviderInfo from '../ProviderInfo';
 import ProviderInfoMobile from '../ProviderInfoMobile';
 import GoogleMap from './GoogleMap';
@@ -20,7 +21,6 @@ import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
 import GOOGLE_API_KEY from '../../config/keys';
 
-const debounce = require('lodash/debounce');
 const classNames = require('classnames');
 
 const FILTER_CUTOFF = 5;
