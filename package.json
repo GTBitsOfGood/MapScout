@@ -39,7 +39,7 @@
         "react-app-polyfill": "^1.0.6",
         "react-beautiful-dnd": "^13.0.0",
         "react-bootstrap": "v1.0.0-beta.12",
-        "react-bootstrap-table-next": "^3.2.1",
+        "react-bootstrap-table-next": "4.0.3",
         "react-bootstrap-time-picker": "^2.0.1",
         "react-collapse": "^5.0.1",
         "react-dom": "^16.8.6",
