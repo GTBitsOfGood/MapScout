@@ -13,6 +13,7 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+        "build:analyze": "npm run build && source-map-explorer build/**/*.js",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -78,7 +79,8 @@
         "eslint-plugin-node": "^11.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-react": "^7.18.0",
-        "eslint-plugin-react-hooks": "^1.7.0"
+        "eslint-plugin-react-hooks": "^1.7.0",
+        "source-map-explorer": "^2.4.2"
     },
     "babel": {
         "presets": [
