@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-filename-extension */
-import 'babel-polyfill';
+import 'react-app-polyfill/stable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
