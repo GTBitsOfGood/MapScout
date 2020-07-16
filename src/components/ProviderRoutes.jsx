@@ -14,12 +14,14 @@ import PasswordForgetForm from './PasswordForget';
 import Template from './template/index';
 import NotFound from './NotFound';
 import SentryWrapper from './SentryWrapper';
+import Chat from './chat';
 
 export const providerRoute = '/provider';
 export const formRoute = '/provider/add';
 export const authRoute = '/';
 export const pwdRoute = '/forgot';
 export const templateRoute = '/provider/template';
+export const chatRoute = '/provider/feeback';
 
 const ProviderRoutes = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -119,6 +121,10 @@ const ProviderRoutes = (props) => {
                 <PrivateRoute
                   path={templateRoute}
                   component={Template}
+                />
+                <PrivateRoute
+                  path={chatRoute}
+                  component={Chat}
                 />
               </Switch>
             </div>
