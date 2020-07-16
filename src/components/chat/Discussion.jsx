@@ -16,41 +16,39 @@ function Discussion({ uid }) {
   });
 
   async function updateChat(payload, payload2) {
-    if (payload && payload2) {
-      const chats = Object.values(payload).filter((x) => x.uid && x.uid === uid);
-      const responses = Object.values(payload2).filter((x) => {
-        const index = x.message.indexOf(`$${uid}`);
-        if (index === 0) {
-          x.message = x.message.replace(`$${uid}`, '').trim();
-        }
-        return index === 0;
-      });
-      const arr = [];
-      while (chats.length > 0 && responses.length > 0) {
-        const chatTarget = chats[chats.length - 1];
-        const responseTarget = responses[responses.length - 1];
-        const chatDate = new Date(chatTarget.timestamp);
-        const responseDate = new Date(responseTarget.timestamp);
-        if (chatDate > responseDate) {
-          arr.push(chatTarget);
-          chats.pop();
-        } else if (chatDate < responseDate) {
-          arr.push(responseTarget);
-          responses.pop();
-        } else {
-          arr.push(chatTarget);
-          chats.pop();
-          arr.push(responseTarget);
-          responses.pop();
-        }
+    const chats = payload ? Object.values(payload).filter((x) => x.uid && x.uid === uid) : [];
+    const responses = payload2 ? Object.values(payload2).filter((x) => {
+      const index = x.message.indexOf(`$${uid}`);
+      if (index === 0) {
+        x.message = x.message.replace(`$${uid}`, '').trim();
       }
-      if (chats.length > 0) {
-        arr.push(...chats);
-      } else if (responses.length > 0) {
-        arr.push(...responses);
+      return index === 0;
+    }) : [];
+    const arr = [];
+    while (chats.length > 0 && responses.length > 0) {
+      const chatTarget = chats[chats.length - 1];
+      const responseTarget = responses[responses.length - 1];
+      const chatDate = new Date(chatTarget.timestamp);
+      const responseDate = new Date(responseTarget.timestamp);
+      if (chatDate > responseDate) {
+        arr.push(chatTarget);
+        chats.pop();
+      } else if (chatDate < responseDate) {
+        arr.push(responseTarget);
+        responses.pop();
+      } else {
+        arr.push(chatTarget);
+        chats.pop();
+        arr.push(responseTarget);
+        responses.pop();
       }
-      setData(arr);
     }
+    if (chats.length > 0) {
+      arr.push(...chats);
+    } else if (responses.length > 0) {
+      arr.push(...responses);
+    }
+    setData(arr);
   }
 
   useEffect(() => {
