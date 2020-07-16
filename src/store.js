@@ -24,6 +24,9 @@ firebase.initializeApp(firebaseConfig);
 firebase.firestore();
 const storage = firebase.storage();
 
+const databaseRef = firebase.database().ref();
+const chatRef = databaseRef.child("chat");
+
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
   reduxFirestore(firebase),
@@ -49,4 +52,4 @@ const store = createStoreWithFirebase(
   middleware,
 );
 
-export { store, history, storage };
+export { store, history, storage, chatRef };
