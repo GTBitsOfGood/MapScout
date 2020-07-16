@@ -1,23 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Discussion from './Discussion';
 import 'firebase/database';
 import { chatRef } from '../../store';
+import Discussion from './Discussion';
 
-const testData = [
-  {
-    message: 'Yeet',
-    timestamp: '2020-07-16T02:24:26Z',
-  },
-  {
-    message: 'Yeet2',
-    timestamp: '2020-07-16T02:25:19Z',
-  },
-];
-
-function Chat() {
+function Chat({ firebase }) {
   const [message, setMessage] = useState('');
   const addToDo = async (newToDo) => {
     chatRef.push().set(newToDo);
@@ -27,21 +17,18 @@ function Chat() {
     setMessage(e.target.value);
   };
 
-  const formSubmit = () => {
-    const currentdate = new Date();
-    const datetime = `Last Sync: ${currentdate.getDate()}/${
-      currentdate.getMonth() + 1}/${
-      currentdate.getFullYear()} @ ${
-      currentdate.getHours()}:${
-      currentdate.getMinutes()}:${
-      currentdate.getSeconds()}`;
-    addToDo({
-      message,
-      timestamp: datetime,
-      uid: 'luke',
-      username: 'luke',
-    });
-    setMessage('');
+  const formSubmit = (e) => {
+    e.preventDefault();
+    if (message !== '') {
+      const currentdate = new Date();
+      const datetime = currentdate.toISOString();
+      addToDo({
+        message,
+        timestamp: datetime,
+        uid: firebase.auth.uid,
+        username: firebase.auth.email,
+      }).then(setMessage(''));
+    }
   };
 
   return (
@@ -57,28 +44,34 @@ function Chat() {
           {' '}
           Please message us here.
         </div>
-        <Discussion chats={testData} />
-        <Form onSubmit={formSubmit}>
-          <Form.Control
-            placeholder="Enter message"
-            as="textarea"
-            rows="3"
-            onChange={inputChange}
-          />
-          <div className="row-spaced">
-            <p className="pt-2" style={{ color: 'lightgray' }}>Press enter to send</p>
+        <div className="mr-5 ml-5">
+          <Discussion uid={firebase.auth.uid} />
+          <Form onSubmit={formSubmit}>
+            <Form.Control
+              placeholder="Enter message"
+              as="textarea"
+              rows="3"
+              value={message}
+              onChange={inputChange}
+            />
             <Button
+              className="mt-2 pl-5 pr-5"
               type="submit"
               value="submit"
-              variant="link"
+              variant="primary"
+              disabled={message === ''}
             >
               SEND
             </Button>
-          </div>
-        </Form>
+          </Form>
+        </div>
       </Container>
     </div>
   );
 }
 
-export default Chat;
+const mapStateToProps = (state) => ({
+  firebase: state.firebase,
+});
+
+export default connect(mapStateToProps, null)(Chat);

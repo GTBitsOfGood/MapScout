@@ -1152,3 +1152,30 @@ h2 {
     color: black;
     height: auto;
 }
+
+#discussion-root {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: 12px;
+    max-height: 440px;
+    width: 100%;
+    margin-bottom: 20px;
+    overflow-y: scroll;
+}
+
+.chat-bubble {
+    border: solid 8px limegreen;
+    padding: 10px 24px;
+    width: 34vw;
+    border-radius: 30px;
+}
+
+.chat-message {
+    font-size: 18px;
+    overflow-wrap: break-word;
+}
+
+.chat-time {
+    font-size: 12px;
+    color: gray;
+}
