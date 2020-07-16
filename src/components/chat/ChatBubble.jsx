@@ -14,7 +14,7 @@ function ChatBubble({ isEnd, isStart, item }) {
         borderBottomLeftRadius: item.fromSlack ? 0
           : !isEnd ? 0 : 30,
         borderBottomRightRadius: !item.fromSlack ? 0
-        : !isEnd ? 0 : 30,
+          : !isEnd ? 0 : 30,
       }}
     >
       <div className="chat-message">{item.message}</div>

@@ -1154,12 +1154,15 @@ h2 {
 }
 
 #discussion-root {
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+#discussion-scroll {
     display: flex;
     flex-direction: column-reverse;
-    margin-top: 12px;
     max-height: 440px;
     width: 100%;
-    margin-bottom: 20px;
     overflow-y: scroll;
 }
 
@@ -1178,4 +1181,13 @@ h2 {
 .chat-time {
     font-size: 12px;
     color: gray;
+}
+
+.veil {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(white, rgba(255, 255, 255, 0));
+    width: 100%;
+    height: 30px;
+    margin-bottom: -30px;
 }
