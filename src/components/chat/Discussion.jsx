@@ -15,7 +15,7 @@ function Discussion({ uid }) {
     }
   });
 
-  async function updateChat(payload, payload2) {
+  async function parseChat(payload, payload2) {
     const chats = payload ? Object.values(payload).filter((x) => x.uid && x.uid === uid) : [];
     const responses = payload2 ? Object.values(payload2).filter((x) => {
       const index = x.message.indexOf(`$${uid}`);
@@ -54,7 +54,7 @@ function Discussion({ uid }) {
   useEffect(() => {
     databaseRef.on('value', (snapshot) => {
       setIsLoading(true);
-      updateChat(
+      parseChat(
         snapshot.child('chat').val(),
         snapshot.child('response').val(),
       ).then(setIsLoading(false));

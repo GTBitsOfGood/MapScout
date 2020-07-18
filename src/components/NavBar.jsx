@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import Link from 'react-router-dom/Link';
 import {
   FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower, FiMessageCircle,
@@ -108,4 +109,8 @@ function NavBar(props) {
   );
 }
 
-export default NavBar;
+const mapStateToProps = (state) => ({
+  newChat: state.item.newChat,
+});
+
+export default connect(mapStateToProps, null)(NavBar);
