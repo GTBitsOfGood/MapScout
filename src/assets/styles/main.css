@@ -807,6 +807,7 @@ h2 {
     height: 60px;
     font-size: 18px;
     border-radius: 30px;
+    position: relative;
 }
 
 .cell-title {
@@ -1151,4 +1152,53 @@ h2 {
     width: 200px;
     color: black;
     height: auto;
+}
+
+#discussion-root {
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+#discussion-scroll {
+    display: flex;
+    flex-direction: column-reverse;
+    max-height: 440px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.chat-bubble {
+    border: solid 8px limegreen;
+    padding: 10px 24px;
+    width: 34vw;
+    border-radius: 30px;
+}
+
+.chat-message {
+    font-size: 18px;
+    overflow-wrap: break-word;
+}
+
+.chat-time {
+    font-size: 12px;
+    color: gray;
+}
+
+.veil {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(white, rgba(255, 255, 255, 0));
+    width: 100%;
+    height: 30px;
+    margin-bottom: -30px;
+}
+
+.redDot {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: red;
 }
