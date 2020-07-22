@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import update from 'immutability-helper';
-import { UPDATE_CHAT, UPDATE_NEW_CHAT } from '../components/chat/index.jsx';
+import { UPDATE_CHAT, UPDATE_NEW_CHAT } from '../components/NavBar';
 import { SELECT_ITEM, SELECT_TEAM } from '../components/dashboard/Dashboard';
 
 const initialState = {
@@ -20,7 +20,6 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
-  console.log(action);
   switch (action.type) {
     case SELECT_ITEM:
       return update(state, {

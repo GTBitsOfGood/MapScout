@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -22,9 +22,51 @@ export const pwdRoute = '/forgot';
 export const templateRoute = '/provider/template';
 export const chatRoute = '/provider/feeback';
 
+function DashboardContent({ isAuth, auth }) {
+  const PrivateRoute = ({ component: Component }) => (
+    <Route render={(prps) => {
+      if (isAuth) {
+        return (
+          <Redirect to={{
+            pathname: authRoute,
+            state: { from: prps.location },
+          }}
+          />
+        );
+      }
+      return <Component {...prps} />;
+    }}
+    />
+  );
+
+  return useMemo(() => (
+    <div className="dashboard-content">
+      <Switch>
+        <PrivateRoute
+          exact
+          path={providerRoute}
+          component={Dashboard}
+        />
+        <PrivateRoute
+          path={formRoute}
+          component={AddProvider}
+        />
+        <PrivateRoute
+          path={templateRoute}
+          component={Template}
+        />
+        <PrivateRoute
+          path={chatRoute}
+          component={Chat}
+        />
+      </Switch>
+    </div>
+  ), [auth]);
+}
+
 const ProviderRoutes = (props) => {
   const [isLoading, setIsLoading] = useState(true);
-  
+
   async function fetchTeam() {
     const { firestore, team, firebaseAuth } = props;
     setIsLoading(true);
@@ -62,22 +104,6 @@ const ProviderRoutes = (props) => {
     fetchTeam();
   }, [props.firebaseAuth.auth]);
 
-  const PrivateRoute = ({ component: Component }) => (
-    <Route render={(prps) => {
-      if (isEmpty(props.firebaseAuth.auth)) {
-        return (
-          <Redirect to={{
-            pathname: authRoute,
-            state: { from: prps.location },
-          }}
-          />
-        );
-      }
-      return <Component {...prps} />;
-    }}
-    />
-  );
-
   const logout = () => {
     props.firebase.logout()
       .then(() => {
@@ -106,27 +132,10 @@ const ProviderRoutes = (props) => {
               team={props.team}
               logout={logout}
             />
-            <div className="dashboard-content">
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path={providerRoute}
-                  component={Dashboard}
-                />
-                <PrivateRoute
-                  path={formRoute}
-                  component={AddProvider}
-                />
-                <PrivateRoute
-                  path={templateRoute}
-                  component={Template}
-                />
-                <PrivateRoute
-                  path={chatRoute}
-                  component={Chat}
-                />
-              </Switch>
-            </div>
+            <DashboardContent
+              isAuth={isEmpty(props.firebaseAuth.auth)}
+              auth={props.firebaseAuth}
+            />
           </>
         </Route>
         <Route

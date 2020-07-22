@@ -292,6 +292,7 @@ class AddProvider extends Component {
                                                     setItem={(item) => {
                                                         let completed =
                                                             item.facilityName.length > 0
+                                                            && item.phoneNum[0]
                                                             && isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), "US");
                                                         this.setState({item, completed})
                                                     }}

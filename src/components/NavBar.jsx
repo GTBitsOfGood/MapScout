@@ -4,7 +4,7 @@ import Link from 'react-router-dom/Link';
 import {
   FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower, FiMessageCircle,
 } from 'react-icons/fi';
-import { providerRoute, templateRoute, chatRoute, updateNewChat, updateChat } from './ProviderRoutes';
+import { providerRoute, templateRoute, chatRoute } from './ProviderRoutes';
 import { databaseRef, responseRef } from '../store';
 
 const classnames = require('classnames');
@@ -33,6 +33,8 @@ export function updateChat(data) {
 
 function NavBar(props) {
   const [expand, setExpanded] = useState(false);
+  const [showBubble, setShowBubble] = useState(props.newChat);
+
   useEffect(() => {
     databaseRef.on('value', (snapshot) => {
       parseChat(
@@ -40,11 +42,14 @@ function NavBar(props) {
         snapshot.child('response').val(),
       );
     });
-    responseRef.on('value', () => {
-      console.log("Update new chat");
-      updateNewChat(true);
-    })
+    responseRef.on('child_added', () => {
+      props.updateNewChat(true);
+    });
   }, []);
+
+  useEffect(() => {
+    setShowBubble(props.newChat);
+  }, [props.newChat]);
 
   async function parseChat(payload, payload2) {
     const {firebaseAuth} = props;
@@ -80,8 +85,7 @@ function NavBar(props) {
     } else if (responses.length > 0) {
       arr.push(...responses);
     }
-    console.log("Update chat");
-    updateChat(arr);
+    props.updateChat(arr);
   }
   return (
     <div>
@@ -139,7 +143,7 @@ function NavBar(props) {
             <Link to={chatRoute} style={{ textDecoration: 'none' }}>
               <div className="cell" >
                 <div className="icon">
-                  {props.newChat && <div className="redDot" />}
+                  {showBubble && <div className="redDot" />}
                   <FiMessageCircle />
                 </div>
                 <div className={classnames('cell-title', { none: !expand, fadeIn: expand })}>

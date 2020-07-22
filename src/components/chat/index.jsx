@@ -5,14 +5,20 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import 'firebase/database';
 import { chatRef } from '../../store';
-import { updateNewChat } from '../ProviderRoutes';
 import Discussion from './Discussion';
+import { updateNewChat as Update } from '../NavBar';
 
-function Chat({ firebase }) {
+function Chat({ firebase, newChat, updateNewChat }) {
   const [message, setMessage] = useState('');
   const addToDo = async (newToDo) => {
     chatRef.push().set(newToDo);
   };
+
+  useEffect(() => {
+    if (newChat) {
+      updateNewChat(false);
+    }
+  }, []);
 
   const inputChange = (e) => {
     setMessage(e.target.value);
@@ -32,11 +38,6 @@ function Chat({ firebase }) {
     }
   };
 
-  useEffect(() => {
-    updateNewChat(false);
-    
-  }, []);
-
   return (
     <div id="template-root">
       <Container className="box">
@@ -51,7 +52,7 @@ function Chat({ firebase }) {
           Please message us here.
         </div>
         <div className="mr-5 ml-5">
-          <Discussion uid={firebase.auth.uid} />
+          <Discussion />
           <Form onSubmit={formSubmit}>
             <Form.Control
               placeholder="Enter message"
@@ -76,8 +77,13 @@ function Chat({ firebase }) {
   );
 }
 
+const mapDispatchToProps = {
+  updateNewChat: Update,
+};
+
 const mapStateToProps = (state) => ({
   firebase: state.firebase,
+  newChat: state.item.newChat,
 });
 
-export default connect(mapStateToProps, null)(Chat);
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
