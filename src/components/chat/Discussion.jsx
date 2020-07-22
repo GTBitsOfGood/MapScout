@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import 'firebase/database';
 import ChatBubble from './ChatBubble';
 import { databaseRef } from '../../store';
+import {connect} from 'react-redux';
 
-function Discussion({ uid }) {
+function Discussion({ uid, chatHistory }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(chatHistory);
   const [height, setHeight] = useState(0);
   const root = useRef(null);
 
@@ -96,4 +97,8 @@ function Discussion({ uid }) {
   );
 }
 
-export default Discussion;
+const mapStateToProps = (state) => ({
+  chatHistory: state.item.chatHistory,
+});
+
+export default connect(mapStateToProps, null)(Discussion);

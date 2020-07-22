@@ -26,6 +26,7 @@ const storage = firebase.storage();
 
 const databaseRef = firebase.database().ref();
 const chatRef = databaseRef.child('chat');
+const responseRef = databaseRef.child('response')
 
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, rrfConfig),
@@ -53,5 +54,5 @@ const store = createStoreWithFirebase(
 );
 
 export {
-  store, history, storage, chatRef, databaseRef,
+  store, history, storage, chatRef, databaseRef, responseRef
 };

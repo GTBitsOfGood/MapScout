@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,31 +22,9 @@ export const pwdRoute = '/forgot';
 export const templateRoute = '/provider/template';
 export const chatRoute = '/provider/feeback';
 
-export const UPDATE_CHAT = 'UPDATE_CHAT';
-
-export function updateChat(data) {
-  return function (dispatch) {
-    dispatch({
-      type: UPDATE_CHAT,
-      data,
-    });
-  };
-}
-
-export const UPDATE_NEW_CHAT = 'UPDATE_NEW_CHAT';
-
-export function updateNewChat(data) {
-  return function (dispatch) {
-    dispatch({
-      type: UPDATE_NEW_CHAT,
-      data,
-    });
-  };
-}
-
 const ProviderRoutes = (props) => {
   const [isLoading, setIsLoading] = useState(true);
-
+  
   async function fetchTeam() {
     const { firestore, team, firebaseAuth } = props;
     setIsLoading(true);
@@ -178,7 +155,6 @@ const mapDispatchToProps = {
 const mapStateToProps = (state) => ({
   firebaseAuth: state.firebase,
   team: state.item.team,
-  chatHistory: state.item.chatHistory,
 });
 
 // Need auth property to check if logged in or loading

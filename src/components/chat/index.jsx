@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import 'firebase/database';
 import { chatRef } from '../../store';
+import { updateNewChat } from '../ProviderRoutes';
 import Discussion from './Discussion';
 
 function Chat({ firebase }) {
@@ -30,6 +31,11 @@ function Chat({ firebase }) {
       }).then(setMessage(''));
     }
   };
+
+  useEffect(() => {
+    updateNewChat(false);
+    
+  }, []);
 
   return (
     <div id="template-root">
