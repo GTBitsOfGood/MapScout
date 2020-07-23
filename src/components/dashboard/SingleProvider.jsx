@@ -5,8 +5,8 @@ import { compose } from 'redux';
 import { withFirestore } from 'react-redux-firebase';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { Link } from 'react-router-dom';
-import ProviderInfo from './ProviderInfo';
-import { formRoute } from './ProviderRoutes';
+import ProviderInfo from '../ProviderInfo';
+import { formRoute } from '../ProviderRoutes';
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update

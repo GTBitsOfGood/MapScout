@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Index from './Index';
+import Index from './map/Index';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const mapStateToProps = (state) => state;

@@ -54,6 +54,12 @@ h2 {
     font-weight: 700;
 }
 
+@media only screen and (max-width: 900px) {
+    h1 {
+        font-size: 1.8em;
+    }
+}
+
 #auth-root {
     margin-top: 10px;
 }
@@ -807,6 +813,7 @@ h2 {
     height: 60px;
     font-size: 18px;
     border-radius: 30px;
+    position: relative;
 }
 
 .cell-title {
@@ -1075,4 +1082,208 @@ h2 {
     width: 700px;
     padding: 12px;
     text-align: center;
+}
+
+#about-root {
+    height: 100vh;
+    width: 100vw;
+}
+
+.team-marker {
+    position: relative;
+    z-index: 0;
+}
+
+.team-marker-image {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: solid lightgreen 2px;
+    transition: border-radius 100ms;
+    transition: transform 200ms;
+    transform: scale(1);
+    transform-origin: bottom;
+    object-fit: cover;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.team-marker.active {
+    z-index: 2;
+}
+
+.team-marker:hover {
+    z-index: 1;
+}
+
+.team-marker:hover .team-marker-image {
+    transform: scale(1.2);
+}
+
+.team-marker.active .team-marker-image {
+    border-radius: 0;
+    transform: scale(4);
+    box-shadow: none;
+}
+
+.team-marker.active .team-marker-link {
+    color: #2867B2;
+}
+
+.team-marker-label {
+    display: none;
+    font-size: 0.8rem;
+    background-color: #F8F9FA;
+    width: 100px;
+}
+
+.team-marker:hover .team-marker-label {
+    display: inherit;
+    transform: translateX(-25px);
+    text-align: center;
+}
+
+.team-marker-content {
+    opacity: 0;
+    padding: 8px 12px;
+    width: 50px;
+    height: 0;
+    color: white;
+    background-color: white;
+    transition: opacity 100ms;
+    transform: translateX(-75px);
+}
+
+.team-marker.active .team-marker-content {
+    opacity: 1;
+    width: 200px;
+    color: black;
+    height: auto;
+}
+
+#discussion-root {
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+#discussion-scroll {
+    display: flex;
+    flex-direction: column-reverse;
+    max-height: 440px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.chat-bubble {
+    border: solid 8px limegreen;
+    padding: 10px 24px;
+    width: 34vw;
+    border-radius: 30px;
+}
+
+.chat-message {
+    font-size: 18px;
+    overflow-wrap: break-word;
+}
+
+.chat-time {
+    font-size: 12px;
+    color: gray;
+}
+
+.veil {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(white, rgba(255, 255, 255, 0));
+    width: 100%;
+    height: 30px;
+    margin-bottom: -30px;
+}
+
+.redDot {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: red;
+}
+
+#homepage-root {
+    background-color: white;
+    padding: 30px 5vw;
+    height: 100vh;
+    width: 100vw;
+    overflow-y: scroll;
+}
+
+#head {
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#head-logo {
+    font-size: 1em;
+}
+
+#head-logo img {
+    width: 120px;
+}
+
+#homepage-body {
+    display: flex;
+    flex-direction: column-reverse;
+    padding-bottom: 50px;
+}
+
+#homepage-background {
+    position: absolute;
+    top: -300px;
+    right: -400px;
+    width: 800px;
+}
+
+#homepage-background img {
+    object-fit: contain;
+    width: inherit;
+    height: inherit;
+}
+
+@media only screen and (min-width: 900px) {
+    #head-logo {
+        font-size: 1.4em;
+    }
+    
+    #head-logo img {
+        width: 180px;
+    }
+    #head .btn{
+        min-width: 120px;
+    }
+
+    #homepage-body {
+        margin-top: 12vh;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .homepage-col {
+        width: 45%;
+    }
+
+    #homepage-background {
+        top: -300px;
+        right: -500px;
+        width: 1000px;
+    }
+}
+
+#youtube {
+    box-shadow: 4px 0 8px 1px rgba(0, 0, 0, .2);
+    margin-bottom: 20px;
+}
+
+.homepage-cta {
+    background-color: #eee,
 }

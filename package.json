@@ -12,13 +12,14 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "CI= react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
         "@khanacademy/react-multi-select": "^0.3.3",
+        "@react-firebase/database": "^0.3.11",
         "@sentry/react": "^5.19.1",
         "autoprefixer": "9.8.0",
         "babel-polyfill": "^6.26.0",
@@ -26,7 +27,7 @@
         "classnames": "^2.2.6",
         "connected-react-router": "^4.2.3",
         "dotenv": "^8.2.0",
-        "firebase": "^7.0.0",
+        "firebase": "^7.16.0",
         "google-map-react": "^1.1.6",
         "history": "^4.10.1",
         "immutability-helper": "^3.0.1",
@@ -58,6 +59,7 @@
         "react-router-dom": "^4.2.2",
         "react-scripts": "^3.4.1",
         "react-select": "^3.1.0",
+        "react-youtube": "^7.11.3",
         "reactjs-popup": "^1.5.0",
         "reactstrap": "^8.1.1",
         "redux": "^3.7.2",
