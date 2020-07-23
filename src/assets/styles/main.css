@@ -1214,6 +1214,7 @@ h2 {
     padding: 30px 5vw;
     height: 100vh;
     width: 100vw;
+    overflow-y: scroll;
 }
 
 #head {
@@ -1232,6 +1233,7 @@ h2 {
 #homepage-body {
     display: flex;
     flex-direction: column-reverse;
+    padding-bottom: 50px;
 }
 
 #homepage-background {
@@ -1280,4 +1282,8 @@ h2 {
 #youtube {
     box-shadow: 4px 0 8px 1px rgba(0, 0, 0, .2);
     margin-bottom: 20px;
+}
+
+.homepage-cta {
+    background-color: #eee,
 }

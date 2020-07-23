@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { isEmpty, isLoaded } from 'react-redux-firebase';
+import { isEmpty, isLoaded, withFirestore } from 'react-redux-firebase';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import LazyLoad from 'react-lazy-load';
-import FormControl from 'react-bootstrap/FormControl';
+import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import YouTube from 'react-youtube';
 
@@ -21,8 +21,16 @@ const opts = {
   },
 };
 
-function Home({ firebaseAuth }) {
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+function Home({ firebaseAuth, firestore }) {
   const [showProviderRoutes, setShowProviderRoutes] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailDisabled, setEmailDisabled] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (isLoaded(firebaseAuth) && !isEmpty(firebaseAuth.auth) && !showProviderRoutes) {
@@ -31,6 +39,18 @@ function Home({ firebaseAuth }) {
       setShowProviderRoutes(false);
     }
   }, [firebaseAuth]);
+
+  function handleSubmit() {
+    const payload = { email };
+    setEmailDisabled(true);
+    firestore.set({ collection: 'waitlist', doc: email }, payload).then(
+      () => {
+        setEmail('');
+        setEmailDisabled(false);
+        setMessage('Thank you for signing up!');
+      },
+    );
+  }
 
   return (
     <div id="homepage-root">
@@ -54,7 +74,7 @@ function Home({ firebaseAuth }) {
               <b>
                 Create
                 {' '}
-                <span style={{ color: 'blue' }}>
+                <span style={{ color: '#0269D9' }}>
                   beautiful
                 </span>
                 {' '}
@@ -64,7 +84,7 @@ function Home({ firebaseAuth }) {
             <p>
               MapScout makes it
               {' '}
-              <b>simple and easy</b>
+              <b>simple</b>
               {' '}
               to build and customize your own interactive resource map. Our unique template builder gives you
               {' '}
@@ -77,20 +97,40 @@ function Home({ firebaseAuth }) {
               <li>100% customer satisfaction</li>
               <li>Mobile friendly</li>
             </ul>
-            <p style={{ color: 'blue' }}>Add your name to our waitlist today!</p>
-            <InputGroup>
-              <FormControl
-                type="email"
-                placeholder="name@example.com"
-                aria-label="Sign up for our mailing list"
-                aria-describedby="emailSignup"
-              />
-              <InputGroup.Append>
-                <Button id="emailSignup">
-                  Signup
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
+            <Form.Group
+              controlId="formEmail"
+              style={{
+                backgroundColor: '#F3F3F3',
+                paddingLeft: 20,
+                paddingRight: 20,
+                paddingTop: 12,
+                paddingBottom: 12,
+              }}
+            >
+              <Form.Label>Add your name to our waitlist today</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  aria-label="Sign up for our waitlist"
+                  aria-describedby="emailSignup"
+                />
+                <InputGroup.Append>
+                  <Button
+                    disabled={emailDisabled || !validateEmail(email)}
+                    onClick={handleSubmit}
+                    id="emailSignup"
+                  >
+                    Signup
+                  </Button>
+                </InputGroup.Append>
+              </InputGroup>
+              <Form.Text muted>
+                { message }
+              </Form.Text>
+            </Form.Group>
           </div>
           <div className="homepage-col">
             <YouTube id="youtube" videoId="HVVHiNPZ88A" opts={opts} />
@@ -105,4 +145,4 @@ const mapStateToProps = (state) => ({
   firebaseAuth: state.firebase,
 });
 
-export default connect(mapStateToProps, null)(React.memo(Home));
+export default compose(withFirestore, connect(mapStateToProps, null))(React.memo(Home));
