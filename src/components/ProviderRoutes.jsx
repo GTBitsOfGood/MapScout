@@ -17,7 +17,7 @@ import Chat from './chat';
 
 export const providerRoute = '/provider';
 export const formRoute = '/provider/add';
-export const authRoute = '/';
+export const authRoute = '/auth';
 export const pwdRoute = '/forgot';
 export const templateRoute = '/provider/template';
 export const chatRoute = '/provider/feeback';
