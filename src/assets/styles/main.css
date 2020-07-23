@@ -54,6 +54,12 @@ h2 {
     font-weight: 700;
 }
 
+@media only screen and (max-width: 900px) {
+    h1 {
+        font-size: 1.8em;
+    }
+}
+
 #auth-root {
     margin-top: 10px;
 }
@@ -1201,4 +1207,77 @@ h2 {
     height: 10px;
     border-radius: 50%;
     background: red;
+}
+
+#homepage-root {
+    background-color: white;
+    padding: 30px 5vw;
+    height: 100vh;
+    width: 100vw;
+}
+
+#head {
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#head-logo {
+    font-size: 1em;
+}
+
+#head-logo img {
+    width: 120px;
+}
+
+#homepage-body {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#homepage-background {
+    position: absolute;
+    top: -300px;
+    right: -400px;
+    width: 800px;
+}
+
+#homepage-background img {
+    object-fit: contain;
+    width: inherit;
+    height: inherit;
+}
+
+@media only screen and (min-width: 900px) {
+    #head-logo {
+        font-size: 1.4em;
+    }
+    
+    #head-logo img {
+        width: 180px;
+    }
+    #head .btn{
+        min-width: 120px;
+    }
+
+    #homepage-body {
+        margin-top: 12vh;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .homepage-col {
+        width: 45%;
+    }
+
+    #homepage-background {
+        top: -300px;
+        right: -500px;
+        width: 1000px;
+    }
+}
+
+#youtube {
+    box-shadow: 4px 0 8px 1px rgba(0, 0, 0, .2);
+    margin-bottom: 20px;
 }
