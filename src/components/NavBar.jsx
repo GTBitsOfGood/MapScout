@@ -14,7 +14,7 @@ export const UPDATE_CHAT = 'UPDATE_CHAT';
 export const UPDATE_NEW_CHAT = 'UPDATE_NEW_CHAT';
 
 export function updateNewChat(data) {
-  return function (dispatch) {
+  return function x(dispatch) {
     dispatch({
       type: UPDATE_NEW_CHAT,
       data,
@@ -23,7 +23,7 @@ export function updateNewChat(data) {
 }
 
 export function updateChat(data) {
-  return function (dispatch) {
+  return function x(dispatch) {
     dispatch({
       type: UPDATE_CHAT,
       data,

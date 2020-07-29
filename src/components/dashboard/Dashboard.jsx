@@ -32,7 +32,6 @@ export function selectTeam(data) {
 }
 
 function Dashboard({ firestore, team, selectItem }) {
-  const [data, setData] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoading, setIsLoading] = useState([]);
   const [providers, setProviders] = useState([]);

@@ -1,5 +1,5 @@
 import React, {
-  Component, Fragment, useState, useEffect, useRef,
+  useState, useEffect,
 } from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
@@ -13,7 +13,6 @@ import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
 import ProviderInfo from '../ProviderInfo';
 import promiseWithTimeout from '../../utils/PromiseWithTimeout';
-import { selectItem } from '../dashboard/Dashboard';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -316,31 +315,30 @@ export default compose(
                     index={index}
                   >
                     {(provided, snapshot) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={
-                                                    provided.draggableProps
-                                                      .style
-                                                }
-                          >
-                            <CategoryCell
-                                item={item}
-                                index={index}
-                                disableCat={disableCat}
-                                enableCat={enableCat}
-                                deleteCat={deleteCat}
-                                changeType={changeType}
-                                rename={rename}
-                                addOption={addOption}
-                                removeOption={removeOption}
-                                isDragged={
-                                                        snapshot.isDragging
-                                                    }
-                              />
-                          </div>
-                      )}
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={
+                          provided.draggableProps.style
+                        }
+                      >
+                        <CategoryCell
+                          item={item}
+                          index={index}
+                          disableCat={disableCat}
+                          enableCat={enableCat}
+                          deleteCat={deleteCat}
+                          changeType={changeType}
+                          rename={rename}
+                          addOption={addOption}
+                          removeOption={removeOption}
+                          isDragged={
+                            snapshot.isDragging
+                          }
+                        />
+                      </div>
+                    )}
                   </Draggable>
                 ))}
                 {provided.placeholder}
@@ -365,7 +363,7 @@ export default compose(
                 variant="light"
               >
                 Save Changes
-</Button>
+              </Button>
             </div>
           </Modal.Header>
           <Modal.Body className="modal-body">
