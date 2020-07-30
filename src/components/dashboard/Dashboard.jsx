@@ -5,7 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty } from 'react-redux-firebase';
-import { formRoute } from '../ProviderRoutes';
+import { formRoute } from '../navigation/ProviderRoutes';
 import SingleProvider from './SingleProvider';
 
 const classNames = require('classnames');

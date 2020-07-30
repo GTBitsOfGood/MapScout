@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import YouTube from 'react-youtube';
 
-import { authRoute, providerRoute } from '../ProviderRoutes';
+import { authRoute, providerRoute } from '../navigation/ProviderRoutes';
 
 const logo = require('../../assets/img/logo.svg');
 const background = require('../../assets/img/homepage-hero.png');

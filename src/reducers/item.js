@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import update from 'immutability-helper';
-import { UPDATE_CHAT, UPDATE_NEW_CHAT } from '../components/NavBar';
+import { UPDATE_CHAT, UPDATE_NEW_CHAT } from '../components/navigation/NavBar';
 import { SELECT_ITEM, SELECT_TEAM } from '../components/dashboard/Dashboard';
 
 const initialState = {

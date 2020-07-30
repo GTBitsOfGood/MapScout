@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import AppWrapper from './components/AppWrapper';
+import AppWrapper from './components/wrappers/AppWrapper';
 import App from './components/App';
-import ProviderRoutes from './components/ProviderRoutes';
-import SentryWrapper from './components/SentryWrapper';
+import ProviderRoutes from './components/navigation/ProviderRoutes';
+import SentryWrapper from './components/wrappers/SentryWrapper';
 import AboutUs from './components/about';
 import Home from './components/home';
 

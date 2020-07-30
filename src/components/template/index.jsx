@@ -11,8 +11,8 @@ import { withFirestore } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
-import ProviderInfo from '../ProviderInfo';
-import promiseWithTimeout from '../../utils/PromiseWithTimeout';
+import ProviderInfo from '../subcomponents/ProviderInfo';
+import promiseWithTimeout from '../../functions/PromiseWithTimeout';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);

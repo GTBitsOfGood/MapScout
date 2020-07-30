@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import 'firebase/database';
 import { chatRef } from '../../store';
 import Discussion from './Discussion';
-import { updateNewChat as Update } from '../NavBar';
+import { updateNewChat as Update } from '../navigation/NavBar';
 
 function Chat({ firebase, newChat, updateNewChat }) {
   const [message, setMessage] = useState('');
