@@ -1,7 +1,8 @@
 /* eslint-disable import/no-cycle */
 import update from 'immutability-helper';
-import { UPDATE_CHAT, UPDATE_NEW_CHAT } from '../components/NavBar';
-import { SELECT_ITEM, SELECT_TEAM } from '../components/dashboard/Dashboard';
+import {
+  UPDATE_CHAT, UPDATE_NEW_CHAT, SELECT_ITEM, SELECT_TEAM,
+} from '../functions/reduxActions';
 
 const initialState = {
   selected: null,

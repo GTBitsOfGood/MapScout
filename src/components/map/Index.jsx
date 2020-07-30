@@ -13,8 +13,8 @@ import Modal from 'react-bootstrap/Modal';
 import {
   FaTimesCircle, FaMap,
 } from 'react-icons/fa';
-import ProviderInfo from '../ProviderInfo';
-import ProviderInfoMobile from '../ProviderInfoMobile';
+import ProviderInfo from '../subcomponents/ProviderInfo';
+import ProviderInfoMobile from '../subcomponents/ProviderInfoMobile';
 import GoogleMap from './GoogleMap';
 import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';

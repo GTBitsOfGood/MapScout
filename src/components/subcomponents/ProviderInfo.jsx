@@ -13,7 +13,7 @@ import { FiGlobe } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
 import Linkify from 'react-linkify';
-import GOOGLE_API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../../config/keys';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');
@@ -93,7 +93,7 @@ const ProviderInfo = (props) => {
                       <div style={{ display: 'inline' }}>
                         {value}
                         ,
-                    </div>
+                      </div>
                     );
                   } if (index === props.item.address.toString().split(',').length - 1) {
                     return (

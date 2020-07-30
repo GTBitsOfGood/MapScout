@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-filename-extension */
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -6,7 +5,7 @@ import * as Sentry from '@sentry/react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { store, history } from './store';
-import { routes } from './routes';
+import routes from './routes';
 import { SENTRY_API_KEY } from './config/keys';
 import './assets/styles/style';
 

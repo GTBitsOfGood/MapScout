@@ -1,5 +1,5 @@
 import React, {
-  Component, Fragment, useState, useEffect, useRef,
+  useState, useEffect,
 } from 'react';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
@@ -11,9 +11,8 @@ import { withFirestore } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
-import ProviderInfo from '../ProviderInfo';
-import promiseWithTimeout from '../../utils/PromiseWithTimeout';
-import { selectItem } from '../dashboard/Dashboard';
+import ProviderInfo from '../subcomponents/ProviderInfo';
+import promiseWithTimeout from '../../functions/promiseWithTimeout';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -215,21 +214,19 @@ export default compose(
                   setShowModal(false);
                   setIsLoading(false);
                 },
-                (error) => {
+                () => {
                   alert('Unable to delete removed categories');
                 },
               );
             },
-            (error) => {
+            () => {
               // code that takes care of the canceled promise.
               // Note that .then rather than .done should be used in this case.
-              console.log(error);
               alert('Unable to save categories');
             },
           );
         });
-    } catch (e) {
-      console.log(e);
+    } catch {
       alert('Unable to load categories');
     }
   }
@@ -248,16 +245,6 @@ export default compose(
         <div className="row-spaced">
           <h2>Template Builder</h2>
           <div>
-            {/* <Button */}
-            {/*    variant="outline-primary" */}
-            {/*    onClick={(e) => { */}
-            {/*        e.preventDefault(); */}
-            {/*        resetCategories(); */}
-            {/*    }} */}
-            {/*    className="mr-2" */}
-            {/* > */}
-            {/*    Reset Changes */}
-            {/* </Button> */}
             <Button
               variant="primary"
               onClick={(e) => {
@@ -271,13 +258,13 @@ export default compose(
         </div>
         <br />
         {
-                    message != null
-                    && (
-                    <p style={{ color: 'green' }}>
-                      {message}
-                    </p>
-                    )
-                }
+          message != null
+          && (
+          <p style={{ color: 'green' }}>
+            {message}
+          </p>
+          )
+        }
         <InputGroup>
           <FormControl
             value={newCatName}
@@ -292,10 +279,10 @@ export default compose(
               }}
               variant="primary"
               disabled={
-                                newCatName == ''
-                                || newCatName == null
-                                || categories.findIndex((x) => x.name == newCatName) > -1
-}
+                newCatName == ''
+                || newCatName == null
+                || categories.findIndex((x) => x.name == newCatName) > -1
+              }
             >
               Add
             </Button>
@@ -316,31 +303,30 @@ export default compose(
                     index={index}
                   >
                     {(provided, snapshot) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={
-                                                    provided.draggableProps
-                                                      .style
-                                                }
-                          >
-                            <CategoryCell
-                                item={item}
-                                index={index}
-                                disableCat={disableCat}
-                                enableCat={enableCat}
-                                deleteCat={deleteCat}
-                                changeType={changeType}
-                                rename={rename}
-                                addOption={addOption}
-                                removeOption={removeOption}
-                                isDragged={
-                                                        snapshot.isDragging
-                                                    }
-                              />
-                          </div>
-                      )}
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={
+                          provided.draggableProps.style
+                        }
+                      >
+                        <CategoryCell
+                          item={item}
+                          index={index}
+                          disableCat={disableCat}
+                          enableCat={enableCat}
+                          deleteCat={deleteCat}
+                          changeType={changeType}
+                          rename={rename}
+                          addOption={addOption}
+                          removeOption={removeOption}
+                          isDragged={
+                            snapshot.isDragging
+                          }
+                        />
+                      </div>
+                    )}
                   </Draggable>
                 ))}
                 {provided.placeholder}
@@ -365,7 +351,7 @@ export default compose(
                 variant="light"
               >
                 Save Changes
-</Button>
+              </Button>
             </div>
           </Modal.Header>
           <Modal.Body className="modal-body">

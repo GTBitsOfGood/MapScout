@@ -2,19 +2,15 @@ import React, { useEffect, useState } from 'react';
 import {
   FaMapMarkerAlt, FaCheck, FaRegClock,
 } from 'react-icons/fa';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
 import { withFirestore } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import Badge from 'react-bootstrap/Badge';
 import { FiGlobe, FiPhone } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
-import LazyLoad from 'react-lazy-load';
 import Linkify from 'react-linkify';
-import GOOGLE_API_KEY from '../config/keys';
+import GOOGLE_API_KEY from '../../config/keys';
 
 const classNames = require('classnames');
 

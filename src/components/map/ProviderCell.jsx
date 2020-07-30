@@ -11,6 +11,10 @@ const classNames = require('classnames');
 export default ({
   item, index, onMouseEnter, onClick, distances, primaryColor,
 }) => {
+  const [image, setImage] = useState('bog');
+  const [myDistance, setMyDistance] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (distances && distances.length > 0) {
       setMyDistance(distances.find((x) => Object.keys(x)[0] === item.facilityName)[item.facilityName]);
@@ -19,9 +23,6 @@ export default ({
     }
   }, [distances]);
 
-  const [image, setImage] = useState('bog');
-  const [myDistance, setMyDistance] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function fetchData() {
       try {

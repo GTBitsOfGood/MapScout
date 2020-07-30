@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'firebase/database';
+import { connect } from 'react-redux';
 import ChatBubble from './ChatBubble';
-import { databaseRef } from '../../store';
-import {connect} from 'react-redux';
 
 function Discussion({ chatHistory }) {
   const [data, setData] = useState(chatHistory);
