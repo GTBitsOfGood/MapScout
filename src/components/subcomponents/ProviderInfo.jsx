@@ -93,7 +93,7 @@ const ProviderInfo = (props) => {
                       <div style={{ display: 'inline' }}>
                         {value}
                         ,
-                    </div>
+                      </div>
                     );
                   } if (index === props.item.address.toString().split(',').length - 1) {
                     return (

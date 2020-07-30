@@ -12,7 +12,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
 import ProviderInfo from '../subcomponents/ProviderInfo';
-import promiseWithTimeout from '../../functions/PromiseWithTimeout';
+import promiseWithTimeout from '../../functions/promiseWithTimeout';
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -214,21 +214,19 @@ export default compose(
                   setShowModal(false);
                   setIsLoading(false);
                 },
-                (error) => {
+                () => {
                   alert('Unable to delete removed categories');
                 },
               );
             },
-            (error) => {
+            () => {
               // code that takes care of the canceled promise.
               // Note that .then rather than .done should be used in this case.
-              console.log(error);
               alert('Unable to save categories');
             },
           );
         });
-    } catch (e) {
-      console.log(e);
+    } catch {
       alert('Unable to load categories');
     }
   }
@@ -247,16 +245,6 @@ export default compose(
         <div className="row-spaced">
           <h2>Template Builder</h2>
           <div>
-            {/* <Button */}
-            {/*    variant="outline-primary" */}
-            {/*    onClick={(e) => { */}
-            {/*        e.preventDefault(); */}
-            {/*        resetCategories(); */}
-            {/*    }} */}
-            {/*    className="mr-2" */}
-            {/* > */}
-            {/*    Reset Changes */}
-            {/* </Button> */}
             <Button
               variant="primary"
               onClick={(e) => {
@@ -270,13 +258,13 @@ export default compose(
         </div>
         <br />
         {
-                    message != null
-                    && (
-                    <p style={{ color: 'green' }}>
-                      {message}
-                    </p>
-                    )
-                }
+          message != null
+          && (
+          <p style={{ color: 'green' }}>
+            {message}
+          </p>
+          )
+        }
         <InputGroup>
           <FormControl
             value={newCatName}
@@ -291,10 +279,10 @@ export default compose(
               }}
               variant="primary"
               disabled={
-                                newCatName == ''
-                                || newCatName == null
-                                || categories.findIndex((x) => x.name == newCatName) > -1
-}
+                newCatName == ''
+                || newCatName == null
+                || categories.findIndex((x) => x.name == newCatName) > -1
+              }
             >
               Add
             </Button>

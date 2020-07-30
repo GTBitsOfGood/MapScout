@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
 import localizationStrings from '../../utils/Localization';
-import { authRoute } from '../navigation/ProviderRoutes';
+import { authRoute } from '../../routes/pathnames';
 
 const classNames = require('classnames');
 

@@ -7,20 +7,18 @@ import {
 } from 'react-redux-firebase';
 import NavBar from './NavBar';
 import Auth from '../auth/Auth';
-import Dashboard, { selectTeam } from '../dashboard/Dashboard';
+import Dashboard from '../dashboard/Dashboard';
 import AddProvider from '../dashboard/AddProvider';
 import PasswordForgetForm from '../auth/PasswordForget';
-import Template from '../template/index';
+import Template from '../template';
 import NotFound from '../NotFound';
 import SentryWrapper from '../wrappers/SentryWrapper';
 import Chat from '../chat';
+import { selectTeam } from '../../functions/reduxActions';
 
-export const providerRoute = '/provider';
-export const formRoute = '/provider/add';
-export const authRoute = '/auth';
-export const pwdRoute = '/forgot';
-export const templateRoute = '/provider/template';
-export const chatRoute = '/provider/feeback';
+import {
+  providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute 
+} from '../../routes/pathnames';
 
 function DashboardContent({ isAuth, auth }) {
   const PrivateRoute = ({ component: Component }) => (

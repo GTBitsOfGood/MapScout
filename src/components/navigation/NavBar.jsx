@@ -2,34 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Link from 'react-router-dom/Link';
 import {
-  FiGrid, FiFileText, FiMap, FiBell, FiSettings, FiPower, FiMessageCircle,
+  FiGrid, FiFileText, FiMap, FiBell, FiPower, FiMessageCircle,
 } from 'react-icons/fi';
-import { providerRoute, templateRoute, chatRoute } from './ProviderRoutes';
+import { providerRoute, templateRoute, chatRoute } from '../../routes/pathnames';
 import { databaseRef, responseRef } from '../../store';
+import { updateChat, updateNewChat } from '../../functions/reduxActions';
 
 const classnames = require('classnames');
-
-export const UPDATE_CHAT = 'UPDATE_CHAT';
-
-export const UPDATE_NEW_CHAT = 'UPDATE_NEW_CHAT';
-
-export function updateNewChat(data) {
-  return function x(dispatch) {
-    dispatch({
-      type: UPDATE_NEW_CHAT,
-      data,
-    });
-  };
-}
-
-export function updateChat(data) {
-  return function x(dispatch) {
-    dispatch({
-      type: UPDATE_CHAT,
-      data,
-    });
-  };
-}
 
 function NavBar(props) {
   const [expand, setExpanded] = useState(false);

@@ -55,11 +55,9 @@ export default ({
                 marginTop: 12,
                 padding: 0,
               }}
-              onClick={() => {
-                item.active
-                  ? disableCat(index)
-                  : deleteCat(index);
-              }}
+              onClick={item.active
+                ? () => disableCat(index)
+                : () => deleteCat(index)}
             >
               <IoIosTrash style={{ marginTop: -16 }} />
             </Button>
@@ -120,68 +118,68 @@ export default ({
           </Row>
         </div>
         {
-                    !item.active
-                        && (
-                        <div className="p-2">
-                          This category has been disabled. You may either restore it or permanently delete it.
-                        </div>
-                        )
-                }
+          !item.active
+            && (
+            <div className="p-2">
+              This category has been disabled. You may either restore it or permanently delete it.
+            </div>
+            )
+        }
         <Collapse isOpened={!collapsed && item.active}>
           {
-                    (item.select_type == 1 || item.select_type == 2)
-                      ? (
-                        <div>
-                          <div className="form-control options-wrapper">
-                            <small className="underline">CURRENT OPTIONS</small>
-                            {
-                                    (item.options && item.options.length > 0)
-                                      ? item.options.map((option, i) => (
-                                        <div key={i} className="options-item row-spaced mt-1">
-                                          <div
-                                            onClick={() => removeOption(i, index)}
-                                            className="options-close"
-                                          >
-                                            <IoMdClose />
-                                          </div>
-                                          <div
-                                            className="options-label"
-                                          >
-                                            {option.label}
-                                          </div>
-                                        </div>
-                                      ))
-                                      : <div>There are currently no options, please add some</div>
-                                }
-                          </div>
-                          <div className="add-option">
-                            <div className="row-spaced">
-                              <InputGroup>
-                                <FormControl
-                                  value={optionName}
-                                  onChange={(e) => setOptionName(e.target.value)}
-                                  type="text"
-                                  placeholder="Create New Option"
-                                />
-                                <InputGroup.Append>
-                                  <Button
-                                    onClick={() => {
-                                      addOption(optionName, index);
-                                      setOptionName('');
-                                    }}
-                                    disabled={!optionName || optionName.length <= 0}
-                                    variant="primary"
+            (item.select_type == 1 || item.select_type == 2)
+              ? (
+                <div>
+                  <div className="form-control options-wrapper">
+                    <small className="underline">CURRENT OPTIONS</small>
+                    {
+                            (item.options && item.options.length > 0)
+                              ? item.options.map((option, i) => (
+                                <div key={i} className="options-item row-spaced mt-1">
+                                  <div
+                                    onClick={() => removeOption(i, index)}
+                                    className="options-close"
                                   >
-                                    Add
-                                  </Button>
-                                </InputGroup.Append>
-                              </InputGroup>
-                            </div>
-                          </div>
-                        </div>
-                      )
-                      : <div className="p-2">There is no additional configuration for this property type</div>
-                }
+                                    <IoMdClose />
+                                  </div>
+                                  <div
+                                    className="options-label"
+                                  >
+                                    {option.label}
+                                  </div>
+                                </div>
+                              ))
+                              : <div>There are currently no options, please add some</div>
+                        }
+                  </div>
+                  <div className="add-option">
+                    <div className="row-spaced">
+                      <InputGroup>
+                        <FormControl
+                          value={optionName}
+                          onChange={(e) => setOptionName(e.target.value)}
+                          type="text"
+                          placeholder="Create New Option"
+                        />
+                        <InputGroup.Append>
+                          <Button
+                            onClick={() => {
+                              addOption(optionName, index);
+                              setOptionName('');
+                            }}
+                            disabled={!optionName || optionName.length <= 0}
+                            variant="primary"
+                          >
+                            Add
+                          </Button>
+                        </InputGroup.Append>
+                      </InputGroup>
+                    </div>
+                  </div>
+                </div>
+              )
+              : <div className="p-2">There is no additional configuration for this property type</div>
+          }
         </Collapse>
       </div>
     </div>

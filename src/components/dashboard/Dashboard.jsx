@@ -5,31 +5,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { withFirestore, isEmpty } from 'react-redux-firebase';
-import { formRoute } from '../navigation/ProviderRoutes';
+import { formRoute } from '../../routes/pathnames';
 import SingleProvider from './SingleProvider';
-
-const classNames = require('classnames');
-
-export const SELECT_ITEM = 'SELECT_ITEM';
-export const SELECT_TEAM = 'SELECT_TEAM';
-
-export function selectItem(data) {
-  return function x(dispatch) {
-    dispatch({
-      type: SELECT_ITEM,
-      data,
-    });
-  };
-}
-
-export function selectTeam(data) {
-  return function x(dispatch) {
-    dispatch({
-      type: SELECT_TEAM,
-      data,
-    });
-  };
-}
+import { selectItem } from '../../functions/reduxActions';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);

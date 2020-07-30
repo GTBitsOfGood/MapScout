@@ -9,7 +9,7 @@ import { withFirebase } from 'react-redux-firebase';
 import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
-import { providerRoute, pwdRoute } from '../navigation/ProviderRoutes';
+import { providerRoute, pwdRoute } from '../../routes/pathnames';
 
 const classNames = require('classnames');
 

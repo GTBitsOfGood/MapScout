@@ -15,9 +15,9 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { withFirestore } from 'react-redux-firebase';
 import { isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js';
 import RowForm from './RowForm';
-import { providerRoute } from '../navigation/ProviderRoutes';
+import { providerRoute } from '../../routes/pathnames';
 import useWindowSize from '../../functions/useWindowSize';
-import promiseWithTimeout from '../../functions/PromiseWithTimeout';
+import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import GOOGLE_API_KEY from '../../config/keys';
 
 const uuidv4 = require('uuid/v4');
