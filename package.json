@@ -1,5 +1,5 @@
 {
-    "name": "MapScout",
+    "name": "mapscout",
     "version": "1.0.0",
     "author": "Hack4Impact",
     "license": "MIT",
@@ -14,7 +14,11 @@
         "start": "react-scripts start",
         "build": "CI= react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "secrets": "npm run secrets:logout && npm run secrets:login 'npm run secrets:sync'",
+        "secrets:logout": "(bw logout || true)",
+        "secrets:login": "cross-env-shell BW_SESSION=`bw login product@bitsofgood.org --raw`",
+        "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > '.env'"
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
