@@ -253,7 +253,7 @@ const Index = (props) => {
     }
   };
 
-  const filterSearch = (filterVal, zipCode, zipProvs) => {
+  const filterSearch = (filterVal: string, zipCode?: string, zipProvs?) => {
     const regex = new RegExp(`${filterVal.toLowerCase()}`, 'gi');
     let temp = providers;
     if (zipCode) {
@@ -263,9 +263,9 @@ const Index = (props) => {
     filterByTags(temp);
   };
 
-  const filterProviders = async (e) => {
+  const filterProviders = async (e?) => {
     if (typeof e !== 'undefined') {
-      const filtertype = e.target.getAttribute('filtertype');
+      const filtertype = e.target.getAttribute('itemType');
       const filterVal = e.target.value;
       if (filtertype === 'search') {
         setSearchName(filterVal);
@@ -348,22 +348,22 @@ const Index = (props) => {
       )}
       <div className={classNames('filter-row', 'padder')}>
         {Object.entries(filtersData)
-          .filter(([key, value]) => Number.isInteger(value.priority)
+          .filter(([key, value]: any[]) => Number.isInteger(value.priority)
                             && value.priority < FILTER_CUTOFF)
           .sort(
-            ([aKey, aValue], [bKey, bValue]) => aValue.priority - bValue.priority,
+            ([aKey, aValue]: any[], [bKey, bValue]: any[]) => aValue.priority - bValue.priority,
           )
-          .map(([key, value]) => renderDropdown(value.name, key))}
+          .map(([key, value]: any[]) => renderDropdown(value.name, key))}
 
         {moreFilter ? (
           <>
             {Object.entries(filtersData)
               .filter(
-                ([key, value]) => !Number.isInteger(value.priority)
+                ([key, value]: any[]) => !Number.isInteger(value.priority)
                                         || value.priority >= FILTER_CUTOFF,
               )
-              .sort(([aKey, aValue], [bKey, bValue]) => aValue.name.localeCompare(bValue.name))
-              .map(([key, value]) => renderDropdown(value.name, key))}
+              .sort(([aKey, aValue]: any[], [bKey, bValue]: any[]) => aValue.name.localeCompare(bValue.name))
+              .map(([key, value]: any[]) => renderDropdown(value.name, key))}
             <Button
               variant="link"
               style={{ color: 'red' }}
@@ -392,6 +392,7 @@ const Index = (props) => {
     return (
       <Dropdown key={key}>
         <Dropdown.Toggle
+          id={key}
           variant="light"
           style={{ marginRight: 5, marginBottom: 5 }}
         >
@@ -399,33 +400,33 @@ const Index = (props) => {
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {
-                        filtersData[key].options.map((item, index) => (
-                          <div
-                            key={index}
-                            onClick={
-                                        () => filterProviders({
-                                          target: {
-                                            name: key,
-                                            value: item.value,
-                                            type: 'checkbox',
-                                            checked: !filtersState[key].includes(item.value),
-                                            getAttribute: (param) => 'normalfilter',
-                                          },
-                                        })
-                                    }
-                          >
-                            <Form.Check
-                              className="dropdown-item"
-                              name={key}
-                              type="checkbox"
-                              checked={filtersState[key].includes(item.value)}
-                              value={item.value}
-                              label={item.label}
-                              filtertype="normalfilter"
-                            />
-                          </div>
-                        ))
-                    }
+            filtersData[key].options.map((item, index) => (
+              <div
+                key={index}
+                onClick={
+                            () => filterProviders({
+                              target: {
+                                name: key,
+                                value: item.value,
+                                type: 'checkbox',
+                                checked: !filtersState[key].includes(item.value),
+                                getAttribute: (param) => 'normalfilter',
+                              },
+                            })
+                        }
+              >
+                <Form.Check
+                  className="dropdown-item"
+                  name={key}
+                  type="checkbox"
+                  checked={filtersState[key].includes(item.value)}
+                  value={item.value}
+                  label={item.label}
+                  itemType="normalfilter"
+                />
+              </div>
+            ))
+          }
         </Dropdown.Menu>
       </Dropdown>
     );
@@ -464,7 +465,7 @@ const Index = (props) => {
                 <Col>
                   <Form.Control
                     placeholder={searchZipcode}
-                    filtertype="zipcode"
+                    itemType="zipcode"
                     value={searchZip}
                     onChange={filterProviders}
                   />
@@ -472,7 +473,7 @@ const Index = (props) => {
                 <Col>
                   <Form.Control
                     placeholder={searchProviderName}
-                    filtertype="search"
+                    itemType="search"
                     onChange={filterProviders}
                   />
                 </Col>
@@ -645,6 +646,6 @@ const Index = (props) => {
   );
 };
 
-export default compose(withFirestore, connect((state) => ({
+export default compose<any>(withFirestore, connect((state) => ({
   firebase: state.firebase,
 })))(Index);

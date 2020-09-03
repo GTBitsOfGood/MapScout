@@ -3,9 +3,21 @@ import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/Button';
 import { FaInfoCircle, FaTimes } from 'react-icons/fa';
 
+type MapMarkerProps = {
+  index: number,
+  selectedIndex: number,
+  name: string,
+  address: string,
+  lng: number,
+  lat: number,
+  onShowMoreClick: () => void,
+  onMarkerClick: () => void,
+  primaryColor?: string
+}
+
 export default ({
   index, selectedIndex, name, address, onShowMoreClick, onMarkerClick, primaryColor,
-}) => (
+}: MapMarkerProps) => (
   <Popup
     trigger={(
       <div
@@ -45,7 +57,7 @@ export default ({
       padding: '12px',
       boxShadow: '0 2px 7px 1px rgba(0,0,0,0.3)',
       maxWidth: '452px',
-      fontWeight: '300',
+      fontWeight: 'lighter',
       fontSize: '13px',
       display: 'inline-block',
       minWidth: '300px',
@@ -68,7 +80,7 @@ export default ({
         onClick={onShowMoreClick}
         style={{
           padding: 0,
-          fontWeight: '300',
+          fontWeight: 'lighter',
           fontSize: '13px',
           margin: 0,
           color: primaryColor,
