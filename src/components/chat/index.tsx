@@ -34,7 +34,7 @@ function Chat({ firebase, newChat, updateNewChat }) {
         timestamp: datetime,
         uid: firebase.auth.uid,
         username: firebase.auth.email,
-      }).then(setMessage(''));
+      }).then(() => setMessage(''));
     }
   };
 
