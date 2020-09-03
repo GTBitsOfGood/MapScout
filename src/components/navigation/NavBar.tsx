@@ -32,8 +32,8 @@ function NavBar(props) {
 
   async function parseChat(payload, payload2) {
     const {firebaseAuth} = props;
-    const chats = payload ? Object.values(payload).filter((x) => x.uid && x.uid === firebaseAuth.auth.uid) : [];
-    const responses = payload2 ? Object.values(payload2).filter((x) => {
+    const chats = payload ? Object.values(payload).filter((x: any) => x.uid && x.uid === firebaseAuth.auth.uid) : [];
+    const responses = payload2 ? Object.values(payload2).filter((x: any) => {
       const index = x.message.indexOf(`$${firebaseAuth.auth.uid}`);
       if (index === 0) {
         x.message = x.message.replace(`$${firebaseAuth.auth.uid}`, '').trim();
@@ -42,8 +42,8 @@ function NavBar(props) {
     }) : [];
     const arr = [];
     while (chats.length > 0 && responses.length > 0) {
-      const chatTarget = chats[chats.length - 1];
-      const responseTarget = responses[responses.length - 1];
+      const chatTarget: any = chats[chats.length - 1];
+      const responseTarget: any = responses[responses.length - 1];
       const chatDate = new Date(chatTarget.timestamp);
       const responseDate = new Date(responseTarget.timestamp);
       if (chatDate > responseDate) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Component, ReactType } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -20,8 +20,14 @@ import {
   providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute 
 } from '../../routes/pathnames';
 
+type PrivateRouteProps = {
+  exact?: boolean,
+  path: string,
+  component: ReactType,
+}
+
 function DashboardContent({ isAuth, auth }) {
-  const PrivateRoute = ({ component: Component }) => (
+  const PrivateRoute = ({ component: Component }: PrivateRouteProps) => (
     <Route render={(prps) => {
       if (isAuth) {
         return (
@@ -165,7 +171,7 @@ const mapStateToProps = (state) => ({
 });
 
 // Need auth property to check if logged in or loading
-export default compose(
+export default compose<any>(
   withFirestore,
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps),
