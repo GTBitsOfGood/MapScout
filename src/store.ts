@@ -28,7 +28,7 @@ const databaseRef = firebase.database().ref();
 const chatRef = databaseRef.child('chat');
 const responseRef = databaseRef.child('response');
 
-const createStoreWithFirebase = compose(
+const createStoreWithFirebase = compose<any>(
   reactReduxFirebase(firebase, rrfConfig),
   reduxFirestore(firebase),
 )(createStore);
