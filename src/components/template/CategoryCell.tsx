@@ -23,45 +23,45 @@ export default ({
     <div className="category-cell-wrapper">
       <div className="category-button-column">
         {
-            item.active
-              ? (
-                <div className="category-grip">
-                  <FiMoreVertical style={{ marginRight: -20 }} />
-                  <FiMoreVertical />
-                </div>
-              )
-              : (
-                <Button
-                  variant="light"
-                  style={{
-                    fontSize: 22,
-                    borderRadius: 0,
-                    padding: 0,
-                  }}
-                  onClick={() => enableCat(index)}
-                >
-                  <IoIosRefresh />
-                </Button>
-              )
-        }
-        {
-            isDragged || (
+          item.active
+          ? (
+            <div className="category-grip">
+              <FiMoreVertical style={{ marginRight: -20 }} />
+              <FiMoreVertical />
+            </div>
+          )
+          : (
             <Button
               variant="light"
               style={{
-                fontSize: 30,
-                height: 38,
+                fontSize: 22,
                 borderRadius: 0,
-                marginTop: 12,
                 padding: 0,
               }}
-              onClick={item.active
-                ? () => disableCat(index)
-                : () => deleteCat(index)}
+              onClick={() => enableCat(index)}
             >
-              <IoIosTrash style={{ marginTop: -16 }} />
+              <IoIosRefresh />
             </Button>
-            )
+          )
+        }
+        {
+          isDragged || (
+          <Button
+            variant="light"
+            style={{
+              fontSize: 30,
+              height: 38,
+              borderRadius: 0,
+              marginTop: 12,
+              padding: 0,
+            }}
+            onClick={item.active
+              ? () => disableCat(index)
+              : () => deleteCat(index)}
+          >
+            <IoIosTrash style={{ marginTop: -16 }} />
+          </Button>
+          )
         }
       </div>
       <div
@@ -79,8 +79,8 @@ export default ({
                   placeholder="Category Title"
                   disabled={!item.active}
                   value={title}
-                  style={{ fontWeight: '700' }}
-                  onChange={(e) => {
+                  style={{ fontWeight: 'bolder' }}
+                  onChange={(e: any) => {
                     setTitle(e.target.value);
                     rename(e, index);
                   }}
@@ -99,22 +99,22 @@ export default ({
               </InputGroup>
             </Col>
             {
-                            item.active
-                            && (
-                            <Col xs={2} md={2} lg={1}>
-                              <Button
-                                variant="light"
-                                onClick={() => setCollapsed(!collapsed)}
-                              >
-                                {
-                                        collapsed
-                                          ? <IoIosArrowDown />
-                                          : <IoIosArrowUp />
-                                    }
-                              </Button>
-                            </Col>
-                            )
-                        }
+              item.active
+              && (
+              <Col xs={2} md={2} lg={1}>
+                <Button
+                  variant="light"
+                  onClick={() => setCollapsed(!collapsed)}
+                >
+                  {
+                          collapsed
+                            ? <IoIosArrowDown />
+                            : <IoIosArrowUp />
+                      }
+                </Button>
+              </Col>
+              )
+            }
           </Row>
         </div>
         {
@@ -133,24 +133,24 @@ export default ({
                   <div className="form-control options-wrapper">
                     <small className="underline">CURRENT OPTIONS</small>
                     {
-                            (item.options && item.options.length > 0)
-                              ? item.options.map((option, i) => (
-                                <div key={i} className="options-item row-spaced mt-1">
-                                  <div
-                                    onClick={() => removeOption(i, index)}
-                                    className="options-close"
-                                  >
-                                    <IoMdClose />
-                                  </div>
-                                  <div
-                                    className="options-label"
-                                  >
-                                    {option.label}
-                                  </div>
-                                </div>
-                              ))
-                              : <div>There are currently no options, please add some</div>
-                        }
+                      (item.options && item.options.length > 0)
+                      ? item.options.map((option, i) => (
+                        <div key={i} className="options-item row-spaced mt-1">
+                          <div
+                            onClick={() => removeOption(i, index)}
+                            className="options-close"
+                          >
+                            <IoMdClose />
+                          </div>
+                          <div
+                            className="options-label"
+                          >
+                            {option.label}
+                          </div>
+                        </div>
+                      ))
+                      : <div>There are currently no options, please add some</div>
+                    }
                   </div>
                   <div className="add-option">
                     <div className="row-spaced">

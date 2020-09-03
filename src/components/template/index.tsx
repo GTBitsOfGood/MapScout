@@ -25,7 +25,7 @@ const mapStateToProps = (state) => ({
   team: state.item.team,
 });
 
-export default compose(
+export default compose<any>(
   withFirestore,
   connect(
     mapStateToProps,
@@ -34,7 +34,7 @@ export default compose(
 )((props) => {
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState(null);
-  const [newCatName, setNewCatName] = useState([]);
+  const [newCatName, setNewCatName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [defaultCategories, setDefaultCategories] = useState([]);
@@ -108,7 +108,7 @@ export default compose(
       result.source.index,
       result.destination.index,
     );
-    items.map((item, index) => {
+    items.map((item: any, index) => {
       item.priority = index;
     });
     setCategories(items);
@@ -148,13 +148,13 @@ export default compose(
   }
 
   function disableCat(index) {
-    const items = reorder(
+    const items: any[] = reorder(
       categories,
       index,
       categories.length - 1,
     );
     items[categories.length - 1].active = false;
-    items.map((item, i) => {
+    items.map((item: any, i) => {
       item.priority = i;
     });
     setCategories(items);
