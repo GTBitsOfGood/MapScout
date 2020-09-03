@@ -254,13 +254,13 @@ function formatTime(arr, time, index) {
   }
   const seconds = time;
   let hours = Math.floor(seconds / 3600);
-  let mins = seconds / 60 % 60;
+  let mins: string = (seconds / 60 % 60).toString();
   const endtime_ending = hours < 12 ? 'AM' : 'PM';
   hours %= 12;
   if (hours === 0) {
     hours = 12;
   }
-  if (mins < 10) {
+  if (parseInt(mins) < 10) {
     mins = `0${mins}`;
   }
   // time = Math.round(time/36);  //
@@ -284,7 +284,7 @@ function formatTime(arr, time, index) {
   return <div className="modal-text">{timeformat}</div>;
 }
 
-export default compose(
+export default compose<any>(
   withFirestore,
   connect((state) => ({
     providers: state.firestore.ordered.providers,
