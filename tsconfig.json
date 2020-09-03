@@ -22,7 +22,7 @@
       "./types",
       "node_modules/@types"
     ],
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "allowJs": true,
     "lib": [
       "dom",
