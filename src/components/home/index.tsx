@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import YouTube from 'react-youtube';
+import YouTube, { Options } from 'react-youtube';
 
 import { authRoute, providerRoute } from '../../routes/pathnames';
 
 const logo = require('../../assets/img/logo.svg');
 const background = require('../../assets/img/homepage-hero.png');
 
-const opts = {
+const opts: Options = {
   width: '100%',
   playerVars: {
     // https://developers.google.com/youtube/player_parameters
@@ -145,4 +145,4 @@ const mapStateToProps = (state) => ({
   firebaseAuth: state.firebase,
 });
 
-export default compose(withFirestore, connect(mapStateToProps, null))(React.memo(Home));
+export default compose<any>(withFirestore, connect(mapStateToProps, null))(React.memo(Home));
