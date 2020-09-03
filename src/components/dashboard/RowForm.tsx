@@ -174,23 +174,23 @@ const RowForm = (props) => {
               placeholder="(000) 000-0000"
             />
             {
-                                item.phoneNum.length > 0
-                                    && (
-                                    <p>
-                                      <small style={{
-                                        color:
-                                                isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
-                                                  ? 'green' : 'red',
-                                      }}
-                                      >
-                                        {
-                                                isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
-                                                  ? 'Valid number' : 'Invalid number'
-                                            }
-                                      </small>
-                                    </p>
-                                    )
-                            }
+              item.phoneNum.length > 0
+              && (
+              <p>
+                <small style={{
+                  color:
+                          isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
+                            ? 'green' : 'red',
+                }}
+                >
+                  {
+                          isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
+                            ? 'Valid number' : 'Invalid number'
+                      }
+                </small>
+              </p>
+              )
+            }
           </Form.Group>
           <Row>
             <Col xs={8}>
@@ -203,23 +203,23 @@ const RowForm = (props) => {
                   placeholder="www.health.com"
                 />
                 {
-                                        item.website.length > 0
-                                        && (
-                                        <p>
-                                          <small style={{
-                                            color:
-                                                    validURL(item.website[0])
-                                                      ? 'green' : 'red',
-                                          }}
-                                          >
-                                            {
-                                                    validURL(item.website[0])
-                                                      ? 'Valid URL' : 'Invalid URL'
-                                                }
-                                          </small>
-                                        </p>
-                                        )
-                                    }
+                  item.website.length > 0
+                  && (
+                  <p>
+                    <small style={{
+                      color:
+                              validURL(item.website[0])
+                                ? 'green' : 'red',
+                    }}
+                    >
+                      {
+                              validURL(item.website[0])
+                                ? 'Valid URL' : 'Invalid URL'
+                          }
+                    </small>
+                  </p>
+                  )
+                }
               </Form.Group>
             </Col>
             <Col xs={4}>
@@ -229,12 +229,12 @@ const RowForm = (props) => {
                 <label className="btn btn-primary btn-block">
                   Upload
                   <FileUploader
-                                          hidden
-                                          accept="image/*"
-                                          name="image"
-                                          storageRef={storage.ref('images')}
-                                          onUploadSuccess={handleUploadSuccess}
-                                        />
+                    hidden
+                    accept="image/*"
+                    name="image"
+                    storageRef={storage.ref('images')}
+                    onUploadSuccess={handleUploadSuccess}
+                  />
                 </label>
               </Form.Group>
             </Col>
@@ -244,7 +244,7 @@ const RowForm = (props) => {
             <Form.Control
               name="description"
               value={item.description}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setItem({
                   ...item,
                   [e.target.name]: e.target.value,
@@ -272,79 +272,79 @@ const RowForm = (props) => {
       return (
         <>
           {
-                            Object.entries(props.filters).map(([key, { name, options }]) => (
-                              <Form.Group key={key}>
-                                <Form.Label>{name}</Form.Label>
-                                <MultiSelect
-                                  options={options}
-                                  selected={item[key] || []}
-                                  onSelectedChanged={(selected) => {
-                                    const newItem = {
-                                      ...item,
-                                      [key]: selected,
-                                    };
-                                    setItem(newItem);
-                                    props.setItem(newItem);
-                                  }}
-                                />
-                              </Form.Group>
-                            ))
-                        }
+            Object.entries(props.filters).map(([key, { name, options }]: any) => (
+              <Form.Group key={key}>
+                <Form.Label>{name}</Form.Label>
+                <MultiSelect
+                  options={options}
+                  selected={item[key] || []}
+                  onSelectedChanged={(selected) => {
+                    const newItem = {
+                      ...item,
+                      [key]: selected,
+                    };
+                    setItem(newItem);
+                    props.setItem(newItem);
+                  }}
+                />
+              </Form.Group>
+            ))
+          }
         </>
       );
     case 3:
       return (
         <>
           {
-                            Object.entries(props.descriptions).map(([key, { name, options }]) => (
-                              <Form.Group key={key}>
-                                <Form.Label>{name}</Form.Label>
-                                <Form.Control
-                                  as="textarea"
-                                  value={item[key]}
-                                  onChange={(e) => {
-                                    const newItem = {
-                                      ...item,
-                                      [key]: e.target.value,
-                                    };
-                                    setItem(newItem);
-                                    props.setItem(newItem);
-                                  }}
-                                />
-                              </Form.Group>
-                            ))
-                        }
+            Object.entries(props.descriptions).map(([key, { name, options }]: any) => (
+              <Form.Group key={key}>
+                <Form.Label>{name}</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  value={item[key]}
+                  onChange={(e: any) => {
+                    const newItem = {
+                      ...item,
+                      [key]: e.target.value,
+                    };
+                    setItem(newItem);
+                    props.setItem(newItem);
+                  }}
+                />
+              </Form.Group>
+            ))
+          }
         </>
       );
     case 4:
       return (
         <>
           {
-                    Object.entries(props.categories).map(([key, { name, options }]) => (
-                      <Form.Group key={key}>
-                        <Form.Label>{name}</Form.Label>
-                        <Select
-                          options={options}
-                          selected={item[key] || []}
-                          maxMenuHeight={220}
-                          menuPlacement="auto"
-                          onSelectedChanged={(selected) => {
-                            const newItem = {
-                              ...item,
-                              [key]: selected,
-                            };
-                            setItem(newItem);
-                            props.setItem(newItem);
-                          }}
-                        />
-                      </Form.Group>
-                    ))
-                    }
-
+            Object.entries(props.categories).map(([key, { name, options }]: any) => (
+              <Form.Group key={key}>
+                <Form.Label>{name}</Form.Label>
+                <Select
+                  options={options}
+                  selected={item[key] || []}
+                  maxMenuHeight={220}
+                  menuPlacement="auto"
+                  onSelectedChanged={(selected) => {
+                    const newItem = {
+                      ...item,
+                      [key]: selected,
+                    };
+                    setItem(newItem);
+                    props.setItem(newItem);
+                  }}
+                />
+              </Form.Group>
+            ))
+          }
         </>
 
       );
     default:
+      return null;
   }
 };
 

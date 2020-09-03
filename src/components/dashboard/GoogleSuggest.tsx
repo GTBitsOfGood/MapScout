@@ -5,20 +5,25 @@ import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import Form from 'react-bootstrap/Form';
 import GOOGLE_API_KEY from '../../config/keys';
 
-const GoogleSuggest = (props) => {
+type GoogleSuggestProps = {
+  value: string,
+  update: (arg0: string) => void,
+}
+
+const GoogleSuggest = ({value, update}: GoogleSuggestProps) => {
   const [search, setSearch] = useState('');
-  const [value, setValue] = useState(props.value);
+  const [val, setVal] = useState(value);
 
   function handleInputChange(e) {
     setSearch(e.target.value);
-    setValue(e.target.value);
-    props.update(e.target.value);
+    setVal(e.target.value);
+    update(e.target.value);
   }
 
   function handleSelectSuggest(suggest) {
     setSearch('');
-    setValue(suggest.description);
-    props.update(suggest.description);
+    setVal(suggest.description);
+    update(suggest.description);
   }
 
   return (
@@ -44,8 +49,8 @@ const GoogleSuggest = (props) => {
             <Form.Label>Address</Form.Label>
             <Form.Control
               placeholder="123 Main St."
-              value={value}
-              onChange={(e) => handleInputChange(e)}
+              value={val}
+              onChange={handleInputChange}
             />
           </Form.Group>
         </ReactGooglePlacesSuggest>

@@ -94,7 +94,7 @@ function AddProvider(props) {
   }
 
   useEffect(() => {
-    fetchData().then(setIsLoading(false));
+    fetchData().then(() => setIsLoading(false));
   }, []);
 
   async function addFirestore() {
@@ -310,7 +310,7 @@ function AddProvider(props) {
   );
 }
 
-export default compose(
+export default compose<any>(
   withFirestore,
   connect((state) => ({
     providers: state.firestore.ordered.providers,

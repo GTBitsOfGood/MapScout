@@ -11,7 +11,7 @@ import { selectItem } from '../../functions/reduxActions';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -126,7 +126,7 @@ const mapStateToProps = (state) => ({
   team: state.item.team,
 });
 
-export default compose(
+export default compose<any>(
   withFirestore,
   connect(
     mapStateToProps,
