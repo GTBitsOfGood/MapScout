@@ -90,7 +90,7 @@ function PasswordForgetFormBase({ firebase }) {
           ) : null}
           <Button
             variant="primary"
-            onClick={!isLoading ? onSubmit : null}
+            onClick={onSubmit}
             disabled={isLoading || isInvalid}
             block
           >
