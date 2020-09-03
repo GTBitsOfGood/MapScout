@@ -1,5 +1,7 @@
 /* eslint-disable global-require */
-export default [
+import { MarkerProps } from './types';
+
+const markersConfig: MarkerProps[] = [
   {
     name: 'Adib Khan',
     image: require('../../assets/img/team/adib.jpg'),
@@ -162,3 +164,5 @@ export default [
     lng: -84.3954,
   },
 ];
+
+export default markersConfig;
