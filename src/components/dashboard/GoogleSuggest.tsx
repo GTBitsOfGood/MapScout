@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ReactGoogleMapLoader from 'react-google-maps-loader';
 import ReactGooglePlacesSuggest from 'react-google-places-suggest';
 import Form from 'react-bootstrap/Form';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 type GoogleSuggestProps = {
   value: string,

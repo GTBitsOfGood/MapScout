@@ -18,7 +18,7 @@ import ProviderInfoMobile from '../subcomponents/ProviderInfoMobile';
 import GoogleMap from './GoogleMap';
 import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -404,16 +404,16 @@ const Index = (props) => {
               <div
                 key={index}
                 onClick={
-                            () => filterProviders({
-                              target: {
-                                name: key,
-                                value: item.value,
-                                type: 'checkbox',
-                                checked: !filtersState[key].includes(item.value),
-                                getAttribute: (param) => 'normalfilter',
-                              },
-                            })
-                        }
+                  () => filterProviders({
+                    target: {
+                      name: key,
+                      value: item.value,
+                      type: 'checkbox',
+                      checked: !filtersState[key].includes(item.value),
+                      getAttribute: (param) => 'normalfilter',
+                    },
+                  })
+                }
               >
                 <Form.Check
                   className="dropdown-item"
@@ -480,28 +480,28 @@ const Index = (props) => {
               </Row>
             </div>
             {
-                            condition
-                              ? (
-                                <Button
-                                  variant="primary"
-                                  style={{ borderColor: primaryColor, backgroundColor: primaryColor }}
-                                  onClick={switchView}
-                                  className="switch-view-button"
-                                >
-                                  { listView ? hideLabel : showLabel }
-                                </Button>
-                              )
-                              : isSticky
-                                && (
-                                <Button
-                                  variant="outline-primary"
-                                  style={{ borderColor: primaryColor, color: primaryColor }}
-                                  onClick={resetSticky}
-                                >
-                                  <FaMap />
-                                </Button>
-                                )
-                        }
+              condition
+                ? (
+                  <Button
+                    variant="primary"
+                    style={{ borderColor: primaryColor, backgroundColor: primaryColor }}
+                    onClick={switchView}
+                    className="switch-view-button"
+                  >
+                    { listView ? hideLabel : showLabel }
+                  </Button>
+                )
+                : isSticky
+                  && (
+                  <Button
+                    variant="outline-primary"
+                    style={{ borderColor: primaryColor, color: primaryColor }}
+                    onClick={resetSticky}
+                  >
+                    <FaMap />
+                  </Button>
+                  )
+              }
           </div>
           {isSticky && renderTagControl()}
         </div>
@@ -513,14 +513,14 @@ const Index = (props) => {
             className={classNames('map-list', { expand: !listView, sticky: isSticky && !condition })}
           >
             {
-                            !isSticky && !condition
-                            && (
-                            <div
-                              className="map-overlay"
-                              onMouseEnter={() => setPoint(false)}
-                            />
-                            )
-                        }
+              !isSticky && !condition
+              && (
+              <div
+                className="map-overlay"
+                onMouseEnter={() => setPoint(false)}
+              />
+              )
+            }
             <div
               className="map-container"
             >
@@ -529,117 +529,117 @@ const Index = (props) => {
                 <div className="tag-row padder">
                   {Object.keys(filtersState).map(renderTag)}
                   {
-                                        evaluateFilters()
-                                        && (
-                                        <div
-                                          onClick={() => clearFilters()}
-                                          className="tag clear-all"
-                                          style={{ borderColor: 'red', color: 'red' }}
-                                        >
-                                          Clear All
-                                        </div>
-                                        )
-                                    }
+                    evaluateFilters()
+                    && (
+                    <div
+                      onClick={() => clearFilters()}
+                      className="tag clear-all"
+                      style={{ borderColor: 'red', color: 'red' }}
+                    >
+                      Clear All
+                    </div>
+                    )
+                  }
                 </div>
                 <div className="count">
                   <span>
                     {
-                                        isEmpty(activeProviders)
-                                          ? 'No' : activeProviders.length
-                                    }
+                      isEmpty(activeProviders)
+                        ? 'No' : activeProviders.length
+                    }
                     {' '}
                     providers found
                   </span>
                 </div>
                 {
-                                    !isEmpty(activeProviders)
-                                    && activeProviders.map((i, index) => (
-                                      <ProviderCell
-                                        key={i.id}
-                                        item={i}
-                                        index={index}
-                                        primaryColor={primaryColor}
-                                        onMouseEnter={debounce(() => {
-                                          if (listView && width > 768) setCurrmarker(index);
-                                        }, 300)}
-                                        onClick={() => handleCellClick(index)}
-                                        distances={distances}
-                                      />
-                                    ))
-                                }
+                  !isEmpty(activeProviders)
+                  && activeProviders.map((i, index) => (
+                    <ProviderCell
+                      key={i.id}
+                      item={i}
+                      index={index}
+                      primaryColor={primaryColor}
+                      onMouseEnter={debounce(() => {
+                        if (listView && width > 768) setCurrmarker(index);
+                      }, 300)}
+                      onClick={() => handleCellClick(index)}
+                      distances={distances}
+                    />
+                  ))
+                }
               </div>
               <div>
                 {
-                                    width >= 768 && activeProviders && activeProviders[selectedIndex]
-                                    && (
-                                    <Modal
-                                      show={showModal}
-                                      onHide={() => setShowModal(false)}
-                                      dialogClassName="myModal"
-                                      scrollable
-                                    >
-                                      <Modal.Header
-                                        style={{ backgroundColor: primaryColor }}
-                                        closeButton
-                                      />
-                                      <Modal.Body
-                                        className="modal-body"
-                                      >
-                                        <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
-                                      </Modal.Body>
-                                    </Modal>
-                                    )
-                                }
+                  width >= 768 && activeProviders && activeProviders[selectedIndex]
+                  && (
+                  <Modal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    dialogClassName="myModal"
+                    scrollable
+                  >
+                    <Modal.Header
+                      style={{ backgroundColor: primaryColor }}
+                      closeButton
+                    />
+                    <Modal.Body
+                      className="modal-body"
+                    >
+                      <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
+                    </Modal.Body>
+                  </Modal>
+                  )
+                }
                 {
-                                    width < 768 && activeProviders && activeProviders[selectedIndex]
-                                    && (
-                                    <Modal
-                                      show={showModal}
-                                      onHide={() => setShowModal(false)}
-                                      dialogClassName="modalMobile"
-                                      scrollable
-                                    >
-                                      <Modal.Header
-                                        style={{ backgroundColor: primaryColor }}
-                                        closeButton
-                                      />
-                                      <Modal.Body
-                                        className="modal-body"
-                                      >
-                                        <ProviderInfoMobile item={activeProviders[selectedIndex]} width={width} categories={categories} />
-                                      </Modal.Body>
-                                    </Modal>
-                                    )
-                                }
+                  width < 768 && activeProviders && activeProviders[selectedIndex]
+                  && (
+                  <Modal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    dialogClassName="modalMobile"
+                    scrollable
+                  >
+                    <Modal.Header
+                      style={{ backgroundColor: primaryColor }}
+                      closeButton
+                    />
+                    <Modal.Body
+                      className="modal-body"
+                    >
+                      <ProviderInfoMobile item={activeProviders[selectedIndex]} width={width} categories={categories} />
+                    </Modal.Body>
+                  </Modal>
+                  )
+                }
               </div>
             </div>
           </div>
           {
-                        !(isSticky && !condition)
-                        && (
-                        <div
-                          id="map"
-                          className={classNames({ 'map-hide': condition && !listView })}
-                        >
-                          <div
-                            onMouseLeave={() => setPoint(true)}
-                            style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}
-                          >
-                            <GoogleMap
-                              providers={activeProviders}
-                              defaultZoom={defaultZoom}
-                              primaryColor={primaryColor}
-                              defaultCenter={{
-                                lat: defaultLat,
-                                lng: defaultLong,
-                              }}
-                              selectedMarker={currmarker}
-                              onShowMoreClick={handleCellClick}
-                            />
-                          </div>
-                        </div>
-                        )
-                    }
+            !(isSticky && !condition)
+            && (
+            <div
+              id="map"
+              className={classNames({ 'map-hide': condition && !listView })}
+            >
+              <div
+                onMouseLeave={() => setPoint(true)}
+                style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}
+              >
+                <GoogleMap
+                  providers={activeProviders}
+                  defaultZoom={defaultZoom}
+                  primaryColor={primaryColor}
+                  defaultCenter={{
+                    lat: defaultLat,
+                    lng: defaultLong,
+                  }}
+                  selectedMarker={currmarker}
+                  onShowMoreClick={handleCellClick}
+                />
+              </div>
+            </div>
+            )
+          }
         </div>
       </div>
     </div>

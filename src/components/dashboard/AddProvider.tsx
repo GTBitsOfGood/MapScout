@@ -18,7 +18,7 @@ import RowForm from './RowForm';
 import { providerRoute } from '../../routes/pathnames';
 import useWindowSize from '../../functions/useWindowSize';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 const uuidv4 = require('uuid/v4');
 

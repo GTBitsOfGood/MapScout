@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 import mapConfig from './mapConfig';
 import markersConfig from './markersConfig';
 import TeamMarker from './TeamMarker';
