@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
+import { TeamDocProps } from './types/firestore';
 import { store, history } from './store';
 import routes from './routes';
 import { SENTRY_API_KEY } from './config/keys';
@@ -17,9 +18,9 @@ const getRoutes = async () => {
   const strRoutes = await store.firestore
     .collection('teams')
     .get()
-    .then((doc) => {
+    .then((doc: TeamDocProps[]) => {
       const arr = [];
-      doc.forEach((team) => {
+      doc.forEach((team: TeamDocProps) => {
         arr.push(`/${team.id}`);
       });
       return arr;

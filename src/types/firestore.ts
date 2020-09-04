@@ -6,13 +6,15 @@ export type TeamDocProps = {
   name: string,
   primaryColor: string,
   secondaryColor: string,
-  zoom?: number
+  zoom?: number,
+  id: string
 }
 
 export type UserDocProps = {
   UID: string,
   email: string,
-  team: string
+  team: string,
+  id: string
 }
 
 export type CategoryOptions = {
