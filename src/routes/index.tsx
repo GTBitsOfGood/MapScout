@@ -8,8 +8,8 @@ import AboutUs from '../components/about';
 import Home from '../components/home';
 import { homeRoute, aboutRoute } from './pathnames';
 
-function renderComponentWithErrorBoundary(Component: React.ReactType) {
-  return (props: any) => (
+function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
+  return (props: P) => (
     <SentryWrapper>
       <Component {...props} />
     </SentryWrapper>
