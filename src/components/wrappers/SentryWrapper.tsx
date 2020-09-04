@@ -2,8 +2,7 @@ import React from 'react';
 import * as Sentry from '@sentry/react';
 import LazyLoad from 'react-lazy-load';
 import Button from 'react-bootstrap/Button';
-
-const image = require('../../assets/img/error.jpg');
+import image from '../../assets/img/error.jpg';
 
 function FallbackComponent() {
   function refresh() {
