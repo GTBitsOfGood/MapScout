@@ -3,12 +3,12 @@ import update from 'immutability-helper';
 import {
   UPDATE_CHAT, UPDATE_NEW_CHAT, SELECT_ITEM, SELECT_TEAM,
 } from '../functions/reduxActions';
-import { TeamDocProps } from '../types/firestore';
-import { ChatDBProps } from '../types/rtdb';
+import { InitialState } from './types';
 
-const initialState = {
+const initialState: InitialState = {
   selected: null,
-  team: <TeamDocProps>{
+  team: {
+    id: '',
     name: '',
     logoUrl: '',
     primaryColor: '',
@@ -18,7 +18,7 @@ const initialState = {
     longitude: 0,
     zoom: 0,
   },
-  chatHistory: <ChatDBProps[]>[],
+  chatHistory: [],
   newChat: false,
 };
 
