@@ -1,4 +1,4 @@
-const promiseWithTimeout = async (timeoutMs, promise) => {
+const promiseWithTimeout = async (timeoutMs: number, promise: Promise<any> | void): Promise<any> => {
   // Create a promise that rejects in <ms> milliseconds
   const timeout = new Promise(
     (
