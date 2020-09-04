@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { FiGlobe, FiPhone } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import Linkify from 'react-linkify';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 const classNames = require('classnames');
 

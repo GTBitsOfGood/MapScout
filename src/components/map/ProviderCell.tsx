@@ -4,7 +4,7 @@ import {
   FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap,
 } from 'react-icons/fa';
 import LazyLoad from 'react-lazy-load';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 const classNames = require('classnames');
 

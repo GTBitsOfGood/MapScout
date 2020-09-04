@@ -13,7 +13,7 @@ import { FiGlobe } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
 import Linkify from 'react-linkify';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');

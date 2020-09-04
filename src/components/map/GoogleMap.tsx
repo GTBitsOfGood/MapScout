@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GoogleMapReact from 'google-map-react';
-import GOOGLE_API_KEY from '../../config/keys';
+import { GOOGLE_API_KEY } from '../../config/keys';
 import MapMarker from './MapMarker';
 
 function arePointsNear(checkPoint, centerPoint, km) {
