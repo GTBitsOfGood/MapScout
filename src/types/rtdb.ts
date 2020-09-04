@@ -3,8 +3,5 @@ export type ChatDBProps = {
   timestamp: string,
   UID: string,
   username: string,
-}
-
-export type ResponseDBProps = ChatDBProps & {
-  fromSlack: boolean,
+  fromSlack?: boolean,
 }
