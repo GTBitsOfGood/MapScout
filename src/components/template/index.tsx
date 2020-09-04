@@ -13,15 +13,16 @@ import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
 import ProviderInfo from '../subcomponents/ProviderInfo';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
+import { Store } from 'reducers/types';
 
-const reorder = (list, startIndex, endIndex) => {
+function reorder<T>(list: T[], startIndex: number, endIndex: number){
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
   return result;
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: Store) => ({
   team: state.item.team,
 });
 
@@ -31,7 +32,7 @@ export default compose<any>(
     mapStateToProps,
     {},
   ),
-)((props) => {
+)(({ team, firestore }) => {
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState(null);
   const [newCatName, setNewCatName] = useState("");
@@ -52,7 +53,7 @@ export default compose<any>(
     latitude: 39.990206,
     longitude: -75.136872,
     phoneNum: ['(123) 456-7890'],
-    team: props.team.name,
+    team: team.name,
     website: ['https://www.mapscout.io'],
   };
 
@@ -78,11 +79,10 @@ export default compose<any>(
   }, [JSON.stringify(categories)]);
 
   async function fetchData() {
-    const { firestore } = props;
     const collections = firestore.collection('categories');
     const arr = [];
     await collections
-      .where('team', '==', props.team.name)
+      .where('team', '==', team.name)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -180,7 +180,7 @@ export default compose<any>(
       select_type: 2,
       options: [],
       active: true,
-      team: props.team.name,
+      team: team.name,
       id: newCatName,
     });
     setNewCatName('');
@@ -194,13 +194,13 @@ export default compose<any>(
   async function saveChanges() {
     setIsLoading(true);
     try {
-      const collections = props.firestore.collection('categories');
+      const collections = firestore.collection('categories');
       const filters = await collections
-        .where('team', '==', props.team.name)
+        .where('team', '==', team.name)
         .get()
         .then(async (querySnapshot) => {
           promiseWithTimeout(10000, categories.forEach((cat) => {
-            props.firestore.set({ collection: 'categories', doc: cat.id }, cat);
+            firestore.set({ collection: 'categories', doc: cat.id }, cat);
           })).then(
             (complete) => {
               // code that executes after the timeout has completed.
