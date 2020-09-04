@@ -8,20 +8,20 @@ import AboutUs from '../components/about';
 import Home from '../components/home';
 import { homeRoute, aboutRoute } from './pathnames';
 
-function renderComponentWithErrorBoundary(Component) {
-  return (props) => (
+function renderComponentWithErrorBoundary(Component: React.ReactType) {
+  return (props: any) => (
     <SentryWrapper>
       <Component {...props} />
     </SentryWrapper>
   );
 }
 
-const routes = (allRoutes) => (
+const routes = (allRoutes: string[]) => (
   <AppWrapper>
     <BrowserRouter basename="/">
       <Switch>
         <Route exact path={homeRoute} component={renderComponentWithErrorBoundary(Home)} />
-        {allRoutes.map((route) => (
+        {allRoutes.map((route: string) => (
           <Route path={route} component={renderComponentWithErrorBoundary(App)} />
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
