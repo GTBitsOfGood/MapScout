@@ -30,10 +30,8 @@
         "bootstrap": "^4.3.1",
         "classnames": "^2.2.6",
         "connected-react-router": "^4.2.3",
-        "cross-env": "^7.0.2",
         "dotenv": "^8.2.0",
         "firebase": "^7.16.0",
-        "fx": "^20.0.0",
         "google-map-react": "^1.1.6",
         "history": "^4.10.1",
         "immutability-helper": "^3.0.1",
@@ -78,6 +76,8 @@
         "uuid": "^7.0.3"
     },
     "devDependencies": {
+        "@bitwarden/cli": "^1.11.0",
+        "cross-env": "^7.0.2",
         "eslint": "^6.8.0",
         "eslint-config-airbnb": "^18.0.1",
         "eslint-config-standard": "^14.1.0",
@@ -86,7 +86,8 @@
         "eslint-plugin-node": "^11.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-react": "^7.18.0",
-        "eslint-plugin-react-hooks": "^1.7.0"
+        "eslint-plugin-react-hooks": "^1.7.0",
+        "fx": "^20.0.0"
     },
     "babel": {
         "presets": [
