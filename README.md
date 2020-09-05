@@ -7,8 +7,8 @@ Build Instructions:
 
 1. Clone the repository
 
-2. Run `yarn`
+2. Run `yarn` (this is the yarn equivalent to npm install)
 
-3. Run `yarn run secrets`, enter in your super secret password when prompted
+3. Run `npm run secrets`, enter in your super secret password when prompted
 
-4. Now you can run `yarn run start` whenever you want to run the app
+4. Now you can run `npm run start` whenever you want to run the app
