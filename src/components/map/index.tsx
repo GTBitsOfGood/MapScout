@@ -19,6 +19,7 @@ import GoogleMap from './GoogleMap';
 import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { Store } from 'reducers/types';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -29,7 +30,7 @@ const getWidth = () => window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
 
-const Index = (props) => {
+const Map = (props) => {
   const [providers, setProviders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -646,6 +647,6 @@ const Index = (props) => {
   );
 };
 
-export default compose<any>(withFirestore, connect((state) => ({
-  firebase: state.firebase,
-})))(Index);
+export default compose<any>(withFirestore, connect((state: Store) => ({
+  state
+})))(Map);

@@ -7,7 +7,7 @@ import {
 } from 'react-redux-firebase';
 import NavBar from './NavBar';
 import Auth from '../auth/Auth';
-import Dashboard from '../dashboard/Dashboard';
+import Dashboard from '../dashboard';
 import AddProvider from '../dashboard/AddProvider';
 import PasswordForgetForm from '../auth/PasswordForget';
 import Template from '../template';
