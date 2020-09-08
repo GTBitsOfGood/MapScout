@@ -18,7 +18,7 @@
         "secrets": "yarn secrets:logout && cross-env-shell BW_SESSION=`bw login product@bitsofgood.org --raw` \"yarn secrets:sync\"",
         "secrets:logout": "(bw logout || exit 0)",
         "secrets:login": "bw login product@bitsofgood.org",
-        "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > '.env'"
+        "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > .env"
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
