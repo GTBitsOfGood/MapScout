@@ -711,7 +711,7 @@ h2 {
 
 .add-button-wrapper {
     padding: 8px;
-    width: 30vw;
+    width: 20vw;
 }
 
 .add-button-wrapper .btn {
@@ -1253,7 +1253,7 @@ h2 {
     #head-logo {
         font-size: 1.4em;
     }
-    
+
     #head-logo img {
         width: 180px;
     }

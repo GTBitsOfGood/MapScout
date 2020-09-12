@@ -60,6 +60,7 @@ function Dashboard({ firestore, team, selectItem }) {
 
   return (
     <div className="admin-dashboard">
+
       <div className="admin-list-container">
         <div className="list-wrapper">
           <div className="add-button-wrapper">
@@ -72,7 +73,9 @@ function Dashboard({ firestore, team, selectItem }) {
             >
               + Add New Provider
             </Button>
+
           </div>
+          <div><Button>Export to CSV</Button></div>
           <div
             className="scroll-container"
             style={{ maxHeight: 'calc(100vh - 66px)' }}
