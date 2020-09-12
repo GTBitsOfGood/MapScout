@@ -58,17 +58,18 @@ function Dashboard({ firestore, team, selectItem }) {
     );
   }
 
-  function arraytojson() {
-    //let providersJSON = JSON.stringify(providers);
+  function arrayToJson() {
+    //Make a providers temp array to edit
     let providersCopy = Array.from(providers);
     
     //iterates through providers array and converts each provider to a JSON object
     for (let index = 0; index < providersCopy.length; index++) {
+      //deletes the team property from each array
       delete providersCopy[index].team;
       providersCopy[index] = JSON.stringify(providersCopy[index]);
     }
-
-    console.log(providersCopy)
+    //returns the JSON array
+    return providersCopy;
   }
 
   return (
@@ -130,7 +131,7 @@ function Dashboard({ firestore, team, selectItem }) {
                 )
             }
       </div>
-      {arraytojson()}
+      {arrayToJson()}
     </div>
   );
 }
