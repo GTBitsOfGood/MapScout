@@ -64,15 +64,10 @@ function Dashboard({ firestore, team, selectItem }) {
     
     //iterates through providers array and converts each provider to a JSON object
     for (let index = 0; index < providersCopy.length; index++) {
-      providersCopy[index] = JSON.stringify(providersCopy[index]);
       delete providersCopy[index].team;
+      providersCopy[index] = JSON.stringify(providersCopy[index]);
     }
 
-    // for (let index = 0; index < providers.length; index++) {
-    //   delete providersJSON[index].team;
-    // }
-    // 
-    // console.log(providers))
     console.log(providersCopy)
   }
 
