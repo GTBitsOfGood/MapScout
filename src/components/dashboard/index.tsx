@@ -58,7 +58,26 @@ function Dashboard({ firestore, team, selectItem }) {
     );
   }
 
+  function arraytojson() {
+    //let providersJSON = JSON.stringify(providers);
+    let providersCopy = Array.from(providers);
+    
+    //iterates through providers array and converts each provider to a JSON object
+    for (let index = 0; index < providersCopy.length; index++) {
+      providersCopy[index] = JSON.stringify(providersCopy[index]);
+      delete providersCopy[index].team;
+    }
+
+    // for (let index = 0; index < providers.length; index++) {
+    //   delete providersJSON[index].team;
+    // }
+    // 
+    // console.log(providers))
+    console.log(providersCopy)
+  }
+
   return (
+
     <div className="admin-dashboard">
 
       <div className="admin-list-container">
@@ -116,6 +135,7 @@ function Dashboard({ firestore, team, selectItem }) {
                 )
             }
       </div>
+      {arraytojson()}
     </div>
   );
 }
