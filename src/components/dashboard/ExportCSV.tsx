@@ -53,7 +53,7 @@ export default class JsonToCSV extends Component {
   }
   render(){
     return (
-      <div><Button onClick={this.handleClick}>Export to CSV</Button></div>
+      <Button variant="primary" onClick={this.handleClick}>Export to CSV</Button>
     )
   }
 

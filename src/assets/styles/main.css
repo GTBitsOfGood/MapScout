@@ -710,12 +710,15 @@ h2 {
 }
 
 .add-button-wrapper {
+    display:flex;
+    flex-direction: row;
     padding: 8px;
     width: 20vw;
 }
 
 .add-button-wrapper .btn {
-    padding: 12px;
+    padding: 12px 30px;
+    margin: 0px 10px;
     font-weight: bold;
 }
 

@@ -81,7 +81,6 @@ function Dashboard({ firestore, team, selectItem }) {
         <div className="list-wrapper">
           <div className="add-button-wrapper">
             <Button
-              block
               variant="primary"
               onClick={() => selectItem({})}
               as={Link}
@@ -89,9 +88,8 @@ function Dashboard({ firestore, team, selectItem }) {
             >
               + Add New Provider
             </Button>
-
+            <ExportCSV />
           </div>
-          <ExportCSV />
           <div
             className="scroll-container"
             style={{ maxHeight: 'calc(100vh - 66px)' }}
@@ -132,7 +130,6 @@ function Dashboard({ firestore, team, selectItem }) {
                 )
             }
       </div>
-      {arrayToJson()}
     </div>
   );
 }
