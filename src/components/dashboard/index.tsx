@@ -8,6 +8,7 @@ import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { formRoute } from '../../routes/pathnames';
 import SingleProvider from './SingleProvider';
 import { selectItem } from '../../functions/reduxActions';
+import ExportCSV from './ExportCSV';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -61,7 +62,7 @@ function Dashboard({ firestore, team, selectItem }) {
   function arrayToJson() {
     //Make a providers temp array to edit
     let providersCopy = Array.from(providers);
-    
+
     //iterates through providers array and converts each provider to a JSON object
     for (let index = 0; index < providersCopy.length; index++) {
       //deletes the team property from each array
@@ -90,7 +91,7 @@ function Dashboard({ firestore, team, selectItem }) {
             </Button>
 
           </div>
-          <div><Button>Export to CSV</Button></div>
+          <ExportCSV />
           <div
             className="scroll-container"
             style={{ maxHeight: 'calc(100vh - 66px)' }}
