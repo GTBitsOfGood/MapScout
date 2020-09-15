@@ -77,7 +77,7 @@ const ExportCSV = (props) => {
     window.open(encodedUri);
   }
   return (
-      <Button variant="primary" onClick={handleClick}>Export to CSV</Button>
+      <Button block variant="secondary" onClick={handleClick}>Export CSV</Button>
   );
 }
 

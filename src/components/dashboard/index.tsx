@@ -65,16 +65,21 @@ function Dashboard({ firestore, team, selectItem }) {
 
       <div className="admin-list-container">
         <div className="list-wrapper">
-          <div className="add-button-wrapper">
-            <Button
-              variant="primary"
-              onClick={() => selectItem({})}
-              as={Link}
-              to={formRoute}
-            >
-              + Add New Provider
-            </Button>
-            <ExportCSV providers={providers}/>
+          <div className="add-export-bttns-wrapper">
+            <div className="add-button-wrapper">
+              <Button
+                block
+                variant="primary"
+                onClick={() => selectItem({})}
+                as={Link}
+                to={formRoute}
+              >
+                New Provider
+              </Button>
+            </div>
+            <div className="export-button-wrapper">
+              <ExportCSV providers={providers}/>
+            </div>
           </div>
           <div
             className="scroll-container"

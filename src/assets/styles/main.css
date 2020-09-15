@@ -709,16 +709,29 @@ h2 {
     width: 30vw;
 }
 
-.add-button-wrapper {
-    display:flex;
+.add-export-bttns-wrapper {
+    width: 30vw;
+    display: flex;
     flex-direction: row;
+}
+
+.add-button-wrapper {
     padding: 8px;
     width: 20vw;
 }
 
 .add-button-wrapper .btn {
-    padding: 12px 30px;
-    margin: 0px 10px;
+    padding: 12px;
+    font-weight: bold;
+}
+
+.export-button-wrapper {
+    padding: 8px;
+    width: 10vw;
+}
+
+.export-button-wrapper .btn {
+    padding: 12px;
     font-weight: bold;
 }
 
