@@ -59,20 +59,6 @@ function Dashboard({ firestore, team, selectItem }) {
     );
   }
 
-  function arrayToJson() {
-    //Make a providers temp array to edit
-    let providersCopy = Array.from(providers);
-
-    //iterates through providers array and converts each provider to a JSON object
-    for (let index = 0; index < providersCopy.length; index++) {
-      //deletes the team property from each array
-      delete providersCopy[index].team;
-      providersCopy[index] = JSON.stringify(providersCopy[index]);
-    }
-    //returns the JSON array
-    return providersCopy;
-  }
-
   return (
 
     <div className="admin-dashboard">
@@ -88,7 +74,7 @@ function Dashboard({ firestore, team, selectItem }) {
             >
               + Add New Provider
             </Button>
-            <ExportCSV />
+            <ExportCSV providers={providers}/>
           </div>
           <div
             className="scroll-container"

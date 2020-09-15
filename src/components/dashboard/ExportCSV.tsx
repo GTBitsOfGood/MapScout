@@ -1,12 +1,25 @@
 import React,{Component} from 'react';
 import { jsonToCSV } from 'react-papaparse';
 import Button from 'react-bootstrap/Button';
+import { array } from 'prop-types';
 
-export default class JsonToCSV extends Component {
+const ExportCSV = (props) => {
 
-  handleClick = () => {
-    const jsonData = `[
-      {
+  function arrayToJson() {
+    //Make a providers temp array to edit
+    let providersCopy : {team: string}[] = Array.from(props.providers);
+  
+    //iterates through providers array and converts each provider to a JSON object
+    for (let index = 0; index < providersCopy.length; index++) {
+      //deletes the team property from each array
+      delete providersCopy[index].team;
+    }
+    return JSON.stringify(providersCopy);
+  }
+
+  function handleClick() {
+    const jsonData = 
+    `[{
         "Column 1": "1",
         "Column 2": "2",
         "Column 3": "3",
@@ -29,10 +42,22 @@ export default class JsonToCSV extends Component {
         "Column 2": 15,
         "Column 3": 16,
         "Column 4": 17
-      }
-    ]`
+      }]`
 
-    const results = jsonToCSV(jsonData)
+    const config = {
+      quotes: false, //or array of booleans
+      quoteChar: '"',
+      escapeChar: '"',
+      delimiter: ",",
+      header: true,
+      newline: "{",
+      skipEmptyLines: false, //or 'greedy',
+      columns: null //or array of strings
+    }
+
+    const results = jsonToCSV(arrayToJson(), config);
+    console.log(results);
+
     var dataString = results.split(/\r?\n/);
     dataString = dataString.slice(1);
     var dataArray = [];
@@ -51,10 +76,9 @@ export default class JsonToCSV extends Component {
     var encodedUri = encodeURI(csvContent);
     window.open(encodedUri);
   }
-  render(){
-    return (
-      <Button variant="primary" onClick={this.handleClick}>Export to CSV</Button>
-    )
-  }
-
+  return (
+      <Button variant="primary" onClick={handleClick}>Export to CSV</Button>
+  );
 }
+
+export default ExportCSV;
