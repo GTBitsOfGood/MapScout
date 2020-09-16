@@ -8,7 +8,7 @@ const ExportCSV = (props) => {
   function arrayToJson() {
     //Make a providers temp array to edit
     let providersCopy : {team: string}[] = Array.from(props.providers);
-  
+
     //iterates through providers array and converts each provider to a JSON object
     for (let index = 0; index < providersCopy.length; index++) {
       //deletes the team property from each array
@@ -18,7 +18,7 @@ const ExportCSV = (props) => {
   }
 
   function handleClick() {
-    const jsonData = 
+    const jsonData =
     `[{
         "Column 1": "1",
         "Column 2": "2",
@@ -59,7 +59,7 @@ const ExportCSV = (props) => {
     console.log(results);
 
     var dataString = results.split(/\r?\n/);
-    dataString = dataString.slice(1);
+    //dataString = dataString.slice(1);
     var dataArray = [];
     for(var i =0; i < dataString.length; i++){
       var subrray = [dataString[i]];
