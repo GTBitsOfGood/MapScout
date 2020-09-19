@@ -6,8 +6,9 @@ import ProviderRoutes from '../components/navigation/ProviderRoutes';
 import SentryWrapper from '../components/wrappers/SentryWrapper';
 import AboutUs from '../components/about';
 import Home from '../components/home';
-import { homeRoute, aboutRoute } from './pathnames';
+import { homeRoute, aboutRoute, signRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import signUp from '../components/signup';
 
 function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
   return (props: P) => (
@@ -22,6 +23,7 @@ const routes = (allRoutes: string[]) => (
     <BrowserRouter basename="/">
       <Switch>
         <Route exact path={homeRoute} component={renderComponentWithErrorBoundary(Home)} />
+        <Route path={signRoute} component={renderComponentWithErrorBoundary(signUp)} />
         {allRoutes.map((route: string) => (
           <Route path={route} component={renderComponentWithErrorBoundary(Map)} />
         ))}
