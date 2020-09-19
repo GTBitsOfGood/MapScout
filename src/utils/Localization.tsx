@@ -7,6 +7,7 @@ const localizationStrings = new LocalizedStrings({
     emailPlaceholder: 'Enter email',
     passwordLabel: 'Password',
     passwordPlaceholder: 'Password',
+    confirmPasswordLabel: 'Confirm Password',
     login: 'Login',
     signUp: 'Sign up',
     forgotPassword: 'Forgot your password?',
@@ -31,6 +32,8 @@ const localizationStrings = new LocalizedStrings({
     therapyTypeLabel: 'Therapy Types',
     moreFilters: 'More Filters',
     lessFilters: 'Less Filters',
+    createAccount: 'Create Account',
+    create: 'Create',
   },
   es: {
     // auth page text
@@ -62,6 +65,8 @@ const localizationStrings = new LocalizedStrings({
     therapyTypeLabel: 'Tipos de terapia',
     moreFilters: 'Mas filtros',
     lessFilters: 'Menos filtros',
+    createAccount: 'Crear Cuenta',
+    create: 'Crear',
   },
   zh: {
     // auth page text
@@ -93,6 +98,8 @@ const localizationStrings = new LocalizedStrings({
     therapyTypeLabel: '疗法',
     moreFilters: '增加筛选条件',
     lessFilters: '减少筛选条件',
+    createAccount: '创建帐号',
+    create: '创造',
   },
 });
 
