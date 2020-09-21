@@ -8,6 +8,7 @@ import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { formRoute } from '../../routes/pathnames';
 import SingleProvider from './SingleProvider';
 import { selectItem } from '../../functions/reduxActions';
+import ExportCSV from './ExportCSV';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -59,19 +60,26 @@ function Dashboard({ firestore, team, selectItem }) {
   }
 
   return (
+
     <div className="admin-dashboard">
+
       <div className="admin-list-container">
         <div className="list-wrapper">
-          <div className="add-button-wrapper">
-            <Button
-              block
-              variant="primary"
-              onClick={() => selectItem({})}
-              as={Link}
-              to={formRoute}
-            >
-              + Add New Provider
-            </Button>
+          <div className="add-export-bttns-wrapper">
+            <div className="add-button-wrapper">
+              <Button
+                block
+                variant="primary"
+                onClick={() => selectItem({})}
+                as={Link}
+                to={formRoute}
+              >
+                New Provider
+              </Button>
+            </div>
+            <div className="export-button-wrapper">
+              <ExportCSV providers={providers}/>
+            </div>
           </div>
           <div
             className="scroll-container"
