@@ -1,9 +1,28 @@
 import React,{Component} from 'react';
 import { jsonToCSV } from 'react-papaparse';
 import Button from 'react-bootstrap/Button';
-import { array } from 'prop-types';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Modal from 'react-bootstrap/Modal';
+import {CSVReader} from 'react-papaparse';
 
 const ExportCSV = (props) => {
+
+  const [show, setShow] = React.useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const importconfig = {
+    quotes: true, //or array of booleans
+    quoteChar: '"',
+    escapeChar: '"',
+    delimiter: ",",
+    header: true,
+    newline: "\n",
+    complete: {importData},
+    skipEmptyLines: 'false', //or 'greedy',
+    columns: ["address", "buildingNum", "description", "facilityName", "hours", "id",
+    "image", "imageURL", "latitude", "longitude", "phoneNum", "website"] //or array of strings
+  }
 
   function arrayToJson() {
     //Make a providers temp array to edit
@@ -18,7 +37,7 @@ const ExportCSV = (props) => {
     return providersCopy;
   }
 
-  function handleClick() {
+  function handleExport() {
     const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
                       "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
 
@@ -51,8 +70,47 @@ const ExportCSV = (props) => {
     var encodedUri = encodeURI(csvContent);
     window.open(encodedUri);
   }
+
+  function importData(results, file) {
+
+  }
+
   return (
-      <Button block variant="secondary" onClick={handleClick}>Export CSV</Button>
+    <>
+      <DropdownButton id="dropdown-split-variants-secondary" variant="secondary" title="CSV">
+        <Dropdown.Item onClick={handleShow}>Import</Dropdown.Item>
+        <Dropdown.Item onClick={handleExport}>Export</Dropdown.Item>
+      </DropdownButton>
+      <Modal
+        size="lg" 
+        show={show}
+        onHide={handleClose}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Import CSV</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CSVReader
+            // onDrop={this.handleOnDrop}
+            // onError={this.handleOnError}
+            style={{}}
+            config={importconfig}
+            addRemoveButton
+            // onRemoveFile={this.handleOnRemoveFile}
+          >
+            <span>Drop CSV file here or click to upload.</span>
+          </CSVReader>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Exit
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Upload
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 

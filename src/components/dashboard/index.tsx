@@ -74,7 +74,7 @@ function Dashboard({ firestore, team, selectItem }) {
                 as={Link}
                 to={formRoute}
               >
-                New Provider
+                + Add New Provider
               </Button>
             </div>
             <div className="export-button-wrapper">
