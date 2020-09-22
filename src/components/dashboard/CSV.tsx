@@ -5,23 +5,36 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
+import { createKeywordTypeNode } from 'typescript';
 
 const ExportCSV = (props) => {
 
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const importconfig = {
+  const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
+  "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
+  const importConfig = {
     quotes: true, //or array of booleans
     quoteChar: '"',
     escapeChar: '"',
     delimiter: ",",
     header: true,
     newline: "\n",
-    complete: {importData},
+    complete: {handleOnDrop},
     skipEmptyLines: 'false', //or 'greedy',
-    columns: ["address", "buildingNum", "description", "facilityName", "hours", "id",
-    "image", "imageURL", "latitude", "longitude", "phoneNum", "website"] //or array of strings
+    columns: columns
+  }
+
+  const exportConfig = {
+    quotes: true, //or array of booleans
+    quoteChar: '"',
+    escapeChar: '"',
+    delimiter: ",",
+    header: true,
+    newline: "\n",
+    skipEmptyLines: 'false', //or 'greedy',
+    columns: columns //or array of strings
   }
 
   function arrayToJson() {
@@ -38,28 +51,13 @@ const ExportCSV = (props) => {
   }
 
   function handleExport() {
-    const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
-                      "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
-
-    const config = {
-      quotes: true, //or array of booleans
-      quoteChar: '"',
-      escapeChar: '"',
-      delimiter: ",",
-      header: true,
-      newline: "\n",
-      skipEmptyLines: 'false', //or 'greedy',
-      columns: columns //or array of strings
-    }
-
-    const results = jsonToCSV(arrayToJson(), config);
+    const results = jsonToCSV(arrayToJson(), exportConfig);
     var dataString = results.split(/\r?\n/);
     var dataArray = [];
     for(var i =0; i < dataString.length; i++){
       var subrray = [dataString[i]];
       dataArray.push(subrray);
     }
-    console.log(dataArray)
     let csvContent = "data:text/csv;charset=utf-8,";
 
     dataArray.forEach(function(rowArray) {
@@ -71,8 +69,29 @@ const ExportCSV = (props) => {
     window.open(encodedUri);
   }
 
-  function importData(results, file) {
+  function handleOnDrop(data) {
+    let oldProviders : {id: string}[] = Array.from(props.providers);
+    console.log(oldProviders);
+    console.log('---------------------------')
+    console.log(data)
+    console.log('---------------------------')
 
+    let mergedProviders = data.slice();
+    let counter = 0;
+
+    for(let i = 0; i < oldProviders.length; i++) { 
+      for (let j = 0; j < mergedProviders.length; j++) {
+        if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) == 0) { //non-match in ID
+          counter = 1;
+        }
+      }
+      if (counter == 0) {
+        mergedProviders.push(oldProviders[i]);
+      }
+      counter = 0;
+    }
+
+    console.log(mergedProviders);
   }
 
   return (
@@ -91,10 +110,10 @@ const ExportCSV = (props) => {
         </Modal.Header>
         <Modal.Body>
           <CSVReader
-            // onDrop={this.handleOnDrop}
+            onDrop={handleOnDrop}
             // onError={this.handleOnError}
             style={{}}
-            config={importconfig}
+            config={importConfig}
             addRemoveButton
             // onRemoveFile={this.handleOnRemoveFile}
           >
@@ -112,6 +131,6 @@ const ExportCSV = (props) => {
       </Modal>
     </>
   );
-}
+  }
 
 export default ExportCSV;
