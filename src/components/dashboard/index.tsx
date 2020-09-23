@@ -78,7 +78,7 @@ function Dashboard({ firestore, team, selectItem }) {
               </Button>
             </div>
             <div className="export-button-wrapper">
-              <CSV providers={providers}/>
+              <CSV providers={providers} categories={categories}/>
             </div>
           </div>
           <div

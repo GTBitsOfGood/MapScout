@@ -71,15 +71,16 @@ const ExportCSV = (props) => {
 
   function handleOnDrop(data) {
     let oldProviders : {id: string}[] = Array.from(props.providers);
-    console.log(oldProviders);
+    let oldCategories: {id: string}[] = Array.from(props.categories);
+    console.log("older categories", oldCategories);
+    console.log("older Providers", oldProviders);
     console.log('---------------------------')
-    console.log(data)
+    console.log("data", data)
     console.log('---------------------------')
 
     let mergedProviders = data.slice();
     let counter = 0;
-
-    for(let i = 0; i < oldProviders.length; i++) { 
+    for(let i = 0; i < oldProviders.length; i++) {
       for (let j = 0; j < mergedProviders.length; j++) {
         if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) == 0) { //non-match in ID
           counter = 1;
@@ -91,7 +92,41 @@ const ExportCSV = (props) => {
       counter = 0;
     }
 
-    console.log(mergedProviders);
+    for(let i = 0; i < data.slice().length; i++){
+      let entry = data.slice()[i].data;
+      for(var column in entry) {
+        let col = column; //column in csv
+        let val = entry[column]; // data corresponding the column
+        let containsName = false;
+        for(let j =0; j < oldCategories.length; j++){
+          if(oldCategories[j]["id"]=== col){
+            containsName = true;
+            let options =oldCategories[j]["options"];
+            if(val != ""){
+              let ele = {label: val, value: val};
+              // push ele to option array
+              options.push(ele);
+            }
+            break;
+          }
+        }
+        console.log(containsName)
+        if(!containsName){
+          // create a new object and push it to mergedCategories
+          var arr= [];
+          if(val != ""){
+            let ele = {label: val, value: val};
+            arr.push(ele)
+          }
+          // manually set priority and select_type to 0
+          let newCatategories = {id: col, name: col, options:arr, prority:0, select_type:0};
+          oldCategories.push(newCatategories);
+        }
+      }
+    }
+
+    console.log("merged Providers", mergedProviders);
+    console.log("merged categories", oldCategories);
   }
 
   return (
@@ -101,7 +136,7 @@ const ExportCSV = (props) => {
         <Dropdown.Item onClick={handleExport}>Export</Dropdown.Item>
       </DropdownButton>
       <Modal
-        size="lg" 
+        size="lg"
         show={show}
         onHide={handleClose}
       >
