@@ -1,15 +1,7 @@
 import React from "react";
-import useSelector from "react-redux";
-import { withFirebase,  useFirestoreConnect } from "react-redux-firebase";
-import { settingsRoute } from "routes/pathnames";
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firestoreConnect } from 'react-redux-firebase'
-import { FaUserSecret } from "react-icons/fa";
-import { firestore } from "firebase";
-import { withFirestore, isEmpty } from 'react-redux-firebase';
-import { useState } from "react";
-import { selectItem } from '../../functions/reduxActions';
+import { withFirestore } from 'react-redux-firebase';
 import { Store } from "reducers/types";
 
 function Settings({ firebase, team }) {
