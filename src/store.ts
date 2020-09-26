@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, Store } from 'redux';
 import { routerMiddleware, connectRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import { createLogger } from 'redux-logger';
@@ -48,10 +48,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 const middleware = applyMiddleware(...middlewares);
 
-const store = createStoreWithFirebase(
+const store = (<any>createStoreWithFirebase(
   connectRouter(history)(rootReducer),
   middleware,
-);
+)) as Store<any>;
 
 export {
   store, history, storage, chatRef, databaseRef, responseRef,
