@@ -48,10 +48,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 const middleware = applyMiddleware(...middlewares);
 
-const store = (<any>createStoreWithFirebase(
+const store = createStoreWithFirebase(
   connectRouter(history)(rootReducer),
   middleware,
-)) as Store<any>;
+);
 
 export {
   store, history, storage, chatRef, databaseRef, responseRef,
