@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
-// import { withFirebase } from 'react-redux-firebase';
+import { withFirebase } from 'react-redux-firebase';
 
 import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
@@ -49,24 +49,36 @@ function handleConfirmPasswordChange(e) {
   }
 }
 
-//   async function handleSubmit(e) {
-//     e.preventDefault();
-//     setIsLoading(true);
-//     try {
-//       const response = await firebase
-//         .auth()
-//         .signInWithEmailAndPassword(email, password);
-//       setAnimate(true);
-//       await setTimeout(() => {
-//         setIsLoading(false);
-//         history.push(providerRoute);
-//       }, 400);
-//     } catch (err) {
-//       // TODO: Add translations
-//       setError(err.message);
-//       setIsLoading(false);
-//     }
-//   }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setIsLoading(true);
+    if (!email) {
+      setError('Please enter an email')
+      setIsLoading(false);
+    }
+    else if (!password) {
+      setError('Please enter a password')
+      setIsLoading(false);
+    }
+    else if (!passwordsMatch) {
+      setError('Passwords do not match')
+      setIsLoading(false);
+    }
+    // try {
+    //   const response = await firebase
+    //     .auth()
+    //     .signInWithEmailAndPassword(email, password);
+    //   setAnimate(true);
+    //   await setTimeout(() => {
+    //     setIsLoading(false);
+    //     history.push(providerRoute);
+    //   }, 400);
+    // } catch (err) {
+    //   // TODO: Add translations
+    //   setError(err.message);
+    //   setIsLoading(false);
+    // }
+  }
 
   const {
     emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, confirmPasswordLabel, createAccount, create
@@ -77,12 +89,12 @@ function handleConfirmPasswordChange(e) {
     <Container fluid>
       <div id="auth-root" className={classNames('box', { translate: animate })}>
         <Form
-          // onSubmit={handleSubmit}
-          // onKeyPress={(e) => {
-          //   if (e.key === 'Enter') {
-          //     handleSubmit(e);
-          //   }
-          // }}
+          onSubmit={handleSubmit}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSubmit(e);
+            }
+          }}
         >
           <div className="mb-4">
             <h2>{createAccount}</h2>
@@ -111,8 +123,8 @@ function handleConfirmPasswordChange(e) {
           }
           <Button
             variant="primary"
-            // onClick={handleSubmit}
-            disabled={isLoading || !passwordsMatch || !password || !email}
+            onClick={handleSubmit}
+            disabled={isLoading}
             block
           >
             {isLoading && <div className="loader" />}
