@@ -119,7 +119,13 @@ const ExportCSV = (props) => {
             arr.push(ele)
           }
           // manually set priority and select_type to 0
-          let newCatategories = {id: col, name: col, options:arr, prority:0, select_type:0};
+          let newCatategories = {
+            id: col, 
+            name: col, 
+            options:arr, 
+            priority: oldProviders.length, 
+            select_type: 2
+          };
           oldCategories.push(newCatategories);
         }
       }
