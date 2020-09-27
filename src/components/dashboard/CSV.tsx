@@ -5,7 +5,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
-import { createKeywordTypeNode } from 'typescript';
+import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
 
 const ExportCSV = (props) => {
 
@@ -79,17 +79,19 @@ const ExportCSV = (props) => {
     console.log('---------------------------')
 
     let mergedProviders = data.slice();
-    let counter = 0;
+    let isDifferent = false;
     for(let i = 0; i < oldProviders.length; i++) {
       for (let j = 0; j < mergedProviders.length; j++) {
-        if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) == 0) { //non-match in ID
-          counter = 1;
+        if (oldProviders[i] != undefined || mergedProviders[j] != undefined ) {
+          continue;
+        } else if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) == 0) { //non-match in ID
+          isDifferent = true;
         }
       }
-      if (counter == 0) {
+      if (isDifferent) {
         mergedProviders.push(oldProviders[i]);
       }
-      counter = 0;
+      isDifferent = false;
     }
 
     for(let i = 0; i < data.slice().length; i++){
