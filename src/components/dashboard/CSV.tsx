@@ -94,10 +94,12 @@ const ExportCSV = (props) => {
       isDifferent = false;
     }
 
+    var columnArr= [];
     for(let i = 0; i < data.slice().length; i++){
       let entry = data.slice()[i].data;
       for(var column in entry) {
         let col = column; //column in csv
+        columnArr.push(col);
         let val = entry[column]; // data corresponding the column
         let containsName = false;
         for(let j =0; j < oldCategories.length; j++){
@@ -122,13 +124,22 @@ const ExportCSV = (props) => {
           }
           // manually set priority and select_type to 0
           let newCatategories = {
-            id: col, 
-            name: col, 
-            options:arr, 
-            priority: oldProviders.length, 
+            id: col,
+            name: col,
+            active: true,
+            options:arr,
+            priority: columnArr.length-1,
             select_type: 2
           };
+
           oldCategories.push(newCatategories);
+        }
+        // if object does not contain in the csv column, set active to false and set priority to undefined
+        for(let j =0; j < oldCategories.length; j++){
+          if(!columnArr.includes(oldCategories[j]["id"])){
+            oldCategories[j]["active"] = false;
+            oldCategories[j]["priority"] = undefined;
+          }
         }
       }
     }
