@@ -10,6 +10,8 @@ import { storage } from '../../store';
 import TimeTable from './TimeTable';
 import GoogleSuggest from './GoogleSuggest';
 
+import ActionForm from './ActionForm';
+
 function validURL(str) {
   const pattern = new RegExp('^(https?:\\/\\/)?' // protocol
         + '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' // domain name
@@ -99,6 +101,34 @@ const RowForm = (props) => {
         Sunday: hours[6].selected
           ? [hours[6].start, hours[6].end]
           : null,
+      },
+    };
+    setItem(newItem);
+    props.setItem(newItem);
+  }
+
+  function onActionTableChange(data) {
+    const newItem = {
+      ...item,
+      actions: {
+        Donate: data[0].selected
+          ? data[0].linkText
+          : null,
+        Uber: data[1].selected
+          ? data[1].linkText
+          : null,
+        Doordash: data[2].selected
+          ? data[2].linkText
+          : null,
+        Postmates: data[3].selected
+          ? data[3].linkText
+          : null,
+        Grubhub: data[4].selected
+          ? data[4].linkText
+          : null,
+        Custom: data[5].selected
+          ? data[5].linkText
+          : null
       },
     };
     setItem(newItem);
@@ -343,152 +373,12 @@ const RowForm = (props) => {
         </>
 
       );
-
-      case 5:
-        return (
-          <>
-            <Form.Group>
-              <Form.Label>Facility Name *</Form.Label>
-              <Form.Control
-                name="facilityName"
-                value={item.facilityName}
-                onChange={(e) => {
-                  setItem({
-                    ...item,
-                    [e.target.name]: e.target.value,
-                  });
-                  props.setItem({
-                    ...item,
-                    [e.target.name]: e.target.value,
-                  });
-                }}
-                placeholder="Name"
-              />
-            </Form.Group>
-            <Row>
-              <Col xs={9}>
-                <GoogleSuggest
-                  value={item.address[0]}
-                  update={(address) => {
-                    setItem({
-                      ...item,
-                      address: [address],
-                    });
-                    props.setItem({
-                      ...item,
-                      address: [address],
-                    });
-                  }}
-                />
-              </Col>
-              <Col xs={3}>
-                <Form.Group>
-                  <Form.Label>Apt #</Form.Label>
-                  <Form.Control
-                    name="buildingNum"
-                    value={item.buildingNum[0]}
-                    onChange={handleInputChange}
-                    placeholder="789"
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Form.Group>
-              <Form.Label>Phone Number *</Form.Label>
-              <Form.Control
-                name="phoneNum"
-                value={item.phoneNum[0]}
-                onChange={onPhoneChange}
-                placeholder="(000) 000-0000"
-              />
-              {
-                item.phoneNum.length > 0
-                && (
-                <p>
-                  <small style={{
-                    color:
-                            isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
-                              ? 'green' : 'red',
-                  }}
-                  >
-                    {
-                            isValidNumberForRegion(parseIncompletePhoneNumber(item.phoneNum[0]), 'US')
-                              ? 'Valid number' : 'Invalid number'
-                        }
-                  </small>
-                </p>
-                )
-              }
-            </Form.Group>
-            <Row>
-              <Col xs={8}>
-                <Form.Group>
-                  <Form.Label>Website</Form.Label>
-                  <Form.Control
-                    name="website"
-                    value={item.website[0]}
-                    onChange={handleInputChange}
-                    placeholder="www.health.com"
-                  />
-                  {
-                    item.website.length > 0
-                    && (
-                    <p>
-                      <small style={{
-                        color:
-                                validURL(item.website[0])
-                                  ? 'green' : 'red',
-                      }}
-                      >
-                        {
-                                validURL(item.website[0])
-                                  ? 'Valid URL' : 'Invalid URL'
-                            }
-                      </small>
-                    </p>
-                    )
-                  }
-                </Form.Group>
-              </Col>
-              <Col xs={4}>
-                <Form.Group>
-                  <Form.Label>Image</Form.Label>
-                  <br />
-                  <label className="btn btn-primary btn-block">
-                    Upload
-                    <FileUploader
-                      hidden
-                      accept="image/*"
-                      name="image"
-                      storageRef={storage.ref('images')}
-                      onUploadSuccess={handleUploadSuccess}
-                    />
-                  </label>
-                </Form.Group>
-              </Col>
-            </Row>
-            <Form.Group>
-              <Form.Label>About</Form.Label>
-              <Form.Control
-                name="description"
-                value={item.description}
-                onChange={(e: any) => {
-                  setItem({
-                    ...item,
-                    [e.target.name]: e.target.value,
-                  });
-                  props.setItem({
-                    ...item,
-                    [e.target.name]: e.target.value,
-                  });
-                }}
-                placeholder="About me"
-                rows="4"
-                as="textarea"
-              />
-            </Form.Group>
-          </>  
-        );
+    case 5:
+      return (
+        <ActionForm
+          actions={props.item.actions || {}}
+          onChange={onActionTableChange} />
+      );
     default:
       return null;
   }
