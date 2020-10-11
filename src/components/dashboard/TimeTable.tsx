@@ -10,6 +10,7 @@ const daysOfWeek = [
 ];
 
 const TimeTable = (props) => {
+  console.log(props)
   const [days, setDays] = useState(daysOfWeek.map((item) => ({
     day: item,
     start: props.hours[item] ? props.hours[item][0] : 0,
@@ -25,6 +26,7 @@ const TimeTable = (props) => {
       label={days[index].day}
       checked={days[index].selected}
       onClick={() => {
+        console.log("uncheck ratio button")
         const data = days;
         data[index].selected = !data[index].selected; //! UNSURE
         setDays(data);

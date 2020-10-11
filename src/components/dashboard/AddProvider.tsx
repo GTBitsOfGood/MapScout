@@ -23,7 +23,7 @@ import { GOOGLE_API_KEY } from '../../config/keys';
 const uuidv4 = require('uuid/v4');
 
 const steps = [
-  'Map', 'Hours', 'Tag', 'Text', 'Toggle',
+  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 'Actions'
 ];
 
 function AddProvider(props) {
@@ -120,6 +120,7 @@ function AddProvider(props) {
       }
       await promiseWithTimeout(5000, props.firestore.set({ collection: 'providers', doc: i.facilityName }, i));
       props.history.push(providerRoute);
+      console.log(providerRoute);
     } catch (e) {
       setError('Failed to save changes. Please check your network connection or try again later.');
     } finally {
@@ -213,6 +214,9 @@ function AddProvider(props) {
               <Step
                 title="Toggle"
               />
+              <Step
+                title="Actions"
+              />
             </Steps>
             {width > 768 && (
             <>
@@ -267,11 +271,11 @@ function AddProvider(props) {
                                                     && <Button onClick={prev} variant="link">Back</Button>
                                                 }
                           <Button
-                            onClick={step === 4 ? addFirestore : next}
-                            disabled={!completed && step === 4}
+                            onClick={step === 5 ? addFirestore : next}
+                            disabled={!completed && step === 5}
                             variant="primary"
                           >
-                            {step === 4
+                            {step === 5
                               ? props.selected && props.selected.facilityName
                                 ? 'Edit Provider'
                                 : 'Add Provider'
