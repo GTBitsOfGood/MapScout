@@ -8,7 +8,7 @@ import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { formRoute } from '../../routes/pathnames';
 import SingleProvider from './SingleProvider';
 import { selectItem } from '../../functions/reduxActions';
-import ExportCSV from './ExportCSV';
+import CSV from './CSV';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -74,11 +74,11 @@ function Dashboard({ firestore, team, selectItem }) {
                 as={Link}
                 to={formRoute}
               >
-                New Provider
+                + Add New Provider
               </Button>
             </div>
             <div className="export-button-wrapper">
-              <ExportCSV providers={providers}/>
+              <CSV providers={providers} categories={categories}/>
             </div>
           </div>
           <div
