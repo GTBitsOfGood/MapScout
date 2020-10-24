@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { compose } from 'redux';
+import LazyLoad from 'react-lazy-load';
 import { connect } from 'react-redux';
 import { withFirestore, isEmpty, isLoaded } from 'react-redux-firebase';
 import Modal from 'react-bootstrap/Modal';
@@ -20,6 +21,7 @@ import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import { Store } from 'reducers/types';
+import Pagination from "react-js-pagination";
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -49,6 +51,8 @@ const Map = (props) => {
   const [point, setPoint] = useState(true);
   const [distances, setDistances] = useState({});
   const [prevSearchLen, setPrevSearchLen] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [currPage, setCurrPage] = useState(1);
 
   const [primaryColor, setPrimaryColor] = useState('');
   const [secondaryColor, setSecondaryColor] = useState('');
@@ -91,22 +95,22 @@ const Map = (props) => {
       .then((querySnapshot) => {
         const arr = [];
         querySnapshot.forEach((doc) => {
-          const docData = doc.data();
-          arr.push({
-            name: docData.name,
-            options: docData.options,
-            priority: docData.priority,
-            select_type: docData.select_type,
-            id: doc.id,
-          });
-          if (docData.select_type !== 0 && docData.options.length) {
-            data[doc.id] = {
+            const docData = doc.data();
+            arr.push({
               name: docData.name,
               options: docData.options,
               priority: docData.priority,
-            };
-            filtersObj[doc.id] = [];
-          }
+              select_type: docData.select_type,
+              id: doc.id,
+            });
+            if (docData.select_type !== 0 && docData.options.length) {
+              data[doc.id] = {
+                name: docData.name,
+                options: docData.options,
+                priority: docData.priority,
+              };
+              filtersObj[doc.id] = [];
+            }
         });
         return arr;
       });
@@ -120,10 +124,14 @@ const Map = (props) => {
       .where('team', '==', getTeam())
       .get()
       .then((querySnapshot) => {
+        let numCurrentlyLoaded = 1;
         const arr = [];
         querySnapshot.forEach((doc) => {
+          // if (numCurrentlyLoaded < 101) {
           const docData = doc.data();
           arr.push(docData);
+          numCurrentlyLoaded++;
+          // }
         });
         return arr;
       });
@@ -236,6 +244,7 @@ const Map = (props) => {
     setTimeout(() => filterSearch(searchName, filterVal, filterActiveProviders), 100);
   };
 
+  
   const filterNormalFilters = (e) => {
     const filterName = e.target.name;
     const filterVal = e.target.value;
@@ -452,7 +461,7 @@ const Map = (props) => {
       </div>
     );
   }
-
+    
   return (
     <div className={classNames('bg-white', { 'overflow-scroll': !condition })}>
       {/* <NavBar /> */}
@@ -568,6 +577,13 @@ const Map = (props) => {
                     />
                   ))
                 }
+                <Pagination
+                  activePage={currPage}
+                  itemsCountPerPage={4}
+                  totalItemsCount={activeProviders.length}
+                  pageRangeDisplayed={pageCount}
+                  handlePagination={() => {setCurrPage(currPage + 1)}}
+                />
               </div>
               <div>
                 {
@@ -615,6 +631,7 @@ const Map = (props) => {
               </div>
             </div>
           </div>
+          
           {
             !(isSticky && !condition)
             && (
@@ -646,6 +663,8 @@ const Map = (props) => {
     </div>
   );
 };
+
+
 
 export default compose<any>(withFirestore, connect((state: Store) => ({
   state

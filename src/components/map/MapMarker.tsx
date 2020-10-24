@@ -1,6 +1,7 @@
 import React from 'react';
 import Popup from 'reactjs-popup';
 import Button from 'react-bootstrap/Button';
+
 import { FaInfoCircle, FaTimes } from 'react-icons/fa';
 
 type MapMarkerProps = {
