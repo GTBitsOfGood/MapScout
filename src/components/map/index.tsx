@@ -20,6 +20,7 @@ import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import { Store } from 'reducers/types';
+import { Pagination } from 'react-bootstrap';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -59,6 +60,10 @@ const Map = (props) => {
   const [filtersState, setFiltersState] = useState({});
   const [filtersData, setFiltersData] = useState({});
   const [categories, setCategories] = useState([]);
+  
+  const items = []
+  const pageSize = 5;
+  items.push()
 
   // set filterIds from firestore in useeffect
   useEffect(() => {
@@ -568,7 +573,15 @@ const Map = (props) => {
                     />
                   ))
                 }
+                
               </div>
+              <Pagination > 
+                  <Pagination.First />
+                  <Pagination.Prev />
+
+                  <Pagination.Next />
+                  <Pagination.Last onClick={()=>(console.log("waffles"))}/>
+                </Pagination>
               <div>
                 {
                   width >= 768 && activeProviders && activeProviders[selectedIndex]
