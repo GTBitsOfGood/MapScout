@@ -21,7 +21,9 @@ import ProviderCell from './ProviderCell';
 import localizationStrings from '../../utils/Localization';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import { Store } from 'reducers/types';
-import Pagination from "react-js-pagination";
+// import Pagination from "react-js-pagination";
+import Pagination from "react-bootstrap/Pagination"
+import PageItem from 'react-bootstrap/PageItem';
 
 const debounce = require('lodash/debounce');
 const classNames = require('classnames');
@@ -51,8 +53,9 @@ const Map = (props) => {
   const [point, setPoint] = useState(true);
   const [distances, setDistances] = useState({});
   const [prevSearchLen, setPrevSearchLen] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
   const [currPage, setCurrPage] = useState(1);
+  const [lowerPageBound, setLowerPageBound] = useState(0);
+  const [upperPageBound, setUpperPageBound] = useState(99);
 
   const [primaryColor, setPrimaryColor] = useState('');
   const [secondaryColor, setSecondaryColor] = useState('');
@@ -127,7 +130,7 @@ const Map = (props) => {
         let numCurrentlyLoaded = 1;
         const arr = [];
         querySnapshot.forEach((doc) => {
-          // if (numCurrentlyLoaded < 101) {
+          // if (numCurrentlyLoaded < 16) {
           const docData = doc.data();
           arr.push(docData);
           numCurrentlyLoaded++;
@@ -461,7 +464,33 @@ const Map = (props) => {
       </div>
     );
   }
-    
+
+  function getPages() {
+    let paginatedData = [];
+    console.log(Math.ceil(providers.length / 100.0) + 1);
+    for (let number = 1; number < Math.ceil(activeProviders.length / 100.0) + 1; number++) {
+      paginatedData.push(
+        <Pagination.Item 
+          active={number===currPage}
+          activeLabel={number.toString()}
+          onClick={() => handlePageChange(number)}
+        >
+          {number}
+        </Pagination.Item>
+      )
+    }
+    return paginatedData;
+  }
+
+  function handlePageChange(newPage) {
+    const pageDifference = newPage - currPage;
+    let newLowerBound = lowerPageBound + pageDifference * 100;
+    setLowerPageBound(newLowerBound);
+    let newUpperBound = upperPageBound + pageDifference * 100;
+    setUpperPageBound(newUpperBound);
+    setCurrPage(newPage);
+  }
+  
   return (
     <div className={classNames('bg-white', { 'overflow-scroll': !condition })}>
       {/* <NavBar /> */}
@@ -563,7 +592,7 @@ const Map = (props) => {
                 </div>
                 {
                   !isEmpty(activeProviders)
-                  && activeProviders.map((i, index) => (
+                  && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
                     <ProviderCell
                       key={i.id}
                       item={i}
@@ -577,13 +606,13 @@ const Map = (props) => {
                     />
                   ))
                 }
-                <Pagination
-                  activePage={currPage}
-                  itemsCountPerPage={4}
-                  totalItemsCount={activeProviders.length}
-                  pageRangeDisplayed={pageCount}
-                  handlePagination={() => {setCurrPage(currPage + 1)}}
-                />
+                <Pagination>
+                  <Pagination.First />
+                  <Pagination.Prev />
+                  {getPages()}
+                  <Pagination.Next />
+                  <Pagination.Last />
+                </Pagination>
               </div>
               <div>
                 {
