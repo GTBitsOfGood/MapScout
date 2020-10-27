@@ -54,8 +54,9 @@ const Map = (props) => {
   const [distances, setDistances] = useState({});
   const [prevSearchLen, setPrevSearchLen] = useState(0);
   const [currPage, setCurrPage] = useState(1);
+  const pageSize = 3;
   const [lowerPageBound, setLowerPageBound] = useState(0);
-  const [upperPageBound, setUpperPageBound] = useState(99);
+  const [upperPageBound, setUpperPageBound] = useState(pageSize);
 
   const [primaryColor, setPrimaryColor] = useState('');
   const [secondaryColor, setSecondaryColor] = useState('');
@@ -130,11 +131,9 @@ const Map = (props) => {
         let numCurrentlyLoaded = 1;
         const arr = [];
         querySnapshot.forEach((doc) => {
-          // if (numCurrentlyLoaded < 16) {
           const docData = doc.data();
           arr.push(docData);
           numCurrentlyLoaded++;
-          // }
         });
         return arr;
       });
@@ -467,26 +466,116 @@ const Map = (props) => {
 
   function getPages() {
     let paginatedData = [];
-    console.log(Math.ceil(providers.length / 100.0) + 1);
-    for (let number = 1; number < Math.ceil(activeProviders.length / 100.0) + 1; number++) {
-      paginatedData.push(
-        <Pagination.Item 
-          active={number===currPage}
-          activeLabel={number.toString()}
-          onClick={() => handlePageChange(number)}
-        >
-          {number}
-        </Pagination.Item>
-      )
+    console.log(Math.ceil(providers.length / pageSize) + 1);
+  
+    const maxPage = Math.ceil(activeProviders.length / pageSize);
+    if (maxPage == 4) {
+      if (currPage <= 3) {
+        for (let number = 1; number < 5; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        }
+        
+      } else if (currPage > maxPage - 3) {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = maxPage - 3; number <= maxPage ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+      } else {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      }
+    } else {
+      if (currPage <= 3) {
+        for (let number = 1; number < 5; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        }
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      } else if (currPage > maxPage - 3) {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = maxPage - 3; number <= maxPage ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+      } else {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      }
     }
     return paginatedData;
   }
 
   function handlePageChange(newPage) {
     const pageDifference = newPage - currPage;
-    let newLowerBound = lowerPageBound + pageDifference * 100;
+    let newLowerBound = lowerPageBound + pageDifference * pageSize;
     setLowerPageBound(newLowerBound);
-    let newUpperBound = upperPageBound + pageDifference * 100;
+    let newUpperBound = upperPageBound + pageDifference * pageSize;
     setUpperPageBound(newUpperBound);
     setCurrPage(newPage);
   }
