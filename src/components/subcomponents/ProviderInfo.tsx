@@ -5,6 +5,9 @@ import {
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Card from 'react-bootstrap/Card';
 import { withFirestore } from 'react-redux-firebase';
 import { compose } from 'redux';
@@ -80,6 +83,7 @@ const ProviderInfo = (props) => {
               </ReadMoreAndLess>
               )}
             </div>
+            {showActions(props)}
           </Col>
         </Row>
         <Row style={{ paddingTop: '20px', paddingRight: '19px' }}>
@@ -109,7 +113,7 @@ const ProviderInfo = (props) => {
                 })}
               </div>
             </div>
-
+            {console.log(props.item)}
             <div className="modal-card-text">
               <FaPhone size="20px" style={{ paddingTop: '5px', color: '#007bff' }} />
               <div style={{ paddingLeft: '15px' }}>
@@ -192,6 +196,30 @@ const ProviderInfo = (props) => {
     </div>
   );
 };
+
+function showActions(props) {
+  var length = 0;
+  var lastoccupied;
+  for (var i in props.item.actions) {
+    if (props.item.actions[i] != null) {
+      length = length + 1;
+      lastoccupied = i;
+    }
+  }
+  if (length > 1) {
+    return (<DropdownButton style={{paddingTop:'20px'}} id="dropdown-basic-button" title="Actions">
+    {
+      Object.entries(props.item.actions).map((item) => {
+      return <Dropdown.Item href={"http://" + item[1] as string}>{item[0]}</Dropdown.Item>
+      })
+    }
+    </DropdownButton>);
+  } else if (length == 1) {
+    console.log(lastoccupied);
+    return (<Button>{lastoccupied}</Button>);
+  }
+  return undefined;
+}
 
 function calculateHours(props) {
   const rows = [];

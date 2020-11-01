@@ -5,6 +5,9 @@ import {
 } from 'react-icons/fa';
 import LazyLoad from 'react-lazy-load';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
 
 const classNames = require('classnames');
 
@@ -40,6 +43,29 @@ export default ({
     }
     fetchData();
   }, []);
+
+  function showActions(item) {
+    var length = 0;
+    var lastoccupied;
+    for (var i in item.actions) {
+      if (item.actions[i] != null) {
+        length = length + 1;
+        lastoccupied = i;
+      }
+    }
+    if (length > 1) {
+      return (<DropdownButton style={{paddingTop:'20px'}} id="dropdown-basic-button" title="Actions">
+      {
+        Object.entries(item.actions).map((action) => {
+        return <Dropdown.Item href={"http://" + action[1] as string}>{action[0]}</Dropdown.Item>
+        })
+      }
+      </DropdownButton>);
+    } else if (length == 1) {
+      return (<Button>{lastoccupied}</Button>);
+    }
+    return undefined;
+  }
 
   return (
     <div
@@ -110,6 +136,8 @@ export default ({
           </div>
         </div>
       </div>
+      {/* {showActions(item)} */}
     </div>
   );
 };
+

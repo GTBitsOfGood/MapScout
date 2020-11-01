@@ -37,6 +37,7 @@ const RowForm = (props) => {
     website: [],
     image: 'modalimage.png',
     imageURL: null,
+    actions: {},
   };
 
   const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
@@ -379,7 +380,7 @@ const RowForm = (props) => {
       return (
         <ActionForm
           // actions={props.item.actions || {}}
-          links={props.item.links || {}}
+          links={props.item.actions || {}}
           onChange={onActionTableChange} />
       );
     default:

@@ -24,9 +24,8 @@ const ActionForm = (props) => {
   const [actions, setActions] = useState(actionOptions.map((item) => ({
     action: item,
     linkText: props.links ? props.links[item] : '',
-    selected: props.links ? props.links[item] : false
+    selected: props.links[item] ? true : false
   })));
-
   const selectFormatter = (cell, row, index) => (
     <FormCheck
       type="radio"
@@ -36,7 +35,6 @@ const ActionForm = (props) => {
         const data = actions;
         data[index].selected = !data[index].selected; //! UNSURE
         console.log(data)
-        console.log(actions[index].selected)
         setActions(data);
         setTimeout(() => props.onChange(actions), 100);
       }}
@@ -52,9 +50,8 @@ const ActionForm = (props) => {
         onChange={(e)=>{
           const data = actions;
           actions[index].linkText = e.target.value;
-          console.log(e.target.value);
           setActions(data);
-          setTimeout(() => props.onChange(actions), 100);
+          setActions(data);
         }}
       />
      {
