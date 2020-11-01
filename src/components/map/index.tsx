@@ -83,6 +83,10 @@ const Map = (props) => {
     }
   }, [providers]);
 
+  useEffect(() => {
+    handlePageChange(1);
+  }, [activeProviders])
+
   function getTeam() {
     return props.location.pathname.replace('/', '');
   }
@@ -464,14 +468,24 @@ const Map = (props) => {
     );
   }
 
+/**
+ * if number_of_providers <= 100:
+ *    don't paginate
+ * else 
+ *    paginate
+ */
+
+
+
   function getPages() {
     let paginatedData = [];
     console.log(Math.ceil(providers.length / pageSize) + 1);
   
     const maxPage = Math.ceil(activeProviders.length / pageSize);
-    if (maxPage == 4) {
+    // alert(maxPage)
+    if (maxPage <= 4) {
       if (currPage <= 3) {
-        for (let number = 1; number < 5; number++) {
+        for (let number = 1; number < maxPage + 1; number++) {
           paginatedData.push(
             <Pagination.Item 
               active={number===currPage}
@@ -695,13 +709,16 @@ const Map = (props) => {
                     />
                   ))
                 }
-                <Pagination>
+                {
+                  (activeProviders.length / pageSize > 1) ? 
+                  <Pagination>
                   <Pagination.First />
                   <Pagination.Prev />
                   {getPages()}
                   <Pagination.Next />
                   <Pagination.Last />
-                </Pagination>
+                </Pagination> : <div/>}
+                
               </div>
               <div>
                 {
