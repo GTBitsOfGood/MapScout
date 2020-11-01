@@ -29,6 +29,7 @@ const debounce = require('lodash/debounce');
 const classNames = require('classnames');
 
 const FILTER_CUTOFF = 5;
+const PAGE_SIZE = 10;
 
 const getWidth = () => window.innerWidth
     || document.documentElement.clientWidth
@@ -44,6 +45,7 @@ const Map = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeProviders, setActiveProviders] = useState([]);
   const [tempProviders, setTempProviders] = useState([]);
+  
   const [zipProviders, setZipProviders] = useState([]);
   const [searchName, setSearchName] = useState('');
   const [searchZip, setSearchZip] = useState(null);
@@ -54,9 +56,9 @@ const Map = (props) => {
   const [distances, setDistances] = useState({});
   const [prevSearchLen, setPrevSearchLen] = useState(0);
   const [currPage, setCurrPage] = useState(1);
-  const pageSize = 3;
+ 
   const [lowerPageBound, setLowerPageBound] = useState(0);
-  const [upperPageBound, setUpperPageBound] = useState(pageSize);
+  const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
 
   const [primaryColor, setPrimaryColor] = useState('');
   const [secondaryColor, setSecondaryColor] = useState('');
@@ -479,9 +481,9 @@ const Map = (props) => {
 
   function getPages() {
     let paginatedData = [];
-    console.log(Math.ceil(providers.length / pageSize) + 1);
+    console.log(Math.ceil(providers.length / PAGE_SIZE) + 1);
   
-    const maxPage = Math.ceil(activeProviders.length / pageSize);
+    const maxPage = Math.ceil(activeProviders.length / PAGE_SIZE);
     // alert(maxPage)
     if (maxPage <= 4) {
       if (currPage <= 3) {
@@ -496,7 +498,6 @@ const Map = (props) => {
             </Pagination.Item>
           )
         }
-        
       } else if (currPage > maxPage - 3) {
         paginatedData.push(
           <Pagination.Ellipsis/>
@@ -587,13 +588,28 @@ const Map = (props) => {
 
   function handlePageChange(newPage) {
     const pageDifference = newPage - currPage;
-    let newLowerBound = lowerPageBound + pageDifference * pageSize;
+    let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
+
     setLowerPageBound(newLowerBound);
-    let newUpperBound = upperPageBound + pageDifference * pageSize;
+    let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+
     setUpperPageBound(newUpperBound);
     setCurrPage(newPage);
   }
   
+  function handlePaginationNext() {
+    if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
+
+      handlePageChange(currPage + 1);
+    }
+  }
+
+  function handlePaginationPrev() {
+    if (currPage !== 1) {
+      handlePageChange(currPage - 1);
+    }
+  }
+
   return (
     <div className={classNames('bg-white', { 'overflow-scroll': !condition })}>
       {/* <NavBar /> */}
@@ -710,7 +726,7 @@ const Map = (props) => {
                   ))
                 }
                 {
-                  (activeProviders.length / pageSize > 1) ? 
+                  (activeProviders.length / PAGE_SIZE > 1) ? 
                   <Pagination>
                   <Pagination.First />
                   <Pagination.Prev />
