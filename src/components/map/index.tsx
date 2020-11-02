@@ -252,7 +252,15 @@ const Map = (props) => {
     setTimeout(() => filterSearch(searchName, filterVal, filterActiveProviders), 100);
   };
 
-  
+  function filterZipCodeOver100(filterVal) {
+    const filterProviders = activeProviders.filter(
+      provider => {
+        return provider.address[0].includes(filterVal)
+      }
+    )
+    setActiveProviders(filterProviders);
+  }
+
   const filterNormalFilters = (e) => {
     const filterName = e.target.name;
     const filterVal = e.target.value;
@@ -290,11 +298,16 @@ const Map = (props) => {
         filterSearch(filterVal);
       } else if (filtertype === 'zipcode') {
         setSearchZip(filterVal.replace(/\D/g, ''));
+        
         if (filterVal.length === 5) {
-          await filterZipcode(filterVal);
+          if (providers.length > 10) {
+            filterZipCodeOver100(filterVal);
+          } else {
+            await filterZipcode(filterVal);
+          }
         } else if (distances !== {}) {
           setDistances({});
-        }
+        } 
       } else {
         await filterNormalFilters(e);
       }
