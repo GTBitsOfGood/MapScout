@@ -29,7 +29,7 @@ const debounce = require('lodash/debounce');
 const classNames = require('classnames');
 
 const FILTER_CUTOFF = 5;
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 100;
 
 const getWidth = () => window.innerWidth
     || document.documentElement.clientWidth
@@ -728,11 +728,19 @@ const Map = (props) => {
                 {
                   (activeProviders.length / PAGE_SIZE > 1) ? 
                   <Pagination>
-                  <Pagination.First />
-                  <Pagination.Prev />
+                  <Pagination.First
+                    onClick={() => handlePageChange(1)}
+                  />
+                  <Pagination.Prev
+                    onClick={() => handlePaginationPrev()}
+                  />
                   {getPages()}
-                  <Pagination.Next />
-                  <Pagination.Last />
+                  <Pagination.Next
+                    onClick={() => handlePaginationNext()}
+                  />
+                  <Pagination.Last
+                    onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
+                  />
                 </Pagination> : <div/>}
                 
               </div>
