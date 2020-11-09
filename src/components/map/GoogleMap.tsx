@@ -49,6 +49,7 @@ export default ({
           latitude, longitude, facilityName, address,
         }, i) => (
           <MapMarker
+
             lat={latitude}
             lng={longitude}
             name={facilityName}
@@ -62,6 +63,7 @@ export default ({
               setCenter({ lat: latitude, lng: longitude });
             }}
           />
+
         ),
       )}
     </GoogleMapReact>
