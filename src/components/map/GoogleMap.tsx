@@ -32,7 +32,12 @@ export default ({
     }
   }, [selectedMarker]);
 
+  const mapStyles = {
+    position:"absolute"
+  };
+
   return (
+
     <GoogleMapReact
       bootstrapURLKeys={{
         key: GOOGLE_API_KEY,
@@ -43,11 +48,14 @@ export default ({
       zoom={zoom}
       center={center}
       onZoomAnimationEnd={(val) => setZoom(val)}
+      style = {{mapStyles}}
     >
-      {providers.map(
+
+        {providers.map(
         ({
           latitude, longitude, facilityName, address,
         }, i) => (
+
           <MapMarker
             lat={latitude}
             lng={longitude}
@@ -61,9 +69,13 @@ export default ({
               setSelected(selected === i ? -1 : i);
               setCenter({ lat: latitude, lng: longitude });
             }}
+
           />
         ),
+
       )}
+
     </GoogleMapReact>
+
   );
 };

@@ -622,10 +622,12 @@ const Map = (props) => {
               id="map"
               className={classNames({ 'map-hide': condition && !listView })}
             >
+
               <div
                 onMouseLeave={() => setPoint(true)}
                 style={{ height: condition ? 'calc(100vh - 70px)' : '60vh', width: '100%' }}
               >
+                {/* <img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"5%", height:"5%", position:"absolute"}}/> */}
                 <GoogleMap
                   providers={activeProviders}
                   defaultZoom={defaultZoom}
@@ -637,6 +639,9 @@ const Map = (props) => {
                   selectedMarker={currmarker}
                   onShowMoreClick={handleCellClick}
                 />
+                <img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"5%", height:"6%", position:"relative"}}/>
+
+
               </div>
             </div>
             )
