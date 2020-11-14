@@ -949,6 +949,7 @@ h2 {
         width: 50vw;
         transition: width 200ms;
         position: relative;
+
         top: 0;
     }
     #map.map-hide {
