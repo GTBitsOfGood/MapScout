@@ -898,10 +898,14 @@ h2 {
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
     #auth-root {
-        margin-top: 30px;
+        /*background-color: #0A1D7C;*/
         width: 400px;
         margin-left: auto;
         margin-right: auto;
+    }
+    #signup-root {
+        background-color: #0A1D7C;
+        height: 100vh;
     }
     .step-wrapper {
         padding: 20px 0 20px 60px;
