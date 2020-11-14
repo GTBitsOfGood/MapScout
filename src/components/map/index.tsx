@@ -297,8 +297,9 @@ const Map = (props) => {
         setSearchName(filterVal);
         filterSearch(filterVal);
       } else if (filtertype === 'zipcode') {
-        setSearchZip(filterVal.replace(/\D/g, ''));
-        
+        console.log("The value before the replace is: " + filterVal + " and length is " + filterVal.length);
+        setSearchZip(filterVal.replace("/\D/g, ''"));
+        console.log("The value after the replace is: " + filterVal + " and length is " + filterVal.length);
         if (filterVal.length === 5) {
           if (providers.length > 10) {
             filterZipCodeOver100(filterVal);
@@ -306,12 +307,15 @@ const Map = (props) => {
             await filterZipcode(filterVal);
           }
         } else if (distances !== {}) {
+          if (filterVal.length === 0) {
+            setActiveProviders(providers);
+          }
           setDistances({});
-        } 
+        }
       } else {
         await filterNormalFilters(e);
       }
-    }
+    } 
   };
 
   useEffect(() => {
