@@ -23,7 +23,7 @@ import { GOOGLE_API_KEY } from '../../config/keys';
 const uuidv4 = require('uuid/v4');
 
 const steps = [
-  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 'Actions'
+  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 'Actions', 'Image Preview'
 ];
 
 function AddProvider(props) {
@@ -217,6 +217,9 @@ function AddProvider(props) {
               <Step
                 title="Actions"
               />
+              <Step
+                title="Image Preview"
+              />
             </Steps>
             {width > 768 && (
             <>
@@ -271,11 +274,11 @@ function AddProvider(props) {
                                                     && <Button onClick={prev} variant="link">Back</Button>
                                                 }
                           <Button
-                            onClick={step === 5 ? addFirestore : next}
-                            disabled={!completed && step === 5}
+                            onClick={step === 6 ? addFirestore : next}
+                            disabled={!completed && step === 6}
                             variant="primary"
                           >
-                            {step === 5
+                            {step === 6
                               ? props.selected && props.selected.facilityName
                                 ? 'Edit Provider'
                                 : 'Add Provider'

@@ -11,6 +11,8 @@ import TimeTable from './TimeTable';
 import GoogleSuggest from './GoogleSuggest';
 
 import ActionForm from './ActionForm';
+import ImagePrev from './ImagePrev';
+
 
 function validURL(str) {
   const pattern = new RegExp('^(https?:\\/\\/)?' // protocol
@@ -382,6 +384,14 @@ const RowForm = (props) => {
           links={props.item.links || {}}
           onChange={onActionTableChange} />
       );
+
+    case 6:
+      return (
+        <ImagePrev
+          links={props.item.links || {}}
+          onChange={onActionTableChange} />
+      );
+      
     default:
       return null;
   }
