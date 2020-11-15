@@ -894,19 +894,69 @@ h2 {
         opacity: 1;
     }
 }
-
+#auth-root {
+    /*background-color: #0A1D7C;*/
+    margin-top: 0%;
+    padding-top: 300px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: transparent;
+}
+#signup-root {
+    background-color: #0A1D7C;
+    height: 100vh;
+    background-image: url('../../assets/img/Ellipse\ 1.svg');
+    background-repeat: no-repeat;
+    background-position: 100% -250px;
+    background-size: 1500px;
+    position: relative;
+}
+/* .mapscout-girl-logo-div {
+    display: felx
+} */
+.mapscout-girl-logo-div {
+    position: absolute;
+    top: -50%;
+    right: -90%;
+    width: 800px;
+    height: 800px;
+}
+.signup-form-textfield {
+    width: 300px;
+}
+.signup-form {
+    font-family: Avenir Next;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 68px;
+    text-align: center;
+    color: #0A1D7C;
+    position: relative;
+}
+.signup-form-label {
+    height: auto;
+}
+.signup-form-group {
+    font-weight: bold;
+    display: flex;
+}
+.navBar-signup {
+    height: 72px;
+    background-color: white;
+    padding-left: 50px;
+}
+.navBar-signup-button {
+    background-color: transparent;
+    border: none;
+}
+.navBar-signup-button:hover {
+    background-color: transparent;
+}
 @media only screen and (min-width: 768px) {
     /*Desktop Specific*/
-    #auth-root {
-        /*background-color: #0A1D7C;*/
-        width: 400px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    #signup-root {
-        background-color: #0A1D7C;
-        height: 100vh;
-    }
+    
     .step-wrapper {
         padding: 20px 0 20px 60px;
     }
