@@ -639,7 +639,7 @@ const Map = (props) => {
                   selectedMarker={currmarker}
                   onShowMoreClick={handleCellClick}
                 />
-                <a href = "https://www.mapscout.io/pacts"><img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"4%", height:"4.444%", position:"relative", padding: "5px"}}/></a>
+                <a href = "https://www.mapscout.io/"><img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"4%", height:"4.444%", position:"relative", padding: "5px"}}/></a>
 
 
               </div>
