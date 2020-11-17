@@ -209,8 +209,11 @@ function showActions(props) {
   if (length > 1) {
     return (<DropdownButton style={{paddingTop:'20px'}} id="dropdown-basic-button" title="Actions">
     {
-      Object.entries(props.item.actions).map((item) => {
-      return <Dropdown.Item href={"http://" + item[1] as string}>{item[0]}</Dropdown.Item>
+      Object.entries(props.item.actions).map((action) => {
+        if (action[1] != null) {
+          return <Dropdown.Item href={"http://" + action[1] as string}>{action[0]}</Dropdown.Item>
+        }
+        return undefined;
       })
     }
     </DropdownButton>);

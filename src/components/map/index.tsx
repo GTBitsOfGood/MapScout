@@ -166,7 +166,7 @@ const Map = (props) => {
       if (ref.current && ref.current.getBoundingClientRect().top <= 70) {
         setSticky(true);
       } else if (isSticky) {
-        setSticky(false);
+        // setSticky(false);
       }
     }
   };

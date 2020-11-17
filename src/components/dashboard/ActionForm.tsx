@@ -32,11 +32,11 @@ const ActionForm = (props) => {
       label={actions[index].action}
       checked={actions[index].selected}
       onClick={() => {
-        const data = actions;
+        const data = JSON.parse(JSON.stringify(actions));
         data[index].selected = !data[index].selected; //! UNSURE
-        console.log(data)
+        console.log(data);
         setActions(data);
-        setTimeout(() => props.onChange(actions), 100);
+        setTimeout(() => props.onChange(data), 100);
       }}
     />
   );
@@ -50,8 +50,7 @@ const ActionForm = (props) => {
         onChange={(e)=>{
           const data = actions;
           actions[index].linkText = e.target.value;
-          setActions(data);
-          setActions(data);
+          props.onChange(data);
         }}
       />
      {
