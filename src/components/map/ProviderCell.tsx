@@ -54,15 +54,18 @@ export default ({
       }
     }
     if (length > 1) {
-      return (<DropdownButton style={{paddingTop:'20px'}} id="dropdown-basic-button" title="Actions">
+      return (<DropdownButton onClick={e=> e.stopPropagation()} style={{paddingTop:'20px', paddingRight:'10px'}} id="dropdown-basic-button" title="Actions">
       {
         Object.entries(item.actions).map((action) => {
-        return <Dropdown.Item href={"http://" + action[1] as string}>{action[0]}</Dropdown.Item>
+          if (action[1] != null) {
+            return <Dropdown.Item href={"http://" + action[1] as string}>{action[0]}</Dropdown.Item>
+          }
+          return undefined;
         })
       }
       </DropdownButton>);
     } else if (length == 1) {
-      return (<Button>{lastoccupied}</Button>);
+      return (<div style={{paddingTop:'20px',paddingRight:'10px'}}><a href={"http://" + item.actions[lastoccupied] as string}><Button onClick={e => e.stopPropagation()}>{lastoccupied}</Button></a></div>);
     }
     return undefined;
   }
@@ -136,7 +139,7 @@ export default ({
           </div>
         </div>
       </div>
-      {/* {showActions(item)} */}
+      {showActions(item)}
     </div>
   );
 };
