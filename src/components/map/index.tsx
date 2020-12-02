@@ -60,6 +60,8 @@ const Map = (props) => {
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
 
+    const clinWikiMap = getTeam() === "clinwiki";
+
     // set filterIds from firestore in useeffect
     useEffect(() => {
         document.title = getTeam().toUpperCase();
@@ -154,7 +156,7 @@ const Map = (props) => {
                 return arr;
             });
 
-        if (getTeam() == "clinwiki") {
+        if (clinWikiMap) {
             const parsed = queryString.parse(window.location.search);
             let clinWikiSearchHash = "";
 
@@ -164,29 +166,7 @@ const Map = (props) => {
             const clinwikiProviders = await loadClinwikiProviders(
                 clinWikiSearchHash
             );
-            clinwikiProviders.forEach((provider) => {
-                provs = [...provs, provider];
-                //@ts-ignore
-                let dataList = [];
-                //@ts-ignore
-                data.Disease.options.map((disease) => {
-                    dataList.push(disease.value.toLowerCase());
-                });
-                //@ts-ignore
-                if (provider.Disease) {
-                    //@ts-ignore
-                    provider.Disease.map((disease) => {
-                        if (!dataList.includes(disease.toLowerCase())) {
-                            dataList.push(disease);
-                            //@ts-ignore
-                            data.Disease.options.push({
-                                value: disease,
-                                label: disease,
-                            });
-                        }
-                    });
-                }
-            });
+            provs = [...provs, ...clinwikiProviders];
         }
 
         setProviders(provs);
@@ -606,7 +586,7 @@ const Map = (props) => {
                             )
                         )}
                     </div>
-                    {isSticky && renderTagControl()}
+                    {isSticky && !clinWikiMap && renderTagControl()}
                 </div>
                 <div className={classNames({ "row-nowrap": condition })}>
                     <div
@@ -628,7 +608,7 @@ const Map = (props) => {
                             />
                         )}
                         <div className="map-container">
-                            {!isSticky && renderTagControl()}
+                            {!isSticky && !clinWikiMap && renderTagControl()}
                             <div
                                 ref={cellScrollRef}
                                 className={classNames("cell-container", {
@@ -655,9 +635,7 @@ const Map = (props) => {
                                         {isEmpty(activeProviders)
                                             ? "No"
                                             : activeProviders.length}{" "}
-                                        {getTeam() === "clinwiki"
-                                            ? "trials"
-                                            : "providers"}{" "}
+                                        {clinWikiMap ? "trials" : "providers"}{" "}
                                         found
                                     </span>
                                 </div>
