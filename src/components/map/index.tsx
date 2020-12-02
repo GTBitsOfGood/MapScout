@@ -18,6 +18,7 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import { Store } from "reducers/types";
 import queryString from "query-string";
 import { string } from "prop-types";
+import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -141,7 +142,7 @@ const Map = (props) => {
         setFiltersData(data);
 
         const collections2 = firestore.collection("providers");
-        const provs = await collections2
+        let provs = await collections2
             .where("team", "==", getTeam())
             .get()
             .then((querySnapshot) => {
@@ -152,6 +153,42 @@ const Map = (props) => {
                 });
                 return arr;
             });
+
+        if (getTeam() == "clinwiki") {
+            const parsed = queryString.parse(window.location.search);
+            let clinWikiSearchHash = "";
+
+            if (typeof parsed.searchHash == "string") {
+                clinWikiSearchHash = parsed.searchHash;
+            }
+            const clinwikiProviders = await loadClinwikiProviders(
+                clinWikiSearchHash
+            );
+            clinwikiProviders.forEach((provider) => {
+                provs = [...provs, provider];
+                //@ts-ignore
+                let dataList = [];
+                //@ts-ignore
+                data.Disease.options.map((disease) => {
+                    dataList.push(disease.value.toLowerCase());
+                });
+                //@ts-ignore
+                if (provider.Disease) {
+                    //@ts-ignore
+                    provider.Disease.map((disease) => {
+                        if (!dataList.includes(disease.toLowerCase())) {
+                            dataList.push(disease);
+                            //@ts-ignore
+                            data.Disease.options.push({
+                                value: disease,
+                                label: disease,
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         setProviders(provs);
         setActiveProviders(provs);
 
@@ -618,7 +655,10 @@ const Map = (props) => {
                                         {isEmpty(activeProviders)
                                             ? "No"
                                             : activeProviders.length}{" "}
-                                        providers found
+                                        {getTeam() === "clinwiki"
+                                            ? "trials"
+                                            : "providers"}{" "}
+                                        found
                                     </span>
                                 </div>
                                 {!isEmpty(activeProviders) &&
