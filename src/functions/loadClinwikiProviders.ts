@@ -51,7 +51,6 @@ async function providerFromId(nctId: string) {
         const newCoords = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${filteredName}&key=${GOOGLE_API_KEY}`
         ).then((r) => r.json());
-        console.log("nc", newCoords);
         if (newCoords.status != "ZERO_RESULTS") {
             provider.latitude =
                 newCoords["results"][0]["geometry"]["location"]["lat"];

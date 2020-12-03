@@ -42,7 +42,7 @@ const Map = (props) => {
     const [tempProviders, setTempProviders] = useState([]);
     const [zipProviders, setZipProviders] = useState([]);
     const [searchName, setSearchName] = useState("");
-    const [searchZip, setSearchZip] = useState(null);
+    const [searchZip, setSearchZip] = useState("");
     const [name, setName] = useState(null);
     const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);

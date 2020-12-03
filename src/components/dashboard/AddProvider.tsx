@@ -23,7 +23,8 @@ import { GOOGLE_API_KEY } from '../../config/keys';
 const uuidv4 = require('uuid/v4');
 
 const steps = [
-  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 'Actions'
+  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 
+  // 'Actions'
 ];
 
 function AddProvider(props) {
@@ -199,24 +200,11 @@ function AddProvider(props) {
         <Col xs={12} md={4} lg={3}>
           <div className="step-wrapper">
             <Steps current={step} direction={width > 768 ? 'vertical' : 'horizontal'} labelPlacement={width > 768 ? 'horizontal' : 'vertical'}>
-              <Step
-                title="Map"
-              />
-              <Step
-                title="Hours"
-              />
-              <Step
-                title="Tag"
-              />
-              <Step
-                title="Text"
-              />
-              <Step
-                title="Toggle"
-              />
-              <Step
-                title="Actions"
-              />
+              {
+                steps.map(x => (
+                  <Step key={x} title={x} />
+                ))
+              }
             </Steps>
             {width > 768 && (
             <>
@@ -271,11 +259,11 @@ function AddProvider(props) {
                                                     && <Button onClick={prev} variant="link">Back</Button>
                                                 }
                           <Button
-                            onClick={step === 5 ? addFirestore : next}
-                            disabled={!completed && step === 5}
+                            onClick={step === steps.length - 1 ? addFirestore : next}
+                            disabled={!completed && step === steps.length - 1}
                             variant="primary"
                           >
-                            {step === 5
+                            {step === steps.length - 1
                               ? props.selected && props.selected.facilityName
                                 ? 'Edit Provider'
                                 : 'Add Provider'
