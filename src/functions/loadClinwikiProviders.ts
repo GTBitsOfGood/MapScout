@@ -1,7 +1,7 @@
 import { GOOGLE_API_KEY } from "../config/keys";
 
 async function providerFromId(nctId: string) {
-    const query = await fetch("http://staging.clinwiki.org/graphql", {
+    const query = await fetch("https://app.clinwiki.org/graphql", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ async function providerFromId(nctId: string) {
         longitude: query?.data?.study?.facilities[0]?.location?.longitude ?? 0,
         phoneNum: [query?.data?.study?.facilities[0]?.contacts[0]?.phone ?? ""],
         team: "clinwiki",
-        website: `https://app.clinwiki.org/study/${nctId}`,
+        website: [`https://app.clinwiki.org/study/${nctId}`],
     };
     //TODO: default lat/long
     if (
@@ -65,7 +65,7 @@ async function providerFromId(nctId: string) {
 
 async function loadClinwikiProviders(searchHash: string) {
     const clinwikiProviders = [];
-    const clinwikiIds = await fetch("http://staging.clinwiki.org/graphql", {
+    const clinwikiIds = await fetch("https://app.clinwiki.org/graphql", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
