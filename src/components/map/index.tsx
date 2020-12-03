@@ -18,6 +18,7 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import { Store } from "reducers/types";
 import queryString from "query-string";
 import { string } from "prop-types";
+import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -58,6 +59,8 @@ const Map = (props) => {
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
+
+    const clinWikiMap = getTeam() === "clinwiki";
 
     // set filterIds from firestore in useeffect
     useEffect(() => {
@@ -141,7 +144,7 @@ const Map = (props) => {
         setFiltersData(data);
 
         const collections2 = firestore.collection("providers");
-        const provs = await collections2
+        let provs = await collections2
             .where("team", "==", getTeam())
             .get()
             .then((querySnapshot) => {
@@ -152,6 +155,20 @@ const Map = (props) => {
                 });
                 return arr;
             });
+
+        if (clinWikiMap) {
+            const parsed = queryString.parse(window.location.search);
+            let clinWikiSearchHash = "";
+
+            if (typeof parsed.searchHash == "string") {
+                clinWikiSearchHash = parsed.searchHash;
+            }
+            const clinwikiProviders = await loadClinwikiProviders(
+                clinWikiSearchHash
+            );
+            provs = [...provs, ...clinwikiProviders];
+        }
+
         setProviders(provs);
         setActiveProviders(provs);
 
@@ -569,7 +586,7 @@ const Map = (props) => {
                             )
                         )}
                     </div>
-                    {isSticky && renderTagControl()}
+                    {isSticky && !clinWikiMap && renderTagControl()}
                 </div>
                 <div className={classNames({ "row-nowrap": condition })}>
                     <div
@@ -591,7 +608,7 @@ const Map = (props) => {
                             />
                         )}
                         <div className="map-container">
-                            {!isSticky && renderTagControl()}
+                            {!isSticky && !clinWikiMap && renderTagControl()}
                             <div
                                 ref={cellScrollRef}
                                 className={classNames("cell-container", {
@@ -618,7 +635,8 @@ const Map = (props) => {
                                         {isEmpty(activeProviders)
                                             ? "No"
                                             : activeProviders.length}{" "}
-                                        providers found
+                                        {clinWikiMap ? "trials" : "providers"}{" "}
+                                        found
                                     </span>
                                 </div>
                                 {!isEmpty(activeProviders) &&
