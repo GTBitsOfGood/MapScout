@@ -1,7 +1,7 @@
 import { GOOGLE_API_KEY } from "../config/keys";
 
 async function providerFromId(nctId: string) {
-    const query = await fetch("https://app.clinwiki.org/graphql", {
+    const query = await fetch("http://staging.clinwiki.org/graphql", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ async function providerFromId(nctId: string) {
 
 async function loadClinwikiProviders(searchHash: string) {
     const clinwikiProviders = [];
-    const clinwikiIds = await fetch("https://app.clinwiki.org/graphql", {
+    const clinwikiIds = await fetch("http://staging.clinwiki.org/graphql", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -80,12 +80,14 @@ async function loadClinwikiProviders(searchHash: string) {
                 }}`,
         }),
     }).then((r) => r.json());
-    await Promise.all(
-        clinwikiIds.data.search.studies.map(async (id) => {
-            const provider = await providerFromId(id.nctId);
-            clinwikiProviders.push(provider);
-        })
-    );
+    if (clinwikiIds.data) {
+        await Promise.all(
+            clinwikiIds.data.search.studies.map(async (id) => {
+                const provider = await providerFromId(id.nctId);
+                clinwikiProviders.push(provider);
+            })
+        );
+    }
     return clinwikiProviders.filter(
         (provider) => provider.latitude !== 0 && provider.longitude !== 0
     );
