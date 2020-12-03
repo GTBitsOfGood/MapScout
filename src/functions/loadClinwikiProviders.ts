@@ -6,6 +6,7 @@ async function providerFromId(nctId: string) {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
             query: `query {
@@ -69,6 +70,7 @@ async function loadClinwikiProviders(searchHash: string) {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
             query: `query { search(searchHash: "${searchHash}")
