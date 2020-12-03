@@ -709,12 +709,28 @@ h2 {
     width: 30vw;
 }
 
+.add-export-bttns-wrapper {
+    width: 30vw;
+    display: flex;
+    flex-direction: row;
+}
+
 .add-button-wrapper {
     padding: 8px;
-    width: 30vw;
+    width: 100%;
 }
 
 .add-button-wrapper .btn {
+    padding: 12px;
+    font-weight: bold;
+}
+
+.export-button-wrapper {
+    padding: 8px;
+    width: 10vw;
+}
+
+.export-button-wrapper .btn {
     padding: 12px;
     font-weight: bold;
 }
@@ -933,6 +949,7 @@ h2 {
         width: 50vw;
         transition: width 200ms;
         position: relative;
+
         top: 0;
     }
     #map.map-hide {
@@ -1253,7 +1270,7 @@ h2 {
     #head-logo {
         font-size: 1.4em;
     }
-    
+
     #head-logo img {
         width: 180px;
     }

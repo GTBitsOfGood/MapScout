@@ -1,5 +1,5 @@
 {
-    "name": "MapScout",
+    "name": "mapscout",
     "version": "1.0.0",
     "author": "Hack4Impact",
     "license": "MIT",
@@ -14,7 +14,11 @@
         "start": "react-scripts start",
         "build": "CI= react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "secrets": "yarn secrets:logout && cross-env-shell BW_SESSION=`bw login product@bitsofgood.org --raw` \"yarn secrets:sync\"",
+        "secrets:logout": "(bw logout || exit 0)",
+        "secrets:login": "bw login product@bitsofgood.org",
+        "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > .env"
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
@@ -52,6 +56,7 @@
         "react-lazy-load": "^3.0.13",
         "react-linkify": "^1.0.0-alpha",
         "react-localization": "^1.0.15",
+        "react-papaparse": "^3.8.0",
         "react-read-more-less": "^0.1.6",
         "react-redux": "^5.0.6",
         "react-redux-firebase": "^2.4.1",
@@ -61,17 +66,19 @@
         "react-select": "^3.1.0",
         "react-youtube": "^7.11.3",
         "reactjs-popup": "^1.5.0",
-        "reactstrap": "^8.1.1",
         "redux": "^3.7.2",
         "redux-firestore": "^0.9.0",
         "redux-form": "^7.0.4",
         "redux-freeze": "^0.1.5",
         "redux-logger": "^3.0.6",
         "redux-thunk": "^2.2.0",
+        "typescript": "^4.0.2",
         "url-loader": "^4.0.0",
         "uuid": "^7.0.3"
     },
     "devDependencies": {
+        "@bitwarden/cli": "^1.11.0",
+        "cross-env": "^7.0.2",
         "eslint": "^6.8.0",
         "eslint-config-airbnb": "^18.0.1",
         "eslint-config-standard": "^14.1.0",
@@ -80,7 +87,8 @@
         "eslint-plugin-node": "^11.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-react": "^7.18.0",
-        "eslint-plugin-react-hooks": "^1.7.0"
+        "eslint-plugin-react-hooks": "^1.7.0",
+        "fx": "^20.0.0"
     },
     "babel": {
         "presets": [
