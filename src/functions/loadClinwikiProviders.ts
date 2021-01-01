@@ -6,7 +6,7 @@ async function providerFromId(nctId: string) {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": "https://mapscout.io",
         },
         body: JSON.stringify({
             query: `query {
@@ -70,7 +70,7 @@ async function loadClinwikiProviders(searchHash: string) {
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": "https://mapscout.io",
         },
         body: JSON.stringify({
             query: `query { search(searchHash: "${searchHash}")
