@@ -3,6 +3,7 @@ import { GOOGLE_API_KEY } from "../config/keys";
 async function providerFromId(nctId: string) {
     const query = await fetch("https://app.clinwiki.org/graphql", {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
