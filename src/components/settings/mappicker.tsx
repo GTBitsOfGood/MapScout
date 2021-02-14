@@ -10,11 +10,11 @@ import Button from 'react-bootstrap/Button';
 const defaultLat = 33.7756;
 const defaultLng = -84.3963;
 const defaultZoom = 2;
-const defaultCoords = { defaultLat, defaultLng };
+const defaultCoords = { lat: defaultLat, lng: defaultLng };
 
 var data = {
-    lat: defaultLat,
-    lng: defaultLng,
+    latitude: defaultLat,
+    longitude: defaultLng,
     zoom: defaultZoom,
     center: defaultCoords,
 }
@@ -23,7 +23,7 @@ const onSave = async () => {
     await firebase.firestore().collection('teams').doc('LA').set(data); 
 }
 
-function MapPicker() {
+function MapPicker(props) {
     const mapOptions = {
         styles: mapConfig,
     }
@@ -31,11 +31,11 @@ function MapPicker() {
     const [center, setCenter] = useState(defaultCoords);
 
     return (
-        <div>
+        <div style={{ height: '100vh', width: '100%'}}>
             <p>Latitude: {defaultLat}</p>
             <p>Longitude: {defaultLng}</p>
             <p>Zoom: {defaultZoom}</p>
-            <div style={{ height: '100vh', width: '100%'}}>
+            <div style={{height: '100%'}}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: GOOGLE_API_KEY,
@@ -43,8 +43,6 @@ function MapPicker() {
                     zoom={17}
                     center={data.center}
                     options={mapOptions}
-                    defaultCenter={this.props.center}
-                    defaultZoom={this.props.zoom}
                 ></GoogleMapReact>
                 <Button
                     variant="primary"
