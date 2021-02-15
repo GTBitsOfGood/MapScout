@@ -14,6 +14,11 @@ const ExportCSV = (props) => {
   const handleShow = () => setShow(true);
   const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
   "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
+
+  props.categories.forEach(category => {
+    columns.push(category.id);
+  });
+
   const importConfig = {
     quotes: true, //or array of booleans
     quoteChar: '"',
