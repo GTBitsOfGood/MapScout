@@ -5,6 +5,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
+import { CategoryDocProps } from 'types/firestore';
 import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
 
 const ExportCSV = (props) => {
@@ -15,7 +16,7 @@ const ExportCSV = (props) => {
   const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
   "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
 
-  props.categories.forEach(category => {
+  props.categories.forEach((category: CategoryDocProps) => {
     columns.push(category.id);
   });
 
