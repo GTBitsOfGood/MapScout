@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import { jsonToCSV } from 'react-papaparse';
 import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { CategoryDocProps } from 'types/firestore';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
@@ -14,6 +15,11 @@ const ExportCSV = (props) => {
   const handleShow = () => setShow(true);
   const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
   "image", "imageURL", "latitude", "longitude", "phoneNum", "website"];
+
+  props.categories.forEach((category: CategoryDocProps) => {
+    columns.push(category.id);
+  });
+
   const importConfig = {
     quotes: true, //or array of booleans
     quoteChar: '"',
