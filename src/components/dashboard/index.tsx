@@ -77,9 +77,9 @@ function Dashboard({ firestore, team, selectItem }) {
                 + Add New Provider
               </Button>
             </div>
-            {/* <div className="export-button-wrapper">
+            <div className="export-button-wrapper">
               <CSV providers={providers} categories={categories}/>
-            </div> */}
+            </div>
           </div>
           <div
             className="scroll-container"
