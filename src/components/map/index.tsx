@@ -19,11 +19,15 @@ import { Store } from "reducers/types";
 import queryString from "query-string";
 import { string } from "prop-types";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
+import LazyLoad from 'react-lazy-load';
+import Pagination from "react-bootstrap/Pagination"
+import PageItem from 'react-bootstrap/PageItem';
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
 
 const FILTER_CUTOFF = 5;
+const PAGE_SIZE = 100;
 
 const getWidth = () =>
     window.innerWidth ||
@@ -31,6 +35,9 @@ const getWidth = () =>
     document.body.clientWidth;
 
 const Map = (props) => {
+    const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
+    const [lowerPageBound, setLowerPageBound] = useState(0);
+    const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -103,6 +110,10 @@ const Map = (props) => {
         }
     }, [providers]);
 
+    useEffect(() => {
+      handlePageChange(1)
+    }, [activeProviders])
+
     function getTeam() {
         return props.location.pathname.replace("/", "");
     }
@@ -148,10 +159,12 @@ const Map = (props) => {
             .where("team", "==", getTeam())
             .get()
             .then((querySnapshot) => {
+              let numCurrentlyLoaded = 1;
                 const arr = [];
                 querySnapshot.forEach((doc) => {
                     const docData = doc.data();
                     arr.push(docData);
+                    numCurrentlyLoaded++;
                 });
                 return arr;
             });
@@ -331,7 +344,11 @@ const Map = (props) => {
             } else if (filtertype === "zipcode") {
                 setSearchZip(filterVal.replace(/\D/g, ""));
                 if (filterVal.length === 5) {
-                    await filterZipcode(e.target.value);
+                  if (providers.length > 10) {
+                    filterZipCodeOver100(filterVal);
+                  } else {
+                    await filterZipcode(filterVal);
+                  }
                 } else if (distances !== {}) {
                     setDistances({});
                 }
@@ -340,6 +357,158 @@ const Map = (props) => {
             }
         }
     };
+
+    function filterZipCodeOver100(filterVal) {
+      const filterProviders = activeProviders.filter(
+        provider => {
+          return provider.address[0].includes(filterVal)
+        }
+      )
+      setActiveProviders(filterProviders);
+    }
+
+    
+  
+
+    /**
+ * if number_of_providers <= 100:
+ *    don't paginate
+ * else 
+ *    paginate
+ */
+
+
+
+  function getPages() {
+    let paginatedData = [];
+    console.log(Math.ceil(providers.length / PAGE_SIZE) + 1);
+
+    const maxPage = Math.ceil(activeProviders.length / PAGE_SIZE);
+    // alert(maxPage)
+    if (maxPage <= 4) {
+      if (currPage <= 3) {
+        for (let number = 1; number < maxPage + 1; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        }
+      } else if (currPage > maxPage - 3) {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = maxPage - 3; number <= maxPage ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+      } else {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      }
+    } else {
+      if (currPage <= 3) {
+        for (let number = 1; number < 5; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        }
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      } else if (currPage > maxPage - 3) {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = maxPage - 3; number <= maxPage ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+      } else {
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
+          paginatedData.push(
+            <Pagination.Item 
+              active={number===currPage}
+              activeLabel={number.toString()}
+              onClick={() => handlePageChange(number)}
+            >
+              {number}
+            </Pagination.Item>
+          )
+        } 
+        paginatedData.push(
+          <Pagination.Ellipsis/>
+        )
+      }
+    }
+    return paginatedData;
+  }
+
+  function handlePageChange(newPage) {
+    const pageDifference = newPage - currPage;
+    let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
+
+    setLowerPageBound(newLowerBound);
+    let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+
+    setUpperPageBound(newUpperBound);
+    setCurrPage(newPage);
+  }
+
+  function handlePaginationNext() {
+    if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
+
+      handlePageChange(currPage + 1);
+    }
+  }
+
+  function handlePaginationPrev() {
+    if (currPage !== 1) {
+      handlePageChange(currPage - 1);
+    }
+  }
 
     useEffect(() => {
         if (activeProviders) filterSearch(searchName);
@@ -639,8 +808,7 @@ const Map = (props) => {
                                         found
                                     </span>
                                 </div>
-                                {!isEmpty(activeProviders) &&
-                                    activeProviders.map((i, index) => (
+                                {!isEmpty(activeProviders) && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
                                         <ProviderCell
                                             key={i.id}
                                             item={i}
@@ -656,6 +824,23 @@ const Map = (props) => {
                                             distances={distances}
                                         />
                                     ))}
+                                    {
+                  (activeProviders.length / PAGE_SIZE > 1) ? 
+                  <Pagination>
+                  <Pagination.First
+                    onClick={() => handlePageChange(1)}
+                  />
+                  <Pagination.Prev
+                    onClick={() => handlePaginationPrev()}
+                  />
+                  {getPages()}
+                  <Pagination.Next
+                    onClick={() => handlePaginationNext()}
+                  />
+                  <Pagination.Last
+                    onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
+                  />
+                </Pagination> : <div/>}
                             </div>
                             <div>
                                 {width >= 768 &&
