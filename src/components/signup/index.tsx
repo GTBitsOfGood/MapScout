@@ -58,6 +58,19 @@ const classNames = require('classnames');
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
+    if (!email) {
+      setError('Please enter an email')
+      setIsLoading(false);
+    }
+    else if (!password) {
+      setError('Please enter a password')
+      setIsLoading(false);
+    }
+    else if (!passwordsMatch) {
+      setError('Passwords do not match')
+      setIsLoading(false);
+    }
     createUserWithEmailAndPassword({ 
       email,
       password,
@@ -122,7 +135,7 @@ const classNames = require('classnames');
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={isLoading || !passwordsMatch || !password || !email}
+            disabled={isLoading}
             block
           >
             {isLoading && <div className="loader" />}
