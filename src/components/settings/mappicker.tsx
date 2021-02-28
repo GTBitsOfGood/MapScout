@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 
 const defaultLat = 33.7756;
 const defaultLng = -84.3963;
-const defaultZoom = 2;
+const defaultZoom = 5;
 const defaultCoords = { lat: defaultLat, lng: defaultLng };
 
 var data = {
@@ -19,29 +19,33 @@ var data = {
     center: defaultCoords,
 }
 
-const onSave = async () => {
-    await firebase.firestore().collection('teams').doc('LA').set(data); 
-}
-
 function MapPicker(props) {
+    const [coords, setCoords] = useState(data.center);
+    const [magnification, setMagnification] = useState(data.zoom);
     const mapOptions = {
         styles: mapConfig,
     }
-    const [activeItem, setActiveItem] = useState(-1);
-    const [center, setCenter] = useState(defaultCoords);
+    const onSave = async () => {
+        await firebase.firestore().collection('teams').doc('LA').set(data); 
+    }
+    const changeCenterAndZoom = ({center, zoom}) => {
+        setCoords(center);
+        setMagnification(zoom);
+    }
 
     return (
         <div style={{ height: '100vh', width: '100%'}}>
-            <p>Latitude: {defaultLat}</p>
-            <p>Longitude: {defaultLng}</p>
-            <p>Zoom: {defaultZoom}</p>
+            <p>Latitude: {coords.lat}</p>
+            <p>Longitude: {coords.lng}</p>
+            <p>Zoom: {magnification}</p>
             <div style={{height: '100%'}}>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: GOOGLE_API_KEY,
                     }}
-                    zoom={17}
-                    center={data.center}
+                    zoom={magnification}
+                    center={coords}
+                    onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
                     options={mapOptions}
                 ></GoogleMapReact>
                 <Button
