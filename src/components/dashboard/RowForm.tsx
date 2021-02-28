@@ -10,6 +10,8 @@ import { storage } from '../../store';
 import TimeTable from './TimeTable';
 import GoogleSuggest from './GoogleSuggest';
 
+import ActionForm from './ActionForm';
+
 function validURL(str) {
   const pattern = new RegExp('^(https?:\\/\\/)?' // protocol
         + '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' // domain name
@@ -29,6 +31,7 @@ const RowForm = (props) => {
     childcare: [false],
     epic: [false],
     hours: {},
+    links:{},
     notes: [],
     phoneNum: [],
     website: [],
@@ -99,6 +102,34 @@ const RowForm = (props) => {
         Sunday: hours[6].selected
           ? [hours[6].start, hours[6].end]
           : null,
+      },
+    };
+    setItem(newItem);
+    props.setItem(newItem);
+  }
+
+  function onActionTableChange(links) {
+    const newItem = {
+      ...item,
+      actions: {
+        Donate: links[0].selected
+          ? links[0].linkText
+          : null,
+        Uber: links[1].selected
+          ? links[1].linkText
+          : null,
+        Doordash: links[2].selected
+          ? links[2].linkText
+          : null,
+        Postmates: links[3].selected
+          ? links[3].linkText
+          : null,
+        Grubhub: links[4].selected
+          ? links[4].linkText
+          : null,
+        Custom: links[5].selected
+          ? links[5].linkText
+          : null
       },
     };
     setItem(newItem);
@@ -261,7 +292,8 @@ const RowForm = (props) => {
           </Form.Group>
         </>
       );
-    case 1:
+
+      case 1:
       return (
         <TimeTable
           hours={props.item.hours || {}}
@@ -342,6 +374,13 @@ const RowForm = (props) => {
           }
         </>
 
+      );
+    case 5:
+      return (
+        <ActionForm
+          // actions={props.item.actions || {}}
+          links={props.item.links || {}}
+          onChange={onActionTableChange} />
       );
     default:
       return null;

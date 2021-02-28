@@ -19,7 +19,7 @@
         "secrets:logout": "(bw logout || exit 0)",
         "secrets:login": "bw login product@bitsofgood.org",
         "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > .env"
-    },
+    }, 
     "dependencies": {
         "@animate/blur": "0.0.5",
         "@khanacademy/react-multi-select": "^0.3.3",
