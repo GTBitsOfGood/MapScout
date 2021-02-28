@@ -66,6 +66,9 @@ const Map = (props) => {
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
+    const items = []
+    const pageSize = 5;
+    items.push()
 
     const clinWikiMap = getTeam() === "clinwiki";
 
@@ -824,23 +827,24 @@ const Map = (props) => {
                                             distances={distances}
                                         />
                                     ))}
-                                    {
-                  (activeProviders.length / PAGE_SIZE > 1) ? 
-                  <Pagination>
-                  <Pagination.First
-                    onClick={() => handlePageChange(1)}
-                  />
-                  <Pagination.Prev
-                    onClick={() => handlePaginationPrev()}
-                  />
-                  {getPages()}
-                  <Pagination.Next
-                    onClick={() => handlePaginationNext()}
-                  />
-                  <Pagination.Last
-                    onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
-                  />
-                </Pagination> : <div/>}
+                                {
+                                (activeProviders.length / PAGE_SIZE > 1) ? 
+                                <Pagination>
+                                <Pagination.First
+                                    onClick={() => handlePageChange(1)}
+                                />
+                                <Pagination.Prev
+                                    onClick={() => handlePaginationPrev()}
+                                />
+                                {getPages()}
+                                <Pagination.Next
+                                    onClick={() => handlePaginationNext()}
+                                />
+                                <Pagination.Last
+                                    onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
+                                />
+                                </Pagination> : <div/>
+                                }
                             </div>
                             <div>
                                 {width >= 768 &&
@@ -870,6 +874,7 @@ const Map = (props) => {
                                             </Modal.Body>
                                         </Modal>
                                     )}
+                                    
                                 {width < 768 &&
                                     activeProviders &&
                                     activeProviders[selectedIndex] && (

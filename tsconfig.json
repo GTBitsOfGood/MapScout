@@ -3,7 +3,7 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "target": "es2015",
+    "target": "es2017",
     "jsx": "react",
     "types": [
       "react"
