@@ -120,25 +120,20 @@ h2 {
     color: gray;
 }
 
-#map {
+.map-google-map {
     width: 100vw;
-    position: absolute;
-    top: 70px;
+    height: calc(100vh - 70px);
     pointer-events: auto;
 }
 
 .map-list {
     position: relative;
     width: 100vw;
+    height: calc(100vh - 70px);
     z-index: 2;
-    max-height: calc(100vh - 70px);
     overflow-y: scroll;
-}
-
-.map-container {
     background: white;
     padding-top: 10px;
-    border-radius: 10px;
 }
 
 .map-cell {
@@ -191,7 +186,7 @@ h2 {
 
 .point {
     cursor: pointer;
-    background:white;
+    background: white;
     display: flex;
     align-items: center;
     margin-top: 5px;
@@ -267,7 +262,7 @@ h2 {
     }
     100% {
         opacity: 0;
-        transform: translateY(-60px)
+        transform: translateY(-60px);
     }
 }
 
@@ -278,7 +273,7 @@ h2 {
     }
     100% {
         opacity: 0;
-        transform: translateY(-60px)
+        transform: translateY(-60px);
     }
 }
 
@@ -538,7 +533,7 @@ h2 {
     text-align: center;
 }
 
-.modal-content  {
+.modal-content {
     border-radius: 0;
     border-color: transparent;
 }
@@ -580,7 +575,7 @@ h2 {
     opacity: 1;
     font-size: 50px !important;
     font-weight: 100 !important;
-    padding-top: 0.3rem!important;
+    padding-top: 0.3rem !important;
     padding-bottom: 1rem !important;
 }
 
@@ -616,7 +611,7 @@ h2 {
 .desc-Box p {
     font-size: 13px;
 }
-.desc-Box h3{
+.desc-Box h3 {
     font-size: 20px;
     font-weight: 700;
 }
@@ -655,14 +650,14 @@ h2 {
 .label {
     background-color: #56CCF2 !important;
     border-radius: 14px !important;
-    padding: 4px  13px !important;
+    padding: 4px 13px !important;
     margin-right: 5px !important;
     font-weight: bold !important;
     font-size: 14px;
 }
 
 .not-found-oops {
-    color: black;  /* Fallback: assume this color ON TOP of image */
+    color: black; /* Fallback: assume this color ON TOP of image */
     background-image: url("../img/blue-stars.jpg");
     background-position: center;
     background-repeat: no-repeat;
@@ -852,37 +847,37 @@ h2 {
 
 @keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-moz-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-webkit-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-o-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
@@ -908,16 +903,7 @@ h2 {
     }
     .map-list {
         padding-top: 0;
-        width: 50vw;
         transition: width 200ms;
-        max-height: calc(100vh - 70px);
-    }
-    .map-list.expand {
-        width: 100vw;
-    }
-    .map-container {
-        padding-top: 0;
-        border-radius: 0;
     }
     .modal-hours-container {
         font-size: 16px;
@@ -926,7 +912,7 @@ h2 {
     .desc-Box p {
         font-size: 16px;
     }
-    .desc-Box h3{
+    .desc-Box h3 {
         font-size: 33px;
     }
     .modal-card-text {
@@ -942,18 +928,12 @@ h2 {
     .modal-hours-container h5 {
         font-size: 18px;
     }
-    .modal-content  {
+    .modal-content {
         border-radius: 20px;
     }
     #map {
-        width: 50vw;
         transition: width 200ms;
         position: relative;
-
-        top: 0;
-    }
-    #map.map-hide {
-        width: 0;
     }
     .cell-container {
         padding-bottom: 30px;
@@ -969,7 +949,7 @@ h2 {
     display: block;
     text-align: center;
     width: 100px;
-    background:  #007bff;
+    background: #007bff;
 }
 
 .underline {
@@ -1274,7 +1254,7 @@ h2 {
     #head-logo img {
         width: 180px;
     }
-    #head .btn{
+    #head .btn {
         min-width: 120px;
     }
 
@@ -1302,5 +1282,5 @@ h2 {
 }
 
 .homepage-cta {
-    background-color: #eee,
+    background-color: #eee;
 }

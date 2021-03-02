@@ -32,12 +32,7 @@ export default ({
     }
   }, [selectedMarker]);
 
-  const mapStyles = {
-    position:"absolute"
-  };
-
   return (
-
     <GoogleMapReact
       bootstrapURLKeys={{
         key: GOOGLE_API_KEY,
@@ -48,10 +43,10 @@ export default ({
       zoom={zoom}
       center={center}
       onZoomAnimationEnd={(val) => setZoom(val)}
-      style = {{mapStyles}}
+      resetBoundsOnResize={true}
     >
 
-        {providers.map(
+      {providers.map(
         ({
           latitude, longitude, facilityName, address,
         }, i) => (

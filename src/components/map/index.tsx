@@ -17,11 +17,8 @@ import localizationStrings from "../../utils/Localization";
 import { GOOGLE_API_KEY } from "../../config/keys";
 import { Store } from "reducers/types";
 import queryString from "query-string";
-import { string } from "prop-types";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
-import LazyLoad from 'react-lazy-load';
 import Pagination from "react-bootstrap/Pagination"
-import PageItem from 'react-bootstrap/PageItem';
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -40,9 +37,8 @@ const Map = (props) => {
     const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
     const [moreFilter, setMoreFilter] = useState(false);
-    const [listView, setListView] = useState(true);
+    const [defaultView, setDefaultView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeProviders, setActiveProviders] = useState([]);
@@ -67,7 +63,6 @@ const Map = (props) => {
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
     const items = []
-    const pageSize = 5;
     items.push()
 
     const clinWikiMap = getTeam() === "clinwiki";
@@ -114,7 +109,7 @@ const Map = (props) => {
     }, [providers]);
 
     useEffect(() => {
-      handlePageChange(1)
+        handlePageChange(1)
     }, [activeProviders])
 
     function getTeam() {
@@ -162,7 +157,7 @@ const Map = (props) => {
             .where("team", "==", getTeam())
             .get()
             .then((querySnapshot) => {
-              let numCurrentlyLoaded = 1;
+                let numCurrentlyLoaded = 1;
                 const arr = [];
                 querySnapshot.forEach((doc) => {
                     const docData = doc.data();
@@ -202,9 +197,6 @@ const Map = (props) => {
 
     useEffect(() => {
         const resizeListener = () => {
-            if (width > 768 && getWidth() <= 768) {
-                setSticky(false);
-            }
             setWidth(getWidth());
         };
         window.addEventListener("resize", resizeListener);
@@ -213,27 +205,7 @@ const Map = (props) => {
         };
     }, []);
 
-    const [isSticky, setSticky] = useState(false);
     const ref = useRef(null);
-    const cellScrollRef = useRef(null);
-    const listScrollRef = useRef(null);
-    const handleScroll = (flip) => {
-        if (flip || width <= 768) {
-            if (ref.current && ref.current.getBoundingClientRect().top <= 70) {
-                setSticky(true);
-            } else if (isSticky) {
-                setSticky(false);
-            }
-        }
-    };
-
-    const resetSticky = () => {
-        setSticky(false);
-        setTimeout(() => {
-            listScrollRef.current.scrollTop = -1;
-            cellScrollRef.current.scrollTop = 0;
-        }, 100);
-    };
 
     const filterByTags = (temp) => {
         setTempProviders(temp);
@@ -241,8 +213,8 @@ const Map = (props) => {
             temp = temp.filter((provider) =>
                 provider[filterName]
                     ? provider[filterName].some((r) =>
-                          filtersState[filterName].includes(r)
-                      ) || filtersState[filterName].length === 0
+                        filtersState[filterName].includes(r)
+                    ) || filtersState[filterName].length === 0
                     : true
             );
         });
@@ -280,9 +252,9 @@ const Map = (props) => {
             const a =
                 Math.sin(deltaTheta / 2) * Math.sin(deltaTheta / 2) +
                 Math.cos(theta1) *
-                    Math.cos(theta2) *
-                    Math.sin(deltaLambda / 2) *
-                    Math.sin(deltaLambda / 2);
+                Math.cos(theta2) *
+                Math.sin(deltaLambda / 2) *
+                Math.sin(deltaLambda / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             const miDistance = (R * c) / metersPerMile;
 
@@ -347,11 +319,11 @@ const Map = (props) => {
             } else if (filtertype === "zipcode") {
                 setSearchZip(filterVal.replace(/\D/g, ""));
                 if (filterVal.length === 5) {
-                  if (providers.length > 10) {
-                    filterZipCodeOver100(filterVal);
-                  } else {
-                    await filterZipcode(filterVal);
-                  }
+                    if (providers.length > 10) {
+                        filterZipCodeOver100(filterVal);
+                    } else {
+                        await filterZipcode(filterVal);
+                    }
                 } else if (distances !== {}) {
                     setDistances({});
                 }
@@ -362,163 +334,159 @@ const Map = (props) => {
     };
 
     function filterZipCodeOver100(filterVal) {
-      const filterProviders = activeProviders.filter(
-        provider => {
-          return provider.address[0].includes(filterVal)
-        }
-      )
-      setActiveProviders(filterProviders);
+        const filterProviders = activeProviders.filter(
+            provider => {
+                return provider.address[0].includes(filterVal)
+            }
+        )
+        setActiveProviders(filterProviders);
     }
 
-    
-  
 
     /**
- * if number_of_providers <= 100:
- *    don't paginate
- * else 
- *    paginate
- */
+  * if number_of_providers <= 100:
+  *    don't paginate
+  * else
+  *    paginate
+  */
 
+    function getPages() {
+        let paginatedData = [];
+        console.log(Math.ceil(providers.length / PAGE_SIZE) + 1);
 
-
-  function getPages() {
-    let paginatedData = [];
-    console.log(Math.ceil(providers.length / PAGE_SIZE) + 1);
-
-    const maxPage = Math.ceil(activeProviders.length / PAGE_SIZE);
-    // alert(maxPage)
-    if (maxPage <= 4) {
-      if (currPage <= 3) {
-        for (let number = 1; number < maxPage + 1; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
+        const maxPage = Math.ceil(activeProviders.length / PAGE_SIZE);
+        // alert(maxPage)
+        if (maxPage <= 4) {
+            if (currPage <= 3) {
+                for (let number = 1; number < maxPage + 1; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+            } else if (currPage > maxPage - 3) {
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+                for (let number = maxPage - 3; number <= maxPage; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+            } else {
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+                for (let number = currPage - 1; number <= currPage + 1; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+            }
+        } else {
+            if (currPage <= 3) {
+                for (let number = 1; number < 5; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+            } else if (currPage > maxPage - 3) {
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+                for (let number = maxPage - 3; number <= maxPage; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+            } else {
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+                for (let number = currPage - 1; number <= currPage + 1; number++) {
+                    paginatedData.push(
+                        <Pagination.Item
+                            active={number === currPage}
+                            activeLabel={number.toString()}
+                            onClick={() => handlePageChange(number)}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    )
+                }
+                paginatedData.push(
+                    <Pagination.Ellipsis />
+                )
+            }
         }
-      } else if (currPage > maxPage - 3) {
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-        for (let number = maxPage - 3; number <= maxPage ; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
-        } 
-      } else {
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
-        } 
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-      }
-    } else {
-      if (currPage <= 3) {
-        for (let number = 1; number < 5; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
+        return paginatedData;
+    }
+
+    function handlePageChange(newPage) {
+        const pageDifference = newPage - currPage;
+        let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
+
+        setLowerPageBound(newLowerBound);
+        let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+
+        setUpperPageBound(newUpperBound);
+        setCurrPage(newPage);
+    }
+
+    function handlePaginationNext() {
+        if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
+
+            handlePageChange(currPage + 1);
         }
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-      } else if (currPage > maxPage - 3) {
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-        for (let number = maxPage - 3; number <= maxPage ; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
-        } 
-      } else {
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-        for (let number = currPage - 1; number <= currPage + 1 ; number++) {
-          paginatedData.push(
-            <Pagination.Item 
-              active={number===currPage}
-              activeLabel={number.toString()}
-              onClick={() => handlePageChange(number)}
-            >
-              {number}
-            </Pagination.Item>
-          )
-        } 
-        paginatedData.push(
-          <Pagination.Ellipsis/>
-        )
-      }
     }
-    return paginatedData;
-  }
 
-  function handlePageChange(newPage) {
-    const pageDifference = newPage - currPage;
-    let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
-
-    setLowerPageBound(newLowerBound);
-    let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
-
-    setUpperPageBound(newUpperBound);
-    setCurrPage(newPage);
-  }
-
-  function handlePaginationNext() {
-    if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
-
-      handlePageChange(currPage + 1);
+    function handlePaginationPrev() {
+        if (currPage !== 1) {
+            handlePageChange(currPage - 1);
+        }
     }
-  }
-
-  function handlePaginationPrev() {
-    if (currPage !== 1) {
-      handlePageChange(currPage - 1);
-    }
-  }
 
     useEffect(() => {
         if (activeProviders) filterSearch(searchName);
     }, [filtersState]);
 
     function switchView() {
-        setListView(!listView);
+        setDefaultView(!defaultView);
     }
 
     function evaluateFilters() {
@@ -577,9 +545,6 @@ const Map = (props) => {
 
     const renderTagControl = () => (
         <>
-            {!condition && !isSticky && (
-                <div ref={ref} className="scroll-indicator" />
-            )}
             <div className={classNames("filter-row", "padder")}>
                 {Object.entries(filtersData)
                     .filter(
@@ -621,10 +586,10 @@ const Map = (props) => {
                         </Button>
                     </>
                 ) : (
-                    <Button variant="link" onClick={() => setMoreFilter(true)}>
-                        + {moreFilters}
-                    </Button>
-                )}
+                        <Button variant="link" onClick={() => setMoreFilter(true)}>
+                            + {moreFilters}
+                        </Button>
+                    )}
             </div>
         </>
     );
@@ -683,7 +648,7 @@ const Map = (props) => {
         moreFilters,
     } = localizationStrings;
 
-    const condition = width > 768;
+    const isDesktop = width > 768;
 
     if (isLoading || !isLoaded(activeProviders)) {
         return (
@@ -696,7 +661,7 @@ const Map = (props) => {
     return (
         <div
             className={classNames("bg-white", {
-                "overflow-scroll": !condition,
+                "overflow-scroll": !isDesktop,
             })}
         >
             {/* <NavBar /> */}
@@ -708,11 +673,11 @@ const Map = (props) => {
                             "ml-2",
                             "mb-3",
                             "pt-3",
-                            { "mr-2": !condition }
+                            { "mr-2": !isDesktop }
                         )}
                     >
                         <div className="w-75">
-                            <Row noGutters={!condition}>
+                            <Row noGutters={!isDesktop}>
                                 <Col>
                                     <Form.Control
                                         placeholder={searchZipcode}
@@ -731,211 +696,153 @@ const Map = (props) => {
                                 </Col>
                             </Row>
                         </div>
-                        {condition ? (
-                            <Button
-                                variant="primary"
-                                style={{
-                                    borderColor: primaryColor,
-                                    backgroundColor: primaryColor,
-                                }}
-                                onClick={switchView}
-                                className="switch-view-button"
-                            >
-                                {listView ? hideLabel : showLabel}
-                            </Button>
-                        ) : (
-                            isSticky && (
-                                <Button
-                                    variant="outline-primary"
-                                    style={{
-                                        borderColor: primaryColor,
-                                        color: primaryColor,
-                                    }}
-                                    onClick={resetSticky}
-                                >
-                                    <FaMap />
-                                </Button>
-                            )
-                        )}
-                    </div>
-                    {isSticky && !clinWikiMap && renderTagControl()}
-                </div>
-                <div className={classNames({ "row-nowrap": condition })}>
-                    <div
-                        ref={listScrollRef}
-                        onScroll={handleScroll}
-                        style={{
-                            pointerEvents:
-                                point || condition || isSticky ? "all" : "none",
-                        }}
-                        className={classNames("map-list", {
-                            expand: !listView,
-                            sticky: isSticky && !condition,
-                        })}
-                    >
-                        {!isSticky && !condition && (
-                            <div
-                                className="map-overlay"
-                                onMouseEnter={() => setPoint(false)}
-                            />
-                        )}
-                        <div className="map-container">
-                            {!isSticky && !clinWikiMap && renderTagControl()}
-                            <div
-                                ref={cellScrollRef}
-                                className={classNames("cell-container", {
-                                    sticky: isSticky && !condition,
-                                })}
-                            >
-                                <div className="tag-row padder">
-                                    {Object.keys(filtersState).map(renderTag)}
-                                    {evaluateFilters() && (
-                                        <div
-                                            onClick={() => clearFilters()}
-                                            className="tag clear-all"
-                                            style={{
-                                                borderColor: "red",
-                                                color: "red",
-                                            }}
-                                        >
-                                            Clear All
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="count">
-                                    <span>
-                                        {isEmpty(activeProviders)
-                                            ? "No"
-                                            : activeProviders.length}{" "}
-                                        {clinWikiMap ? "trials" : "providers"}{" "}
-                                        found
-                                    </span>
-                                </div>
-                                {!isEmpty(activeProviders) && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
-                                        <ProviderCell
-                                            key={i.id}
-                                            item={i}
-                                            index={index}
-                                            primaryColor={primaryColor}
-                                            onMouseEnter={debounce(() => {
-                                                if (listView && width > 768)
-                                                    setCurrmarker(index);
-                                            }, 300)}
-                                            onClick={() =>
-                                                handleCellClick(index)
-                                            }
-                                            distances={distances}
-                                        />
-                                    ))}
-                                {
-                                (activeProviders.length / PAGE_SIZE > 1) ? 
-                                <Pagination>
-                                <Pagination.First
-                                    onClick={() => handlePageChange(1)}
-                                />
-                                <Pagination.Prev
-                                    onClick={() => handlePaginationPrev()}
-                                />
-                                {getPages()}
-                                <Pagination.Next
-                                    onClick={() => handlePaginationNext()}
-                                />
-                                <Pagination.Last
-                                    onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
-                                />
-                                </Pagination> : <div/>
-                                }
-                            </div>
-                            <div>
-                                {width >= 768 &&
-                                    activeProviders &&
-                                    activeProviders[selectedIndex] && (
-                                        <Modal
-                                            show={showModal}
-                                            onHide={() => setShowModal(false)}
-                                            dialogClassName="myModal"
-                                            scrollable
-                                        >
-                                            <Modal.Header
-                                                style={{
-                                                    backgroundColor: primaryColor,
-                                                }}
-                                                closeButton
-                                            />
-                                            <Modal.Body className="modal-body">
-                                                <ProviderInfo
-                                                    item={
-                                                        activeProviders[
-                                                            selectedIndex
-                                                        ]
-                                                    }
-                                                    categories={categories}
-                                                />
-                                            </Modal.Body>
-                                        </Modal>
-                                    )}
-                                    
-                                {width < 768 &&
-                                    activeProviders &&
-                                    activeProviders[selectedIndex] && (
-                                        <Modal
-                                            show={showModal}
-                                            onHide={() => setShowModal(false)}
-                                            dialogClassName="modalMobile"
-                                            scrollable
-                                        >
-                                            <Modal.Header
-                                                style={{
-                                                    backgroundColor: primaryColor,
-                                                }}
-                                                closeButton
-                                            />
-                                            <Modal.Body className="modal-body">
-                                                <ProviderInfoMobile
-                                                    item={
-                                                        activeProviders[
-                                                            selectedIndex
-                                                        ]
-                                                    }
-                                                    width={width}
-                                                    categories={categories}
-                                                />
-                                            </Modal.Body>
-                                        </Modal>
-                                    )}
-                            </div>
-                        </div>
-                    </div>
-                    {!(isSticky && !condition) && (
-                        <div
-                            id="map"
-                            className={classNames({
-                                "map-hide": condition && !listView,
-                            })}
+                        <Button
+                            variant="primary"
+                            style={{
+                                borderColor: primaryColor,
+                                backgroundColor: primaryColor,
+                            }}
+                            onClick={switchView}
+                            className="switch-view-button"
                         >
-                            <div
-                                onMouseLeave={() => setPoint(true)}
-                                style={{
-                                    height: condition
-                                        ? "calc(100vh - 70px)"
-                                        : "60vh",
-                                    width: "100%",
-                                }}
-                            >
-                                <GoogleMap
-                                    providers={activeProviders}
-                                    defaultZoom={defaultZoom}
-                                    primaryColor={primaryColor}
-                                    defaultCenter={{
-                                        lat: defaultLat,
-                                        lng: defaultLong,
-                                    }}
-                                    selectedMarker={currmarker}
-                                    onShowMoreClick={handleCellClick}
-                                />
+                            {isDesktop ? (defaultView ? hideLabel : showLabel) : (defaultView ? showLabel : hideLabel)}
+                        </Button>
+                    </div>
+                </div>
+                <div className={classNames({ "row-nowrap": isDesktop })}>
+                    <div
+                        className={classNames("map-list")}
+                        style={{
+                            pointerEvents: point || isDesktop ? "all" : "none",
+                            width: isDesktop ? (defaultView ? "50vw" : "100vw") : (defaultView ? "100vw" : 0),
+                            display: !isDesktop && !defaultView && "none"
+                        }}
+                    >
+                        {renderTagControl()}
+                        <div>
+                            <div className="tag-row padder">
+                                {Object.keys(filtersState).map(renderTag)}
+                                {evaluateFilters() && (
+                                    <div
+                                        onClick={() => clearFilters()}
+                                        className="tag clear-all"
+                                        style={{
+                                            borderColor: "red",
+                                            color: "red",
+                                        }}
+                                    >
+                                        Clear All
+                                    </div>
+                                )}
                             </div>
+                            <div className="count">
+                                <span>
+                                    {isEmpty(activeProviders) ? "No" : activeProviders.length}
+                                    {clinWikiMap ? " trials found" : " providers found"}
+                                </span>
+                            </div>
+                            {!isEmpty(activeProviders) && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
+                                <ProviderCell
+                                    key={i.id}
+                                    item={i}
+                                    index={index}
+                                    primaryColor={primaryColor}
+                                    onMouseEnter={debounce(() => {
+                                        if (defaultView && isDesktop)
+                                            setCurrmarker(index);
+                                    }, 300)}
+                                    onClick={() =>
+                                        handleCellClick(index)
+                                    }
+                                    distances={distances}
+                                />
+                            ))}
+                            {
+                                (activeProviders.length / PAGE_SIZE > 1) ?
+                                    <Pagination>
+                                        <Pagination.First
+                                            onClick={() => handlePageChange(1)}
+                                        />
+                                        <Pagination.Prev
+                                            onClick={() => handlePaginationPrev()}
+                                        />
+                                        {getPages()}
+                                        <Pagination.Next
+                                            onClick={() => handlePaginationNext()}
+                                        />
+                                        <Pagination.Last
+                                            onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
+                                        />
+                                    </Pagination> : <div />
+                            }
                         </div>
-                    )}
+                        <div>
+                            {isDesktop && activeProviders && activeProviders[selectedIndex] && (
+                                <Modal
+                                    show={showModal}
+                                    onHide={() => setShowModal(false)}
+                                    dialogClassName="myModal"
+                                    scrollable
+                                >
+                                    <Modal.Header
+                                        style={{
+                                            backgroundColor: primaryColor
+                                        }}
+                                        closeButton
+                                    />
+                                    <Modal.Body className="modal-body">
+                                        <ProviderInfo
+                                            item={activeProviders[selectedIndex]}
+                                            categories={categories}
+                                        />
+                                    </Modal.Body>
+                                </Modal>
+                            )}
+
+                            {!isDesktop && activeProviders && activeProviders[selectedIndex] && (
+                                <Modal
+                                    show={showModal}
+                                    onHide={() => setShowModal(false)}
+                                    dialogClassName="modalMobile"
+                                    scrollable
+                                >
+                                    <Modal.Header
+                                        style={{
+                                            backgroundColor: primaryColor
+                                        }}
+                                        closeButton
+                                    />
+                                    <Modal.Body className="modal-body">
+                                        <ProviderInfoMobile
+                                            item={activeProviders[selectedIndex]}
+                                            width={width}
+                                            categories={categories}
+                                        />
+                                    </Modal.Body>
+                                </Modal>
+                            )}
+                        </div>
+                    </div>
+                    <div
+                        className={classNames("map-google-map")}
+                        style={{
+                            width: isDesktop ? (defaultView ? "50vw" : 0) : (defaultView ? 0 : "100vw"),
+                            display: !isDesktop && defaultView && "none"
+                        }}
+                        onMouseLeave={() => setPoint(true)}
+                    >
+                        <GoogleMap
+                            providers={activeProviders}
+                            defaultZoom={defaultZoom}
+                            primaryColor={primaryColor}
+                            defaultCenter={{
+                                lat: defaultLat,
+                                lng: defaultLong,
+                            }}
+                            selectedMarker={currmarker}
+                            onShowMoreClick={handleCellClick}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
