@@ -26,7 +26,11 @@ function MapPicker(props) {
         styles: mapConfig,
     }
     const onSave = async () => {
-        await firebase.firestore().collection('teams').doc('LA').set(data); 
+        const center_and_zoom = {
+            center: coords,
+            zoom: magnification,
+        }
+        await firebase.firestore().collection('teams').doc('LA').set(center_and_zoom); 
     }
     const changeCenterAndZoom = ({center, zoom}) => {
         setCoords(center);
@@ -39,6 +43,10 @@ function MapPicker(props) {
             <p>Longitude: {coords.lng}</p>
             <p>Zoom: {magnification}</p>
             <div style={{height: '100%'}}>
+                <Button
+                    variant="primary"
+                    onClick={() => onSave()}
+                >Save</Button>
                 <GoogleMapReact
                     bootstrapURLKeys={{
                         key: GOOGLE_API_KEY,
@@ -48,10 +56,6 @@ function MapPicker(props) {
                     onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
                     options={mapOptions}
                 ></GoogleMapReact>
-                <Button
-                    variant="primary"
-                    onClick={() => onSave()}
-                ></Button>
             </div>
         </div>
     )
