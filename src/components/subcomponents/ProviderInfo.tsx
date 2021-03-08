@@ -27,12 +27,7 @@ const ProviderInfo = (props) => {
         const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${GOOGLE_API_KEY}&format=png&visual_refresh=true`
              + `&markers=${props.item.latitude},${props.item.longitude}`);
         setStreetView(res2.url);
-        if (typeof props.item.imageURL === 'string') {
-          setImage(props.item.imageURL);
-        } else {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
-          setImage(res.url);
-        }
+        setImage(props.item.imageURL);
         setIsLoading(false);
       } catch (e) {
         setIsLoading(false);
