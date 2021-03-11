@@ -1284,3 +1284,50 @@ h2 {
 .homepage-cta {
     background-color: #eee;
 }
+
+.create-map-title {
+    display: flex;
+    margin-left: 440px;
+    padding-bottom: 50px; 
+}
+
+.CreateMapTitle {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.create-map-content {
+    display: flex;
+    margin-left: 300px;
+    width: 600px;
+    height: 200px;
+}
+
+.square-1 {
+    
+    height: 200px;
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.square-2 {
+    height: 200px;
+    width: 300px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    align-items: center;
+}
+
+.whole-page-signup {
+    display: flex;
+    background-color: rgb(239, 239, 239, 0.9);
+    flex-direction: column;
+    justify-items: center;
+    height: 100vh;
+    width: 100vw;
+    border: 1px solid;
+    padding-top: 200px;
+}

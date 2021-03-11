@@ -97,64 +97,95 @@ const classNames = require('classnames');
 
   console.log(email)
   return (
-    <Container fluid>
-      <div id="auth-root" className={classNames('box', { translate: animate })}>
-        <Form
-          onSubmit={handleSubmit}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleSubmit(e);
-            }
-          }}
-        >
-          <div className="mb-4">
-            <h2>{createAccount}</h2>
-          </div>
-          <Form.Group controlId="formEmail">
-            <Form.Label>{emailLabel}</Form.Label>
-            <Form.Control type="email" placeholder={emailPlaceholder} onChange={handleChange} />
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>{passwordLabel}</Form.Label>
-            <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleChange} />
-          </Form.Group>
-          <Form.Group controlId="formPassword">
-            <Form.Label>{confirmPasswordLabel}</Form.Label>
-            <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange} />
-          </Form.Group>
-          <br />
-          {
-            error
-            ? (
-              <Alert variant="danger" onClose={() => setError(null)} dismissible>
-                <small>{error}</small>
-              </Alert>
-            )
-            : null
-          }
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={isLoading}
-            block
-          >
-            {isLoading && <div className="loader" />}
-            {' '}
-            {create}
-          </Button>
-        </Form>
+    <div className="whole-page-signup">
+      <div className="create-map-title"> 
+        <p className="CreateMapTitle">Create maps with us!</p>
       </div>
-      {
-        animate
-        ? (
-          <Blur>
-            <div className="splash fade-out" />
-          </Blur>
-        )
-        : <div className="splash" />
-      }
-    </Container>
+      <div className="create-map-content">
+        <Container>
+          <div className="square-1">
+          <p>
+            <b>Non-Profit Organization</b>
+          </p>
+          <p>Get started with your beautiful resource map, for free</p>
+          <Button>
+            Create New Account
+          </Button>
+          </div>
+        </Container>
+
+        <Container>
+        <div className="square-2">
+          <p>
+            <b>For-Profit Orginization</b>
+          </p>
+          <p>Interested in using MapScout? Let's talk!</p>
+          <Button>
+            Contact us
+          </Button>
+          </div>
+        </Container>
+      </div>
+    </div>
   );
 }
 
 export default withFirebase(SignUp);
+
+    // <Container fluid>
+    //   <div id="auth-root" className={classNames('box', { translate: animate })}>
+    //     <Form
+    //       onSubmit={handleSubmit}
+    //       onKeyPress={(e) => {
+    //         if (e.key === 'Enter') {
+    //           handleSubmit(e);
+    //         }
+    //       }}
+    //     >
+    //       <div className="mb-4">
+    //         <h2>{createAccount}</h2>
+    //       </div>
+    //       <Form.Group controlId="formEmail">
+    //         <Form.Label>{emailLabel}</Form.Label>
+    //         <Form.Control type="email" placeholder={emailPlaceholder} onChange={handleChange} />
+    //       </Form.Group>
+    //       <Form.Group controlId="formPassword">
+    //         <Form.Label>{passwordLabel}</Form.Label>
+    //         <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleChange} />
+    //       </Form.Group>
+    //       <Form.Group controlId="formPassword">
+    //         <Form.Label>{confirmPasswordLabel}</Form.Label>
+    //         <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange} />
+    //       </Form.Group>
+    //       <br />
+    //       {
+    //         error
+    //         ? (
+    //           <Alert variant="danger" onClose={() => setError(null)} dismissible>
+    //             <small>{error}</small>
+    //           </Alert>
+    //         )
+    //         : null
+    //       }
+    //       <Button
+    //         variant="primary"
+    //         onClick={handleSubmit}
+    //         disabled={isLoading}
+    //         block
+    //       >
+    //         {isLoading && <div className="loader" />}
+    //         {' '}
+    //         {create}
+    //       </Button>
+    //     </Form>
+    //   </div>
+    //   {
+    //     animate
+    //     ? (
+    //       <Blur>
+    //         <div className="splash fade-out" />
+    //       </Blur>
+    //     )
+    //     : <div className="splash" />
+    //   }
+    // </Container>
