@@ -9,6 +9,9 @@ import Select from 'react-select';
 import { storage } from '../../store';
 import TimeTable from './TimeTable';
 import GoogleSuggest from './GoogleSuggest';
+import ImageModal from './ImageModal';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 import ActionForm from './ActionForm';
 
@@ -40,6 +43,7 @@ const RowForm = (props) => {
   };
 
   const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const itemFields = Object.keys(props.filters);
@@ -257,7 +261,7 @@ const RowForm = (props) => {
               <Form.Group>
                 <Form.Label>Image</Form.Label>
                 <br />
-                <label className="btn btn-primary btn-block">
+                {/* <label className="btn btn-primary btn-block">
                   Upload
                   <FileUploader
                     hidden
@@ -266,7 +270,17 @@ const RowForm = (props) => {
                     storageRef={storage.ref('images')}
                     onUploadSuccess={handleUploadSuccess}
                   />
-                </label>
+                  <ImageModal/>
+                </label> */}
+                <Button className="btn btn-primary btn-block" onClick={() => setShowModal(true)}>
+                  Upload
+                </Button>
+                <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+                    <Modal.Header>Image Upload</Modal.Header>
+                    <Modal.Body>
+                        <ImageModal/>
+                    </Modal.Body>
+                </Modal>
               </Form.Group>
             </Col>
           </Row>

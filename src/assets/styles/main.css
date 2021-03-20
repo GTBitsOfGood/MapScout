@@ -1284,3 +1284,24 @@ h2 {
 .homepage-cta {
     background-color: #eee;
 }
+
+.dropzone {
+    text-align: center;
+    padding: 100px;
+    border: 3px dotted #eeeeee;
+    background-color: #fafafa;
+    color: #bdbdbd;
+}
+
+.imageModalSave {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.saveButton {
+    margin: 0px 10px;
+}
+.cancelButton {
+    margin: 0px 10px;
+}

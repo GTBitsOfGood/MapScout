@@ -19,7 +19,7 @@
         "secrets:logout": "(bw logout || exit 0)",
         "secrets:login": "bw login product@bitsofgood.org",
         "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > .env"
-    }, 
+    },
     "dependencies": {
         "@animate/blur": "0.0.5",
         "@khanacademy/react-multi-select": "^0.3.3",
@@ -47,7 +47,7 @@
         "react-bootstrap-time-picker": "^2.0.1",
         "react-collapse": "^5.0.1",
         "react-dom": "^16.8.6",
-        "react-dropzone": "^10.1.4",
+        "react-dropzone": "^11.3.1",
         "react-firebase-file-uploader": "^2.4.3",
         "react-flip-toolkit": "^7.0.5",
         "react-google-maps-loader": "^4.2.6",
