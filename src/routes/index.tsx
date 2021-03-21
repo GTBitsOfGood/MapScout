@@ -30,8 +30,8 @@ const routes = (allRoutes: string[]) => (
           <Route path={route} component={renderComponentWithErrorBoundary(Map)} />
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
-        <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)}  />
-        <Route path={signupRoute} component={renderComponentWithErrorBoundary(CreateMyAccount)} />
+        <Route path={signupRoute} component={renderComponentWithErrorBoundary(CreateMyAccount)}  />
+        <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)} />
         
         <Route path={settingsRoute} component={renderComponentWithErrorBoundary(settings)} />
         <ProviderRoutes />

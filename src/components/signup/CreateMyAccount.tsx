@@ -18,6 +18,8 @@ import { providerRoute, pwdRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 
 function CreateMyAccount({ firebase, history }) {
+    const [show, setShow] = useState(false);
+
     const { width } = useWindowSize();
     const [step, setStep] = useState(0);
     const [completed, setCompleted] = useState(false);
@@ -29,6 +31,10 @@ function CreateMyAccount({ firebase, history }) {
     const [isLoading, setIsLoading] = useState(false);
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(false);
+
+    const {
+        emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, confirmPasswordLabel, createAccount, create
+    } = localizationStrings;
 
     function handleChange(e) {
         const { value, type } = e.target;
@@ -78,31 +84,33 @@ function CreateMyAccount({ firebase, history }) {
             setIsLoading(false);
         } else if (!passwordsMatch) {
             setError('Passwords do not match')
+            setShow(true)
             setIsLoading(false);
-        }
-        createUserWithEmailAndPassword({ 
-            email,
-            password,
-        });
-        setIsLoading(true);
-        try {
-        const response = await firebase
-            .auth()
-            setAnimate(true);
-            await setTimeout(() => {
+        } else {
+            createUserWithEmailAndPassword({ 
+                email,
+                password,
+            });
+            setIsLoading(true);
+            try {
+            const response = await firebase
+                .auth()
+                setAnimate(true);
+                await setTimeout(() => {
+                    setIsLoading(false);
+                    history.push(providerRoute);
+                }, 400);
+            } catch (err) {
+                // TODO: Add translations
+                setError(err.message);
                 setIsLoading(false);
-                history.push(providerRoute);
-            }, 400);
-        } catch (err) {
-            // TODO: Add translations
-            setError(err.message);
-            setIsLoading(false);
+            }
         }
     }
 
     return (
         <div>
-             <Steps current={2}>
+             <Steps current={0}>
              <Steps.Step title="ACCOUNT INFO" />
              <Steps.Step title="ORGANIZATION INFO" />
              <Steps.Step title="NEXT STEPS" />
@@ -112,20 +120,30 @@ function CreateMyAccount({ firebase, history }) {
             <Form>
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" onChange={(email) => setEmail(email)}/>
+                    <Form.Control type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
                     <Form.Text className="text-muted">
                         We'll always share your email with everyone else.
                     </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" onChange={(password) => setPassword(password)}/>
+                    <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type="confirmPassword" onChange={(password) => setPassword(password)}/>
+                    <Form.Control type="confirmPassword" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={() => this.nextPath('../components/wrappers/SentryWrapper')}>
+                {show ? 
+                        <Alert variant="danger" onClose={() => console.log("error")} dismissible>
+                            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                            <p>
+                            Change this and that and try again. Duis mollis, est non commodo
+                            luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+                            Cras mattis consectetur purus sit amet fermentum.
+                            </p>
+                        </Alert> : <div />
+                }
+                <Button variant="primary" type="submit" onClick={handleSubmit}>
                     Next
                 </Button>
             </Form>
