@@ -4,9 +4,13 @@ import Button from 'react-bootstrap/Button';
 
 const ImageModal = (props) => {
     const [uploaded, setUploaded] = useState(false);
+    const handleDrop = () => {
+        console.log("hello")
+        setUploaded(true)
+    }
     return(<div>
         {!uploaded && 
-        (<Dropzone accept="image/*" onDrop={() => setUploaded(true)}>
+        (<Dropzone accept="image/*" onDrop={handleDrop}>
             {({ getRootProps, getInputProps }) => (
             <div {...getRootProps({ className: "dropzone" })}>
                 <input {...getInputProps()} />
