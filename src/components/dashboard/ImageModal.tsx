@@ -4,10 +4,13 @@ import Button from 'react-bootstrap/Button';
 
 const ImageModal = (props) => {
     const [uploaded, setUploaded] = useState(false);
-    const handleDrop = () => {
-        console.log("hello")
-        setUploaded(true)
+    const [image, setImage] = useState(null);
+
+    const handleDrop = (img) => {
+        setImage(img[0]);
+        setUploaded(true);
     }
+
     return(<div>
         {!uploaded && 
         (<Dropzone accept="image/*" onDrop={handleDrop}>
@@ -21,8 +24,11 @@ const ImageModal = (props) => {
         }
         {uploaded && (
             <div className="imageModalSave">
+                <div>
+                    <img src={URL.createObjectURL(image)} className="image-upload" />
+                </div>
                 <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>
-                <Button className="saveButton btn btn-success">Save</Button>
+                <Button className="saveButton btn btn-success" onClick={() => props.handleSuccess(image)}>Save</Button>
             </div>
         )
         }

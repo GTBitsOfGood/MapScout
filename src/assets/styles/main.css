@@ -688,6 +688,11 @@ h2 {
     object-fit: cover;
 }
 
+.image-upload {
+    width: 50%;
+    height: 50%;
+}
+
 .modal-mobile-card {
     z-index: 2;
     position: absolute;
@@ -1294,14 +1299,14 @@ h2 {
 }
 
 .imageModalSave {
-    display: flex;
+    text-align: center;
     justify-content: center;
     padding: 10px;
 }
 
 .saveButton {
-    margin: 0px 10px;
+    margin: 10px 10px;
 }
 .cancelButton {
-    margin: 0px 10px;
+    margin: 10px 10px;
 }

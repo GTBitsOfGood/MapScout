@@ -140,7 +140,9 @@ const RowForm = (props) => {
     props.setItem(newItem);
   }
 
-  const handleUploadSuccess = async (filename) => {
+  const handleUploadSuccess = async (file) => {
+    const filename = file.name;
+    await storage.ref('images').child(filename).put(file);
     let newItem = { ...item, image: filename };
     await storage.ref('images').child(filename).getDownloadURL()
       .then((url) => {
@@ -148,6 +150,7 @@ const RowForm = (props) => {
         setItem(newItem);
       });
     props.setItem(newItem);
+    setShowModal(false);
   };
 
   switch (props.step) {
@@ -278,7 +281,7 @@ const RowForm = (props) => {
                 <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                     <Modal.Header>Image Upload</Modal.Header>
                     <Modal.Body>
-                        <ImageModal/>
+                        <ImageModal handleSuccess={handleUploadSuccess}/>
                     </Modal.Body>
                 </Modal>
               </Form.Group>
