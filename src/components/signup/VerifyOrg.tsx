@@ -22,6 +22,7 @@ const uuidv4 = require('uuid/v4');
 
 
 function VerifyOrg({ firebase, history, props }) {
+    /*
     
     const { width } = useWindowSize();
     const [step, setStep] = useState(0);
@@ -121,6 +122,7 @@ function VerifyOrg({ firebase, history, props }) {
             setIsLoading(false);
         }
     }
+    */
 
     return (
         <div>
@@ -135,18 +137,18 @@ function VerifyOrg({ firebase, history, props }) {
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Orginization Name</Form.Label>
                     
-                    <Form.Control type="email" onChange={(email) => setEmail(email)}/>
+                    <Form.Control type="email" />
                     <Form.Text className="text-muted">
                         We'll always share your email with everyone else.
                     </Form.Text>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Organization Website URL</Form.Label>
-                    <Form.Control type="password" onChange={(password) => setPassword(password)}/>
+                    <Form.Control type="password" />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Preferred Mapscout URL</Form.Label>
-                    <Form.Control type="confirmPassword" onChange={(password) => setPassword(password)}/>
+                    <Form.Control type="confirmPassword"/>
                     <Form.Control type="password" placeholder="mapscout.io/" />
                 </Form.Group>
                 <Button variant="primary" type="submit" onClick={() => this.nextPath('../components/wrappers/SentryWrapper')}>
