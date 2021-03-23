@@ -102,15 +102,15 @@ const classNames = require('classnames');
   return (
     <div className="sign-up-root">
       <div className="create-map-title"> 
-        <p>Create maps with us!</p>
+        <p className="title-text-styles">Create maps with us!</p>
       </div>
-      <div className="create-map-content">
+      <div id="create-map-content">
         <Container>
-          <div className="square-1">
+          <div className="square">
           <p>
-            <p style={{ fontSize: '100%' , fontWeight: 'bold', textAlign: 'center' }}>Non-Profit Organization</p>
+            <p className="title-text-styles">Non-Profit Organization</p>
           </p>
-          <p style={{ fontSize: '80%', color: 'grey'}}>Get started with your beautiful resource map, for free!</p>
+          <p className="body-text-styles">Get started with your beautiful resource map, for free!</p>
           <Button className="button" size="sm">
             CREATE NEW ACCOUNT
           </Button>
@@ -118,11 +118,11 @@ const classNames = require('classnames');
         </Container>
 
         <Container>
-        <div className="square-2">
+        <div className="square">
           <p>
-            <p style={{ fontSize: '100%' , fontWeight: 'bold', textAlign: 'center' }}>For-Profit Organization</p>
+            <p className="title-text-styles">For-Profit Organization</p>
           </p>
-          <p style={{ fontSize: '80%', color: 'grey'}}>Interested in using MapScout? Let's talk!</p>
+          <p className="body-text-styles">Interested in using MapScout? Let's talk!</p>
           <Button className="button" size="sm">
             CONTACT US
           </Button>

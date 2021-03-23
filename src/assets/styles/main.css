@@ -1321,14 +1321,13 @@ h2 {
 }
 
 .create-map-title {
-    margin-left: 32%;
     padding-top: 100px;
     padding-bottom: 20px;
     font-size: 200%;
     font-weight: bold;
 }
 
-.create-map-content {
+#create-map-content {
     display: flex;
     min-height: 50px;
     width: 60%;
@@ -1337,19 +1336,29 @@ h2 {
 }
 
 .button {
-    height: 30%;
+    margin-top: 5%;
+    height: 2rem;
     width: 100%;
     font-size: 15px;
 }
 
-.square-1 {
+.square {
     padding: 15%;
     border-radius: 10px;
     background-color: #fff;
+    height: 100%;
+    width: 100%;
+    box-shadow: 1px 1px 2px lightgray;
 }
 
-.square-2 {
-    padding: 15%;
-    border-radius: 10px;
-    background-color: #fff;
+.title-text-styles {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.body-text-styles {
+    margin-top: 10%;
+    font-size: 80%;
+    color: grey;
 }
