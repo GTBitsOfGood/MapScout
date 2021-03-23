@@ -1312,7 +1312,7 @@ h2 {
     background-color: #eee;
 }
 
-#signup-root {
+.signup-root {
     background-color: rgb(239, 239, 239, 0.9);
     padding: 30px 5vw;
     margin-top: 12vh;
@@ -1320,6 +1320,9 @@ h2 {
     width: 100vw;
 }
 
+.container {
+    height: 20%;
+}
 .create-map-title {
     padding-top: 100px;
     padding-bottom: 20px;
@@ -1329,26 +1332,25 @@ h2 {
 
 #create-map-content {
     display: flex;
-    min-height: 50px;
-    width: 60%;
     margin-left: auto;
     margin-right: auto;
+    height: 10rem;
+    width: 40rem;
 }
 
 .button {
     margin-top: 5%;
     height: 2rem;
     width: 100%;
-    font-size: 15px;
+    font-size: 65%;
 }
 
 .square {
-    padding: 15%;
-    border-radius: 10px;
+    margin: 0.5rem;
+    padding: 2rem;
     background-color: #fff;
-    height: 100%;
-    width: 100%;
-    box-shadow: 1px 1px 2px lightgray;
+    box-shadow: 0 0 10px lightgray;
+    border-radius: 1rem;
 }
 
 .title-text-styles {

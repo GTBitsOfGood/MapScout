@@ -12,6 +12,8 @@ import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
 import { providerRoute, pwdRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 // import {createAccountRoute} from '../signup/CreateMyAccount';
 
@@ -105,28 +107,27 @@ const classNames = require('classnames');
         <p className="title-text-styles">Create maps with us!</p>
       </div>
       <div id="create-map-content">
-        <Container>
-          <div className="square">
-          <p>
-            <p className="title-text-styles">Non-Profit Organization</p>
-          </p>
-          <p className="body-text-styles">Get started with your beautiful resource map, for free!</p>
-          <Button className="button" size="sm">
-            CREATE NEW ACCOUNT
-          </Button>
-          </div>
-        </Container>
-
-        <Container>
-        <div className="square">
-          <p>
-            <p className="title-text-styles">For-Profit Organization</p>
-          </p>
-          <p className="body-text-styles">Interested in using MapScout? Let's talk!</p>
-          <Button className="button" size="sm">
-            CONTACT US
-          </Button>
-          </div>
+        <Container className="container">
+          <Row>
+            <Col xs="5" className="square">
+              <p>
+                <p className="title-text-styles">Non-Profit Organization</p>
+              </p>
+              <p className="body-text-styles">Get started with your beautiful resource map, for free!</p>
+              <Button className="button" size="sm">
+                CREATE NEW ACCOUNT
+              </Button>
+            </Col>
+            <Col xs="5" className="square">
+              <p>
+                <p className="title-text-styles">For-Profit Organization</p>
+              </p>
+              <p className="body-text-styles">Interested in using MapScout? Let's talk!</p>
+              <Button className="button" size="sm">
+                CONTACT US
+              </Button>
+            </Col>
+          </Row>
         </Container>
       </div>
     </div>
