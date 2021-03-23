@@ -4,6 +4,9 @@ export const authRoute = '/auth';
 export const pwdRoute = '/forgot';
 export const signupRoute = '/signup'
 export const settingsRoute = '/settings'
+export const createAccountRoute = '/signup/create';
+export const verifyOrgRoute = '/signup/verify';
+export const processingTextRoute = '/signup/confirm';
 // Private routes
 export const providerRoute = '/provider';
 export const formRoute = '/provider/add';

@@ -8,8 +8,7 @@ import AboutUs from '../components/about';
 import SignUp from '../components/signup';
 import Home from '../components/home';
 import settings from '../components/settings';
-import CreateMyAccount from '../components/signup/CreateMyAccount'
-import VerifyOrg from '../components/signup/VerifyOrg'
+import SignUpRoutes from '../components/signup/SignupRoutes';
 import { homeRoute, aboutRoute, signupRoute, settingsRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -30,11 +29,10 @@ const routes = (allRoutes: string[]) => (
           <Route path={route} component={renderComponentWithErrorBoundary(Map)} />
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
-        <Route path={signupRoute} component={renderComponentWithErrorBoundary(CreateMyAccount)}  />
-        <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)} />
-        
+        <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)}  />        
         <Route path={settingsRoute} component={renderComponentWithErrorBoundary(settings)} />
         <ProviderRoutes />
+        <SignUpRoutes />
       </Switch>
     </BrowserRouter>
   </AppWrapper>

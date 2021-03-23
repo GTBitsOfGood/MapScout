@@ -17,7 +17,7 @@ import localizationStrings from '../../utils/Localization';
 import { providerRoute, pwdRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 
-function CreateMyAccount({ firebase, history }) {
+function ProcessingText({ firebase, history }) {
     const { width } = useWindowSize();
     const [step, setStep] = useState(0);
     const [completed, setCompleted] = useState(false);
@@ -112,4 +112,4 @@ function CreateMyAccount({ firebase, history }) {
     )
 }
 
-export default withFirebase(CreateMyAccount);
+export default withFirebase(ProcessingText);
