@@ -1409,3 +1409,15 @@ h2 {
 .alert {
     margin-top: 0px;
 }
+
+.confirm-text {
+    margin-top: 25vh;
+    text-align: center;
+}
+
+.button-2 {
+    margin-top: 50px;
+    height: 30px;
+    width: 200px;
+    font-size: 10px;
+}

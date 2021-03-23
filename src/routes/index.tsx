@@ -13,6 +13,7 @@ import { homeRoute, aboutRoute, signupRoute, settingsRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CreateMyAccount from 'components/signup/CreateMyAccount';
 import VerifyOrg from 'components/signup/VerifyOrg';
+import ProcessingText from 'components/signup/ProcessingText';
 
 function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
   return (props: P) => (
@@ -31,7 +32,7 @@ const routes = (allRoutes: string[]) => (
           <Route path={route} component={renderComponentWithErrorBoundary(Map)} />
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
-        <Route path={signupRoute} component={renderComponentWithErrorBoundary(VerifyOrg)}  />        
+        <Route path={signupRoute} component={renderComponentWithErrorBoundary(ProcessingText)}  />        
         <Route path={settingsRoute} component={renderComponentWithErrorBoundary(settings)} />
         <ProviderRoutes />
         <SignUpRoutes />

@@ -101,13 +101,19 @@ function ProcessingText({ firebase, history }) {
     }
 
     return (
-        <div>
-             <Steps current={2}>
+        <div className="container">
+             <Steps current={2} type="navigation" labelPlacement="vertical" size="small">
              <Steps.Step title="ACCOUNT INFO" />
              <Steps.Step title="ORGANIZATION INFO" />
              <Steps.Step title="NEXT STEPS" />
             </Steps>
-            <p>Thank you for applying! Our team is processing your orginization's information and will be in touch with any additional steps as soon as possible. In the </p>
+            <p className="confirm-text">Thank you for applying! 
+                Our team is processing your organization's information and will be in touch with any additional steps as soon as possible. 
+                In the meanintime, your map has been created at, and you can begin to explore Mapscout's features.
+            </p>
+            <Button variant="primary" type="submit" onClick={handleSubmit} className="button-2">
+                        START EXPLORING
+            </Button>
         </div>
     )
 }
