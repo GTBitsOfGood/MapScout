@@ -1405,3 +1405,7 @@ h2 {
     font-size: 15px;
     text-align: center;
 }
+
+.alert {
+    margin-top: 0px;
+}

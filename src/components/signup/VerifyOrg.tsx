@@ -126,35 +126,33 @@ function VerifyOrg({ firebase, history, props }) {
 
     return (
         <div>
-             <Steps current={3}>
+            <Container>
+            <Steps current={1} type="navigation" labelPlacement="vertical" size="small">
              <Steps.Step title="ACCOUNT INFO" />
              <Steps.Step title="ORGANIZATION INFO" />
              <Steps.Step title="NEXT STEPS" />
             </Steps>
-            <h1>Verify your organization</h1>
-            <h4>Enter information about your non-profit</h4>
-            <Form>
+            <div className="title-text">Verify your organization</div>
+            <div className="body-text">Enter information about your non-profit</div>
+            <Form className="form-group">
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Orginization Name</Form.Label>
                     
-                    <Form.Control type="email" />
-                    <Form.Text className="text-muted">
-                        We'll always share your email with everyone else.
-                    </Form.Text>
+                    <Form.Control size="sm" type="email" />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Organization Website URL</Form.Label>
-                    <Form.Control type="password" />
+                    <Form.Control size="sm" type="password" />
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Preferred Mapscout URL</Form.Label>
-                    <Form.Control type="confirmPassword"/>
-                    <Form.Control type="password" placeholder="mapscout.io/" />
+                    <Form.Control size="sm" type="password" placeholder="mapscout.io/" />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={() => this.nextPath('../components/wrappers/SentryWrapper')}>
-                    Next
-                </Button>
             </Form>
+            <Button className="button-1" variant="primary" type="submit" onClick={() => console.log("Error")}>
+                    SUBMIT
+            </Button>
+            </Container>
         </div>
     )
 }

@@ -111,7 +111,7 @@ function CreateMyAccount({ firebase, history }) {
     }
 
     return (
-        <div id="create-root">
+        <div>
             <Container className="container">
                 <Steps current={0} type="navigation" labelPlacement="vertical" size="small">
                 <Steps.Step title="ACCOUNT INFO"/>
@@ -133,15 +133,15 @@ function CreateMyAccount({ firebase, history }) {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control size="sm" type="confirmPassword" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
                     </Form.Group>
-                    {show ? 
-                            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+                </Form>
+                {show ? 
+                            <Alert variant="danger" onClose={() => setShow(false)} dismissible className="alert">
                                 <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
                                 <p>
                                 Your passwords do not match.
                                 </p>
                             </Alert> : <div />
                     }
-                </Form>
                 <Button variant="primary" type="submit" onClick={handleSubmit} className="button-1">
                         NEXT
                 </Button>
