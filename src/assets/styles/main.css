@@ -688,6 +688,11 @@ h2 {
     object-fit: cover;
 }
 
+.image-upload {
+    width: 50%;
+    height: 50%;
+}
+
 .modal-mobile-card {
     z-index: 2;
     position: absolute;
@@ -1283,4 +1288,25 @@ h2 {
 
 .homepage-cta {
     background-color: #eee;
+}
+
+.dropzone {
+    text-align: center;
+    padding: 100px;
+    border: 3px dotted #eeeeee;
+    background-color: #fafafa;
+    color: #bdbdbd;
+}
+
+.imageModalSave {
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.saveButton {
+    margin: 10px 10px;
+}
+.cancelButton {
+    margin: 10px 10px;
 }
