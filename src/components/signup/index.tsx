@@ -14,6 +14,7 @@ import { providerRoute, pwdRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import CreateMyAccount from './CreateMyAccount';
 
 // import {createAccountRoute} from '../signup/CreateMyAccount';
 
@@ -87,7 +88,7 @@ const classNames = require('classnames');
       setAnimate(true);
       await setTimeout(() => {
         setIsLoading(false);
-        history.push(providerRoute);
+        history.push(CreateMyAccount);
       }, 400);
     } catch (err) {
       // TODO: Add translations

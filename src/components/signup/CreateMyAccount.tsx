@@ -14,8 +14,10 @@ import useWindowSize from '../../functions/useWindowSize';
 import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
-import { providerRoute, pwdRoute } from '../../routes/pathnames';
+import { providerRoute, pwdRoute, verifyOrgRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
+
+const classNames = require('classnames');
 
 function CreateMyAccount({ firebase, history }) {
     const [show, setShow] = useState(false);
@@ -98,7 +100,7 @@ function CreateMyAccount({ firebase, history }) {
                 setAnimate(true);
                 await setTimeout(() => {
                     setIsLoading(false);
-                    history.push(providerRoute);
+                    history.push(verifyOrgRoute);
                 }, 400);
             } catch (err) {
                 // TODO: Add translations
@@ -109,44 +111,41 @@ function CreateMyAccount({ firebase, history }) {
     }
 
     return (
-        <div>
-             <Steps current={0}>
-             <Steps.Step title="ACCOUNT INFO" />
-             <Steps.Step title="ORGANIZATION INFO" />
-             <Steps.Step title="NEXT STEPS" />
-            </Steps>
-            <h1>Set up your account information</h1>
-            <h4>Create your account</h4>
-            <Form>
-                <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
-                    <Form.Text className="text-muted">
-                        We'll always share your email with everyone else.
-                    </Form.Text>
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control type="confirmPassword" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
-                </Form.Group>
-                {show ? 
-                        <Alert variant="danger" onClose={() => console.log("error")} dismissible>
-                            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-                            <p>
-                            Change this and that and try again. Duis mollis, est non commodo
-                            luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
-                            Cras mattis consectetur purus sit amet fermentum.
-                            </p>
-                        </Alert> : <div />
-                }
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
-                    Next
+        <div id="create-root">
+            <Container className="container">
+                <Steps current={0} type="navigation" labelPlacement="vertical" size="small">
+                <Steps.Step title="ACCOUNT INFO"/>
+                <Steps.Step title="ORGANIZATION INFO" />
+                <Steps.Step title="NEXT STEPS" />
+                </Steps>
+                <div className="title-text">Set up your account information</div>
+                <div className="body-text">Create your account.</div>
+                <Form className="form-group">
+                    <Form.Group controlId="formBasicEmail">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control size="sm" type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
+                    </Form.Group>
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
+                    </Form.Group>
+                    <Form.Group controlId="formBasicPassword">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control size="sm" type="confirmPassword" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
+                    </Form.Group>
+                    {show ? 
+                            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+                                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                                <p>
+                                Your passwords do not match.
+                                </p>
+                            </Alert> : <div />
+                    }
+                </Form>
+                <Button variant="primary" type="submit" onClick={handleSubmit} className="button-1">
+                        NEXT
                 </Button>
-            </Form>
+            </Container>
         </div>
     )
 }

@@ -1325,7 +1325,6 @@ h2 {
 }
 .create-map-title {
     padding-top: 100px;
-    padding-bottom: 20px;
     font-size: 200%;
     font-weight: bold;
 }
@@ -1336,6 +1335,7 @@ h2 {
     margin-right: auto;
     height: 10rem;
     width: 40rem;
+    text-align: center;
 }
 
 .button {
@@ -1350,7 +1350,7 @@ h2 {
     padding: 2rem;
     background-color: #fff;
     box-shadow: 0 0 10px lightgray;
-    border-radius: 1rem;
+    border-radius: 10px;
 }
 
 .title-text-styles {
@@ -1363,4 +1363,45 @@ h2 {
     margin-top: 10%;
     font-size: 80%;
     color: grey;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    height: 10rem;
+    width: 40rem;
+    text-align: center;
+}
+
+.button-1 {
+    margin-top: 180px;
+    height: 30px;
+    width: 200px;
+    font-size: 10px;
+}
+
+.form-group {
+    margin-top: 20px;
+    font-size: 15px;
+    height: 70%;
+    width: 80%;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title-text {
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.body-text {
+    margin-top: 10px;
+    font-size: 15px;
+    text-align: center;
 }
