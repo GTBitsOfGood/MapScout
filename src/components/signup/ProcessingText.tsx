@@ -102,7 +102,7 @@ function ProcessingText({ firebase, history }) {
 
     return (
         <div className="container">
-             <Steps current={2} type="navigation" labelPlacement="vertical" size="small">
+             <Steps current={2} type="navigation" size="small">
              <Steps.Step title="ACCOUNT INFO" />
              <Steps.Step title="ORGANIZATION INFO" />
              <Steps.Step title="NEXT STEPS" />

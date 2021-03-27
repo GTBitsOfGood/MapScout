@@ -14,7 +14,7 @@ import useWindowSize from '../../functions/useWindowSize';
 import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
-import { providerRoute, pwdRoute } from '../../routes/pathnames';
+import { processingTextRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 const uuidv4 = require('uuid/v4');
@@ -22,8 +22,9 @@ const uuidv4 = require('uuid/v4');
 
 
 function VerifyOrg({ firebase, history, props }) {
-    /*
     
+    const [show, setShow] = useState(false);
+
     const { width } = useWindowSize();
     const [step, setStep] = useState(0);
     const [completed, setCompleted] = useState(false);
@@ -35,7 +36,10 @@ function VerifyOrg({ firebase, history, props }) {
     const [isLoading, setIsLoading] = useState(false);
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [passwordsMatch, setPasswordsMatch] = useState(false);
-    const [item, setItem] = useState(props.selected || {});
+
+    const {
+        emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, confirmPasswordLabel, createAccount, create
+    } = localizationStrings;
 
     function handleChange(e) {
         const { value, type } = e.target;
@@ -52,26 +56,6 @@ function VerifyOrg({ firebase, history, props }) {
             }
         } 
     }
-
-    async function addFirestore() {
-        setIsLoading(true);
-        const i = {
-          ...item,
-          uid: uuidv4(),
-          organization: props.organization.name,
-          url: props.url
-
-        };
-        try {
-          await promiseWithTimeout(5000, props.firestore.set({ collection: 'providers', doc: i.facilityName }, i));
-          props.history.push(providerRoute);
-          console.log(providerRoute);
-        } catch (e) {
-          setError('Failed to save changes. Please check your network connection or try again later.');
-        } finally {
-          setIsLoading(false);
-        }
-      }
 
     function handleConfirmPasswordChange(e) {
         const { value } = e.target;
@@ -101,33 +85,35 @@ function VerifyOrg({ firebase, history, props }) {
             setIsLoading(false);
         } else if (!passwordsMatch) {
             setError('Passwords do not match')
+            setShow(true)
             setIsLoading(false);
-        }
-        createUserWithEmailAndPassword({ 
-            email,
-            password,
-        });
-        setIsLoading(true);
-        try {
-        const response = await firebase
-            .auth()
-            setAnimate(true);
-            await setTimeout(() => {
+        } else {
+            createUserWithEmailAndPassword({ 
+                email,
+                password,
+            });
+            setIsLoading(true);
+            try {
+            const response = await firebase
+                .auth()
+                setAnimate(true);
+                await setTimeout(() => {
+                    setIsLoading(false);
+                    history.push(processingTextRoute);
+                }, 400);
+            } catch (err) {
+                // TODO: Add translations
+                setError(err.message);
                 setIsLoading(false);
-                history.push(providerRoute);
-            }, 400);
-        } catch (err) {
-            // TODO: Add translations
-            setError(err.message);
-            setIsLoading(false);
+            }
         }
     }
-    */
+    
 
     return (
         <div>
             <Container>
-            <Steps current={1} type="navigation" labelPlacement="vertical" size="small">
+            <Steps current={1} type="navigation" size="small">
              <Steps.Step title="ACCOUNT INFO" />
              <Steps.Step title="ORGANIZATION INFO" />
              <Steps.Step title="NEXT STEPS" />
@@ -136,20 +122,20 @@ function VerifyOrg({ firebase, history, props }) {
             <div className="body-text">Enter information about your non-profit</div>
             <Form className="form-group">
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Orginization Name</Form.Label>
+                    <Form.Label>Organization Name</Form.Label>
                     
-                    <Form.Control size="sm" type="email" />
+                    <Form.Control size="sm" type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Organization Website URL</Form.Label>
-                    <Form.Control size="sm" type="password" />
+                    <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Preferred Mapscout URL</Form.Label>
-                    <Form.Control size="sm" type="password" placeholder="mapscout.io/" />
+                    <Form.Control size="sm" type="password" placeholder="mapscout.io/" onChange={handleConfirmPasswordChange}/>
                 </Form.Group>
             </Form>
-            <Button className="button-1" variant="primary" type="submit" onClick={() => console.log("Error")}>
+            <Button className="button-1" variant="primary" type="submit" onClick={handleSubmit}>
                     SUBMIT
             </Button>
             </Container>

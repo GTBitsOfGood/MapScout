@@ -14,7 +14,7 @@ import useWindowSize from '../../functions/useWindowSize';
 import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
-import { providerRoute, pwdRoute, verifyOrgRoute } from '../../routes/pathnames';
+import { verifyOrgRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 
 const classNames = require('classnames');
@@ -53,10 +53,6 @@ function CreateMyAccount({ firebase, history }) {
             }
         } 
     }
-
-    function nextPath(path) {
-        this.props.history.push(path);
-      }
 
     function handleConfirmPasswordChange(e) {
         const { value } = e.target;
@@ -113,7 +109,7 @@ function CreateMyAccount({ firebase, history }) {
     return (
         <div>
             <Container className="container">
-                <Steps current={0} type="navigation" labelPlacement="vertical" size="small">
+                <Steps current={0} type="navigation" size="small">
                 <Steps.Step title="ACCOUNT INFO"/>
                 <Steps.Step title="ORGANIZATION INFO" />
                 <Steps.Step title="NEXT STEPS" />
