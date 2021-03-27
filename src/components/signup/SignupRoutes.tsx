@@ -30,7 +30,7 @@ const SignUpRoutes = () => {
         />
         <Route
           path={processingTextRoute}
-          component={ProcessingText}
+          render={ProcessingText} 
         />
       </Switch>
   );

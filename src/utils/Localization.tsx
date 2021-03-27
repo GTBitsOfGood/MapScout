@@ -34,6 +34,9 @@ const localizationStrings = new LocalizedStrings({
     lessFilters: 'Less Filters',
     createAccount: 'Create Account',
     create: 'Create',
+    orgNamePlaceholder: 'Organization name',
+    orgURLPlaceholder: 'Organization URL',
+    mapScoutURLPlaceholder: 'mapscout.io/'
   },
   es: {
     // auth page text

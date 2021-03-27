@@ -17,96 +17,36 @@ import localizationStrings from '../../utils/Localization';
 import { processingTextRoute } from '../../routes/pathnames';
 import { FaSlack } from 'react-icons/fa';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
-const uuidv4 = require('uuid/v4');
 
-
-
-function VerifyOrg({ firebase, history, props }) {
-    
-    const [show, setShow] = useState(false);
-
-    const { width } = useWindowSize();
-    const [step, setStep] = useState(0);
-    const [completed, setCompleted] = useState(false);
-    
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [animate, setAnimate] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [passwordsMatch, setPasswordsMatch] = useState(false);
+function VerifyOrg({ firebase, history }) {        
+    const [orgName, setOrgName] = useState('');
+    const [orgURL, setOrgURL] = useState('');
+    const [mapScoutURL, setmapScoutURL] = useState('mapscout.io/');
 
     const {
-        emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, confirmPasswordLabel, createAccount, create
+        orgNamePlaceholder, orgURLPlaceholder
     } = localizationStrings;
 
-    function handleChange(e) {
-        const { value, type } = e.target;
-        if (type === "email") {
-            setEmail(value);
-            console.log('setting email to: ' + email)
-        } else {
-            setPassword(value);
-            console.log('setting password to: ' + value);
-            if (value === passwordConfirm) {
-                setPasswordsMatch(true);
-            } else {
-                setPasswordsMatch(false);
-            }
-        } 
+    async function handleSubmit() {
+        const orgData = {
+          latitude: 33.7756,
+          longitude: -84.3963,
+          zoom: 5,
+          orgUrl: orgURL,
+          label: orgName,
+          name: orgName.toLowerCase().split(" ").join(""),
+          primaryColor: '#000000',
+          secondaryColor: '#000000',
+          mapScoutUrl: mapScoutURL,
+        };
+        
+        await promiseWithTimeout(5000, firebase.firestore().collection('teams').doc('delete this').set(orgData));
+        history.push(processingTextRoute);
     }
-
-    function handleConfirmPasswordChange(e) {
-        const { value } = e.target;
-        setPasswordConfirm(value);
-        console.log('setting confirm password to: ' + value);
-        if (value === password) {
-            setPasswordsMatch(true);
-        } else {
-            setPasswordsMatch(false);
-        }
-    }
-
-    function createUserWithEmailAndPassword({ email, password }) {
-        firebase.createUser (
-            { email, password },
-        )
-    }
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        setIsLoading(true);
-        if (!email) {
-            setError('Please enter an email')
-            setIsLoading(false);
-        } else if (!password) {
-            setError('Please enter a password')
-            setIsLoading(false);
-        } else if (!passwordsMatch) {
-            setError('Passwords do not match')
-            setShow(true)
-            setIsLoading(false);
-        } else {
-            createUserWithEmailAndPassword({ 
-                email,
-                password,
-            });
-            setIsLoading(true);
-            try {
-            const response = await firebase
-                .auth()
-                setAnimate(true);
-                await setTimeout(() => {
-                    setIsLoading(false);
-                    history.push(processingTextRoute);
-                }, 400);
-            } catch (err) {
-                // TODO: Add translations
-                setError(err.message);
-                setIsLoading(false);
-            }
-        }
+    
+    function handleOrgNameChange(newOrgName) {
+        setOrgName(newOrgName);
+        setmapScoutURL("mapscout.io/" + newOrgName.toLowerCase().split(" ").join(""));
     }
     
 
@@ -123,16 +63,15 @@ function VerifyOrg({ firebase, history, props }) {
             <Form className="form-group">
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Organization Name</Form.Label>
-                    
-                    <Form.Control size="sm" type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
+                    <Form.Control size="sm" type="email" placeholder={orgNamePlaceholder} onChange={(event) => handleOrgNameChange(event.target.value)}/>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Organization Website URL</Form.Label>
-                    <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
+                    <Form.Control size="sm" type="text" placeholder={orgURLPlaceholder} onChange={(event) => setOrgURL(event.target.value)}/>
                 </Form.Group>
                 <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Preferred Mapscout URL</Form.Label>
-                    <Form.Control size="sm" type="password" placeholder="mapscout.io/" onChange={handleConfirmPasswordChange}/>
+                    <Form.Label>Mapscout URL</Form.Label>
+                    <Form.Control size="sm" type="text" placeholder={mapScoutURL} autoComplete="mapscout.io/" readOnly/>
                 </Form.Group>
             </Form>
             <Button className="button-1" variant="primary" type="submit" onClick={handleSubmit}>
@@ -143,4 +82,8 @@ function VerifyOrg({ firebase, history, props }) {
     )
 }
 
+
+
+
 export default withFirebase(VerifyOrg);
+  

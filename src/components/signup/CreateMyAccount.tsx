@@ -127,7 +127,7 @@ function CreateMyAccount({ firebase, history }) {
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control size="sm" type="confirmPassword" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
+                        <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
                     </Form.Group>
                 </Form>
                 {show ? 
