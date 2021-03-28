@@ -5,15 +5,11 @@ import Map from '../components/map';
 import ProviderRoutes from '../components/navigation/ProviderRoutes';
 import SentryWrapper from '../components/wrappers/SentryWrapper';
 import AboutUs from '../components/about';
-import SignUp from '../components/signup';
+import SignUp from '../components/signup/index';
 import Home from '../components/home';
 import settings from '../components/settings';
-import SignUpRoutes from '../components/signup/SignupRoutes';
-import { homeRoute, aboutRoute, signupRoute, settingsRoute, createAccountRoute } from './pathnames';
+import { homeRoute, aboutRoute, settingsRoute, signupRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CreateMyAccount from 'components/signup/CreateMyAccount';
-import VerifyOrg from 'components/signup/VerifyOrg';
-import ProcessingText from 'components/signup/ProcessingText';
 
 function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
   return (props: P) => (
@@ -32,8 +28,8 @@ const routes = (allRoutes: string[]) => (
           <Route path={route} component={renderComponentWithErrorBoundary(Map)} />
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
+        <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)} />
         <Route path={settingsRoute} component={renderComponentWithErrorBoundary(settings)} />
-        <SignUpRoutes />
         <ProviderRoutes />
       </Switch>
     </BrowserRouter>
