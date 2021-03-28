@@ -153,6 +153,15 @@ const RowForm = (props) => {
     setShowModal(false);
   };
 
+  const handleDeleteImage = async () => {
+    if (item.image) {
+      await storage.ref('images').child(item.image).delete().catch(error => console.error(error));
+    }
+    let newItem = { ...item, image: "", imageURL: null };
+    setItem(newItem);
+    props.setItem(newItem);
+  }
+
   switch (props.step) {
     case 0:
       return (
@@ -277,6 +286,9 @@ const RowForm = (props) => {
                 </label> */}
                 <Button className="btn btn-primary btn-block" onClick={() => setShowModal(true)}>
                   Upload
+                </Button>
+                <Button className="btn btn-danger btn-block" onClick={handleDeleteImage}>
+                  Delete
                 </Button>
                 <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                     <Modal.Header>Image Upload</Modal.Header>
