@@ -40,7 +40,7 @@ function VerifyOrg({ firebase, history }) {
           mapScoutUrl: mapScoutURL,
         };
         
-        await promiseWithTimeout(5000, firebase.firestore().collection('teams').doc('delete this').set(orgData));
+        await promiseWithTimeout(5000, firebase.firestore().collection('teams').doc(orgData.name).set(orgData));
         history.push(processingTextRoute);
     }
     
