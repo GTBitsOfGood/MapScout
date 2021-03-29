@@ -6,6 +6,8 @@ import firebase from "firebase";
 import { withFirebase } from 'react-redux-firebase';
 import { withFirestore } from 'react-redux-firebase';
 import Button from 'react-bootstrap/Button';
+import { Col, Container, Row, Card} from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
 const defaultLat = 33.7756;
 const defaultLng = -84.3963;
@@ -38,24 +40,73 @@ function MapPicker(props) {
     }
 
     return (
-        <div style={{ height: '100vh', width: '100%'}}>
-            <p>Latitude: {coords.lat}</p>
-            <p>Longitude: {coords.lng}</p>
-            <p>Zoom: {magnification}</p>
-            <div style={{height: '100%'}}>
-                <Button
-                    variant="primary"
-                    onClick={() => onSave()}
-                >Save</Button>
-                <GoogleMapReact
-                    bootstrapURLKeys={{
-                        key: GOOGLE_API_KEY,
-                    }}
-                    zoom={magnification}
-                    center={coords}
-                    onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
-                    options={mapOptions}
-                ></GoogleMapReact>
+        <div style={{ height: '100%', width: '100%'}}>
+            <div style={{backgroundColor: 'rgb(255, 255, 255', marginLeft: '150px', padding: '10px', marginBottom: '10px'}}>
+                <Container>
+                    <Row style={{paddingBottom: '20px', marginTop: '1rem', marginBottom: '1rem', border: '0', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}}>
+                        <Col xs={10}>
+                            <h3 style={{fontWeight: 'bold'}}>Personalize your map</h3>
+                        </Col>
+                        <Col>
+                        <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => onSave()}>
+                            Create
+                        </Button>
+                        </Col>
+                    </Row>
+                    <Form style={{paddingBottom: '30px'}}>
+                        <Form.Group>
+                            <Form.Label>Organization Name</Form.Label>
+                            <Form.Control size="sm" value="LA" type="text" readOnly/>
+                        </Form.Group>
+                        <Row>
+                            <Col xs={9}>
+                                <Form.Label>Mapscout URL</Form.Label>
+                                <Form.Control size="sm" value="mapscout.io/la" type="text" readOnly/>
+                            </Col>
+                            <Col>
+                                <Form.Label>Logo</Form.Label>
+                                <Form.Control size="sm" placeholder="Upload button" />
+                            </Col>
+                        </Row>
+                    </Form>
+                    <Row>
+                        <Col>
+                            <p>Color</p>
+                            <Row>
+                                <Col xs={2}>
+                                    <Card bg='primary' style={{ width: '3rem', height: '3rem'}}>
+                                    </Card>
+                                </Col>
+                                <Col xs={2}>
+                                    <Card bg='info' style={{ width: '3rem', height: '3rem'}}>
+                                    </Card>
+                                </Col>
+                                <Col>
+                                    <Card style={{ width: '3rem', height: '3rem'}}>
+                                    <Card.Text>
+                                        Custom
+                                    </Card.Text>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col style={{ height: '30vh', width: '2px'}}>
+                            <p>Map. Choose the default location of your map</p>
+                            <GoogleMapReact
+                                bootstrapURLKeys={{
+                                    key: GOOGLE_API_KEY,
+                                }}
+                                zoom={magnification}
+                                center={coords}
+                                onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
+                                options={mapOptions}
+                            ></GoogleMapReact>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         </div>
     )
