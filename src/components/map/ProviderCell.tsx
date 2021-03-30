@@ -26,12 +26,7 @@ export default ({
   useEffect(() => {
     async function fetchData() {
       try {
-        if (typeof item.imageURL === 'string') {
-          await setImage(item.imageURL);
-        } else {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=100x100&location=${item.latitude},${item.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
-          setImage(res.url);
-        }
+        await setImage(item.imageURL);
         setIsLoading(false);
       } catch (e) {
         console.log(e);

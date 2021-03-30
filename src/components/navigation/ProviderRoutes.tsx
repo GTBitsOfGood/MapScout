@@ -15,10 +15,14 @@ import NotFound from '../NotFound';
 import SentryWrapper from '../wrappers/SentryWrapper';
 import Chat from '../chat';
 import { selectTeam } from '../../functions/reduxActions';
+import useWindowSize from '../../functions/useWindowSize';
+import Modal from "react-bootstrap/Modal";
 
 import {
   providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute 
 } from '../../routes/pathnames';
+
+const classNames = require("classnames");
 
 type PrivateRouteProps = {
   exact?: boolean,
@@ -70,6 +74,8 @@ function DashboardContent({ isAuth, auth }) {
 
 const ProviderRoutes = (props) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { width } = useWindowSize();
+  const [alerted, setAlerted] = useState(false);
 
   async function fetchTeam() {
     const { firestore, team, firebaseAuth } = props;
@@ -108,6 +114,11 @@ const ProviderRoutes = (props) => {
     fetchTeam();
   }, [props.firebaseAuth.auth]);
 
+  useEffect(() => {
+    // TODO: Define a constant for mobile width
+    width > 768 && setAlerted(false);
+  }, [width]);
+
   const logout = () => {
     props.firebase.logout()
       .then(() => {
@@ -128,32 +139,45 @@ const ProviderRoutes = (props) => {
   }
 
   return (
-    <SentryWrapper>
-      <Switch>
-        <Route path={providerRoute}>
-          <>
-            <NavBar
-              team={props.team}
-              logout={logout}
-            />
-            <DashboardContent
-              isAuth={isEmpty(props.firebaseAuth.auth)}
-              auth={props.firebaseAuth}
-            />
-          </>
-        </Route>
-        <Route
-          exact
-          path={authRoute}
-          component={Auth}
-        />
-        <Route
-          path={pwdRoute}
-          component={PasswordForgetForm}
-        />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
-    </SentryWrapper>
+    <div style={{position: 'relative'}}>
+      {width <= 768 ? (
+        <Modal
+          show={!alerted}
+          onHide={() => setAlerted(true)}
+          scrollable
+        >
+          <Modal.Header closeButton className="bg-warning">
+            WARNING: The Admin Dashboard is not optimized for small screens
+          </Modal.Header>
+        </Modal>
+      ) : (<></>)}
+      <SentryWrapper>
+        <Switch>
+          <Route path={providerRoute}>
+            <>
+              <NavBar
+                team={props.team}
+                logout={logout}
+              />
+              <DashboardContent
+                isAuth={isEmpty(props.firebaseAuth.auth)}
+                auth={props.firebaseAuth}
+              />
+            </>
+          </Route>
+          <Route
+            exact
+            path={authRoute}
+            component={Auth}
+          />
+          <Route
+            path={pwdRoute}
+            component={PasswordForgetForm}
+          />
+          <Route exact path="*" component={NotFound} />
+        </Switch>
+      </SentryWrapper>
+    </div>
   );
 };
 

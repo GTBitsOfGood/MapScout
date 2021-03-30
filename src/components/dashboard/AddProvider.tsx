@@ -19,6 +19,7 @@ import { providerRoute } from '../../routes/pathnames';
 import useWindowSize from '../../functions/useWindowSize';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { storage } from '../../store';
 
 const uuidv4 = require('uuid/v4');
 
@@ -118,6 +119,16 @@ function AddProvider(props) {
           i.latitude = responseJson.results[0].geometry.location.lat;
           i.longitude = responseJson.results[0].geometry.location.lng;
         }
+        if (!i.imageURL) {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
+          const blob = await res.blob();
+          const filename = i.facilityName + '.jpeg';
+          await storage.ref('images').child(filename).put(blob);
+          await storage.ref('images').child(filename).getDownloadURL()
+            .then((url) => {
+              i.imageURL = url;
+          });
+        }
       }
       await promiseWithTimeout(5000, props.firestore.set({ collection: 'providers', doc: i.facilityName }, i));
       props.history.push(providerRoute);
@@ -146,6 +157,16 @@ function AddProvider(props) {
         if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
           i.latitude = responseJson.results[0].geometry.location.lat;
           i.longitude = responseJson.results[0].geometry.location.lng;
+        }
+        if (!i.imageURL) {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
+          const blob = await res.blob();
+          const filename = i.facilityName + '.jpeg';
+          await storage.ref('images').child(filename).put(blob);
+          await storage.ref('images').child(filename).getDownloadURL()
+            .then((url) => {
+              i.imageURL = url;
+          });
         }
       }
       const { firestore } = props;
