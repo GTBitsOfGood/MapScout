@@ -166,135 +166,142 @@ function SignUp({ firebase, history }) {
           + '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
     return !!pattern.test(str);
   }
-
-  switch (stage) {
-    case 0:
-      return (
-        <div className="sign-up-root">
-          <div className="create-map-title"> 
-            <p className="title-text-styles">Create maps with us!</p>
-          </div>
-          <div id="create-map-content">
-            <Container className="container">
-              <Row>
-                <Col xs="5" className="square">
-                  <p>
-                    <p className="title-text-styles">Non-Profit Organization</p>
-                  </p>
-                  <p className="body-text-styles">Get started with your beautiful resource map, for free!</p>
-                  <Button className="button" size="sm" onClick={() => setStage(1)}>
-                    CREATE NEW ACCOUNT
-                  </Button>
-                </Col>
-                <Col xs="5" className="square">
-                  <p>
-                    <p className="title-text-styles">For-Profit Organization</p>
-                  </p>
-                    <p className="body-text-styles">Interested in using MapScout? Let's talk!</p>
-                  <Button className="button" size="sm">
-                    CONTACT US
-                  </Button>
-                </Col>
-              </Row>
-            </Container>
-          </div>
-        </div>
-      );
-      case 1: 
+  const content = () => {
+    switch (stage) {
+      case 0:
         return (
-          <div>
-            <Container className="container">
-                <Steps current={0} type="navigation" size="small">
-                <Steps.Step title="ACCOUNT INFO"/>
+          <div className="sign-up-root">
+            <div className="create-map-title"> 
+              <p className="title-text-styles">Create maps with us!</p>
+            </div>
+            <div id="create-map-content">
+              <Container className="container">
+                <Row>
+                  <Col xs="5" className="square">
+                    <p>
+                      <p className="title-text-styles">Non-Profit Organization</p>
+                    </p>
+                    <p className="body-text-styles">Get started with your beautiful resource map, for free!</p>
+                    <Button className="button" size="sm" onClick={() => setStage(1)}>
+                      CREATE NEW ACCOUNT
+                    </Button>
+                  </Col>
+                  <Col xs="5" className="square">
+                    <p>
+                      <p className="title-text-styles">For-Profit Organization</p>
+                    </p>
+                      <p className="body-text-styles">Interested in using MapScout? Let's talk!</p>
+                    <Button className="button" size="sm">
+                      CONTACT US
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+          </div>
+        );
+        case 1: 
+          return (
+            <div>
+              <Container className="container">
+                  <Steps current={0} type="navigation" size="small">
+                  <Steps.Step title="ACCOUNT INFO"/>
+                  <Steps.Step title="ORGANIZATION INFO" />
+                  <Steps.Step title="NEXT STEPS" />
+                  </Steps>
+                  <div className="title-text">Set up your account information</div>
+                  <div className="body-text">Create your account.</div>
+                  <Form className="form-group">
+                      <Form.Group controlId="formBasicEmail">
+                          <Form.Label>Email</Form.Label>
+                          <Form.Control size="sm" type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
+                      </Form.Group>
+                      <Form.Group controlId="formBasicPassword">
+                          <Form.Label>Password</Form.Label>
+                          <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
+                      </Form.Group>
+                      <Form.Group controlId="formBasicPassword">
+                          <Form.Label>Confirm Password</Form.Label>
+                          <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
+                      </Form.Group>
+                      <Button variant="primary" type="submit" onClick={handleSubmit} className="button-1">
+                          NEXT
+                  </Button>
+                  </Form>
+                  {show ? 
+                              <Alert variant="danger" onClose={() => setShow(false)} dismissible className="alert">
+                                  <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                                  <p>
+                                  Your passwords do not match.
+                                  </p>
+                              </Alert> : <div />
+                      }
+              </Container>
+          </div>
+          );
+        case 2:
+          return (
+            <div>
+                <Container>
+                <Steps current={1} type="navigation" size="small">
+                <Steps.Step title="ACCOUNT INFO" />
                 <Steps.Step title="ORGANIZATION INFO" />
                 <Steps.Step title="NEXT STEPS" />
                 </Steps>
-                <div className="title-text">Set up your account information</div>
-                <div className="body-text">Create your account.</div>
+                <div className="title-text">Verify your organization</div>
+                <div className="body-text">Enter information about your non-profit</div>
                 <Form className="form-group">
                     <Form.Group controlId="formBasicEmail">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control size="sm" type="email" placeholder={emailPlaceholder} onChange={handleChange}/>
+                        <Form.Label>Organization Name</Form.Label>
+                        <Form.Control size="sm" type="email" value={orgName} placeholder={orgNamePlaceholder} autoComplete="something-unsupported" onChange={(event) => handleOrgName(event.target.value)}/>
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleChange}/>
+                        <Form.Label>Organization Website URL</Form.Label>
+                        <Form.Control size="sm" type="text" value={orgURL} placeholder={orgURLPlaceholder} onChange={(event) => handleOrgURL(event.target.value)}/>
                     </Form.Group>
                     <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control size="sm" type="password" placeholder={passwordPlaceholder} onChange={handleConfirmPasswordChange}/>
+                        <Form.Label>Mapscout URL</Form.Label>
+                        <Form.Control size="sm" type="text" readOnly value={mapScoutURL} placeholder="mapscout.io/" autoComplete="off"/>
                     </Form.Group>
-                    <Button variant="primary" type="submit" onClick={handleSubmit} className="button-1">
-                        NEXT
-                </Button>
+                    <Button className="button-1" variant="primary" type="submit" onClick={handleVerifyOrgSubmit}>
+                        Submit
+                    </Button>
                 </Form>
-                {show ? 
-                            <Alert variant="danger" onClose={() => setShow(false)} dismissible className="alert">
-                                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-                                <p>
-                                Your passwords do not match.
-                                </p>
-                            </Alert> : <div />
-                    }
-            </Container>
-        </div>
-        );
-      case 2:
-        return (
-          <div>
-              <Container>
-              <Steps current={1} type="navigation" size="small">
-              <Steps.Step title="ACCOUNT INFO" />
-              <Steps.Step title="ORGANIZATION INFO" />
-              <Steps.Step title="NEXT STEPS" />
-              </Steps>
-              <div className="title-text">Verify your organization</div>
-              <div className="body-text">Enter information about your non-profit</div>
-              <Form className="form-group">
-                  <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Organization Name</Form.Label>
-                      <Form.Control size="sm" type="email" value={orgName} placeholder={orgNamePlaceholder} autoComplete="something-unsupported" onChange={(event) => handleOrgName(event.target.value)}/>
-                  </Form.Group>
-                  <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Organization Website URL</Form.Label>
-                      <Form.Control size="sm" type="text" value={orgURL} placeholder={orgURLPlaceholder} onChange={(event) => handleOrgURL(event.target.value)}/>
-                  </Form.Group>
-                  <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Mapscout URL</Form.Label>
-                      <Form.Control size="sm" type="text" readOnly value={mapScoutURL} placeholder="mapscout.io/" autoComplete="off"/>
-                  </Form.Group>
-                  <Button className="button-1" variant="primary" type="submit" onClick={handleVerifyOrgSubmit}>
-                      Submit
-                  </Button>
-              </Form>
-              {alert ? 
-                            <Alert variant="danger" onClose={() => setAlert(false)} dismissible className="alert">
-                                <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
-                            </Alert> : <div />
-                    }
-              </Container>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="container">
-                  <Steps current={2} type="navigation" size="small">
-              <Steps.Step title="ACCOUNT INFO" />
-              <Steps.Step title="ORGANIZATION INFO" />
-              <Steps.Step title="NEXT STEPS" />
-              </Steps>
-              <p className="confirm-text">Thank you for applying! 
-                  Our team is processing your organization's information and will be in touch with any additional steps as soon as possible. 
-                  In the meanintime, your map has been created at {mapScoutURL}, and you can begin to explore Mapscout's features.
-              </p>
-              <Button variant="primary" type="submit" onClick={() => {}} className="button-2">
-                          START EXPLORING
-              </Button>
-          </div>
-        )
-      default:
-        return null;
+                {alert ? 
+                              <Alert variant="danger" onClose={() => setAlert(false)} dismissible className="alert">
+                                  <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                              </Alert> : <div />
+                      }
+                </Container>
+            </div>
+          );
+        case 3:
+          return (
+            <div className="container">
+                <Steps current={2} type="navigation" size="small">
+                  <Steps.Step title="ACCOUNT INFO" />
+                  <Steps.Step title="ORGANIZATION INFO" />
+                  <Steps.Step title="NEXT STEPS" />
+                </Steps>
+                <p className="confirm-text">Thank you for applying! 
+                    Our team is processing your organization's information and will be in touch with any additional steps as soon as possible. 
+                    In the meanintime, your map has been created at {mapScoutURL}, and you can begin to explore Mapscout's features.
+                </p>
+                <Button variant="primary" type="submit" onClick={() => {}} className="button-2">
+                            START EXPLORING
+                </Button>
+            </div>
+          )
+        default:
+          return null;
+    }
   }
+
+  return (
+    <div id="signup">
+      {content()}
+    </div>
+  )
 }
 
 export default withFirebase(SignUp);

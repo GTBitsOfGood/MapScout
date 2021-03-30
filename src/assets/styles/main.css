@@ -1317,8 +1317,7 @@ h2 {
     background-color: #eee;
 }
 
-
-.signup-root {
+#signup .signup-root {
     background-color: rgb(239, 239, 239, 0.9);
     padding: 30px 5vw;
     margin-top: 12vh;
@@ -1326,7 +1325,7 @@ h2 {
     width: 100vw;
 }
 
-.container {
+#signup .container {
     height: 20%;
 }
 .create-map-title {
@@ -1344,14 +1343,14 @@ h2 {
     text-align: center;
 }
 
-.button {
+#signup .button {
     margin-top: 5%;
     height: 2rem;
     width: 100%;
     font-size: 65%;
 }
 
-.square {
+#signup .square {
     margin: 0.5rem;
     padding: 2rem;
     background-color: #fff;
@@ -1359,13 +1358,13 @@ h2 {
     border-radius: 10px;
 }
 
-.title-text-styles {
+#signup .title-text-styles {
     font-size: 100%;
     font-weight: bold;
     text-align: center;
 }
 
-.body-text-styles {
+#signup .body-text-styles {
     margin-top: 10%;
     font-size: 80%;
     color: grey;
@@ -1373,7 +1372,7 @@ h2 {
     margin-left: 10px;
 }
 
-.container {
+#signup .container {
     margin-left: auto;
     margin-right: auto;
     margin-top: 30px;
@@ -1382,14 +1381,14 @@ h2 {
     text-align: center;
 }
 
-.button-1 {
+#signup .button-1 {
     margin-left: 150px;
     height: 30px;
     width: 200px;
     font-size: 10px;
 }
 
-.form-group {
+#signup .form-group {
     margin-top: 20px;
     font-size: 15px;
     height: 70%;
@@ -1399,29 +1398,29 @@ h2 {
     margin-right: auto;
 }
 
-.title-text {
+#signup .title-text {
     margin-top: 30px;
     font-size: 25px;
     font-weight: bold;
     text-align: center;
 }
 
-.body-text {
+#signup .body-text {
     margin-top: 10px;
     font-size: 15px;
     text-align: center;
 }
 
-.alert {
+#signup .alert {
     margin-top: 0px;
 }
 
-.confirm-text {
+#signup .confirm-text {
     margin-top: 25vh;
     text-align: center;
 }
 
-.button-2 {
+#signup .button-2 {
     margin-top: 50px;
     height: 30px;
     width: 200px;
