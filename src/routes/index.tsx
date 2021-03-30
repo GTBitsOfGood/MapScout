@@ -5,10 +5,10 @@ import Map from '../components/map';
 import ProviderRoutes from '../components/navigation/ProviderRoutes';
 import SentryWrapper from '../components/wrappers/SentryWrapper';
 import AboutUs from '../components/about';
-import SignUp from '../components/signup';
+import SignUp from '../components/signup/index';
 import Home from '../components/home';
 import settings from '../components/settings';
-import { homeRoute, aboutRoute, signupRoute, settingsRoute } from './pathnames';
+import { homeRoute, aboutRoute, settingsRoute, signupRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
