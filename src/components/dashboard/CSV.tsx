@@ -1,3 +1,6 @@
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withFirestore } from 'react-redux-firebase';
 import React,{Component} from 'react';
 import { jsonToCSV } from 'react-papaparse';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +12,25 @@ import {CSVReader} from 'react-papaparse';
 import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
 
 const ExportCSV = (props) => {
+
+  const defaultItem = {
+    facilityName: '',
+    address: [],
+    description: '',
+    buildingNum: [0],
+    childcare: [false],
+    epic: [false],
+    hours: {},
+    links: {},
+    notes: [],
+    phoneNum: [],
+    latitude: 0,
+    longitude: 0,
+    website: [],
+    image: 'modalimage.png',
+    imageURL: null,
+  };
+
 
   const [show, setShow] = React.useState(false);
   const handleClose = () => setShow(false);
@@ -24,10 +46,9 @@ const ExportCSV = (props) => {
     quotes: true, //or array of booleans
     quoteChar: '"',
     escapeChar: '"',
-    delimiter: ",",
+    delimiter: "\n",
     header: true,
     newline: "\n",
-    complete: {handleOnDrop},
     skipEmptyLines: 'false', //or 'greedy',
     columns: columns
   }
@@ -36,7 +57,7 @@ const ExportCSV = (props) => {
     quotes: true, //or array of booleans
     quoteChar: '"',
     escapeChar: '"',
-    delimiter: ",",
+    delimiter: "\n",
     header: true,
     newline: "\n",
     skipEmptyLines: 'false', //or 'greedy',
@@ -75,7 +96,7 @@ const ExportCSV = (props) => {
     window.open(encodedUri);
   }
 
-  function handleOnDrop(data) {
+  async function handleOnDrop(data) {
     let oldProviders : {id: string}[] = Array.from(props.providers);
     let oldCategories: {id: string}[] = Array.from(props.categories);
     console.log("older categories", oldCategories);
@@ -98,6 +119,23 @@ const ExportCSV = (props) => {
         mergedProviders.push(oldProviders[i]);
       }
       isDifferent = false;
+    }
+
+    for (let i = 0; i < mergedProviders.length; i++) {
+      mergedProviders[i].data['team'] = props.team.name;
+      for (const property in mergedProviders[i].data) {
+        if (property in defaultItem && Array.isArray(defaultItem[property])) {
+          if (!mergedProviders[i].data[property]) {
+            mergedProviders[i].data[property] = []
+          } else {
+            mergedProviders[i].data[property] = mergedProviders[i].data[property].split('\n')
+          }
+        } else if (property in defaultItem && typeof defaultItem[property] === "number") {
+          mergedProviders[i].data[property] = Number(mergedProviders[i].data[property])
+        } else if (property in defaultItem && (property === "hours" || property === "links")) {
+          mergedProviders[i].data[property] = JSON.parse(mergedProviders[i].data[property]);
+        }
+      }
     }
 
     var columnArr= [];
@@ -150,8 +188,22 @@ const ExportCSV = (props) => {
       }
     }
 
-    console.log("merged Providers", mergedProviders);
-    console.log("merged categories", oldCategories);
+    let promises = [];
+    mergedProviders.forEach(async (provider) => {
+      console.log(provider);
+      await props.firestore.collection('providers').doc(provider.data.facilityName).set(provider.data);
+    });
+    await Promise.all(promises);
+  }
+
+  function handleOnError(err, file, inputElem, reason) {
+    console.log(err)
+  }
+
+  function handleOnRemoveFile(data) {
+    console.log('---------------------------')
+    console.log(data)
+    console.log('---------------------------')
   }
 
   return (
@@ -171,13 +223,12 @@ const ExportCSV = (props) => {
         <Modal.Body>
           <CSVReader
             onDrop={handleOnDrop}
-            // onError={this.handleOnError}
-            style={{}}
+            onError={handleOnError}
             config={importConfig}
             addRemoveButton
-            // onRemoveFile={this.handleOnRemoveFile}
+            onRemoveFile={handleOnRemoveFile}
           >
-            <span>Drop CSV file here or click to upload.</span>
+            <span>Drop CSV file here or click to upload 1.</span>
           </CSVReader>
         </Modal.Body>
         <Modal.Footer>
@@ -193,4 +244,10 @@ const ExportCSV = (props) => {
   );
   }
 
-export default ExportCSV;
+export default compose<any>(
+  withFirestore,
+  connect((state) => ({
+    firebase: state.firebase,
+    team: state.item.team,
+  })),
+)(ExportCSV)
