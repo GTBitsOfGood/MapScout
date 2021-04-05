@@ -33,6 +33,7 @@ const ExportCSV = (props) => {
 
 
   const [show, setShow] = React.useState(false);
+  const [importProviders, setImportProviders] = React.useState(null);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const columns = ["address", "buildingNum", "description", "facilityName", "hours", "id",
@@ -46,7 +47,7 @@ const ExportCSV = (props) => {
     quotes: true, //or array of booleans
     quoteChar: '"',
     escapeChar: '"',
-    delimiter: "\n",
+    delimiter: ",",
     header: true,
     newline: "\n",
     skipEmptyLines: 'false', //or 'greedy',
@@ -57,7 +58,7 @@ const ExportCSV = (props) => {
     quotes: true, //or array of booleans
     quoteChar: '"',
     escapeChar: '"',
-    delimiter: "\n",
+    delimiter: ",",
     header: true,
     newline: "\n",
     skipEmptyLines: 'false', //or 'greedy',
@@ -96,7 +97,7 @@ const ExportCSV = (props) => {
     window.open(encodedUri);
   }
 
-  async function handleOnDrop(data) {
+  async function handleDrop(data) {
     let oldProviders : {id: string}[] = Array.from(props.providers);
     let oldCategories: {id: string}[] = Array.from(props.categories);
     console.log("older categories", oldCategories);
@@ -124,16 +125,26 @@ const ExportCSV = (props) => {
     for (let i = 0; i < mergedProviders.length; i++) {
       mergedProviders[i].data['team'] = props.team.name;
       for (const property in mergedProviders[i].data) {
-        if (property in defaultItem && Array.isArray(defaultItem[property])) {
-          if (!mergedProviders[i].data[property]) {
-            mergedProviders[i].data[property] = []
-          } else {
-            mergedProviders[i].data[property] = mergedProviders[i].data[property].split('\n')
+        const trimmedProperty = property.trim();
+        if (property != trimmedProperty) {
+          mergedProviders[i].data[trimmedProperty] = JSON.parse(JSON.stringify(mergedProviders[i].data[property]));
+          delete mergedProviders[i].data[property]
+        }
+        if (trimmedProperty in defaultItem && Array.isArray(defaultItem[trimmedProperty])) { // Handle default array categories
+          mergedProviders[i].data[trimmedProperty] = mergedProviders[i].data[trimmedProperty] ? [mergedProviders[i].data[trimmedProperty]] : []
+        } else if (trimmedProperty in defaultItem && typeof defaultItem[trimmedProperty] === "number") { // Handle default number categories
+          mergedProviders[i].data[trimmedProperty] = Number(mergedProviders[i].data[trimmedProperty])
+        } else if (trimmedProperty in defaultItem && (trimmedProperty === "hours" || trimmedProperty === "links")) { // Handle default object categories
+          mergedProviders[i].data[trimmedProperty] = JSON.parse(mergedProviders[i].data[trimmedProperty]);
+        } else if (columns.includes(trimmedProperty) && !(trimmedProperty in defaultItem)) { // Handle custom array categories
+          const doc = await props.firestore.collection('categories').doc(trimmedProperty).get();
+          console.log(columns);
+          if (doc.data()) {
+            const selectType = doc.data()['select_type'];
+            if (selectType === 2) {
+              mergedProviders[i].data[trimmedProperty] = mergedProviders[i].data[trimmedProperty] ? mergedProviders[i].data[trimmedProperty].split(',') : []
+            }
           }
-        } else if (property in defaultItem && typeof defaultItem[property] === "number") {
-          mergedProviders[i].data[property] = Number(mergedProviders[i].data[property])
-        } else if (property in defaultItem && (property === "hours" || property === "links")) {
-          mergedProviders[i].data[property] = JSON.parse(mergedProviders[i].data[property]);
         }
       }
     }
@@ -187,23 +198,22 @@ const ExportCSV = (props) => {
         }
       }
     }
-
-    let promises = [];
-    mergedProviders.forEach(async (provider) => {
-      console.log(provider);
-      await props.firestore.collection('providers').doc(provider.data.facilityName).set(provider.data);
-    });
-    await Promise.all(promises);
+    setImportProviders(mergedProviders);
   }
 
-  function handleOnError(err, file, inputElem, reason) {
-    console.log(err)
+  function handleRemoveFile() {
+    setImportProviders(null);
   }
 
-  function handleOnRemoveFile(data) {
-    console.log('---------------------------')
-    console.log(data)
-    console.log('---------------------------')
+  async function handleSubmit() {
+    if (importProviders) {
+      let promises = [];
+      importProviders.forEach(async (provider) => {
+        await props.firestore.collection('providers').doc(provider.data.facilityName).set(provider.data);
+      });
+      await Promise.all(promises);
+      handleClose();
+    }
   }
 
   return (
@@ -222,11 +232,10 @@ const ExportCSV = (props) => {
         </Modal.Header>
         <Modal.Body>
           <CSVReader
-            onDrop={handleOnDrop}
-            onError={handleOnError}
+            onDrop={handleDrop}
             config={importConfig}
             addRemoveButton
-            onRemoveFile={handleOnRemoveFile}
+            onRemoveFile={handleRemoveFile}
           >
             <span>Drop CSV file here or click to upload 1.</span>
           </CSVReader>
@@ -235,7 +244,7 @@ const ExportCSV = (props) => {
           <Button variant="secondary" onClick={handleClose}>
             Exit
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSubmit}>
             Upload
           </Button>
         </Modal.Footer>
