@@ -3,11 +3,13 @@ import GoogleMapReact from 'google-map-react';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import mapConfig from '../about/mapConfig';
 import firebase from "firebase";
-import { withFirebase } from 'react-redux-firebase';
-import { withFirestore } from 'react-redux-firebase';
+import {
+    withFirestore, isEmpty, isLoaded, withFirebase,
+  } from 'react-redux-firebase';
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row, Card} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { SketchPicker } from 'react-color'; 
 
 const defaultLat = 33.7756;
 const defaultLng = -84.3963;
@@ -22,8 +24,17 @@ var data = {
 }
 
 function MapPicker(props) {
+    const [isLoading, setIsLoading] = useState(true);
     const [coords, setCoords] = useState(data.center);
     const [magnification, setMagnification] = useState(data.zoom);
+    const [customColorDesired, setCustomColorDesired] = useState(false);
+    const [color, setColor] = useState('#FFFFFF');
+
+    function saveColorToFirebase() {
+        team = props.team
+        // save color to firebase here
+    }
+    
     const mapOptions = {
         styles: mapConfig,
     }
@@ -52,19 +63,19 @@ function MapPicker(props) {
                             variant="primary"
                             size="sm"
                             onClick={() => onSave()}>
-                            Create
+                            Save
                         </Button>
                         </Col>
                     </Row>
                     <Form style={{paddingBottom: '30px'}}>
                         <Form.Group>
                             <Form.Label>Organization Name</Form.Label>
-                            <Form.Control size="sm" value="LA" type="text" readOnly/>
+                            <Form.Control size="sm" value={fetchedTeam} type="text" readOnly/>
                         </Form.Group>
                         <Row>
                             <Col xs={9}>
                                 <Form.Label>Mapscout URL</Form.Label>
-                                <Form.Control size="sm" value="mapscout.io/la" type="text" readOnly/>
+                                <Form.Control size="sm" value={fetchedTeam} type="text" readOnly/>
                             </Col>
                             <Col>
                                 <Form.Label>Logo</Form.Label>
@@ -89,12 +100,17 @@ function MapPicker(props) {
                                     <Card.Text>
                                         Custom
                                     </Card.Text>
+                                    <SketchPicker
+                                    color={color}
+                                    onChange={(color) => setColor(color)}
+                                    />
                                     </Card>
                                 </Col>
                             </Row>
                         </Col>
                         <Col style={{ height: '30vh', width: '2px'}}>
-                            <p>Map. Choose the default location of your map</p>
+                            <p>Map</p>
+                            <p>Choose the default location of your map</p>
                             <GoogleMapReact
                                 bootstrapURLKeys={{
                                     key: GOOGLE_API_KEY,
