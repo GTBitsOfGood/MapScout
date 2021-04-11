@@ -11,6 +11,7 @@ import { Col, Container, Row, Card} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { SketchPicker } from 'react-color';
 import ImageModal from '../dashboard/ImageModal';
+import Dropzone from 'react-dropzone';
 
 
 const defaultLat = 33.7756;
@@ -30,30 +31,34 @@ function MapPicker(props) {
     const [coords, setCoords] = useState(data.center);
     const [magnification, setMagnification] = useState(data.zoom);
     const [customColorDesired, setCustomColorDesired] = useState(false);
-    const [color, setColor] = useState('#FFFFFF');
-    const team = props.team;
+    const [primaryColor, setPrimaryColor] = useState('#226DFF');
+    const [secondaryColor, setSecondaryColor] = useState('#0A1D7C');
+    const [visibility, setVisibility] = useState(false);
+    const teamName = props.team.name;
+    const [uploaded, setUploaded] = useState(false);
+    const [image, setImage] = useState(null);
 
-    function saveColorToFirebase() {
-       //  const team = props.team
-        // save color to firebase here
+    const handleDrop = (img) => {
+        setImage(img[0]);
+        setUploaded(true);
+    }
+    
+    async function saveDataToFirebase() {
+        await firebase.firestore().collection('teams').doc(teamName).update({latitude: coords.lat});
+        await firebase.firestore().collection('teams').doc(teamName).update({longitude: coords.lng});
+        await firebase.firestore().collection('teams').doc(teamName).update({zoom: magnification});
+        await firebase.firestore().collection('teams').doc(teamName).update({primaryColor: primaryColor});
+        await firebase.firestore().collection('teams').doc(teamName).update({secondaryColor: secondaryColor});
+        await firebase.firestore().collection('teams').doc(teamName).update({imageURL: image});
     }
     
     const mapOptions = {
         styles: mapConfig,
     }
-    const onSave = async () => {
-        const center_and_zoom = {
-            center: coords,
-            zoom: magnification,
-        }
-        await firebase.firestore().collection('teams').doc('LA').set(center_and_zoom); 
-    }
-
-    const onUpload = () => {
-        return props.image;
-    }
     
-        
+    function verifyColor(color) {
+        setPrimaryColor(color.hex);
+    }
 
     const changeCenterAndZoom = ({center, zoom}) => {
         setCoords(center);
@@ -70,9 +75,10 @@ function MapPicker(props) {
                         </Col>
                         <Col>
                         <Button
+                            className="saveButton"
                             variant="primary"
                             size="sm"
-                            onClick={() => onSave()}>
+                            onClick={saveDataToFirebase}>
                             Save
                         </Button>
                         </Col>
@@ -80,19 +86,38 @@ function MapPicker(props) {
                     <Form style={{paddingBottom: '30px'}}>
                         <Form.Group>
                             <Form.Label>Organization Name</Form.Label>
-                            <Form.Control size="sm" value={team} type="text" readOnly/>
+                            <Form.Control size="sm" value={teamName} type="text" readOnly/>
                         </Form.Group>
                         <Row>
-                            <Col>
-                                <div className="urlFormandLogoTitle">
+                            <Col xs={9}>
                                 <Form.Label>Mapscout URL</Form.Label>
-                                <Form.Label>Logo</Form.Label>
+                                <Form.Control size="sm" value={teamName} type="text" readOnly/>
+                            </Col>
+                            <Col xs={3}> 
+                                <div className="upload-restrict">
+                                    {!uploaded && 
+                                    (<Dropzone accept="image/*" onDrop={handleDrop}>
+                                        {({ getRootProps, getInputProps }) => (
+                                        <div {...getRootProps({ className: "dropzone-mappicker" })}>
+                                            <input {...getInputProps()} />
+                                            <p style={{height: "100px"}}>Upload Logo Image</p>
+                                        </div>
+                                        )}
+                                    </Dropzone>)
+                                    }
+                                    {uploaded && (
+                                        <div className="imageModalSave">
+                                            <div>
+                                                <img src={URL.createObjectURL(image)} className="image-upload" />
+                                            </div>
+                                            <Row>
+                                                <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>
+                                                <Button className="saveButton btn btn-success" onClick={() => props.handleSuccess(image)}>Save</Button>
+                                            </Row>
+                                        </div>
+                                    )
+                                    }
                                 </div>
-                                <div className="settingURLandLogo">
-                                <Form.Control size="sm" value={team} type="text" readOnly/>
-                                <Button className="uploadButtonWidth" size="sm" onClick={() => onUpload()}>Upload</Button>
-                                </div>
-                                
                             </Col>
                         </Row>
                     </Form>
@@ -109,7 +134,7 @@ function MapPicker(props) {
                                     </Card>
                                 </Col>
                                 <Col xs={2}>
-                                    <Card style={{ backgroundColor: color, width: '3rem', height: '3rem'}}>
+                                    <Card style={{ backgroundColor: primaryColor, width: '3rem', height: '3rem'}}>
                                     <Card.Text className="custom-color">
                                         Custom
                                     </Card.Text>
@@ -117,9 +142,9 @@ function MapPicker(props) {
                                 </Col>
                                 <Col>
                                 <SketchPicker
-                                    color={color}
-                                    onChange={(color) => setColor(color)}
-                                    />
+                                    color={primaryColor}
+                                    onChange={verifyColor}
+                                />
                                 </Col>
                                 
                             </Row>

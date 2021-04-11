@@ -1325,6 +1325,17 @@ h2 {
     color: #bdbdbd;
 }
 
+.dropzone-mappicker {
+    width: 20vw;
+    height: 6vh;
+    padding: 10px;
+    text-align: center;
+    background-color: #226dff;
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
 .imageModalSave {
     text-align: center;
     justify-content: center;
@@ -1333,6 +1344,7 @@ h2 {
 
 .saveButton {
     margin: 10px 10px;
+    width: 10vh;
 }
 .cancelButton {
     margin: 10px 10px;
@@ -1352,20 +1364,26 @@ h2 {
 .settingURLandLogo {
     display: flex;
     justify-items: start;
-    gap: 38px;
+    gap: 20px;
 }
 .uploadButtonWidth {
     width: 30vw;
 }
 .urlFormandLogoTitle {
     display: flex;
-    gap: 690px;
+    gap: 625px;
 }
 .chooseDefaultLocationText {
-    justify-self: start;
+    align-self: start;
 }
 
 .custom-color {
     font-size: 12px;
     text-align: center;
+}
+
+.upload-restrict {
+    max-height: 3vw;
+    max-width: 3vw;
+    margin-top: 35px;
 }
