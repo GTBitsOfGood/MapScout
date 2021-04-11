@@ -104,17 +104,17 @@ function AddProvider(props) {
   }, [filters, descriptions, categories]);
 
   function updateSteps() {
-    if (filters && Object.keys(filters).length === 0) {
+    if (filters && !Object.keys(filters).length) {
       const delIndex = steps.indexOf("Tag");
       delIndex !== -1 && steps.splice(delIndex, 1);
     }
 
-    if (descriptions && Object.keys(descriptions).length === 0) {
+    if (descriptions && !Object.keys(descriptions).length) {
       const delIndex = steps.indexOf("Text");
       delIndex !== -1 && steps.splice(delIndex, 1);
     }
 
-    if (categories && Object.keys(categories).length === 0) {
+    if (categories && !Object.keys(categories).length) {
       const delIndex = steps.indexOf("Toggle");
       delIndex !== -1 && steps.splice(delIndex, 1);
     }
