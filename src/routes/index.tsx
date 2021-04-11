@@ -7,7 +7,6 @@ import SentryWrapper from '../components/wrappers/SentryWrapper';
 import AboutUs from '../components/about';
 import SignUp from '../components/signup';
 import Home from '../components/home';
-import settings from '../components/settings';
 import { homeRoute, aboutRoute, signupRoute, settingsRoute } from './pathnames';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -29,7 +28,7 @@ const routes = (allRoutes: string[]) => (
         ))}
         <Route path={aboutRoute} component={renderComponentWithErrorBoundary(AboutUs)} />
         <Route path={signupRoute} component={renderComponentWithErrorBoundary(SignUp)} />
-        <Route path={settingsRoute} component={renderComponentWithErrorBoundary(settings)} />
+        
         <ProviderRoutes />
       </Switch>
     </BrowserRouter>
