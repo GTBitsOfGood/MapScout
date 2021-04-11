@@ -9,7 +9,9 @@ import {
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row, Card} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import { SketchPicker } from 'react-color'; 
+import { SketchPicker } from 'react-color';
+import ImageModal from '../dashboard/ImageModal';
+
 
 const defaultLat = 33.7756;
 const defaultLng = -84.3963;
@@ -29,9 +31,10 @@ function MapPicker(props) {
     const [magnification, setMagnification] = useState(data.zoom);
     const [customColorDesired, setCustomColorDesired] = useState(false);
     const [color, setColor] = useState('#FFFFFF');
+    const team = props.team;
 
     function saveColorToFirebase() {
-        team = props.team
+       //  const team = props.team
         // save color to firebase here
     }
     
@@ -45,6 +48,13 @@ function MapPicker(props) {
         }
         await firebase.firestore().collection('teams').doc('LA').set(center_and_zoom); 
     }
+
+    const onUpload = () => {
+        return props.image;
+    }
+    
+        
+
     const changeCenterAndZoom = ({center, zoom}) => {
         setCoords(center);
         setMagnification(zoom);
@@ -52,7 +62,7 @@ function MapPicker(props) {
 
     return (
         <div style={{ height: '100%', width: '100%'}}>
-            <div style={{backgroundColor: 'rgb(255, 255, 255', marginLeft: '150px', padding: '10px', marginBottom: '10px'}}>
+            <div style={{backgroundColor: 'rgb(255, 255, 255)', marginLeft: '150px', padding: '10px', marginBottom: '10px'}}>
                 <Container>
                     <Row style={{paddingBottom: '20px', marginTop: '1rem', marginBottom: '1rem', border: '0', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}}>
                         <Col xs={10}>
@@ -70,47 +80,53 @@ function MapPicker(props) {
                     <Form style={{paddingBottom: '30px'}}>
                         <Form.Group>
                             <Form.Label>Organization Name</Form.Label>
-                            <Form.Control size="sm" value={fetchedTeam} type="text" readOnly/>
+                            <Form.Control size="sm" value={team} type="text" readOnly/>
                         </Form.Group>
                         <Row>
-                            <Col xs={9}>
-                                <Form.Label>Mapscout URL</Form.Label>
-                                <Form.Control size="sm" value={fetchedTeam} type="text" readOnly/>
-                            </Col>
                             <Col>
+                                <div className="urlFormandLogoTitle">
+                                <Form.Label>Mapscout URL</Form.Label>
                                 <Form.Label>Logo</Form.Label>
-                                <Form.Control size="sm" placeholder="Upload button" />
+                                </div>
+                                <div className="settingURLandLogo">
+                                <Form.Control size="sm" value={team} type="text" readOnly/>
+                                <Button className="uploadButtonWidth" size="sm" onClick={() => onUpload()}>Upload</Button>
+                                </div>
+                                
                             </Col>
                         </Row>
                     </Form>
-                    <Row>
+                    <Row className="align-items">
                         <Col>
                             <p>Color</p>
-                            <Row>
+                            <Row className="align-items">
                                 <Col xs={2}>
-                                    <Card bg='primary' style={{ width: '3rem', height: '3rem'}}>
+                                    <Card style={{ backgroundColor: '#226DFF', width: '3rem', height: '3rem'}}>
                                     </Card>
                                 </Col>
                                 <Col xs={2}>
-                                    <Card bg='info' style={{ width: '3rem', height: '3rem'}}>
+                                    <Card style={{backgroundColor: "#0A1D7C", width: '3rem', height: '3rem'}}>
+                                    </Card>
+                                </Col>
+                                <Col xs={2}>
+                                    <Card style={{ backgroundColor: color, width: '3rem', height: '3rem'}}>
+                                    <Card.Text className="custom-color">
+                                        Custom
+                                    </Card.Text>
                                     </Card>
                                 </Col>
                                 <Col>
-                                    <Card style={{ width: '3rem', height: '3rem'}}>
-                                    <Card.Text>
-                                        Custom
-                                    </Card.Text>
-                                    <SketchPicker
+                                <SketchPicker
                                     color={color}
                                     onChange={(color) => setColor(color)}
                                     />
-                                    </Card>
                                 </Col>
+                                
                             </Row>
                         </Col>
                         <Col style={{ height: '30vh', width: '2px'}}>
-                            <p>Map</p>
-                            <p>Choose the default location of your map</p>
+                            <Row className="rowheight">
+                            <p className="chooseDefaultLocationTex">Choose the default location of your map</p>
                             <GoogleMapReact
                                 bootstrapURLKeys={{
                                     key: GOOGLE_API_KEY,
@@ -120,6 +136,8 @@ function MapPicker(props) {
                                 onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
                                 options={mapOptions}
                             ></GoogleMapReact>
+                            
+                            </Row>
                         </Col>
                     </Row>
                 </Container>
