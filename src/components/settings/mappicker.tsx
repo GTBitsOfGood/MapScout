@@ -37,6 +37,7 @@ function MapPicker(props) {
     const teamName = props.team.name;
     const [uploaded, setUploaded] = useState(false);
     const [image, setImage] = useState(null);
+    const[imageURL, setImageURL] = useState(null);
 
     const handleDrop = (img) => {
         setImage(img[0]);
@@ -49,7 +50,6 @@ function MapPicker(props) {
         await firebase.firestore().collection('teams').doc(teamName).update({zoom: magnification});
         await firebase.firestore().collection('teams').doc(teamName).update({primaryColor: primaryColor});
         await firebase.firestore().collection('teams').doc(teamName).update({secondaryColor: secondaryColor});
-        await firebase.firestore().collection('teams').doc(teamName).update({imageURL: image});
     }
     
     const mapOptions = {
@@ -67,7 +67,7 @@ function MapPicker(props) {
 
     return (
         <div style={{ height: '100%', width: '100%'}}>
-            <div style={{backgroundColor: 'rgb(255, 255, 255)', marginLeft: '150px', padding: '10px', marginBottom: '10px'}}>
+            <div style={{backgroundColor: 'rgb(255, 255, 255)', marginLeft: '150px', padding: '5px'}}>
                 <Container>
                     <Row style={{paddingBottom: '20px', marginTop: '1rem', marginBottom: '1rem', border: '0', borderBottom: '1px solid rgba(0, 0, 0, 0.1)'}}>
                         <Col xs={10}>
@@ -93,7 +93,7 @@ function MapPicker(props) {
                                 <Form.Label>Mapscout URL</Form.Label>
                                 <Form.Control size="sm" value={teamName} type="text" readOnly/>
                             </Col>
-                            <Col xs={3}> 
+                            <Col> 
                                 <div className="upload-restrict">
                                     {!uploaded && 
                                     (<Dropzone accept="image/*" onDrop={handleDrop}>
@@ -107,12 +107,13 @@ function MapPicker(props) {
                                     }
                                     {uploaded && (
                                         <div className="imageModalSave">
-                                            <div>
-                                                <img src={URL.createObjectURL(image)} className="image-upload" />
-                                            </div>
-                                            <Row>
-                                                <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>
-                                                <Button className="saveButton btn btn-success" onClick={() => props.handleSuccess(image)}>Save</Button>
+                                            <Row noGutters={true}>
+                                                <Col style={{marginRight: "40px"}}>
+                                                    <img src={URL.createObjectURL(image)} className="image-upload" />
+                                                </Col>
+                                                <Col>
+                                                    <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>
+                                                </Col>
                                             </Row>
                                         </div>
                                     )
@@ -122,22 +123,15 @@ function MapPicker(props) {
                         </Row>
                     </Form>
                     <Row className="align-items">
-                        <Col>
+                        <Col xs={5}>
                             <p>Color</p>
                             <Row className="align-items">
                                 <Col xs={2}>
-                                    <Card style={{ backgroundColor: '#226DFF', width: '3rem', height: '3rem'}}>
-                                    </Card>
-                                </Col>
-                                <Col xs={2}>
-                                    <Card style={{backgroundColor: "#0A1D7C", width: '3rem', height: '3rem'}}>
-                                    </Card>
-                                </Col>
-                                <Col xs={2}>
                                     <Card style={{ backgroundColor: primaryColor, width: '3rem', height: '3rem'}}>
-                                    <Card.Text className="custom-color">
-                                        Custom
-                                    </Card.Text>
+                                    </Card>
+                                </Col>
+                                <Col xs={2}>
+                                    <Card style={{ backgroundColor: secondaryColor, width: '3rem', height: '3rem'}}>
                                     </Card>
                                 </Col>
                                 <Col>
@@ -149,20 +143,19 @@ function MapPicker(props) {
                                 
                             </Row>
                         </Col>
-                        <Col style={{ height: '30vh', width: '2px'}}>
-                            <Row className="rowheight">
-                            <p className="chooseDefaultLocationTex">Choose the default location of your map</p>
-                            <GoogleMapReact
-                                bootstrapURLKeys={{
-                                    key: GOOGLE_API_KEY,
-                                }}
-                                zoom={magnification}
-                                center={coords}
-                                onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
-                                options={mapOptions}
-                            ></GoogleMapReact>
-                            
-                            </Row>
+                        <Col>
+                            <p>Choose the default location of your map</p>
+                            <Row className="align-items" style={{height: "40vh", marginLeft: "auto"}}>
+                                <GoogleMapReact
+                                        bootstrapURLKeys={{
+                                            key: GOOGLE_API_KEY,
+                                        }}
+                                        zoom={magnification}
+                                        center={coords}
+                                        onChange={({center, zoom}) => changeCenterAndZoom({center, zoom})}
+                                        options={mapOptions}
+                                    ></GoogleMapReact>
+                            </Row> 
                         </Col>
                     </Row>
                 </Container>
