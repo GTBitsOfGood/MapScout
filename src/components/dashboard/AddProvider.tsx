@@ -23,7 +23,7 @@ import { storage } from '../../store';
 
 const uuidv4 = require('uuid/v4');
 
-const steps = [
+let steps = [
   'Map', 'Hours', 'Tag', 'Text', 'Toggle', 
   // 'Actions'
 ];
@@ -35,9 +35,9 @@ function AddProvider(props) {
   const [animate, setAnimate] = useState(true);
   const [item, setItem] = useState(props.selected || {});
   const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState({});
-  const [descriptions, setDescriptions] = useState({});
-  const [categories, setCategories] = useState({});
+  const [filters, setFilters] = useState(null);
+  const [descriptions, setDescriptions] = useState(null);
+  const [categories, setCategories] = useState(null);
   const [error, setError] = useState('');
 
   async function fetchData() {
@@ -98,6 +98,27 @@ function AddProvider(props) {
   useEffect(() => {
     fetchData().then(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    updateSteps();
+  }, [filters, descriptions, categories]);
+
+  function updateSteps() {
+    if (filters && !Object.keys(filters).length) {
+      const delIndex = steps.indexOf("Tag");
+      delIndex !== -1 && steps.splice(delIndex, 1);
+    }
+
+    if (descriptions && !Object.keys(descriptions).length) {
+      const delIndex = steps.indexOf("Text");
+      delIndex !== -1 && steps.splice(delIndex, 1);
+    }
+
+    if (categories && !Object.keys(categories).length) {
+      const delIndex = steps.indexOf("Toggle");
+      delIndex !== -1 && steps.splice(delIndex, 1);
+    }
+  }
 
   async function addFirestore() {
     setIsLoading(true);

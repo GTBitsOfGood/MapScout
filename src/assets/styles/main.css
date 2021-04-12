@@ -1317,6 +1317,116 @@ h2 {
     background-color: #eee;
 }
 
+#signup .signup-root {
+    background-color: rgb(239, 239, 239, 0.9);
+    padding: 30px 5vw;
+    margin-top: 12vh;
+    height: 100vh;
+    width: 100vw;
+}
+
+#signup .container {
+    height: 20%;
+}
+.create-map-title {
+    padding-top: 100px;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+#create-map-content {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    height: 10rem;
+    width: 40rem;
+    text-align: center;
+}
+
+#signup .button {
+    margin-top: 5%;
+    height: 2rem;
+    width: 100%;
+    font-size: 65%;
+}
+
+#signup .square {
+    margin: 0.5rem;
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 10px lightgray;
+    border-radius: 10px;
+}
+
+#signup .title-text-styles {
+    font-size: 100%;
+    font-weight: bold;
+    text-align: center;
+}
+
+#signup .body-text-styles {
+    margin-top: 10%;
+    font-size: 80%;
+    color: grey;
+    text-align: left;
+    margin-left: 10px;
+}
+
+#signup .container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    height: 10rem;
+    width: 40rem;
+    text-align: center;
+}
+
+#signup .button-1 {
+    margin-left: 150px;
+    height: 30px;
+    width: 200px;
+    font-size: 10px;
+}
+
+#signup .form-group {
+    margin-top: 20px;
+    font-size: 15px;
+    height: 70%;
+    width: 80%;
+    text-align: left;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#signup .title-text {
+    margin-top: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#signup .body-text {
+    margin-top: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+#signup .alert {
+    margin-top: 0px;
+}
+
+#signup .confirm-text {
+    margin-top: 25vh;
+    text-align: center;
+}
+
+#signup .button-2 {
+    margin-top: 50px;
+    height: 30px;
+    width: 200px;
+    font-size: 10px;
+}
+
 .dropzone {
     text-align: center;
     padding: 100px;
