@@ -144,6 +144,8 @@ const ExportCSV = (props) => {
             if (selectType === 2) {
               mergedProviders[i].data[trimmedProperty] = mergedProviders[i].data[trimmedProperty] ? mergedProviders[i].data[trimmedProperty].split(',') : []
             }
+          } else {
+            alert(`Warning: You are uploading a CSV where the ${trimmedProperty} column is not defined`);
           }
         }
       }
