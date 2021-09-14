@@ -20,6 +20,7 @@ import useWindowSize from '../../functions/useWindowSize';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import { storage } from '../../store';
+import { Store } from 'reducers/types';
 
 const uuidv4 = require('uuid/v4');
 
@@ -346,7 +347,7 @@ function AddProvider(props) {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
     selected: state.item.selected,

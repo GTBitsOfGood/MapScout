@@ -10,6 +10,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
 import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
+import { Store } from 'reducers/types';
 
 const ExportCSV = (props) => {
 
@@ -50,7 +51,7 @@ const ExportCSV = (props) => {
     delimiter: ",",
     header: true,
     newline: "\n",
-    skipEmptyLines: 'false', //or 'greedy',
+    skipEmptyLines: false, //or 'greedy',
     columns: columns
   }
 
@@ -61,7 +62,7 @@ const ExportCSV = (props) => {
     delimiter: ",",
     header: true,
     newline: "\n",
-    skipEmptyLines: 'false', //or 'greedy',
+    skipEmptyLines: false, //or 'greedy',
     columns: columns //or array of strings
   }
 
@@ -257,7 +258,7 @@ const ExportCSV = (props) => {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     firebase: state.firebase,
     team: state.item.team,
   })),

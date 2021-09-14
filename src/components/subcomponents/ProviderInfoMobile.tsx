@@ -11,6 +11,7 @@ import { FiGlobe, FiPhone } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import Linkify from 'react-linkify';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { Store } from 'reducers/types';
 
 const classNames = require('classnames');
 
@@ -270,7 +271,7 @@ function formatTime(arr, time, index) {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
   })),

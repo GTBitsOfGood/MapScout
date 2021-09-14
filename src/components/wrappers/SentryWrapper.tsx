@@ -6,7 +6,7 @@ import image from '../../assets/img/error.jpg';
 
 function FallbackComponent() {
   function refresh() {
-    window.location.reload(false);
+    window.location.reload();
   }
   return (
     <div id="fallback-root">

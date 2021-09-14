@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose, Store } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware, connectRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import { createLogger } from 'redux-logger';
@@ -13,6 +13,7 @@ import 'firebase/database';
 import 'firebase/firestore';
 import 'firebase/storage';
 import firebaseConfig from './config/firebase-config';
+import { Store } from 'reducers/types';
 
 // react-redux-firebase config
 const rrfConfig = {
