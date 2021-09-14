@@ -7,9 +7,9 @@ assignees: ''
 
 ---
 
-### Epic Number
-- [ ] 1 - Easy (1 person)
-- [ ] 2 - Medium (1-2 people)
-- [ ] 3 - Hard (1-3 people)
+### Difficulty
+Easy (1 person)
+Medium (1-2 people)
+Hard (1-3 people)
 
 ### Description
