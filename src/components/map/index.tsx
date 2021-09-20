@@ -20,6 +20,8 @@ import queryString from "query-string";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import Pagination from "react-bootstrap/Pagination"
 
+const frame = require('../../assets/svg/Frame.svg');
+
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
 
@@ -735,28 +737,39 @@ const Map = (props) => {
                                     </div>
                                 )}
                             </div>
-                            <div className="count">
-                                <span>
-                                    {isEmpty(activeProviders) ? "No" : activeProviders.length}
-                                    {clinWikiMap ? " trials found" : " providers found"}
-                                </span>
-                            </div>
-                            {!isEmpty(activeProviders) && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
-                                <ProviderCell
-                                    key={i.id}
-                                    item={i}
-                                    index={index}
-                                    primaryColor={primaryColor}
-                                    onMouseEnter={debounce(() => {
-                                        if (defaultView && isDesktop)
-                                            setCurrmarker(index);
-                                    }, 300)}
-                                    onClick={() =>
-                                        handleCellClick(index)
-                                    }
-                                    distances={distances}
-                                />
-                            ))}
+                            {!isEmpty(activeProviders) ? activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
+                                <div>
+                                    <span className="count">
+                                        {activeProviders.length}
+                                        {clinWikiMap ? " trials found" : " providers found"}
+                                    </span>
+                                    <ProviderCell
+                                        key={i.id}
+                                        item={i}
+                                        index={index}
+                                        primaryColor={primaryColor}
+                                        onMouseEnter={debounce(() => {
+                                            if (defaultView && isDesktop)
+                                                setCurrmarker(index);
+                                        }, 300)}
+                                        onClick={() =>
+                                            handleCellClick(index)
+                                        }
+                                        distances={distances}
+                                    />
+                                </div>
+                            )) : (
+                                <div>
+                                    <Row>
+                                        <img src={frame} alt="No providers found." />
+                                        <Col>
+                                            <b>Whoops!</b>
+                                            <p>Sorry, your query returned no matching providers.</p>
+                                            <p>Please adjust the filters or try different keywords to get more results.</p>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )}
                             {
                                 (activeProviders.length / PAGE_SIZE > 1) ?
                                     <Pagination>
