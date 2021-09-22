@@ -759,16 +759,18 @@ const Map = (props) => {
                                     />
                                 </div>
                             )) : (
-                                <div>
-                                    <Row>
-                                        <img src={frame} alt="No providers found." />
-                                        <Col>
+                                <Row>
+                                    <div>
+                                        <Row>
+                                            <img src={frame} alt="No providers found." />
+                                            <Col>
                                             <b>Whoops!</b>
                                             <p>Sorry, your query returned no matching providers.</p>
-                                            <p>Please adjust the filters or try different keywords to get more results.</p>
-                                        </Col>
-                                    </Row>
-                                </div>
+                                            <p>Please adjust the filters or try different keywords.</p>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </Row>
                             )}
                             {
                                 (activeProviders.length / PAGE_SIZE > 1) ?
