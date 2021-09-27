@@ -4,13 +4,13 @@ import { GOOGLE_API_KEY } from '../../config/keys';
 import mapConfig from '../about/mapConfig';
 import firebase from "firebase";
 import {
-    withFirestore, isEmpty, isLoaded, withFirebase,
+    withFirebase,
   } from 'react-redux-firebase';
 import Button from 'react-bootstrap/Button';
 import { Col, Container, Row, Card} from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { SketchPicker } from 'react-color';
-import ImageModal from '../dashboard/ImageModal';
+//import ImageModal from '../dashboard/ImageModal';
 import Dropzone from 'react-dropzone';
 
 
@@ -27,17 +27,17 @@ var data = {
 }
 
 function MapPicker(props) {
-    const [isLoading, setIsLoading] = useState(true);
+    //const [isLoading, setIsLoading] = useState(true);
     const [coords, setCoords] = useState(data.center);
     const [magnification, setMagnification] = useState(data.zoom);
-    const [customColorDesired, setCustomColorDesired] = useState(false);
+    //const [customColorDesired, setCustomColorDesired] = useState(false);
     const [primaryColor, setPrimaryColor] = useState('#226DFF');
-    const [secondaryColor, setSecondaryColor] = useState('#0A1D7C');
-    const [visibility, setVisibility] = useState(false);
+    const [secondaryColor, ] = useState('#0A1D7C');
+    //const [visibility, setVisibility] = useState(false);
     const teamName = props.team.name;
     const [uploaded, setUploaded] = useState(false);
     const [image, setImage] = useState(null);
-    const[imageURL, setImageURL] = useState(null);
+    //const[imageURL, setImageURL] = useState(null);
 
     const handleDrop = (img) => {
         setImage(img[0]);
@@ -109,7 +109,7 @@ function MapPicker(props) {
                                         <div className="imageModalSave">
                                             <Row noGutters={true}>
                                                 <Col style={{marginRight: "40px"}}>
-                                                    <img src={URL.createObjectURL(image)} className="image-upload" />
+                                                    <img src={URL.createObjectURL(image)} className="image-upload" alt='some value'/>
                                                 </Col>
                                                 <Col>
                                                     <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>

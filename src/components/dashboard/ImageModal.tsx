@@ -25,7 +25,7 @@ const ImageModal = (props) => {
         {uploaded && (
             <div className="imageModalSave">
                 <div>
-                    <img src={URL.createObjectURL(image)} className="image-upload" />
+                    <img src={URL.createObjectURL(image)} className="image-upload" alt="description"/>
                 </div>
                 <Button className="cancelButton btn btn-danger" onClick={() => setUploaded(false)}>Cancel</Button>
                 <Button className="saveButton btn btn-success" onClick={() => props.handleSuccess(image)}>Save</Button>

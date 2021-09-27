@@ -12,7 +12,7 @@ function Discussion({ chatHistory }) {
     if (root.current) {
       setHeight(root.current.clientHeight);
     }
-  });
+  }, []);
 
   useEffect(() => {
     setData(chatHistory);

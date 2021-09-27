@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js';
 import MultiSelect from '@khanacademy/react-multi-select';
-import FileUploader from 'react-firebase-file-uploader';
 import Select from 'react-select';
 import { storage } from '../../store';
 import TimeTable from './TimeTable';
@@ -49,7 +48,7 @@ const RowForm = (props) => {
     const itemFields = Object.keys(props.filters);
     itemFields.forEach((field) => { defaultItem[field] = []; });
     setItem(props.item.facilityName ? props.item : defaultItem);
-  }, [props.filters]);
+  }, [props.filters, props.item, defaultItem]); 
 
   function handleInputChange(e) {
     let newItem = {};
