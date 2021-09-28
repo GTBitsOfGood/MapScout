@@ -196,7 +196,7 @@ const Map = (props) => {
         fetchData().then((_r) => {
             setTempProviders(providers);
         });
-    }, [getTeam, providers, clinWikiMap, props]);
+    }, []);
 
 
 
@@ -362,11 +362,11 @@ const Map = (props) => {
                 });
             }
         }
-    }, [providers, filterProviders]);
+    }, []);
 
     useEffect(() => {
         handlePageChange(1)
-    }, [activeProviders, handlePageChange])
+    }, [activeProviders])
 
 
     
@@ -548,7 +548,7 @@ const Map = (props) => {
 
     useEffect(() => {
         if (activeProviders) filterSearch(searchName);
-    }, [filtersState, activeProviders, searchName, filterSearch]);
+    }, [searchName, filtersState]);
 
     function switchView() {
         setDefaultView(!defaultView);
@@ -802,28 +802,35 @@ const Map = (props) => {
                                     </div>
                                 )}
                             </div>
-                            {!isEmpty(activeProviders) ? activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
+                            {!isEmpty(activeProviders) ? (
                                 <div>
-                                    <span className="count">
+                                    <strong className="padder">
                                         {activeProviders.length}
                                         {clinWikiMap ? " trials found" : " providers found"}
-                                    </span>
-                                    <ProviderCell
-                                        key={i.id}
-                                        item={i}
-                                        index={index}
-                                        primaryColor={primaryColor}
-                                        onMouseEnter={debounce(() => {
-                                            if (defaultView && isDesktop)
-                                                setCurrmarker(index);
-                                        }, 300)}
-                                        onClick={() =>
-                                            handleCellClick(index)
-                                        }
-                                        distances={distances}
-                                    />
+                                    </strong>
+                                    <hr />
+                                    {
+                                        activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
+                                            <div>
+                                            <ProviderCell
+                                                key={i.id}
+                                                item={i}
+                                                index={index}
+                                                primaryColor={primaryColor}
+                                                onMouseEnter={debounce(() => {
+                                                    if (defaultView && isDesktop)
+                                                        setCurrmarker(index);
+                                                }, 300)}
+                                                onClick={() =>
+                                                    handleCellClick(index)
+                                                }
+                                                distances={distances}
+                                            />
+                                        </div>
+                                    ))
+                                }
                                 </div>
-                            )) : (
+                            ) : (
                                 <Row>
                                     <div>
                                         <Row>

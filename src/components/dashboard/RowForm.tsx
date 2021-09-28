@@ -48,7 +48,7 @@ const RowForm = (props) => {
     const itemFields = Object.keys(props.filters);
     itemFields.forEach((field) => { defaultItem[field] = []; });
     setItem(props.item.facilityName ? props.item : defaultItem);
-  }, [props.filters, props.item, defaultItem]); 
+  }, []); 
 
   function handleInputChange(e) {
     let newItem = {};

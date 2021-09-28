@@ -113,11 +113,7 @@ const ProviderRoutes = (props) => {
 
   useEffect(() => {
     fetchTeam();
-  }, [fetchTeam]);
-
-  useEffect(() => {
-    fetchTeam();
-  }, [props.firebaseAuth.auth, fetchTeam]);
+  }, [props.firebaseAuth.auth]);
 
   useEffect(() => {
     // TODO: Define a constant for mobile width

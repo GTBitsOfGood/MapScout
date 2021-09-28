@@ -38,7 +38,7 @@ function Home({ firebaseAuth, firestore }) {
     } else if (showProviderRoutes) {
       setShowProviderRoutes(false);
     }
-  }, [firebaseAuth, showProviderRoutes]);
+  }, [firebaseAuth]);
 
   function handleSubmit() {
     const payload = { email };

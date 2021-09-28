@@ -153,7 +153,7 @@ function AddProvider(props) {
       setCategories(c);
     }
     fetchData().then(() => setIsLoading(false));
-  });
+  }, []);
 
   useEffect(() => {
     function updateSteps() {

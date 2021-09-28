@@ -81,7 +81,7 @@ export default compose<any>(
       setIsLoading(false);
     }
     fetchData();
-  });
+  }, []);
 
   useEffect(() => {
     const newDummy = { ...staticData };
@@ -96,7 +96,7 @@ export default compose<any>(
       }
     });
     setDummy(newDummy);
-  }, [categories, message, staticData]);
+  }, [categories]);
 
   // async function fetchData() {
   //   const collections = firestore.collection('categories');
