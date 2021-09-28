@@ -15,21 +15,7 @@ function NavBar(props) {
   const [showBubble, setShowBubble] = useState(props.newChat);
 
   useEffect(() => {
-    databaseRef.on('value', (snapshot) => {
-      parseChat(
-        snapshot.child('chat').val(),
-        snapshot.child('response').val(),
-      );
-    });
-    responseRef.on('child_added', () => {
-      props.updateNewChat(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    setShowBubble(props.newChat);
-  }, [props.newChat]);
-
+    
   async function parseChat(payload, payload2) {
     const {firebaseAuth} = props;
     const chats = payload ? Object.values(payload).filter((x: any) => x.uid && x.uid === firebaseAuth.auth.uid) : [];
@@ -66,6 +52,21 @@ function NavBar(props) {
     }
     props.updateChat(arr);
   }
+    databaseRef.on('value', (snapshot) => {
+      parseChat(
+        snapshot.child('chat').val(),
+        snapshot.child('response').val(),
+      );
+    });
+    responseRef.on('child_added', () => {
+      props.updateNewChat(true);
+    });
+  }, [props]);
+
+  useEffect(() => {
+    setShowBubble(props.newChat);
+  }, [props.newChat]);
+
   return (
     <div>
       <div className={classnames('gray-overlay', { none: !expand, fadeIn: expand })} />

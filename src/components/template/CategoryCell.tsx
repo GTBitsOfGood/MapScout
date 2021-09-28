@@ -127,7 +127,7 @@ export default ({
         }
         <Collapse isOpened={!collapsed && item.active}>
           {
-            (item.select_type == 1 || item.select_type == 2)
+            (item.select_type === 1 || item.select_type === 2)
               ? (
                 <div>
                   <div className="form-control options-wrapper">

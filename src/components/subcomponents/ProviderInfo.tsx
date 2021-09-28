@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaMapMarkerAlt, FaRegClock, FaPhone,
 } from 'react-icons/fa';
@@ -117,7 +117,7 @@ const ProviderInfo = (props) => {
               {props.item.website && props.item.website[0] ? <FiGlobe size="20px" style={{ paddingTop: '5px', color: '#007bff' }} /> : <div />}
               {props.item.website && props.item.website[0] ? (
                 <div style={{ paddingLeft: '15px' }}>
-                  <a href={props.item.website[0]} target="_blank">Visit Website</a>
+                  <a href={props.item.website[0]} target="_blank" rel="noopener noreferrer">Visit Website</a>
                 </div>
               ) : <div />}
             </div>
@@ -135,7 +135,7 @@ const ProviderInfo = (props) => {
           <Col>
             <Card>
               <div>
-                <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">
+                <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank" rel="noopener noreferrer">
                   <Card.Img
                     src={streetView}
                     alt="Google Map"
@@ -196,9 +196,9 @@ function calculateHours(props) {
   const abbrevDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   for (let i = 1; i < 7; i++) {
     // not both undefined
-    if (props.item.hours[days[i]] != props.item.hours[days[i - 1]]) {
-      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] != props.item.hours[days[i - 1]][0]
-      || props.item.hours[days[i]][1] != props.item.hours[days[i - 1]][1]) {
+    if (props.item.hours[days[i]] !== props.item.hours[days[i - 1]]) {
+      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] !== props.item.hours[days[i - 1]][0]
+      || props.item.hours[days[i]][1] !== props.item.hours[days[i - 1]][1]) {
         startandFinish.push(i - 1);
         startandFinish.push(i);
       }
@@ -207,9 +207,9 @@ function calculateHours(props) {
       startandFinish.push(6);
     }
   }
-  for (var i = 0; i < startandFinish.length; i += 2) {
+  for (let i = 0; i < startandFinish.length; i += 2) {
     const children = [];
-    if (startandFinish[i] == startandFinish[i + 1]) {
+    if (startandFinish[i] === startandFinish[i + 1]) {
       children.push(<Col className="modal-col-flex-end" sm={5}>{days[startandFinish[i]]}</Col>);
     } else {
       const subchild = [<div>

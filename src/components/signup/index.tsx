@@ -1,6 +1,6 @@
 // Base page imports
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
+//import {Link} from 'react-router-dom';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -9,37 +9,37 @@ import Alert from 'react-bootstrap/Alert';
 import { withFirebase } from 'react-redux-firebase';
 
 import Container from 'react-bootstrap/Container';
-import Blur from '@animate/blur';
+//import Blur from '@animate/blur';
 import localizationStrings from '../../utils/Localization';
-import { FaSlack } from 'react-icons/fa';
+//import { FaSlack } from 'react-icons/fa';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 // Verify Org imports
-import Steps, { Step } from 'rc-steps';
+import Steps from 'rc-steps';
 import 'rc-steps/assets/index.css';
 import 'rc-steps/assets/iconfont.css';
-import useWindowSize from '../../functions/useWindowSize';
+//import useWindowSize from '../../functions/useWindowSize';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 
 
 
-const classNames = require('classnames');
+//const classNames = require('classnames');
 
 function SignUp({ firebase, history }) {
   const [stage, setStage] = useState(0);
   const [show, setShow] = useState(false);
   const [alert, setAlert] = useState(false);
 
-  const { width } = useWindowSize();
-  const [step, setStep] = useState(0);
-  const [completed, setCompleted] = useState(false);
+  //const { width } = useWindowSize();
+  //const [step, setStep] = useState(0);
+  //const [completed, setCompleted] = useState(false);
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [animate, setAnimate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setError] = useState(null);
+  const [, setAnimate] = useState(false);
+  const [, setIsLoading] = useState(false);
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [passwordsMatch, setPasswordsMatch] = useState(false);
 
@@ -48,7 +48,7 @@ function SignUp({ firebase, history }) {
   const [mapScoutURL, setmapScoutURL] = useState('mapscout.io/');
 
   const {
-      emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, confirmPasswordLabel, createAccount, create,
+      emailPlaceholder,  passwordPlaceholder,
       orgNamePlaceholder, orgURLPlaceholder
   } = localizationStrings;
 
@@ -105,7 +105,7 @@ function SignUp({ firebase, history }) {
         });
         setIsLoading(true);
         try {
-        const response = await firebase
+        await firebase
             .auth()
             setAnimate(true);
             await setTimeout(() => {

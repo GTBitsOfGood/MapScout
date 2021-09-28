@@ -18,7 +18,7 @@ function Chat({ firebase, newChat, updateNewChat }) {
     if (newChat) {
       updateNewChat(false);
     }
-  }, []);
+  }, [newChat, updateNewChat]);
 
   const inputChange = (e) => {
     setMessage(e.target.value);
