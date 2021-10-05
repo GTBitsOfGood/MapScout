@@ -1,13 +1,11 @@
 import React, {useState} from 'react'
-import ReactJoyride from 'react-joyride'
+import ReactJoyride, {Step} from 'react-joyride'
 
 export class DashTutorial extends React.Component {
     state = {
-        run: false,
         steps: [
             {
                 target: "body",
-                placement: "center",
                 content: "Welcome to the Mapscout Admin Dashboard! Create and customize your own resource map through our dashboard."
             }, 
             {
@@ -25,7 +23,7 @@ export class DashTutorial extends React.Component {
         const { steps } = this.state;
     
         return (
-          <div className="app">
+          <div className="joyride">
             <ReactJoyride
               steps={steps}
             />
