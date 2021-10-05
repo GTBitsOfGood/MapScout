@@ -62,7 +62,6 @@ function Dashboard({ firestore, team, selectItem }) {
   return (
 
     <div className="admin-dashboard">
-
       <div className="admin-list-container">
         <div className="list-wrapper">
           <div className="add-export-bttns-wrapper">
