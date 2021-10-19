@@ -14,6 +14,7 @@ import CategoryCell from './CategoryCell';
 import ProviderInfo from '../subcomponents/ProviderInfo';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { Store } from 'reducers/types';
+import { TempTutorial } from './TempTutorial';
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number){
   const result = Array.from(list);
@@ -241,10 +242,10 @@ export default compose<any>(
 
   return (
     <div id="template-root">
+      <TempTutorial />
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>
-          <div className="create-cat-wrapper">
             <Button
               variant="primary"
               onClick={(e) => {
@@ -254,7 +255,6 @@ export default compose<any>(
             >
               Preview
             </Button>
-          </div>
         </div>
         <br />
         {
@@ -273,6 +273,7 @@ export default compose<any>(
             placeholder="Create New Category"
           />
           <InputGroup.Append>
+          <div className="create-cat-wrapper">
               <Button
                 onClick={() => {
                   createNewCat();
@@ -286,6 +287,7 @@ export default compose<any>(
               >
                 Add
               </Button>
+          </div>
           </InputGroup.Append>
         </InputGroup>
         <br />
