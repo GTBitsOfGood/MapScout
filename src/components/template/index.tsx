@@ -273,6 +273,7 @@ export default compose<any>(
             placeholder="Create New Category"
           />
           <InputGroup.Append>
+            <div className="create-cat-wrapper">
             <Button
               onClick={() => {
                 createNewCat();
@@ -286,6 +287,7 @@ export default compose<any>(
             >
               Add
             </Button>
+            </div>
           </InputGroup.Append>
         </InputGroup>
         <br />
