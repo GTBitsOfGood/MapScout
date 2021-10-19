@@ -1915,6 +1915,15 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
+"@types/react@^17.0.30":
+  version "17.0.30"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.30.tgz#2f8e6f5ab6415c091cc5e571942ee9064b17609e"
+  integrity sha512-3Dt/A8gd3TCXi2aRe84y7cK1K8G+N9CZRDG8kDGguOKa0kf/ZkSwTmVIDPsm/KbQOVMaDJXwhBtuOXxqwdpWVg==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
@@ -9193,10 +9202,10 @@ react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-i
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz"
 
-react-joyride@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.3.1.tgz#de3c8e8bfd6b58f62e7c6e8b38467e807ef8f90f"
-  integrity sha512-MmyhECU3V+4kZAJrcDPPXcXxaoTpwc7g+E7Cq6QZ5IqJZrWYSVvpVCfudQcdcf6BsNbgawRhvCvbQyeWoPtNig==
+react-joyride@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.3.2.tgz#7a5407b9032ab399c3c624ab21e60ddd40c12d56"
+  integrity sha512-MPYvHdxF/ylBZXJkKzyR3nTd+jydPeTKVwQDg8y7Ctl5H0UPgvF3uCzfieyJqE/JnK2wJU4QcjkontqBU1g7Xg==
   dependencies:
     deep-diff "^1.0.2"
     deepmerge "^4.2.2"

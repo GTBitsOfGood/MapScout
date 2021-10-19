@@ -25,6 +25,7 @@
         "@khanacademy/react-multi-select": "^0.3.3",
         "@react-firebase/database": "^0.3.11",
         "@sentry/react": "^5.19.1",
+        "@types/react": "^17.0.30",
         "autoprefixer": "9.8.0",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.3.1",

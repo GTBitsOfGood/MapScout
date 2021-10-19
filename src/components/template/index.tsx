@@ -244,7 +244,7 @@ export default compose<any>(
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>
-          <div>
+          <div className="create-cat-wrapper">
             <Button
               variant="primary"
               onClick={(e) => {
@@ -273,21 +273,19 @@ export default compose<any>(
             placeholder="Create New Category"
           />
           <InputGroup.Append>
-            <div className="create-cat-wrapper">
-            <Button
-              onClick={() => {
-                createNewCat();
-              }}
-              variant="primary"
-              disabled={
-                newCatName == ''
-                || newCatName == null
-                || categories.findIndex((x) => x.name == newCatName) > -1
-              }
-            >
-              Add
-            </Button>
-            </div>
+              <Button
+                onClick={() => {
+                  createNewCat();
+                }}
+                variant="primary"
+                disabled={
+                  newCatName == ''
+                  || newCatName == null
+                  || categories.findIndex((x) => x.name == newCatName) > -1
+                }
+              >
+                Add
+              </Button>
           </InputGroup.Append>
         </InputGroup>
         <br />

@@ -19,7 +19,7 @@ export class TempTutorial extends React.Component {
         const { steps } = this.state;
     
         return (
-          <div className="joyride">
+          <div className="temp-tutorial">
             <ReactJoyride
               steps={steps}
             />
