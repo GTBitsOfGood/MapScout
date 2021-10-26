@@ -41,85 +41,157 @@ function AddProvider(props) {
   const [categories, setCategories] = useState(null);
   const [error, setError] = useState('');
 
-  async function fetchData() {
-    const collections = props.firestore.collection('categories');
-    const f = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 2)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    const d = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 0)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    const c = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 1)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    setFilters(f);
-    setDescriptions(d);
-    setCategories(c);
-  }
+  
+  // async function fetchData() {
+  //   const collections = props.firestore.collection('categories');
+  //   const f = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 2)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   const d = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 0)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   const c = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 1)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   setFilters(f);
+  //   setDescriptions(d);
+  //   setCategories(c);
+  // }
 
   useEffect(() => {
+    async function fetchData() {
+      const collections = props.firestore.collection('categories');
+      const f = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 2)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      const d = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 0)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      const c = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 1)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      setFilters(f);
+      setDescriptions(d);
+      setCategories(c);
+    }
     fetchData().then(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
+    function updateSteps() {
+      if (filters && !Object.keys(filters).length) {
+        const delIndex = steps.indexOf("Tag");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+  
+      if (descriptions && !Object.keys(descriptions).length) {
+        const delIndex = steps.indexOf("Text");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+  
+      if (categories && !Object.keys(categories).length) {
+        const delIndex = steps.indexOf("Toggle");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+    }
+
     updateSteps();
   }, [filters, descriptions, categories]);
 
-  function updateSteps() {
-    if (filters && !Object.keys(filters).length) {
-      const delIndex = steps.indexOf("Tag");
-      delIndex !== -1 && steps.splice(delIndex, 1);
-    }
+  // function updateSteps() {
+  //   if (filters && !Object.keys(filters).length) {
+  //     const delIndex = steps.indexOf("Tag");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
 
-    if (descriptions && !Object.keys(descriptions).length) {
-      const delIndex = steps.indexOf("Text");
-      delIndex !== -1 && steps.splice(delIndex, 1);
-    }
+  //   if (descriptions && !Object.keys(descriptions).length) {
+  //     const delIndex = steps.indexOf("Text");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
 
-    if (categories && !Object.keys(categories).length) {
-      const delIndex = steps.indexOf("Toggle");
-      delIndex !== -1 && steps.splice(delIndex, 1);
-    }
-  }
+  //   if (categories && !Object.keys(categories).length) {
+  //     const delIndex = steps.indexOf("Toggle");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
+  // }
 
   async function addFirestore() {
     setIsLoading(true);

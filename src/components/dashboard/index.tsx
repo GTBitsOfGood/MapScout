@@ -18,42 +18,39 @@ function Dashboard({ firestore, team, selectItem }) {
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  console.log(document.cookie)
-
-  async function fetchData() {
-    if (team && team.name) {
-      const collections = firestore.collection('categories');
-      const c = await collections
-        .where('team', '==', team.name)
-        .get()
-        .then((querySnapshot) => {
-          const arr = [];
-          querySnapshot.forEach((doc) => {
-            const docData = doc.data();
-            arr.push(docData);
-          });
-          return arr;
-        });
-      const collections2 = firestore.collection('providers');
-      const p = await collections2
-        .where('team', '==', team.name)
-        .get()
-        .then((querySnapshot) => {
-          const arr = [];
-          querySnapshot.forEach((doc) => {
-            const docData = doc.data();
-            arr.push(docData);
-          });
-          return arr;
-        });
-      setProviders(p);
-      setCategories(c);
-    }
-  }
-
   useEffect(() => {
+    async function fetchData() {
+      if (team && team.name) {
+        const collections = firestore.collection('categories');
+        const c = await collections
+          .where('team', '==', team.name)
+          .get()
+          .then((querySnapshot) => {
+            const arr = [];
+            querySnapshot.forEach((doc) => {
+              const docData = doc.data();
+              arr.push(docData);
+            });
+            return arr;
+          });
+        const collections2 = firestore.collection('providers');
+        const p = await collections2
+          .where('team', '==', team.name)
+          .get()
+          .then((querySnapshot) => {
+            const arr = [];
+            querySnapshot.forEach((doc) => {
+              const docData = doc.data();
+              arr.push(docData);
+            });
+            return arr;
+          });
+        setProviders(p);
+        setCategories(c);
+      }
+    }
     fetchData().then(() => setIsLoading(false));
-  }, []);
+  });
 
   if (isLoading) {
     return (

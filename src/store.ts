@@ -13,7 +13,7 @@ import 'firebase/database';
 import 'firebase/firestore';
 import 'firebase/storage';
 import firebaseConfig from './config/firebase-config';
-import { Store } from 'reducers/types';
+//import { Store } from 'reducers/types';
 
 // react-redux-firebase config
 const rrfConfig = {

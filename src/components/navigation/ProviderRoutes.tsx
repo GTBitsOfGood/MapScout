@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, Component, ReactType } from 'react';
+import React, { useState, useEffect, useMemo, ReactType, useCallback } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ import {
   providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute, settingsRoute 
 } from '../../routes/pathnames';
 
-const classNames = require("classnames");
+//const classNames = require("classnames");
 
 type PrivateRouteProps = {
   exact?: boolean,
@@ -74,7 +74,7 @@ function DashboardContent({ isAuth, auth }) {
         />
       </Switch>
     </div>
-  ), [auth]);
+  ), []);
 }
 
 const ProviderRoutes = (props) => {
@@ -82,11 +82,11 @@ const ProviderRoutes = (props) => {
   const { width } = useWindowSize();
   const [alerted, setAlerted] = useState(false);
 
-  async function fetchTeam() {
+  const fetchTeam = useCallback(() => {
     const { firestore, team, firebaseAuth } = props;
     setIsLoading(true);
     if ((!team || !team.name) && typeof firebaseAuth.auth.uid === 'string') {
-      await firestore
+      firestore
         .collection('users')
         .where('UID', '==', firebaseAuth.auth.uid)
         .get()
@@ -109,11 +109,7 @@ const ProviderRoutes = (props) => {
     } else if (isLoaded(firebaseAuth.auth) && firebaseAuth.auth.uid === undefined) {
       setIsLoading(false);
     }
-  }
-
-  useEffect(() => {
-    fetchTeam();
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     fetchTeam();

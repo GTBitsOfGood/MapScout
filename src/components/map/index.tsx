@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -8,7 +8,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
 import Modal from "react-bootstrap/Modal";
-import { FaTimesCircle, FaMap } from "react-icons/fa";
+import { FaTimesCircle } from "react-icons/fa";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
@@ -19,6 +19,8 @@ import { Store } from "reducers/types";
 import queryString from "query-string";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import Pagination from "react-bootstrap/Pagination"
+
+const frame = require('../../assets/svg/Frame.svg');
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -31,6 +33,7 @@ const getWidth = () =>
     document.documentElement.clientWidth ||
     document.body.clientWidth;
 
+
 const Map = (props) => {
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
     const [lowerPageBound, setLowerPageBound] = useState(0);
@@ -42,19 +45,19 @@ const Map = (props) => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [activeProviders, setActiveProviders] = useState([]);
-    const [tempProviders, setTempProviders] = useState([]);
-    const [zipProviders, setZipProviders] = useState([]);
-    const [searchName, setSearchName] = useState("");
+    const [, setTempProviders] = useState([]);
+    const [, setZipProviders] = useState([]);
+    const [searchName, setSearchName] = useState(""); 
     const [searchZip, setSearchZip] = useState("");
-    const [name, setName] = useState(null);
-    const [markers, setMarkers] = useState(null);
+    // const [name, setName] = useState(null);
+    // const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
     const [point, setPoint] = useState(true);
     const [distances, setDistances] = useState({});
-    const [prevSearchLen, setPrevSearchLen] = useState(0);
+    //const [prevSearchLen, setPrevSearchLen] = useState(0);
 
     const [primaryColor, setPrimaryColor] = useState("");
-    const [secondaryColor, setSecondaryColor] = useState("");
+    const [, setSecondaryColor] = useState("");
     const [defaultLat, setDefaultLat] = useState(0);
     const [defaultLong, setDefaultLong] = useState(0);
     const [defaultZoom, setDefaultZoom] = useState(1);
@@ -65,149 +68,13 @@ const Map = (props) => {
     const items = []
     items.push()
 
+    const getTeam = useCallback((e?) => { 
+        return props.location.pathname.replace("/", "");
+    }, [props.location.pathname]);
+
     const clinWikiMap = getTeam() === "clinwiki";
 
-    // set filterIds from firestore in useeffect
-    useEffect(() => {
-        document.title = getTeam().toUpperCase();
-        setIsLoading(true);
-        fetchData().then((r) => {
-            setTempProviders(providers);
-        });
-    }, []);
-
-    useEffect(() => {
-        if (isLoaded(providers)) {
-            setTempProviders(providers);
-
-            // grab the contents of the query string as an object
-            // a prperly formatted query string with a search term and a zip looks like: mapscout.io/?zip=12345&q=asdf
-            const parsed = queryString.parse(window.location.search);
-            // if there exists a zip object in the querystring (i.e. mapscout.io/?zip=12345)
-            if (typeof parsed.zip == "string") {
-                filterProviders({
-                    target: {
-                        name: "queryZip",
-                        value: parsed.zip,
-                        type: "input",
-                        getAttribute: (param) => "zipcode",
-                    },
-                });
-            }
-            // if there exists a q object in the querystring (i.e. mapscout.io/?q=12345)
-            if (typeof parsed.q == "string") {
-                filterProviders({
-                    target: {
-                        name: "querySearch",
-                        value: parsed.q,
-                        type: "input",
-                        getAttribute: (param) => "search",
-                    },
-                });
-            }
-        }
-    }, [providers]);
-
-    useEffect(() => {
-        handlePageChange(1)
-    }, [activeProviders])
-
-    function getTeam() {
-        return props.location.pathname.replace("/", "");
-    }
-
-    async function fetchData() {
-        const { firestore } = props;
-        const collections = firestore.collection("categories");
-        const data = {};
-        const filtersObj = {};
-        const cat = await collections
-            .where("active", "==", true)
-            .where("team", "==", getTeam())
-            .get()
-            .then((querySnapshot) => {
-                const arr = [];
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    arr.push({
-                        name: docData.name,
-                        options: docData.options,
-                        priority: docData.priority,
-                        select_type: docData.select_type,
-                        id: doc.id,
-                    });
-                    if (docData.select_type !== 0 && docData.options.length) {
-                        data[doc.id] = {
-                            name: docData.name,
-                            options: docData.options,
-                            priority: docData.priority,
-                        };
-                        filtersObj[doc.id] = [];
-                    }
-                });
-                return arr;
-            });
-        setCategories(cat);
-
-        setFiltersState(filtersObj);
-        setFiltersData(data);
-
-        const collections2 = firestore.collection("providers");
-        let provs = await collections2
-            .where("team", "==", getTeam())
-            .get()
-            .then((querySnapshot) => {
-                let numCurrentlyLoaded = 1;
-                const arr = [];
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    arr.push(docData);
-                    numCurrentlyLoaded++;
-                });
-                return arr;
-            });
-
-        if (clinWikiMap) {
-            const parsed = queryString.parse(window.location.search);
-            let clinWikiSearchHash = "";
-
-            if (typeof parsed.searchHash == "string") {
-                clinWikiSearchHash = parsed.searchHash;
-            }
-            const clinwikiProviders = await loadClinwikiProviders(
-                clinWikiSearchHash
-            );
-            provs = [...provs, ...clinwikiProviders];
-        }
-
-        setProviders(provs);
-        setActiveProviders(provs);
-
-        const teamCollection = firestore.collection("teams").doc(getTeam());
-        const teamData = await teamCollection.get().then((doc) => doc.data());
-        setPrimaryColor(teamData.primaryColor);
-        setSecondaryColor(teamData.secondaryColor);
-        setDefaultLat(teamData.latitude);
-        setDefaultLong(teamData.longitude);
-        setDefaultZoom(teamData.zoom);
-        setIsLoading(false);
-    }
-
-    const [width, setWidth] = useState(getWidth());
-
-    useEffect(() => {
-        const resizeListener = () => {
-            setWidth(getWidth());
-        };
-        window.addEventListener("resize", resizeListener);
-        return () => {
-            window.removeEventListener("resize", resizeListener);
-        };
-    }, []);
-
-    const ref = useRef(null);
-
-    const filterByTags = (temp) => {
+    const filterByTags = useCallback((temp?) => { 
         setTempProviders(temp);
         Object.keys(filtersState).forEach((filterName) => {
             temp = temp.filter((provider) =>
@@ -219,7 +86,119 @@ const Map = (props) => {
             );
         });
         setActiveProviders(temp);
-    };
+    }, [filtersState]);
+
+    const filterSearch = useCallback((filterVal: string, zipCode?: string, zipProvs?) => {
+        const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
+        let temp = zipCode ? zipProvs : providers;
+        temp = temp.filter((item) => regex.test(item.facilityName));
+        filterByTags(temp);
+    }, [filterByTags,  providers]);
+
+    // set filterIds from firestore in useeffect
+
+    const filterNormalFilters = useCallback((e?)  => {
+        const filterName = e.target.name;
+        const filterVal = e.target.value;
+        if (e.target.type === "checkbox" && e.target.checked) {
+            setFiltersState({
+                ...filtersState,
+                [filterName]: [...filtersState[filterName], filterVal],
+            });
+        } else if (e.target.type === "checkbox" && !e.target.checked) {
+            setFiltersState({
+                ...filtersState,
+                [filterName]: filtersState[filterName].filter(
+                    (filter) => filter !== filterVal
+                ),
+            });
+        }
+    }, [filtersState]);
+    
+    
+    useEffect(() => {
+        async function fetchData() {
+            const { firestore } = props;
+            const collections = firestore.collection("categories");
+            const data = {};
+            const filtersObj = {};
+            const cat = await collections
+                .where("active", "==", true)
+                .where("team", "==", getTeam())
+                .get()
+                .then((querySnapshot) => {
+                    const arr = [];
+                    querySnapshot.forEach((doc) => {
+                        const docData = doc.data();
+                        arr.push({
+                            name: docData.name,
+                            options: docData.options,
+                            priority: docData.priority,
+                            select_type: docData.select_type,
+                            id: doc.id,
+                        });
+                        if (docData.select_type !== 0 && docData.options.length) {
+                            data[doc.id] = {
+                                name: docData.name,
+                                options: docData.options,
+                                priority: docData.priority,
+                            };
+                            filtersObj[doc.id] = [];
+                        }
+                    });
+                    return arr;
+                });
+            setCategories(cat);
+    
+            setFiltersState(filtersObj);
+            setFiltersData(data);
+    
+            const collections2 = firestore.collection("providers");
+            let provs = await collections2
+                .where("team", "==", getTeam())
+                .get()
+                .then((querySnapshot) => {
+                    const arr = [];
+                    querySnapshot.forEach((doc) => {
+                        const docData = doc.data();
+                        arr.push(docData);
+                    });
+                    return arr;
+                });
+    
+            if (clinWikiMap) {
+                const parsed = queryString.parse(window.location.search);
+                let clinWikiSearchHash = "";
+    
+                if (typeof parsed.searchHash == "string") {
+                    clinWikiSearchHash = parsed.searchHash;
+                }
+                const clinwikiProviders = await loadClinwikiProviders(
+                    clinWikiSearchHash
+                );
+                provs = [...provs, ...clinwikiProviders];
+            }
+    
+            setProviders(provs);
+            setActiveProviders(provs);
+    
+            const teamCollection = firestore.collection("teams").doc(getTeam());
+            const teamData = await teamCollection.get().then((doc) => doc.data());
+            setPrimaryColor(teamData.primaryColor);
+            setSecondaryColor(teamData.secondaryColor);
+            setDefaultLat(teamData.latitude);
+            setDefaultLong(teamData.longitude);
+            setDefaultZoom(teamData.zoom);
+            setIsLoading(false);
+        }
+        document.title = getTeam().toUpperCase();
+        setIsLoading(true);
+        fetchData().then((_r) => {
+            setTempProviders(providers);
+        });
+    }, []);
+
+
 
     const filterZipcode = async (filterVal) => {
         const response = await fetch(
@@ -284,32 +263,16 @@ const Map = (props) => {
         );
     };
 
-    const filterNormalFilters = (e) => {
-        const filterName = e.target.name;
-        const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) {
-            setFiltersState({
-                ...filtersState,
-                [filterName]: [...filtersState[filterName], filterVal],
-            });
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
-            setFiltersState({
-                ...filtersState,
-                [filterName]: filtersState[filterName].filter(
-                    (filter) => filter !== filterVal
-                ),
-            });
-        }
-    };
-
-    const filterSearch = (filterVal: string, zipCode?: string, zipProvs?) => {
-        const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
-        let temp = zipCode ? zipProvs : providers;
-        temp = temp.filter((item) => regex.test(item.facilityName));
-        filterByTags(temp);
-    };
-
-    const filterProviders = async (e?) => {
+    const filterZipCodeOver100 = useCallback((filterVal?) => { 
+        const filterProviders = activeProviders.filter(
+            provider => {
+                return provider.address[0].includes(filterVal)
+            }
+        )
+        setActiveProviders(filterProviders);
+    }, [activeProviders ]);
+    
+    const filterProviders = useCallback((e?) => {
         if (typeof e !== "undefined") {
             const filtertype = e.target.getAttribute("itemType");
             const filterVal = e.target.value;
@@ -322,25 +285,138 @@ const Map = (props) => {
                     if (providers.length > 10) {
                         filterZipCodeOver100(filterVal);
                     } else {
-                        await filterZipcode(filterVal);
+                        filterZipcode(filterVal);
                     }
                 } else if (distances !== {}) {
                     setDistances({});
                 }
             } else {
-                await filterNormalFilters(e);
+                filterNormalFilters(e);
             }
         }
-    };
+    }, [distances, filterNormalFilters, setDistances, filterZipCodeOver100, providers.length, filterZipcode, filterSearch]);
 
-    function filterZipCodeOver100(filterVal) {
-        const filterProviders = activeProviders.filter(
-            provider => {
-                return provider.address[0].includes(filterVal)
+    
+    //const filterProviders = async (e?) => {
+        // if (typeof e !== "undefined") {
+        //     const filtertype = e.target.getAttribute("itemType");
+        //     const filterVal = e.target.value;
+        //     if (filtertype === "search") {
+        //         setSearchName(filterVal);
+        //         filterSearch(e.target.value);
+        //     } else if (filtertype === "zipcode") {
+        //         setSearchZip(filterVal.replace(/\D/g, ""));
+        //         if (filterVal.length === 5) {
+        //             if (providers.length > 10) {
+        //                 filterZipCodeOver100(filterVal);
+        //             } else {
+        //                 await filterZipcode(filterVal);
+        //             }
+        //         } else if (distances !== {}) {
+        //             setDistances({});
+        //         }
+        //     } else {
+        //         await filterNormalFilters(e);
+        //     }
+        // }
+    //};
+    
+    const handlePageChange = useCallback((newPage) => {
+        const pageDifference = newPage - currPage;
+        let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
+
+        setLowerPageBound(newLowerBound);
+        let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+
+        setUpperPageBound(newUpperBound);
+        setCurrPage(newPage);
+    }, [currPage, lowerPageBound, upperPageBound]);
+
+    useEffect(() => {
+        if (isLoaded(providers)) {
+            setTempProviders(providers);
+
+            // grab the contents of the query string as an object
+            // a prperly formatted query string with a search term and a zip looks like: mapscout.io/?zip=12345&q=asdf
+            const parsed = queryString.parse(window.location.search);
+            // if there exists a zip object in the querystring (i.e. mapscout.io/?zip=12345)
+            if (typeof parsed.zip == "string") {
+                filterProviders({
+                    target: {
+                        name: "queryZip",
+                        value: parsed.zip,
+                        type: "input",
+                        getAttribute: (param) => "zipcode",
+                    },
+                });
             }
-        )
-        setActiveProviders(filterProviders);
-    }
+            // if there exists a q object in the querystring (i.e. mapscout.io/?q=12345)
+            if (typeof parsed.q == "string") {
+                filterProviders({
+                    target: {
+                        name: "querySearch",
+                        value: parsed.q,
+                        type: "input",
+                        getAttribute: (param) => "search",
+                    },
+                });
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        handlePageChange(1)
+    }, [activeProviders])
+
+
+    
+
+    const [width, setWidth] = useState(getWidth());
+
+    useEffect(() => {
+        const resizeListener = () => {
+            setWidth(getWidth());
+        };
+        window.addEventListener("resize", resizeListener);
+        return () => {
+            window.removeEventListener("resize", resizeListener);
+        };
+    }, []);
+
+    // const ref = useRef(null);
+
+
+    
+
+    
+
+    
+
+    // const filterProviders = async (e?) => {
+    //     if (typeof e !== "undefined") {
+    //         const filtertype = e.target.getAttribute("itemType");
+    //         const filterVal = e.target.value;
+    //         if (filtertype === "search") {
+    //             setSearchName(filterVal);
+    //             filterSearch(e.target.value);
+    //         } else if (filtertype === "zipcode") {
+    //             setSearchZip(filterVal.replace(/\D/g, ""));
+    //             if (filterVal.length === 5) {
+    //                 if (providers.length > 10) {
+    //                     filterZipCodeOver100(filterVal);
+    //                 } else {
+    //                     await filterZipcode(filterVal);
+    //                 }
+    //             } else if (distances !== {}) {
+    //                 setDistances({});
+    //             }
+    //         } else {
+    //             await filterNormalFilters(e);
+    //         }
+    //     }
+    // };
+
+    
 
 
     /**
@@ -457,17 +533,6 @@ const Map = (props) => {
         return paginatedData;
     }
 
-    function handlePageChange(newPage) {
-        const pageDifference = newPage - currPage;
-        let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
-
-        setLowerPageBound(newLowerBound);
-        let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
-
-        setUpperPageBound(newUpperBound);
-        setCurrPage(newPage);
-    }
-
     function handlePaginationNext() {
         if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
 
@@ -483,7 +548,7 @@ const Map = (props) => {
 
     useEffect(() => {
         if (activeProviders) filterSearch(searchName);
-    }, [filtersState]);
+    }, [searchName, filtersState]);
 
     function switchView() {
         setDefaultView(!defaultView);
@@ -491,11 +556,13 @@ const Map = (props) => {
 
     function evaluateFilters() {
         let isFiltersEmpty = true;
-        Object.keys(filtersState).map((item) => {
+        Object.keys(filtersState).forEach((item) => {
             if (filtersState[item].length > 0) {
                 isFiltersEmpty = false;
             }
         });
+        
+        
         return !isFiltersEmpty;
     }
 
@@ -735,28 +802,48 @@ const Map = (props) => {
                                     </div>
                                 )}
                             </div>
-                            <div className="count">
-                                <span>
-                                    {isEmpty(activeProviders) ? "No" : activeProviders.length}
-                                    {clinWikiMap ? " trials found" : " providers found"}
-                                </span>
-                            </div>
-                            {!isEmpty(activeProviders) && activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
-                                <ProviderCell
-                                    key={i.id}
-                                    item={i}
-                                    index={index}
-                                    primaryColor={primaryColor}
-                                    onMouseEnter={debounce(() => {
-                                        if (defaultView && isDesktop)
-                                            setCurrmarker(index);
-                                    }, 300)}
-                                    onClick={() =>
-                                        handleCellClick(index)
-                                    }
-                                    distances={distances}
-                                />
-                            ))}
+                            {!isEmpty(activeProviders) ? (
+                                <div>
+                                    <strong className="padder">
+                                        {activeProviders.length}
+                                        {clinWikiMap ? " trials found" : " providers found"}
+                                    </strong>
+                                    <hr />
+                                    {
+                                        activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
+                                            <div>
+                                            <ProviderCell
+                                                key={i.id}
+                                                item={i}
+                                                index={index}
+                                                primaryColor={primaryColor}
+                                                onMouseEnter={debounce(() => {
+                                                    if (defaultView && isDesktop)
+                                                        setCurrmarker(index);
+                                                }, 300)}
+                                                onClick={() =>
+                                                    handleCellClick(index)
+                                                }
+                                                distances={distances}
+                                            />
+                                        </div>
+                                    ))
+                                }
+                                </div>
+                            ) : (
+                                <Row>
+                                    <div>
+                                        <Row>
+                                            <img src={frame} alt="No providers found." />
+                                            <Col>
+                                            <b>Whoops!</b>
+                                            <p>Sorry, your query returned no matching providers.</p>
+                                            <p>Please adjust the filters or try different keywords.</p>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </Row>
+                            )}
                             {
                                 (activeProviders.length / PAGE_SIZE > 1) ?
                                     <Pagination>

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFirestore } from 'react-redux-firebase';
-import React,{Component} from 'react';
+import React from 'react';
 import { jsonToCSV } from 'react-papaparse';
 import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -9,7 +9,7 @@ import { CategoryDocProps } from 'types/firestore';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import {CSVReader} from 'react-papaparse';
-import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
+//import { createDocumentRegistry, createKeywordTypeNode } from 'typescript';
 import { Store } from 'reducers/types';
 
 const ExportCSV = (props) => {
@@ -111,9 +111,9 @@ const ExportCSV = (props) => {
     let isDifferent = false;
     for(let i = 0; i < oldProviders.length; i++) {
       for (let j = 0; j < mergedProviders.length; j++) {
-        if (oldProviders[i] != undefined || mergedProviders[j] != undefined ) {
+        if (oldProviders[i] !== undefined || mergedProviders[j] !== undefined ) {
           continue;
-        } else if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) == 0) { //non-match in ID
+        } else if (oldProviders[i].id.localeCompare(mergedProviders[j].data.id) === 0) { //non-match in ID
           isDifferent = true;
         }
       }
@@ -127,7 +127,7 @@ const ExportCSV = (props) => {
       mergedProviders[i].data['team'] = props.team.name;
       for (const property in mergedProviders[i].data) {
         const trimmedProperty = property.trim();
-        if (property != trimmedProperty) {
+        if (property !== trimmedProperty) {
           mergedProviders[i].data[trimmedProperty] = JSON.parse(JSON.stringify(mergedProviders[i].data[property]));
           delete mergedProviders[i].data[property]
         }
@@ -164,7 +164,7 @@ const ExportCSV = (props) => {
           if(oldCategories[j]["id"]=== col){
             containsName = true;
             let options =oldCategories[j]["options"];
-            if(val != ""){
+            if(val !== ""){
               let ele = {label: val, value: val};
               // push ele to option array
               options.push(ele);
@@ -176,7 +176,7 @@ const ExportCSV = (props) => {
         if(!containsName){
           // create a new object and push it to mergedCategories
           var arr= [];
-          if(val != ""){
+          if(val !== ""){
             let ele = {label: val, value: val};
             arr.push(ele)
           }
