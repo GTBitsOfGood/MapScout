@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { withFirestore } from 'react-redux-firebase';
+import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
@@ -15,6 +15,7 @@ import ProviderInfo from '../subcomponents/ProviderInfo';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { Store } from 'reducers/types';
 import { TempTutorial } from './TempTutorial';
+import { TempTutorialTwo } from './TempTutorialTwo';
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number){
   const result = Array.from(list);
@@ -240,9 +241,11 @@ export default compose<any>(
     );
   }
 
+  console.log(document.cookie)
   return (
     <div id="template-root">
-      <TempTutorial />
+      {(document.cookie == "" || document.cookie == null) && (<TempTutorial />)}
+      {(document.cookie == "tut=true") && (!isEmpty(categories)) && (<TempTutorialTwo />)}
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>

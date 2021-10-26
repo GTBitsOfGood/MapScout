@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import ReactJoyride, {Step} from 'react-joyride'
+import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 
 export class TempTutorial extends React.Component {
     state = {
@@ -15,12 +16,21 @@ export class TempTutorial extends React.Component {
         ]
     }
 
+    handleJoyrideCallback = data => {
+      const {action, index, status, type} = data;
+
+      if ([STATUS.FINISHED].includes(status)) {
+        document.cookie += "tut=true;";
+      }
+    }
+
     render () {
         const { steps } = this.state;
     
         return (
-          <div className="temp-tutorial">
+          <div className="joyride">
             <ReactJoyride
+              callback={this.handleJoyrideCallback}
               steps={steps}
             />
           </div>
