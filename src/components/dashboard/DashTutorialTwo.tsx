@@ -2,20 +2,16 @@ import React, {useState} from 'react'
 import ReactJoyride, {Step} from 'react-joyride'
 import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 
-export class DashTutorial extends React.Component {
+export class DashTutorialTwo extends React.Component {
     state = {
         steps: [
             {
-                target: "body",
-                content: "Welcome to the Mapscout Admin Dashboard! Create and customize your own resource map through our dashboard."
+                target: ".admin-list-container",
+                content: "All of your active listings will appear here."
             }, 
             {
-                target: ".add-button-wrapper",
-                content: "You can start listing locations here.",
-            },
-            {
-                target: ".export-button-wrapper",
-                content: "Alternatively, you can upload a spreadsheet of locations. Be sure to follow our CSV guideline template!",
+                target: ".scroll-container",
+                content: "Select a listing to see its details. This is a preview of what your users will see when they click on the listing.",
             },
         ]
     }
@@ -24,7 +20,7 @@ export class DashTutorial extends React.Component {
       const {action, index, status, type} = data;
 
       if ([STATUS.FINISHED].includes(status)) {
-        document.cookie = "tut=true;";
+        document.cookie += "tut2=true;";
       }
     }
 

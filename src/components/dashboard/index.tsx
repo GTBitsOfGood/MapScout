@@ -10,12 +10,15 @@ import SingleProvider from './SingleProvider';
 import { selectItem } from '../../functions/reduxActions';
 import CSV from './CSV';
 import { DashTutorial } from './DashTutorial';
+import { DashTutorialTwo } from './DashTutorialTwo';
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [providers, setProviders] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  console.log(document.cookie)
 
   async function fetchData() {
     if (team && team.name) {
@@ -63,7 +66,8 @@ function Dashboard({ firestore, team, selectItem }) {
   return (
 
     <div className="admin-dashboard">
-      <DashTutorial />
+      {(document.cookie == "" || document.cookie == null) && (<DashTutorial />)}
+      {(document.cookie == "" || document.cookie == null) && (<DashTutorialTwo />)}
       <div className="admin-list-container">
         <div className="list-wrapper">
           <div className="add-export-bttns-wrapper">
