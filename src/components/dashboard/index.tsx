@@ -67,7 +67,7 @@ function Dashboard({ firestore, team, selectItem }) {
 
     <div className="admin-dashboard">
       {(document.cookie == "" || document.cookie == null) && (<DashTutorial />)}
-      {(document.cookie == "tut=true") && (<DashTutorialTwo />)}
+      {(document.cookie == "tut=true") && (!isEmpty(providers)) && (<DashTutorialTwo />)}
       <div className="admin-list-container">
         <div className="list-wrapper">
           <div className="add-export-bttns-wrapper">
