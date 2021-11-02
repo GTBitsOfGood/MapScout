@@ -3,7 +3,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js';
-import MultiSelect from '@khanacademy/react-multi-select';
+//import MultiSelect from '@khanacademy/react-multi-select';
+import { MultiSelect } from "react-multi-select-component";
 import Select from 'react-select';
 import { storage } from '../../store';
 import TimeTable from './TimeTable';
@@ -337,8 +338,9 @@ const RowForm = (props) => {
                 <Form.Label>{name}</Form.Label>
                 <MultiSelect
                   options={options}
-                  selected={item[key] || []}
-                  onSelectedChanged={(selected) => {
+                  labelledBy = {name}
+                  value={item[key] || []}
+                  onChange={(selected) => {
                     const newItem = {
                       ...item,
                       [key]: selected,

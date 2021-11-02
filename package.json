@@ -58,6 +58,7 @@
         "react-lazy-load": "^3.0.13",
         "react-linkify": "^1.0.0-alpha",
         "react-localization": "^1.0.15",
+        "react-multi-select-component": "^4.1.13",
         "react-papaparse": "^3.8.0",
         "react-read-more-less": "^0.1.6",
         "react-redux": "^5.0.6",
