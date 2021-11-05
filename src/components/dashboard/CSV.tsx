@@ -50,7 +50,7 @@ const ExportCSV = (props) => {
     escapeChar: '"',
     delimiter: ",",
     header: true,
-    newline: "\n",
+    //newline: "\n",
     skipEmptyLines: false, //or 'greedy',
     columns: columns
   }
