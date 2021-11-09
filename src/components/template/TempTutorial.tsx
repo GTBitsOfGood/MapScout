@@ -20,7 +20,8 @@ export class TempTutorial extends React.Component {
       const {action, index, status, type} = data;
 
       if ([STATUS.FINISHED].includes(status)) {
-        document.cookie += "tut=true;";
+        document.cookie = "tut=true;";
+        window.location.reload()
       }
     }
 

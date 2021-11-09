@@ -245,7 +245,7 @@ export default compose<any>(
   return (
     <div id="template-root">
       {(document.cookie == "" || document.cookie == null) && (<TempTutorial />)}
-      {(document.cookie == "tut=true") && (!isEmpty(categories)) && (<TempTutorialTwo />)}
+      {(document.cookie.includes("tut=true") && !isEmpty(categories) && !document.cookie.includes("tut2")) && (<TempTutorialTwo />)}
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>
