@@ -33,7 +33,7 @@ function Auth({ firebase, history }) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await firebase
+      await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
       setAnimate(true);
@@ -49,7 +49,7 @@ function Auth({ firebase, history }) {
   }
 
   const {
-    emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, login, signUp, forgotPassword,
+    emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, login, forgotPassword,
   } = localizationStrings;
 
   return (
