@@ -7,13 +7,15 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { withFirestore } from 'react-redux-firebase';
+import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
 import ProviderInfo from '../subcomponents/ProviderInfo';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { Store } from 'reducers/types';
+import { TempTutorial } from './TempTutorial';
+import { TempTutorialTwo } from './TempTutorialTwo';
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number){
   const result = Array.from(list);
@@ -259,12 +261,14 @@ export default compose<any>(
     );
   }
 
+  console.log(document.cookie)
   return (
     <div id="template-root">
+      {(document.cookie == "" || document.cookie == null) && (<TempTutorial />)}
+      {(document.cookie.includes("tut=true") && !isEmpty(categories) && !document.cookie.includes("tut2")) && (<TempTutorialTwo />)}
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>
-          <div>
             <Button
               variant="primary"
               onClick={(e) => {
@@ -274,7 +278,6 @@ export default compose<any>(
             >
               Preview
             </Button>
-          </div>
         </div>
         <br />
         {
@@ -293,19 +296,21 @@ export default compose<any>(
             placeholder="Create New Category"
           />
           <InputGroup.Append>
-            <Button
-              onClick={() => {
-                createNewCat();
-              }}
-              variant="primary"
-              disabled={
-                newCatName === ''
-                || newCatName == null
-                || categories.findIndex((x) => x.name === newCatName) > -1
-              }
-            >
-              Add
-            </Button>
+          <div className="create-cat-wrapper">
+              <Button
+                onClick={() => {
+                  createNewCat();
+                }}
+                variant="primary"
+                disabled={
+                  newCatName == ''
+                  || newCatName == null
+                  || categories.findIndex((x) => x.name == newCatName) > -1
+                }
+              >
+                Add
+              </Button>
+          </div>
           </InputGroup.Append>
         </InputGroup>
         <br />
