@@ -61,7 +61,7 @@ function Dashboard({ firestore, team, selectItem }) {
       }
     }
     fetchData().then(() => setIsLoading(false));
-  });
+  }, [team]);
 
   if (isLoading) {
     return (
@@ -81,12 +81,7 @@ function Dashboard({ firestore, team, selectItem }) {
       margin: 'auto',
     }} className="admin-list-container">
         <div className="list-wrapper">
-          <div
-          style={{
-            marginLeft: '35px'
-          }}>
           <img src={dash} alt="empty dash" />
-          </div>
         <h1
           style={{
             textAlign: 'center',
