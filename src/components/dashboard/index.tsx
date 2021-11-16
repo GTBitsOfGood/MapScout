@@ -9,6 +9,7 @@ import { formRoute } from '../../routes/pathnames';
 import SingleProvider from './SingleProvider';
 import { selectItem } from '../../functions/reduxActions';
 import CSV from './CSV';
+import { DashTutorial } from './DashTutorial';
 import {CSVReader} from 'react-papaparse';
 import Modal from 'react-bootstrap/Modal';
 import handleDrop from './CSV';
@@ -17,7 +18,6 @@ import handleRemoveFile from './CSV';
 import handleSubmit from './CSV';
 
 const dash = require('../../assets/img/dash.svg');
-
 
 function Dashboard({ firestore, team, selectItem }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -177,7 +177,7 @@ function Dashboard({ firestore, team, selectItem }) {
   return (
 
     <div className="admin-dashboard">
-
+      <DashTutorial />
       <div className="admin-list-container">
         <div className="list-wrapper">
           <div className="add-export-bttns-wrapper">
