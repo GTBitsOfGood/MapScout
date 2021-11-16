@@ -287,6 +287,8 @@ const Map = (props) => {
                     } else {
                         filterZipcode(filterVal);
                     }
+                } else if (filterVal.length === 0) {
+                    setActiveProviders(providers);
                 } else if (distances !== {}) {
                     setDistances({});
                 }
