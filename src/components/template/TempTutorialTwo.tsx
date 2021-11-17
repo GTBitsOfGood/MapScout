@@ -2,6 +2,18 @@ import React, {useState} from 'react'
 import ReactJoyride, {Step} from 'react-joyride'
 import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 
+const options = {
+    arrowColor: '#fff',
+    backgroundColor: '#fff',
+    beaconSize: 36,
+    overlayColor: 'rgba(0, 0, 0, 0.5)',
+    primaryColor: '#f04',
+    spotlightShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+    textColor: '#333',
+    width: undefined,
+    zIndex: 10000000,
+};
+
 export class TempTutorialTwo extends React.Component {
     state = {
         steps: [
@@ -44,7 +56,9 @@ export class TempTutorialTwo extends React.Component {
             <div className="joyride">
                 <ReactJoyride
                 callback={this.handleJoyrideCallback}
+                continuous
                 steps={steps}
+                styles={{ options }}
                 />
             </div>
         );
