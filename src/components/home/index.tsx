@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import YouTube, { Options } from 'react-youtube';
+import { HomeTutorial } from './HomeTutorial';
 
 import { authRoute, providerRoute } from '../../routes/pathnames';
 
@@ -54,6 +55,7 @@ function Home({ firebaseAuth, firestore }) {
 
   return (
     <div id="homepage-root">
+      <HomeTutorial />
       <span id="homepage-background">
         <img src={background} alt="background" />
       </span>

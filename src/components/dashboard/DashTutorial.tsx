@@ -5,12 +5,12 @@ export class DashTutorial extends React.Component {
     state = {
         steps: [
             {
-                target: "body",
+                target: ".form-control",
                 content: "Welcome to the Mapscout Admin Dashboard! Create and customize your own resource map through our dashboard."
             }, 
             {
-                target: ".add-button-wrapper",
-                content: "You can start listing locations here.",
+                target: ".btn-toolbar",
+                content: "You can't start listing locations here.",
             },
             {
                 target: ".export-button-wrapper",
