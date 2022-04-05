@@ -9,6 +9,7 @@ import { store, history } from './store';
 import routes from './routes';
 import { SENTRY_API_KEY } from './config/keys';
 import './assets/styles/style';
+import Joyride from 'react-joyride';
 
 Sentry.init({
   dsn: SENTRY_API_KEY,
@@ -26,6 +27,8 @@ const getRoutes = async () => {
       return arr;
     });
 
+
+
   // render the main component
   ReactDOM.render(
     <Provider store={store}>
@@ -38,3 +41,4 @@ const getRoutes = async () => {
 };
 
 getRoutes();
+

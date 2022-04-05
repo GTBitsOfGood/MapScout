@@ -55,7 +55,7 @@
         "react-google-maps-loader": "^4.2.6",
         "react-google-places-suggest": "^3.8.0",
         "react-icons": "^3.8.0",
-        "react-joyride": "^2.3.2",
+        "react-joyride": "^2.4.0",
         "react-js-pagination": "^3.0.3",
         "react-lazy-load": "^3.0.13",
         "react-linkify": "^1.0.0-alpha",
