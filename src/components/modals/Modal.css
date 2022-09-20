@@ -1,0 +1,47 @@
+.email-modal {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.email-modal .modal-body {
+    max-width: none;
+}
+
+.email-modal .modal-content {
+    width: auto;
+    text-align: center;
+    top: 0;
+    left: 0;
+}
+
+.email-modal.modal-dialog {
+    margin: 0px 0px 0px 0px;
+    top: 420px;
+    left: 90px;
+}
+
+.email-btn-modal {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.email-btn-modal .modal-body {
+    max-width: none;
+}
+
+.email-btn-modal .modal-content {
+    width: fit-content;
+    text-align: center;
+    top: 0;
+    left: 0;
+}
+
+.email-btn-modal.modal-dialog {
+    margin: 0px 0px 0px 0px;
+    top: 420px;
+    left: 500px;
+}
