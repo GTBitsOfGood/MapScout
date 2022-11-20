@@ -80,20 +80,6 @@
         "url-loader": "^4.0.0",
         "uuid": "^7.0.3"
     },
-    "devDependencies": {
-        "@bitwarden/cli": "^1.11.0",
-        "cross-env": "^7.0.2",
-        "eslint": "^6.8.0",
-        "eslint-config-airbnb": "^18.0.1",
-        "eslint-config-standard": "^14.1.0",
-        "eslint-plugin-import": "^2.20.0",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-node": "^11.0.0",
-        "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-react": "^7.18.0",
-        "eslint-plugin-react-hooks": "^1.7.0",
-        "fx": "^20.0.0"
-    },
     "babel": {
         "presets": [
             "env",
