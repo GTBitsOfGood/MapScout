@@ -32,6 +32,13 @@ function validateEmail(email) {
     return re.test(String(email).toLowerCase());
 }
 
+async function sendSlackMessage(email) {
+    fetch("https://hooks.slack.com/services/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", {
+    body: "{'text':'The email: " + email + " has been added to the waitlist for MapScout.'}",
+    method: "POST"
+    })
+}
+
 function Home({ firebaseAuth, firestore }) {
     const [showProviderRoutes, setShowProviderRoutes] = useState(false);
     const [email, setEmail] = useState("");
@@ -64,7 +71,7 @@ function Home({ firebaseAuth, firestore }) {
         }
     }, [email]);
 
-    function handleSubmit() {
+    async function handleSubmit() {
         const payload = { email };
         setEmailDisabled(true);
         firestore
@@ -74,6 +81,8 @@ function Home({ firebaseAuth, firestore }) {
                 setEmailDisabled(false);
                 setMessage("Thank you for signing up!");
             });
+        
+        await sendSlackMessage(email);
     }
 
     return (
@@ -138,13 +147,13 @@ function Home({ firebaseAuth, firestore }) {
                                         onChange={(e) =>
                                             setEmail(e.target.value)
                                         }
-                                        onClick={addModal}
+                                        //onClick={addModal}
                                         placeholder="name@example.com"
                                         aria-label="Sign up for our waitlist"
                                         aria-describedby="emailSignup"
                                     />
                                     <Modal
-                                        show={showEmailBtnModal}
+                                        //show={showEmailBtnModal}
                                         onHide={() =>
                                             setShowEmailBtnModal(false)
                                         }
