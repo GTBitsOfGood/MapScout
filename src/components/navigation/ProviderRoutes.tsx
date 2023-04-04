@@ -1,26 +1,33 @@
-import React, { useState, useEffect, useMemo, ReactType, useCallback } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { compose } from 'redux';
+import React, { ReactType, useCallback, useEffect, useMemo, useState } from 'react';
+import Modal from "react-bootstrap/Modal";
 import { connect } from 'react-redux';
 import {
-  withFirestore, isEmpty, isLoaded, withFirebase,
+    isEmpty, isLoaded, withFirebase,
+    withFirestore,
 } from 'react-redux-firebase';
-import NavBar from './NavBar';
-import Auth from '../auth/Auth';
-import Dashboard from '../dashboard';
-import settings from '../settings';
-import AddProvider from '../dashboard/AddProvider';
-import PasswordForgetForm from '../auth/PasswordForget';
-import Template from '../template';
-import NotFound from '../NotFound';
-import SentryWrapper from '../wrappers/SentryWrapper';
-import Chat from '../chat';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { compose } from 'redux';
 import { selectTeam } from '../../functions/reduxActions';
 import useWindowSize from '../../functions/useWindowSize';
-import Modal from "react-bootstrap/Modal";
+import NotFound from '../NotFound';
+import Auth from '../auth/Auth';
+import PasswordForgetForm from '../auth/PasswordForget';
+import Chat from '../chat';
+import Dashboard from '../dashboard';
+import AddProvider from '../dashboard/AddProvider';
+import settings from '../settings';
+import Template from '../template';
+import SentryWrapper from '../wrappers/SentryWrapper';
+import NavBar from './NavBar';
 
 import {
-  providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute, settingsRoute 
+    authRoute,
+    chatRoute,
+    formRoute,
+    providerRoute,
+    pwdRoute,
+    settingsRoute,
+    templateRoute
 } from '../../routes/pathnames';
 
 //const classNames = require("classnames");
