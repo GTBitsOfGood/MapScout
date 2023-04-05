@@ -1,26 +1,27 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { useTour } from "@reactour/tour";
+import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
+import queryString from "query-string";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
-import { compose } from "redux";
-import { connect } from "react-redux";
-import { withFirestore, isEmpty, isLoaded } from "react-redux-firebase";
+import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { FaTimesCircle } from "react-icons/fa";
+import Pagination from "react-bootstrap/Pagination";
+import Row from "react-bootstrap/Row";
+import { FaRegQuestionCircle, FaTimesCircle } from "react-icons/fa";
+import { connect } from "react-redux";
+import { isEmpty, isLoaded, withFirestore } from "react-redux-firebase";
+import { Store } from "reducers/types";
+import { compose } from "redux";
+import { GOOGLE_API_KEY } from "../../config/keys";
+import localizationStrings from "../../utils/Localization";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
-import localizationStrings from "../../utils/Localization";
-import { GOOGLE_API_KEY } from "../../config/keys";
-import { Store } from "reducers/types";
-import queryString from "query-string";
-import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
-import Pagination from "react-bootstrap/Pagination"
 
-const frame = require('../../assets/svg/Frame.svg');
+const frame = require("../../assets/svg/Frame.svg");
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -33,8 +34,8 @@ const getWidth = () =>
     document.documentElement.clientWidth ||
     document.body.clientWidth;
 
-
 const Map = (props) => {
+    const { setIsOpen } = useTour();
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
     const [lowerPageBound, setLowerPageBound] = useState(0);
     const [currPage, setCurrPage] = useState(1);
@@ -47,7 +48,7 @@ const Map = (props) => {
     const [activeProviders, setActiveProviders] = useState([]);
     const [, setTempProviders] = useState([]);
     const [, setZipProviders] = useState([]);
-    const [searchName, setSearchName] = useState(""); 
+    const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState("");
     // const [name, setName] = useState(null);
     // const [markers, setMarkers] = useState(null);
@@ -65,57 +66,68 @@ const Map = (props) => {
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
-    const items = []
-    items.push()
+    const items = [];
+    items.push();
 
-    const getTeam = useCallback((e?) => { 
-        return props.location.pathname.replace("/", "");
-    }, [props.location.pathname]);
+    const getTeam = useCallback(
+        (e?) => {
+            return props.location.pathname.replace("/", "");
+        },
+        [props.location.pathname]
+    );
 
     const clinWikiMap = getTeam() === "clinwiki";
 
-    const filterByTags = useCallback((temp?) => { 
-        setTempProviders(temp);
-        Object.keys(filtersState).forEach((filterName) => {
-            temp = temp.filter((provider) =>
-                provider[filterName]
-                    ? provider[filterName].some((r) =>
-                        filtersState[filterName].includes(r)
-                    ) || filtersState[filterName].length === 0
-                    : true
-            );
-        });
-        setActiveProviders(temp);
-    }, [filtersState]);
+    const filterByTags = useCallback(
+        (temp?) => {
+            setTempProviders(temp);
+            Object.keys(filtersState).forEach((filterName) => {
+                temp = temp.filter((provider) =>
+                    provider[filterName]
+                        ? provider[filterName].some((r) =>
+                              filtersState[filterName].includes(r)
+                          ) || filtersState[filterName].length === 0
+                        : true
+                );
+            });
+            setActiveProviders(temp);
+        },
+        [filtersState]
+    );
 
-    const filterSearch = useCallback((filterVal: string, zipCode?: string, zipProvs?) => {
-        const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
-        let temp = zipCode ? zipProvs : providers;
-        temp = temp.filter((item) => regex.test(item.facilityName));
-        filterByTags(temp);
-    }, [filterByTags,  providers]);
+    const filterSearch = useCallback(
+        (filterVal: string, zipCode?: string, zipProvs?) => {
+            const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
+            let temp = zipCode ? zipProvs : providers;
+            temp = temp.filter((item) => regex.test(item.facilityName));
+            filterByTags(temp);
+        },
+        [filterByTags, providers]
+    );
 
     // set filterIds from firestore in useeffect
 
-    const filterNormalFilters = useCallback((e?)  => {
-        const filterName = e.target.name;
-        const filterVal = e.target.value;
-        if (e.target.type === "checkbox" && e.target.checked) {
-            setFiltersState({
-                ...filtersState,
-                [filterName]: [...filtersState[filterName], filterVal],
-            });
-        } else if (e.target.type === "checkbox" && !e.target.checked) {
-            setFiltersState({
-                ...filtersState,
-                [filterName]: filtersState[filterName].filter(
-                    (filter) => filter !== filterVal
-                ),
-            });
-        }
-    }, [filtersState]);
-    
-    
+    const filterNormalFilters = useCallback(
+        (e?) => {
+            const filterName = e.target.name;
+            const filterVal = e.target.value;
+            if (e.target.type === "checkbox" && e.target.checked) {
+                setFiltersState({
+                    ...filtersState,
+                    [filterName]: [...filtersState[filterName], filterVal],
+                });
+            } else if (e.target.type === "checkbox" && !e.target.checked) {
+                setFiltersState({
+                    ...filtersState,
+                    [filterName]: filtersState[filterName].filter(
+                        (filter) => filter !== filterVal
+                    ),
+                });
+            }
+        },
+        [filtersState]
+    );
+
     useEffect(() => {
         async function fetchData() {
             const { firestore } = props;
@@ -137,7 +149,10 @@ const Map = (props) => {
                             select_type: docData.select_type,
                             id: doc.id,
                         });
-                        if (docData.select_type !== 0 && docData.options.length) {
+                        if (
+                            docData.select_type !== 0 &&
+                            docData.options.length
+                        ) {
                             data[doc.id] = {
                                 name: docData.name,
                                 options: docData.options,
@@ -149,10 +164,10 @@ const Map = (props) => {
                     return arr;
                 });
             setCategories(cat);
-    
+
             setFiltersState(filtersObj);
             setFiltersData(data);
-    
+
             const collections2 = firestore.collection("providers");
             let provs = await collections2
                 .where("team", "==", getTeam())
@@ -165,11 +180,11 @@ const Map = (props) => {
                     });
                     return arr;
                 });
-    
+
             if (clinWikiMap) {
                 const parsed = queryString.parse(window.location.search);
                 let clinWikiSearchHash = "";
-    
+
                 if (typeof parsed.searchHash == "string") {
                     clinWikiSearchHash = parsed.searchHash;
                 }
@@ -178,12 +193,14 @@ const Map = (props) => {
                 );
                 provs = [...provs, ...clinwikiProviders];
             }
-    
+
             setProviders(provs);
             setActiveProviders(provs);
-    
+
             const teamCollection = firestore.collection("teams").doc(getTeam());
-            const teamData = await teamCollection.get().then((doc) => doc.data());
+            const teamData = await teamCollection
+                .get()
+                .then((doc) => doc.data());
             setPrimaryColor(teamData.primaryColor);
             setSecondaryColor(teamData.secondaryColor);
             setDefaultLat(teamData.latitude);
@@ -197,8 +214,6 @@ const Map = (props) => {
             setTempProviders(providers);
         });
     }, []);
-
-
 
     const filterZipcode = async (filterVal) => {
         const response = await fetch(
@@ -231,9 +246,9 @@ const Map = (props) => {
             const a =
                 Math.sin(deltaTheta / 2) * Math.sin(deltaTheta / 2) +
                 Math.cos(theta1) *
-                Math.cos(theta2) *
-                Math.sin(deltaLambda / 2) *
-                Math.sin(deltaLambda / 2);
+                    Math.cos(theta2) *
+                    Math.sin(deltaLambda / 2) *
+                    Math.sin(deltaLambda / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             const miDistance = (R * c) / metersPerMile;
 
@@ -263,76 +278,90 @@ const Map = (props) => {
         );
     };
 
-    const filterZipCodeOver100 = useCallback((filterVal?) => { 
-        const filterProviders = activeProviders.filter(
-            provider => {
-                return provider.address[0].includes(filterVal)
-            }
-        )
-        setActiveProviders(filterProviders);
-    }, [activeProviders ]);
-    
-    const filterProviders = useCallback((e?) => {
-        if (typeof e !== "undefined") {
-            const filtertype = e.target.getAttribute("itemType");
-            const filterVal = e.target.value;
-            if (filtertype === "search") {
-                setSearchName(filterVal);
-                filterSearch(e.target.value);
-            } else if (filtertype === "zipcode") {
-                setSearchZip(filterVal.replace(/\D/g, ""));
-                if (filterVal.length === 5) {
-                    if (providers.length > 10) {
-                        filterZipCodeOver100(filterVal);
-                    } else {
-                        filterZipcode(filterVal);
+    const filterZipCodeOver100 = useCallback(
+        (filterVal?) => {
+            const filterProviders = activeProviders.filter((provider) => {
+                return provider.address[0].includes(filterVal);
+            });
+            setActiveProviders(filterProviders);
+        },
+        [activeProviders]
+    );
+
+    const filterProviders = useCallback(
+        (e?) => {
+            if (typeof e !== "undefined") {
+                const filtertype = e.target.getAttribute("itemType");
+                const filterVal = e.target.value;
+                if (filtertype === "search") {
+                    setSearchName(filterVal);
+                    filterSearch(e.target.value);
+                } else if (filtertype === "zipcode") {
+                    setSearchZip(filterVal.replace(/\D/g, ""));
+                    if (filterVal.length === 5) {
+                        if (providers.length > 10) {
+                            filterZipCodeOver100(filterVal);
+                        } else {
+                            filterZipcode(filterVal);
+                        }
+                    } else if (filterVal.length === 0) {
+                        setActiveProviders(providers);
+                    } else if (distances !== {}) {
+                        setDistances({});
                     }
-                } else if (filterVal.length === 0) {
-                    setActiveProviders(providers);
-                } else if (distances !== {}) {
-                    setDistances({});
+                } else {
+                    filterNormalFilters(e);
                 }
-            } else {
-                filterNormalFilters(e);
             }
-        }
-    }, [distances, filterNormalFilters, setDistances, filterZipCodeOver100, providers.length, filterZipcode, filterSearch]);
+        },
+        [
+            distances,
+            filterNormalFilters,
+            setDistances,
+            filterZipCodeOver100,
+            providers.length,
+            filterZipcode,
+            filterSearch,
+        ]
+    );
 
-    
     //const filterProviders = async (e?) => {
-        // if (typeof e !== "undefined") {
-        //     const filtertype = e.target.getAttribute("itemType");
-        //     const filterVal = e.target.value;
-        //     if (filtertype === "search") {
-        //         setSearchName(filterVal);
-        //         filterSearch(e.target.value);
-        //     } else if (filtertype === "zipcode") {
-        //         setSearchZip(filterVal.replace(/\D/g, ""));
-        //         if (filterVal.length === 5) {
-        //             if (providers.length > 10) {
-        //                 filterZipCodeOver100(filterVal);
-        //             } else {
-        //                 await filterZipcode(filterVal);
-        //             }
-        //         } else if (distances !== {}) {
-        //             setDistances({});
-        //         }
-        //     } else {
-        //         await filterNormalFilters(e);
-        //     }
-        // }
+    // if (typeof e !== "undefined") {
+    //     const filtertype = e.target.getAttribute("itemType");
+    //     const filterVal = e.target.value;
+    //     if (filtertype === "search") {
+    //         setSearchName(filterVal);
+    //         filterSearch(e.target.value);
+    //     } else if (filtertype === "zipcode") {
+    //         setSearchZip(filterVal.replace(/\D/g, ""));
+    //         if (filterVal.length === 5) {
+    //             if (providers.length > 10) {
+    //                 filterZipCodeOver100(filterVal);
+    //             } else {
+    //                 await filterZipcode(filterVal);
+    //             }
+    //         } else if (distances !== {}) {
+    //             setDistances({});
+    //         }
+    //     } else {
+    //         await filterNormalFilters(e);
+    //     }
+    // }
     //};
-    
-    const handlePageChange = useCallback((newPage) => {
-        const pageDifference = newPage - currPage;
-        let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
 
-        setLowerPageBound(newLowerBound);
-        let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+    const handlePageChange = useCallback(
+        (newPage) => {
+            const pageDifference = newPage - currPage;
+            let newLowerBound = lowerPageBound + pageDifference * PAGE_SIZE;
 
-        setUpperPageBound(newUpperBound);
-        setCurrPage(newPage);
-    }, [currPage, lowerPageBound, upperPageBound]);
+            setLowerPageBound(newLowerBound);
+            let newUpperBound = upperPageBound + pageDifference * PAGE_SIZE;
+
+            setUpperPageBound(newUpperBound);
+            setCurrPage(newPage);
+        },
+        [currPage, lowerPageBound, upperPageBound]
+    );
 
     useEffect(() => {
         if (isLoaded(providers)) {
@@ -367,11 +396,8 @@ const Map = (props) => {
     }, []);
 
     useEffect(() => {
-        handlePageChange(1)
-    }, [activeProviders])
-
-
-    
+        handlePageChange(1);
+    }, [activeProviders]);
 
     const [width, setWidth] = useState(getWidth());
 
@@ -386,13 +412,6 @@ const Map = (props) => {
     }, []);
 
     // const ref = useRef(null);
-
-
-    
-
-    
-
-    
 
     // const filterProviders = async (e?) => {
     //     if (typeof e !== "undefined") {
@@ -418,15 +437,12 @@ const Map = (props) => {
     //     }
     // };
 
-    
-
-
     /**
-  * if number_of_providers <= 100:
-  *    don't paginate
-  * else
-  *    paginate
-  */
+     * if number_of_providers <= 100:
+     *    don't paginate
+     * else
+     *    paginate
+     */
 
     function getPages() {
         let paginatedData = [];
@@ -445,12 +461,10 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
             } else if (currPage > maxPage - 3) {
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
+                paginatedData.push(<Pagination.Ellipsis />);
                 for (let number = maxPage - 3; number <= maxPage; number++) {
                     paginatedData.push(
                         <Pagination.Item
@@ -460,13 +474,15 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
             } else {
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
-                for (let number = currPage - 1; number <= currPage + 1; number++) {
+                paginatedData.push(<Pagination.Ellipsis />);
+                for (
+                    let number = currPage - 1;
+                    number <= currPage + 1;
+                    number++
+                ) {
                     paginatedData.push(
                         <Pagination.Item
                             active={number === currPage}
@@ -475,11 +491,9 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
+                paginatedData.push(<Pagination.Ellipsis />);
             }
         } else {
             if (currPage <= 3) {
@@ -492,15 +506,11 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
+                paginatedData.push(<Pagination.Ellipsis />);
             } else if (currPage > maxPage - 3) {
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
+                paginatedData.push(<Pagination.Ellipsis />);
                 for (let number = maxPage - 3; number <= maxPage; number++) {
                     paginatedData.push(
                         <Pagination.Item
@@ -510,13 +520,15 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
             } else {
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
-                for (let number = currPage - 1; number <= currPage + 1; number++) {
+                paginatedData.push(<Pagination.Ellipsis />);
+                for (
+                    let number = currPage - 1;
+                    number <= currPage + 1;
+                    number++
+                ) {
                     paginatedData.push(
                         <Pagination.Item
                             active={number === currPage}
@@ -525,11 +537,9 @@ const Map = (props) => {
                         >
                             {number}
                         </Pagination.Item>
-                    )
+                    );
                 }
-                paginatedData.push(
-                    <Pagination.Ellipsis />
-                )
+                paginatedData.push(<Pagination.Ellipsis />);
             }
         }
         return paginatedData;
@@ -537,7 +547,6 @@ const Map = (props) => {
 
     function handlePaginationNext() {
         if (currPage !== Math.ceil(activeProviders.length / PAGE_SIZE)) {
-
             handlePageChange(currPage + 1);
         }
     }
@@ -563,8 +572,7 @@ const Map = (props) => {
                 isFiltersEmpty = false;
             }
         });
-        
-        
+
         return !isFiltersEmpty;
     }
 
@@ -614,7 +622,13 @@ const Map = (props) => {
 
     const renderTagControl = () => (
         <>
-            <div className={classNames("filter-row", "padder")}>
+            <div
+                className={classNames("filter-row", "padder", "filters")}
+                style={{ display: "flex", alignItems: "center" }}
+            >
+                <div style={{ marginRight: "8px", marginBottom: "6px" }}>
+                    {filters}:
+                </div>
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -655,10 +669,14 @@ const Map = (props) => {
                         </Button>
                     </>
                 ) : (
-                        <Button variant="link" onClick={() => setMoreFilter(true)}>
-                            + {moreFilters}
-                        </Button>
-                    )}
+                    <Button variant="link" onClick={() => setMoreFilter(true)}>
+                        + {moreFilters}
+                    </Button>
+                )}
+                <FaRegQuestionCircle
+                    className="filter-tooltip-tutorial"
+                    style={{ marginBottom: "4px" }}
+                />
             </div>
         </>
     );
@@ -715,6 +733,7 @@ const Map = (props) => {
         showLabel,
         lessFilters,
         moreFilters,
+        filters,
     } = localizationStrings;
 
     const isDesktop = width > 768;
@@ -765,17 +784,32 @@ const Map = (props) => {
                                 </Col>
                             </Row>
                         </div>
-                        <Button
-                            variant="primary"
-                            style={{
-                                borderColor: primaryColor,
-                                backgroundColor: primaryColor,
-                            }}
-                            onClick={switchView}
-                            className="switch-view-button"
-                        >
-                            {isDesktop ? (defaultView ? hideLabel : showLabel) : (defaultView ? showLabel : hideLabel)}
-                        </Button>
+                        <div>
+                            <Button
+                                className="button-tutorial"
+                                variant="primary"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                Open Tour
+                            </Button>
+                            <Button
+                                variant="primary"
+                                style={{
+                                    borderColor: primaryColor,
+                                    backgroundColor: primaryColor,
+                                }}
+                                onClick={switchView}
+                                className="switch-view-button"
+                            >
+                                {isDesktop
+                                    ? defaultView
+                                        ? hideLabel
+                                        : showLabel
+                                    : defaultView
+                                    ? showLabel
+                                    : hideLabel}
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 <div className={classNames({ "row-nowrap": isDesktop })}>
@@ -783,13 +817,23 @@ const Map = (props) => {
                         className={classNames("map-list")}
                         style={{
                             pointerEvents: point || isDesktop ? "all" : "none",
-                            width: isDesktop ? (defaultView ? "50vw" : "100vw") : (defaultView ? "100vw" : 0),
-                            display: !isDesktop && !defaultView && "none"
+                            width: isDesktop
+                                ? defaultView
+                                    ? "50vw"
+                                    : "100vw"
+                                : defaultView
+                                ? "100vw"
+                                : 0,
+                            display: !isDesktop && !defaultView && "none",
                         }}
                     >
                         {renderTagControl()}
                         <div>
-                            <div className="tag-row padder">
+                            <div
+                                className={classNames("tag-row padder", {
+                                    "result-tutorial": isEmpty(activeProviders),
+                                })}
+                            >
                                 {Object.keys(filtersState).map(renderTag)}
                                 {evaluateFilters() && (
                                     <div
@@ -808,115 +852,165 @@ const Map = (props) => {
                                 <div>
                                     <strong className="padder">
                                         {activeProviders.length}
-                                        {clinWikiMap ? " trials found" : " providers found"}
+                                        {clinWikiMap
+                                            ? " trials found"
+                                            : " providers found"}
                                     </strong>
                                     <hr />
-                                    {
-                                        activeProviders.slice(lowerPageBound, upperPageBound).map((i, index) => (
-                                            <div>
-                                            <ProviderCell
-                                                key={i.id}
-                                                item={i}
-                                                index={index}
-                                                primaryColor={primaryColor}
-                                                onMouseEnter={debounce(() => {
-                                                    if (defaultView && isDesktop)
-                                                        setCurrmarker(index);
-                                                }, 300)}
-                                                onClick={() =>
-                                                    handleCellClick(index)
-                                                }
-                                                distances={distances}
-                                            />
-                                        </div>
-                                    ))
-                                }
+                                    {activeProviders
+                                        .slice(lowerPageBound, upperPageBound)
+                                        .map((i, index) => (
+                                            <div
+                                                className={classNames({
+                                                    "result-tutorial":
+                                                        index == 0,
+                                                })}
+                                            >
+                                                <ProviderCell
+                                                    key={i.id}
+                                                    item={i}
+                                                    index={index}
+                                                    primaryColor={primaryColor}
+                                                    onMouseEnter={debounce(
+                                                        () => {
+                                                            if (
+                                                                defaultView &&
+                                                                isDesktop
+                                                            )
+                                                                setCurrmarker(
+                                                                    index
+                                                                );
+                                                        },
+                                                        300
+                                                    )}
+                                                    onClick={() =>
+                                                        handleCellClick(index)
+                                                    }
+                                                    distances={distances}
+                                                />
+                                            </div>
+                                        ))}
                                 </div>
                             ) : (
                                 <Row>
                                     <div>
                                         <Row>
-                                            <img src={frame} alt="No providers found." />
+                                            <img
+                                                src={frame}
+                                                alt="No providers found."
+                                            />
                                             <Col>
-                                            <b>Whoops!</b>
-                                            <p>Sorry, your query returned no matching providers.</p>
-                                            <p>Please adjust the filters or try different keywords.</p>
+                                                <b>Whoops!</b>
+                                                <p>
+                                                    Sorry, your query returned
+                                                    no matching providers.
+                                                </p>
+                                                <p>
+                                                    Please adjust the filters or
+                                                    try different keywords.
+                                                </p>
                                             </Col>
                                         </Row>
                                     </div>
                                 </Row>
                             )}
-                            {
-                                (activeProviders.length / PAGE_SIZE > 1) ?
-                                    <Pagination>
-                                        <Pagination.First
-                                            onClick={() => handlePageChange(1)}
-                                        />
-                                        <Pagination.Prev
-                                            onClick={() => handlePaginationPrev()}
-                                        />
-                                        {getPages()}
-                                        <Pagination.Next
-                                            onClick={() => handlePaginationNext()}
-                                        />
-                                        <Pagination.Last
-                                            onClick={() => handlePageChange(Math.ceil(activeProviders.length / PAGE_SIZE))}
-                                        />
-                                    </Pagination> : <div />
-                            }
+                            {activeProviders.length / PAGE_SIZE > 1 ? (
+                                <Pagination>
+                                    <Pagination.First
+                                        onClick={() => handlePageChange(1)}
+                                    />
+                                    <Pagination.Prev
+                                        onClick={() => handlePaginationPrev()}
+                                    />
+                                    {getPages()}
+                                    <Pagination.Next
+                                        onClick={() => handlePaginationNext()}
+                                    />
+                                    <Pagination.Last
+                                        onClick={() =>
+                                            handlePageChange(
+                                                Math.ceil(
+                                                    activeProviders.length /
+                                                        PAGE_SIZE
+                                                )
+                                            )
+                                        }
+                                    />
+                                </Pagination>
+                            ) : (
+                                <div />
+                            )}
                         </div>
                         <div>
-                            {isDesktop && activeProviders && activeProviders[selectedIndex] && (
-                                <Modal
-                                    show={showModal}
-                                    onHide={() => setShowModal(false)}
-                                    dialogClassName="myModal"
-                                    scrollable
-                                >
-                                    <Modal.Header
-                                        style={{
-                                            backgroundColor: primaryColor
-                                        }}
-                                        closeButton
-                                    />
-                                    <Modal.Body className="modal-body">
-                                        <ProviderInfo
-                                            item={activeProviders[selectedIndex]}
-                                            categories={categories}
+                            {isDesktop &&
+                                activeProviders &&
+                                activeProviders[selectedIndex] && (
+                                    <Modal
+                                        show={showModal}
+                                        onHide={() => setShowModal(false)}
+                                        dialogClassName="myModal"
+                                        scrollable
+                                    >
+                                        <Modal.Header
+                                            style={{
+                                                backgroundColor: primaryColor,
+                                            }}
+                                            closeButton
                                         />
-                                    </Modal.Body>
-                                </Modal>
-                            )}
+                                        <Modal.Body className="modal-body">
+                                            <ProviderInfo
+                                                item={
+                                                    activeProviders[
+                                                        selectedIndex
+                                                    ]
+                                                }
+                                                categories={categories}
+                                            />
+                                        </Modal.Body>
+                                    </Modal>
+                                )}
 
-                            {!isDesktop && activeProviders && activeProviders[selectedIndex] && (
-                                <Modal
-                                    show={showModal}
-                                    onHide={() => setShowModal(false)}
-                                    dialogClassName="modalMobile"
-                                    scrollable
-                                >
-                                    <Modal.Header
-                                        style={{
-                                            backgroundColor: primaryColor
-                                        }}
-                                        closeButton
-                                    />
-                                    <Modal.Body className="modal-body">
-                                        <ProviderInfoMobile
-                                            item={activeProviders[selectedIndex]}
-                                            width={width}
-                                            categories={categories}
+                            {!isDesktop &&
+                                activeProviders &&
+                                activeProviders[selectedIndex] && (
+                                    <Modal
+                                        show={showModal}
+                                        onHide={() => setShowModal(false)}
+                                        dialogClassName="modalMobile"
+                                        scrollable
+                                    >
+                                        <Modal.Header
+                                            style={{
+                                                backgroundColor: primaryColor,
+                                            }}
+                                            closeButton
                                         />
-                                    </Modal.Body>
-                                </Modal>
-                            )}
+                                        <Modal.Body className="modal-body">
+                                            <ProviderInfoMobile
+                                                item={
+                                                    activeProviders[
+                                                        selectedIndex
+                                                    ]
+                                                }
+                                                width={width}
+                                                categories={categories}
+                                            />
+                                        </Modal.Body>
+                                    </Modal>
+                                )}
                         </div>
                     </div>
                     <div
                         className={classNames("map-google-map")}
                         style={{
-                            width: isDesktop ? (defaultView ? "50vw" : 0) : (defaultView ? 0 : "100vw"),
-                            display: !isDesktop && defaultView && "none"
+                            width: isDesktop
+                                ? defaultView
+                                    ? "50vw"
+                                    : 0
+                                : defaultView
+                                ? 0
+                                : "100vw",
+                            display: !isDesktop && defaultView && "none",
                         }}
                         onMouseLeave={() => setPoint(true)}
                     >

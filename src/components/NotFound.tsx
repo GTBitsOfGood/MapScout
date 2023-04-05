@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => (
+const NotFound = () => (
   <div className="bg-white" style={{ height: '100vh' }}>
     <div className="text-center">
       <div className="not-found-oops">
@@ -15,3 +15,5 @@ export default () => (
     </div>
   </div>
 );
+
+export default NotFound;

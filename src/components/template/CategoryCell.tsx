@@ -1,14 +1,17 @@
-import React, { useState, useRef } from 'react';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
+import React, { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import FormControl from 'react-bootstrap/FormControl';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Row from 'react-bootstrap/Row';
+import { Collapse } from 'react-collapse';
 import { FiMoreVertical } from 'react-icons/fi';
 import {
-  IoMdClose, IoIosArrowDown, IoIosArrowUp, IoIosTrash, IoIosRefresh,
+    IoIosArrowDown, IoIosArrowUp,
+    IoIosRefresh,
+    IoIosTrash,
+    IoMdClose,
 } from 'react-icons/io';
-import { Collapse } from 'react-collapse';
 
 export default ({
   item, index, deleteCat, disableCat, enableCat, addOption, removeOption, changeType, rename, isDragged,
