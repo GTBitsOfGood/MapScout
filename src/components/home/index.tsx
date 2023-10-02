@@ -34,8 +34,8 @@ function validateEmail(email) {
 
 async function sendSlackMessage(email) {
     fetch("https://hooks.slack.com/services/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", {
-    body: "{'text':'The email: " + email + " has been added to the waitlist for MapScout.'}",
-    method: "POST"
+        body: "{'text':'The email: " + email + " has been added to the waitlist for MapScout.'}",
+        method: "POST"
     })
 }
 
@@ -81,7 +81,7 @@ function Home({ firebaseAuth, firestore }) {
                 setEmailDisabled(false);
                 setMessage("Thank you for signing up!");
             });
-        
+
         await sendSlackMessage(email);
     }
 
@@ -96,6 +96,12 @@ function Home({ firebaseAuth, firestore }) {
                         <span id="head-logo">
                             <b>MapScout</b> <img src={logo} alt="logo" />
                         </span>
+                        <a href="https://www.netlify.com">
+                            <img
+                                src="https://www.netlify.com/v3/img/components/netlify-dark.svg"
+                                alt="Deploys by Netlify"
+                            />
+                        </a>
                         <Button
                             as={Link}
                             to={showProviderRoutes ? providerRoute : authRoute}
