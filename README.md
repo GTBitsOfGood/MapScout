@@ -31,6 +31,8 @@ The Dockerized application will have live-reloading of changes made on the host 
 
 Note: On linux-based operating systems, if you come across an entrypoint permission error (i.e. `process: exec: "./entrypoint.sh": permission denied: unknown`), run `chmod +x ./entrypoint.sh` to make the shell file an executable.
 
+Windows Users: If you come across this error `exec ./entrypoint.sh: no such file or directory` when running the docker compose command, please follow this [Stackoverflow thread](https://stackoverflow.com/questions/40452508/docker-error-on-an-entrypoint-script-no-such-file-or-directory) to fix it.
+
 ## Gitflow
 
 The `master/main` branch automatically deploys to production, so all code should first go through the `develop` branch first. Mapscout only accepts code that has been approved from a Pull Request. In order to make changes to the code, we recommend the following steps:
