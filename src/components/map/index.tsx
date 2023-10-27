@@ -20,8 +20,10 @@ import ProviderInfo from "../subcomponents/ProviderInfo";
 import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const frame = require("../../assets/svg/Frame.svg");
+
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
@@ -66,6 +68,7 @@ const Map = (props) => {
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
+    const [isOpen, setOpen] = useState(false);
     const items = [];
     items.push();
 
@@ -674,9 +677,92 @@ const Map = (props) => {
                     </Button>
                 )}
                 <FaRegQuestionCircle
+                    data-tooltip-id="my-tooltip-1"
                     className="filter-tooltip-tutorial"
                     style={{ marginBottom: "4px" }}
+                    onMouseEnter={() => setOpen(true)}
                 />
+                <ReactTooltip
+                    id="my-tooltip-1"
+                    place="right"
+                    isOpen = {isOpen}
+                    border = "true"
+                    variant = "light"
+                    arrowColor = "white"
+                    style={{
+                    pointerEvents: "auto",
+                    padding: "0px",
+                    borderStyle: "solid",
+                    borderWidth: 'thin',
+                    borderRadius: '8px',
+                    }}
+                >
+                    <div>
+                    <div
+                        style={{
+                        backgroundColor: "#244D75",
+                        borderTopLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
+                        }}
+                    >
+                        <h4
+                        style={{
+                            margin: "0px",
+                            padding: "1rem 5rem",
+                            paddingLeft: "0.5rem",
+                            color: "white"
+                        }}
+                        >
+                        {" "}
+                        Filters{" "}
+                        </h4>
+                    </div>
+                    <div style={{ padding: "0.2rem 0.5rem" }}>
+                        <p
+                        style={{
+                            fontSize: "11px",
+                            margin: "0px",
+                            borderRadius: "0px",
+                            lineBreak: "anywhere",
+                            color: "black",
+                            maxWidth: "12rem",
+                            borderBottom: "1px",
+                            borderBottomColor: "black",
+                            borderBottomStyle: "solid",
+                            paddingBottom: "0.2rem"
+                        }}
+                        >
+                        {" "}
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                        enim ad minim v{" "}
+                        </p>
+                    </div>
+                    <div
+                        style={{
+                        padding: "0.2rem 0.5rem",
+                        borderBottomLeftRadius: "4px",
+                        borderBottomRightRadius: "4px"
+                        }}
+                    >
+                        <button
+                        onClick={() => {
+                            setOpen(false);
+                        }}
+                        style={{
+                            backgroundColor: "#244D75",
+                            border: "0px",
+                            color: "white",
+                            padding: "0.3rem",
+                            marginLeft: "9.2rem",
+                            borderRadius: '4px',
+                        }}
+                        >
+                        Got It!
+                        </button>
+                    </div>
+                    </div>
+                </ReactTooltip>
             </div>
         </>
     );
