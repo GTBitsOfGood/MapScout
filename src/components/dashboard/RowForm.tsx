@@ -4,11 +4,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { AsYouType, isValidNumberForRegion, parseIncompletePhoneNumber } from 'libphonenumber-js';
 import MultiSelect from '@khanacademy/react-multi-select';
-import FileUploader from 'react-firebase-file-uploader';
 import Select from 'react-select';
 import { storage } from '../../store';
 import TimeTable from './TimeTable';
 import GoogleSuggest from './GoogleSuggest';
+import ImageModal from './ImageModal';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 import ActionForm from './ActionForm';
 
@@ -40,12 +42,13 @@ const RowForm = (props) => {
   };
 
   const [item, setItem] = useState(props.item.facilityName ? props.item : defaultItem);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const itemFields = Object.keys(props.filters);
     itemFields.forEach((field) => { defaultItem[field] = []; });
     setItem(props.item.facilityName ? props.item : defaultItem);
-  }, [props.filters]);
+  }, []); 
 
   function handleInputChange(e) {
     let newItem = {};
@@ -136,7 +139,9 @@ const RowForm = (props) => {
     props.setItem(newItem);
   }
 
-  const handleUploadSuccess = async (filename) => {
+  const handleUploadSuccess = async (file) => {
+    const filename = file.name;
+    await storage.ref('images').child(filename).put(file);
     let newItem = { ...item, image: filename };
     await storage.ref('images').child(filename).getDownloadURL()
       .then((url) => {
@@ -144,7 +149,17 @@ const RowForm = (props) => {
         setItem(newItem);
       });
     props.setItem(newItem);
+    setShowModal(false);
   };
+
+  const handleDeleteImage = async () => {
+    if (item.image) {
+      await storage.ref('images').child(item.image).delete().catch(error => console.error(error));
+    }
+    let newItem = { ...item, image: "", imageURL: null };
+    setItem(newItem);
+    props.setItem(newItem);
+  }
 
   switch (props.step) {
     case 0:
@@ -257,7 +272,7 @@ const RowForm = (props) => {
               <Form.Group>
                 <Form.Label>Image</Form.Label>
                 <br />
-                <label className="btn btn-primary btn-block">
+                {/* <label className="btn btn-primary btn-block">
                   Upload
                   <FileUploader
                     hidden
@@ -266,7 +281,20 @@ const RowForm = (props) => {
                     storageRef={storage.ref('images')}
                     onUploadSuccess={handleUploadSuccess}
                   />
-                </label>
+                  <ImageModal/>
+                </label> */}
+                <Button className="btn btn-primary btn-block" onClick={() => setShowModal(true)}>
+                  Upload
+                </Button>
+                <Button className="btn btn-danger btn-block" onClick={handleDeleteImage}>
+                  Delete
+                </Button>
+                <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
+                    <Modal.Header>Image Upload</Modal.Header>
+                    <Modal.Body>
+                        <ImageModal handleSuccess={handleUploadSuccess}/>
+                    </Modal.Body>
+                </Modal>
               </Form.Group>
             </Col>
           </Row>

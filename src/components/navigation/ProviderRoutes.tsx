@@ -1,24 +1,36 @@
-import React, { useState, useEffect, useMemo, Component, ReactType } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { compose } from 'redux';
+import React, { ReactType, useCallback, useEffect, useMemo, useState } from 'react';
+import Modal from "react-bootstrap/Modal";
 import { connect } from 'react-redux';
 import {
-  withFirestore, isEmpty, isLoaded, withFirebase,
+    isEmpty, isLoaded, withFirebase,
+    withFirestore,
 } from 'react-redux-firebase';
-import NavBar from './NavBar';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { compose } from 'redux';
+import { selectTeam } from '../../functions/reduxActions';
+import useWindowSize from '../../functions/useWindowSize';
+import NotFound from '../NotFound';
 import Auth from '../auth/Auth';
+import PasswordForgetForm from '../auth/PasswordForget';
+import Chat from '../chat';
 import Dashboard from '../dashboard';
 import AddProvider from '../dashboard/AddProvider';
-import PasswordForgetForm from '../auth/PasswordForget';
+import settings from '../settings';
 import Template from '../template';
-import NotFound from '../NotFound';
 import SentryWrapper from '../wrappers/SentryWrapper';
-import Chat from '../chat';
-import { selectTeam } from '../../functions/reduxActions';
+import NavBar from './NavBar';
 
 import {
-  providerRoute, formRoute, authRoute, pwdRoute, templateRoute, chatRoute 
+    authRoute,
+    chatRoute,
+    formRoute,
+    providerRoute,
+    pwdRoute,
+    settingsRoute,
+    templateRoute
 } from '../../routes/pathnames';
+
+//const classNames = require("classnames");
 
 type PrivateRouteProps = {
   exact?: boolean,
@@ -63,19 +75,25 @@ function DashboardContent({ isAuth, auth }) {
           path={chatRoute}
           component={Chat}
         />
+        <PrivateRoute
+          path={settingsRoute}
+          component={settings}
+        />
       </Switch>
     </div>
-  ), [auth]);
+  ), []);
 }
 
 const ProviderRoutes = (props) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { width } = useWindowSize();
+  const [alerted, setAlerted] = useState(false);
 
-  async function fetchTeam() {
+  const fetchTeam = useCallback(() => {
     const { firestore, team, firebaseAuth } = props;
     setIsLoading(true);
     if ((!team || !team.name) && typeof firebaseAuth.auth.uid === 'string') {
-      await firestore
+      firestore
         .collection('users')
         .where('UID', '==', firebaseAuth.auth.uid)
         .get()
@@ -98,15 +116,16 @@ const ProviderRoutes = (props) => {
     } else if (isLoaded(firebaseAuth.auth) && firebaseAuth.auth.uid === undefined) {
       setIsLoading(false);
     }
-  }
-
-  useEffect(() => {
-    fetchTeam();
-  }, []);
+  }, [props]);
 
   useEffect(() => {
     fetchTeam();
   }, [props.firebaseAuth.auth]);
+
+  useEffect(() => {
+    // TODO: Define a constant for mobile width
+    width > 768 && setAlerted(false);
+  }, [width]);
 
   const logout = () => {
     props.firebase.logout()
@@ -128,32 +147,45 @@ const ProviderRoutes = (props) => {
   }
 
   return (
-    <SentryWrapper>
-      <Switch>
-        <Route path={providerRoute}>
-          <>
-            <NavBar
-              team={props.team}
-              logout={logout}
-            />
-            <DashboardContent
-              isAuth={isEmpty(props.firebaseAuth.auth)}
-              auth={props.firebaseAuth}
-            />
-          </>
-        </Route>
-        <Route
-          exact
-          path={authRoute}
-          component={Auth}
-        />
-        <Route
-          path={pwdRoute}
-          component={PasswordForgetForm}
-        />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
-    </SentryWrapper>
+    <div style={{position: 'relative'}}>
+      {width <= 768 ? (
+        <Modal
+          show={!alerted}
+          onHide={() => setAlerted(true)}
+          scrollable
+        >
+          <Modal.Header closeButton className="bg-warning">
+            WARNING: The Admin Dashboard is not optimized for small screens
+          </Modal.Header>
+        </Modal>
+      ) : (<></>)}
+      <SentryWrapper>
+        <Switch>
+          <Route path={providerRoute}>
+            <>
+              <NavBar
+                team={props.team}
+                logout={logout}
+              />
+              <DashboardContent
+                isAuth={isEmpty(props.firebaseAuth.auth)}
+                auth={props.firebaseAuth}
+              />
+            </>
+          </Route>
+          <Route
+            exact
+            path={authRoute}
+            component={Auth}
+          />
+          <Route
+            path={pwdRoute}
+            component={PasswordForgetForm}
+          />
+          <Route exact path="*" component={NotFound} />
+        </Switch>
+      </SentryWrapper>
+    </div>
   );
 };
 

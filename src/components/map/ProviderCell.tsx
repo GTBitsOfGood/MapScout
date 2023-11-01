@@ -1,10 +1,10 @@
 import Badge from 'react-bootstrap/Badge';
 import React, { useEffect, useState } from 'react';
 import {
-  FaMapMarkerAlt, FaPhone, FaTimesCircle, FaLocationArrow, FaMap,
+  FaMapMarkerAlt, FaPhone, FaLocationArrow, 
 } from 'react-icons/fa';
 import LazyLoad from 'react-lazy-load';
-import { GOOGLE_API_KEY } from '../../config/keys';
+//import { GOOGLE_API_KEY } from '../../config/keys';
 
 const classNames = require('classnames');
 
@@ -21,17 +21,12 @@ export default ({
     } else if (myDistance) {
       setMyDistance(null);
     }
-  }, [distances]);
+  }, [distances, item.facilityName, myDistance]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        if (typeof item.imageURL === 'string') {
-          await setImage(item.imageURL);
-        } else {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=100x100&location=${item.latitude},${item.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
-          setImage(res.url);
-        }
+        await setImage(item.imageURL);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
@@ -39,7 +34,7 @@ export default ({
       }
     }
     fetchData();
-  }, []);
+  }, [item.imageURL]);
 
   return (
     <div

@@ -19,9 +19,10 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
+    'only-warn',
     'react',
   ],
   rules: {
-    'react/jsx-props-no-spreading': ['off']
+    'react/jsx-props-no-spreading': ['off'],
   },
 };

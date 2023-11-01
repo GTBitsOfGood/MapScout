@@ -34,7 +34,7 @@ const SingleProvider = (props) => (
             onClick={async () => {
               props.setLoading();
               const collections = props.firestore.collection('providers');
-              const filters = await collections
+              await collections
                 .where('id', '==', props.item.id)
                 .get()
                 .then(async (querySnapshot) => {

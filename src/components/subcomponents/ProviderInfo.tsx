@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FaMapMarkerAlt, FaRegClock, FaPhone,
 } from 'react-icons/fa';
@@ -14,6 +14,7 @@ import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
 import Linkify from 'react-linkify';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { Store } from 'reducers/types';
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');
@@ -27,12 +28,7 @@ const ProviderInfo = (props) => {
         const res2 = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${GOOGLE_API_KEY}&format=png&visual_refresh=true`
              + `&markers=${props.item.latitude},${props.item.longitude}`);
         setStreetView(res2.url);
-        if (typeof props.item.imageURL === 'string') {
-          setImage(props.item.imageURL);
-        } else {
-          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${props.item.latitude},${props.item.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
-          setImage(res.url);
-        }
+        setImage(props.item.imageURL);
         setIsLoading(false);
       } catch (e) {
         setIsLoading(false);
@@ -121,7 +117,7 @@ const ProviderInfo = (props) => {
               {props.item.website && props.item.website[0] ? <FiGlobe size="20px" style={{ paddingTop: '5px', color: '#007bff' }} /> : <div />}
               {props.item.website && props.item.website[0] ? (
                 <div style={{ paddingLeft: '15px' }}>
-                  <a href={props.item.website[0]} target="_blank">Visit Website</a>
+                  <a href={props.item.website[0]} target="_blank" rel="noopener noreferrer">Visit Website</a>
                 </div>
               ) : <div />}
             </div>
@@ -139,7 +135,7 @@ const ProviderInfo = (props) => {
           <Col>
             <Card>
               <div>
-                <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank">
+                <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank" rel="noopener noreferrer">
                   <Card.Img
                     src={streetView}
                     alt="Google Map"
@@ -200,9 +196,9 @@ function calculateHours(props) {
   const abbrevDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   for (let i = 1; i < 7; i++) {
     // not both undefined
-    if (props.item.hours[days[i]] != props.item.hours[days[i - 1]]) {
-      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] != props.item.hours[days[i - 1]][0]
-      || props.item.hours[days[i]][1] != props.item.hours[days[i - 1]][1]) {
+    if (props.item.hours[days[i]] !== props.item.hours[days[i - 1]]) {
+      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] !== props.item.hours[days[i - 1]][0]
+      || props.item.hours[days[i]][1] !== props.item.hours[days[i - 1]][1]) {
         startandFinish.push(i - 1);
         startandFinish.push(i);
       }
@@ -211,9 +207,9 @@ function calculateHours(props) {
       startandFinish.push(6);
     }
   }
-  for (var i = 0; i < startandFinish.length; i += 2) {
+  for (let i = 0; i < startandFinish.length; i += 2) {
     const children = [];
-    if (startandFinish[i] == startandFinish[i + 1]) {
+    if (startandFinish[i] === startandFinish[i + 1]) {
       children.push(<Col className="modal-col-flex-end" sm={5}>{days[startandFinish[i]]}</Col>);
     } else {
       const subchild = [<div>
@@ -286,7 +282,7 @@ function formatTime(arr, time, index) {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
   })),

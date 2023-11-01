@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 import { withFirebase } from 'react-redux-firebase';
 
-import Container from 'react-bootstrap/Container';
 import Blur from '@animate/blur';
-import localizationStrings from '../../utils/Localization';
+import Container from 'react-bootstrap/Container';
 import { providerRoute, pwdRoute } from '../../routes/pathnames';
+import localizationStrings from '../../utils/Localization';
 
 const classNames = require('classnames');
 
@@ -33,7 +33,7 @@ function Auth({ firebase, history }) {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await firebase
+      await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
       setAnimate(true);
@@ -49,7 +49,7 @@ function Auth({ firebase, history }) {
   }
 
   const {
-    emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, login, signUp, forgotPassword,
+    emailLabel, emailPlaceholder, passwordLabel, passwordPlaceholder, login, forgotPassword,
   } = localizationStrings;
 
   return (

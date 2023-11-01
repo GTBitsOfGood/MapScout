@@ -7,13 +7,15 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { withFirestore } from 'react-redux-firebase';
+import { withFirestore, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CategoryCell from './CategoryCell';
 import ProviderInfo from '../subcomponents/ProviderInfo';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { Store } from 'reducers/types';
+import { TempTutorial } from './TempTutorial';
+import { TempTutorialTwo } from './TempTutorialTwo';
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number){
   const result = Array.from(list);
@@ -38,7 +40,7 @@ export default compose<any>(
   const [newCatName, setNewCatName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [defaultCategories, setDefaultCategories] = useState([]);
+  const [, setDefaultCategories] = useState([]);
   const staticData = {
     id: 'Preview',
     address: ['123 Fake St, Philadelphia, PA 19133'],
@@ -60,6 +62,26 @@ export default compose<any>(
   const [dummy, setDummy] = useState(staticData);
 
   useEffect(() => {
+    async function fetchData() {
+      const collections = firestore.collection('categories');
+      const arr = [];
+      await collections
+        .where('team', '==', team.name)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (!data.id) {
+              data.id = doc.id;
+            }
+            arr.push(data);
+          });
+        });
+      arr.sort((a, b) => a.priority - b.priority);
+      setCategories(arr);
+      setDefaultCategories(arr);
+      setIsLoading(false);
+    }
     fetchData();
   }, []);
 
@@ -76,28 +98,28 @@ export default compose<any>(
       }
     });
     setDummy(newDummy);
-  }, [JSON.stringify(categories)]);
+  }, [categories]);
 
-  async function fetchData() {
-    const collections = firestore.collection('categories');
-    const arr = [];
-    await collections
-      .where('team', '==', team.name)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (!data.id) {
-            data.id = doc.id;
-          }
-          arr.push(data);
-        });
-      });
-    arr.sort((a, b) => a.priority - b.priority);
-    setCategories(arr);
-    setDefaultCategories(arr);
-    setIsLoading(false);
-  }
+  // async function fetchData() {
+  //   const collections = firestore.collection('categories');
+  //   const arr = [];
+  //   await collections
+  //     .where('team', '==', team.name)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         if (!data.id) {
+  //           data.id = doc.id;
+  //         }
+  //         arr.push(data);
+  //       });
+  //     });
+  //   arr.sort((a, b) => a.priority - b.priority);
+  //   setCategories(arr);
+  //   setDefaultCategories(arr);
+  //   setIsLoading(false);
+  // }
 
   function onDragEnd(result) {
     if (!result.destination) {
@@ -108,7 +130,7 @@ export default compose<any>(
       result.source.index,
       result.destination.index,
     );
-    items.map((item: any, index) => {
+    items.forEach((item: any, index) => {
       item.priority = index;
     });
     setCategories(items);
@@ -154,7 +176,7 @@ export default compose<any>(
       categories.length - 1,
     );
     items[categories.length - 1].active = false;
-    items.map((item: any, i) => {
+    items.forEach((item: any, i) => {
       item.priority = i;
     });
     setCategories(items);
@@ -187,15 +209,15 @@ export default compose<any>(
     setIsLoading(false);
   }
 
-  function resetCategories() {
-    setCategories(defaultCategories);
-  }
+  // function resetCategories() {
+  //   setCategories(defaultCategories);
+  // }
 
   async function saveChanges() {
     setIsLoading(true);
     try {
       const collections = firestore.collection('categories');
-      const filters = await collections
+      await collections
         .where('team', '==', team.name)
         .get()
         .then(async (querySnapshot) => {
@@ -239,12 +261,14 @@ export default compose<any>(
     );
   }
 
+  console.log(document.cookie)
   return (
     <div id="template-root">
+      {(document.cookie == "" || document.cookie == null) && (<TempTutorial />)}
+      {(document.cookie.includes("tut=true") && !isEmpty(categories) && !document.cookie.includes("tut2")) && (<TempTutorialTwo />)}
       <Container className="box">
         <div className="row-spaced">
           <h2>Template Builder</h2>
-          <div>
             <Button
               variant="primary"
               onClick={(e) => {
@@ -254,7 +278,6 @@ export default compose<any>(
             >
               Preview
             </Button>
-          </div>
         </div>
         <br />
         {
@@ -273,19 +296,21 @@ export default compose<any>(
             placeholder="Create New Category"
           />
           <InputGroup.Append>
-            <Button
-              onClick={() => {
-                createNewCat();
-              }}
-              variant="primary"
-              disabled={
-                newCatName == ''
-                || newCatName == null
-                || categories.findIndex((x) => x.name == newCatName) > -1
-              }
-            >
-              Add
-            </Button>
+          <div className="create-cat-wrapper">
+              <Button
+                onClick={() => {
+                  createNewCat();
+                }}
+                variant="primary"
+                disabled={
+                  newCatName == ''
+                  || newCatName == null
+                  || categories.findIndex((x) => x.name == newCatName) > -1
+                }
+              >
+                Add
+              </Button>
+          </div>
           </InputGroup.Append>
         </InputGroup>
         <br />

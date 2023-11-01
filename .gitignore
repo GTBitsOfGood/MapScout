@@ -13,3 +13,6 @@ build/
 
 #env
 .env
+.venv
+
+bitwarden.env

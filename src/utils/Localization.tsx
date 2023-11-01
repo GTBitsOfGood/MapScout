@@ -30,10 +30,14 @@ const localizationStrings = new LocalizedStrings({
     serviceTypeLabel: 'Service Type',
     specializationsLabel: 'Specializations',
     therapyTypeLabel: 'Therapy Types',
+    filters: 'Filters',
     moreFilters: 'More Filters',
     lessFilters: 'Less Filters',
     createAccount: 'Create Account',
     create: 'Create',
+    orgNamePlaceholder: 'Organization name',
+    orgURLPlaceholder: 'Organization URL',
+    mapScoutURLPlaceholder: 'mapscout.io/'
   },
   es: {
     // auth page text
@@ -63,6 +67,7 @@ const localizationStrings = new LocalizedStrings({
     serviceTypeLabel: 'Tipo de servicio',
     specializationsLabel: 'Especializaciones',
     therapyTypeLabel: 'Tipos de terapia',
+    filters: 'Filtros',
     moreFilters: 'Mas filtros',
     lessFilters: 'Menos filtros',
     createAccount: 'Crear Cuenta',
@@ -96,6 +101,7 @@ const localizationStrings = new LocalizedStrings({
     serviceTypeLabel: '服务类型',
     specializationsLabel: '专项研究',
     therapyTypeLabel: '疗法',
+    filters: '选条件',
     moreFilters: '增加筛选条件',
     lessFilters: '减少筛选条件',
     createAccount: '创建帐号',

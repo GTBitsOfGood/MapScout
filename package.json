@@ -22,9 +22,15 @@
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
+        "@babel/preset-env": "^7.21.4",
+        "@babel/preset-react": "^7.18.6",
         "@khanacademy/react-multi-select": "^0.3.3",
         "@react-firebase/database": "^0.3.11",
+        "@reactour/mask": "^1.0.5",
+        "@reactour/tour": "^3.3.0",
         "@sentry/react": "^5.19.1",
+        "@slack/client": "^5.0.2",
+        "@types/react": "^17.0.30",
         "autoprefixer": "9.8.0",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.3.1",
@@ -32,7 +38,7 @@
         "connected-react-router": "^4.2.3",
         "dotenv": "^8.2.0",
         "firebase": "^7.16.0",
-        "google-map-react": "^1.1.6",
+        "google-map-react": "^2.1.7",
         "history": "^4.10.1",
         "immutability-helper": "^3.0.1",
         "isomorphic-fetch": "^2.2.1",
@@ -46,24 +52,28 @@
         "react-bootstrap-table-next": "^3.2.1",
         "react-bootstrap-time-picker": "^2.0.1",
         "react-collapse": "^5.0.1",
+        "react-color": "^2.19.3",
         "react-dom": "^16.8.6",
-        "react-dropzone": "^10.1.4",
+        "react-dropzone": "^11.3.1",
         "react-firebase-file-uploader": "^2.4.3",
         "react-flip-toolkit": "^7.0.5",
         "react-google-maps-loader": "^4.2.6",
         "react-google-places-suggest": "^3.8.0",
         "react-icons": "^3.8.0",
+        "react-joyride": "^2.3.2",
+        "react-js-pagination": "^3.0.3",
         "react-lazy-load": "^3.0.13",
         "react-linkify": "^1.0.0-alpha",
         "react-localization": "^1.0.15",
-        "react-papaparse": "^3.8.0",
+        "react-papaparse": "^4.1.0",
         "react-read-more-less": "^0.1.6",
         "react-redux": "^5.0.6",
         "react-redux-firebase": "^2.4.1",
         "react-router": "^4.2.0",
         "react-router-dom": "^4.2.2",
-        "react-scripts": "^3.4.1",
+        "react-scripts": "^5.0.1",
         "react-select": "^3.1.0",
+        "react-tooltip": "^5.21.5",
         "react-youtube": "^7.11.3",
         "reactjs-popup": "^1.5.0",
         "redux": "^3.7.2",
@@ -76,24 +86,10 @@
         "url-loader": "^4.0.0",
         "uuid": "^7.0.3"
     },
-    "devDependencies": {
-        "@bitwarden/cli": "^1.11.0",
-        "cross-env": "^7.0.2",
-        "eslint": "^6.8.0",
-        "eslint-config-airbnb": "^18.0.1",
-        "eslint-config-standard": "^14.1.0",
-        "eslint-plugin-import": "^2.20.0",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-node": "^11.0.0",
-        "eslint-plugin-promise": "^4.2.1",
-        "eslint-plugin-react": "^7.18.0",
-        "eslint-plugin-react-hooks": "^1.7.0",
-        "fx": "^20.0.0"
-    },
     "babel": {
         "presets": [
-            "env",
-            "react"
+            "@babel/preset-env",
+            "@babel/preset-react"
         ]
     },
     "browserslist": {
@@ -107,5 +103,13 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "devDependencies": {
+        "eslint-config-airbnb": "19.0.4",
+        "eslint-plugin-import": "^2.25.3",
+        "eslint-plugin-jsx-a11y": "^6.5.1",
+        "eslint-plugin-only-warn": "^1.1.0",
+        "eslint-plugin-react": "^7.28.0",
+        "eslint-plugin-react-hooks": "^4.3.0"
     }
 }

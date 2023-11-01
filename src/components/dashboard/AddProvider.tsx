@@ -19,10 +19,12 @@ import { providerRoute } from '../../routes/pathnames';
 import useWindowSize from '../../functions/useWindowSize';
 import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { storage } from '../../store';
+import { Store } from 'reducers/types';
 
 const uuidv4 = require('uuid/v4');
 
-const steps = [
+let steps = [
   'Map', 'Hours', 'Tag', 'Text', 'Toggle', 
   // 'Actions'
 ];
@@ -34,69 +36,162 @@ function AddProvider(props) {
   const [animate, setAnimate] = useState(true);
   const [item, setItem] = useState(props.selected || {});
   const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState({});
-  const [descriptions, setDescriptions] = useState({});
-  const [categories, setCategories] = useState({});
+  const [filters, setFilters] = useState(null);
+  const [descriptions, setDescriptions] = useState(null);
+  const [categories, setCategories] = useState(null);
   const [error, setError] = useState('');
 
-  async function fetchData() {
-    const collections = props.firestore.collection('categories');
-    const f = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 2)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    const d = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 0)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    const c = await collections
-      .where('team', '==', props.team.name)
-      .where('active', '==', true)
-      .where('select_type', '==', 1)
-      .get()
-      .then((querySnapshot) => {
-        const idToData = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          idToData[doc.id] = {
-            name: data.name,
-            options: data.options,
-          };
-        });
-        return idToData;
-      });
-    setFilters(f);
-    setDescriptions(d);
-    setCategories(c);
-  }
+  
+  // async function fetchData() {
+  //   const collections = props.firestore.collection('categories');
+  //   const f = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 2)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   const d = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 0)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   const c = await collections
+  //     .where('team', '==', props.team.name)
+  //     .where('active', '==', true)
+  //     .where('select_type', '==', 1)
+  //     .get()
+  //     .then((querySnapshot) => {
+  //       const idToData = {};
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         idToData[doc.id] = {
+  //           name: data.name,
+  //           options: data.options,
+  //         };
+  //       });
+  //       return idToData;
+  //     });
+  //   setFilters(f);
+  //   setDescriptions(d);
+  //   setCategories(c);
+  // }
 
   useEffect(() => {
+    async function fetchData() {
+      const collections = props.firestore.collection('categories');
+      const f = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 2)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      const d = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 0)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      const c = await collections
+        .where('team', '==', props.team.name)
+        .where('active', '==', true)
+        .where('select_type', '==', 1)
+        .get()
+        .then((querySnapshot) => {
+          const idToData = {};
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            idToData[doc.id] = {
+              name: data.name,
+              options: data.options,
+            };
+          });
+          return idToData;
+        });
+      setFilters(f);
+      setDescriptions(d);
+      setCategories(c);
+    }
     fetchData().then(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    function updateSteps() {
+      if (filters && !Object.keys(filters).length) {
+        const delIndex = steps.indexOf("Tag");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+  
+      if (descriptions && !Object.keys(descriptions).length) {
+        const delIndex = steps.indexOf("Text");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+  
+      if (categories && !Object.keys(categories).length) {
+        const delIndex = steps.indexOf("Toggle");
+        delIndex !== -1 && steps.splice(delIndex, 1);
+      }
+    }
+
+    updateSteps();
+  }, [filters, descriptions, categories]);
+
+  // function updateSteps() {
+  //   if (filters && !Object.keys(filters).length) {
+  //     const delIndex = steps.indexOf("Tag");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
+
+  //   if (descriptions && !Object.keys(descriptions).length) {
+  //     const delIndex = steps.indexOf("Text");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
+
+  //   if (categories && !Object.keys(categories).length) {
+  //     const delIndex = steps.indexOf("Toggle");
+  //     delIndex !== -1 && steps.splice(delIndex, 1);
+  //   }
+  // }
 
   async function addFirestore() {
     setIsLoading(true);
@@ -117,6 +212,16 @@ function AddProvider(props) {
         if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
           i.latitude = responseJson.results[0].geometry.location.lat;
           i.longitude = responseJson.results[0].geometry.location.lng;
+        }
+        if (!i.imageURL) {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
+          const blob = await res.blob();
+          const filename = i.facilityName + '.jpeg';
+          await storage.ref('images').child(filename).put(blob);
+          await storage.ref('images').child(filename).getDownloadURL()
+            .then((url) => {
+              i.imageURL = url;
+          });
         }
       }
       await promiseWithTimeout(5000, props.firestore.set({ collection: 'providers', doc: i.facilityName }, i));
@@ -146,6 +251,16 @@ function AddProvider(props) {
         if (responseJson.results.length > 0 && responseJson.results[0].geometry.location) {
           i.latitude = responseJson.results[0].geometry.location.lat;
           i.longitude = responseJson.results[0].geometry.location.lng;
+        }
+        if (!i.imageURL) {
+          const res = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`);
+          const blob = await res.blob();
+          const filename = i.facilityName + '.jpeg';
+          await storage.ref('images').child(filename).put(blob);
+          await storage.ref('images').child(filename).getDownloadURL()
+            .then((url) => {
+              i.imageURL = url;
+          });
         }
       }
       const { firestore } = props;
@@ -304,7 +419,7 @@ function AddProvider(props) {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
     selected: state.item.selected,

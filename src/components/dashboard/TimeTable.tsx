@@ -18,7 +18,7 @@ const TimeTable = (props) => {
     action: '',
     selected: props.hours[item] && props.hours[item].length === 2,
   })));
-  const [selected, setSelected] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
+  //const [selected, setSelected] = useState([0, 1, 2, 3, 4, 5, 6, 7]);
 
   const selectFormatter = (cell, row, index) => (
     <FormCheck

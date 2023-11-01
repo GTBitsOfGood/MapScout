@@ -14,7 +14,43 @@ function NavBar(props) {
   const [expand, setExpanded] = useState(false);
   const [showBubble, setShowBubble] = useState(props.newChat);
 
-  useEffect(() => {
+  useEffect(() => { 
+    async function parseChat(payload, payload2) {
+      const {firebaseAuth} = props;
+      const chats = payload ? Object.values(payload).filter((x: any) => x.uid && x.uid === firebaseAuth.auth.uid) : [];
+      const responses = payload2 ? Object.values(payload2).filter((x: any) => {
+        const index = x.message.indexOf(`$${firebaseAuth.auth.uid}`);
+        if (index === 0) {
+          x.message = x.message.replace(`$${firebaseAuth.auth.uid}`, '').trim();
+        }
+        return index === 0;
+      }) : [];
+      const arr = [];
+      while (chats.length > 0 && responses.length > 0) {
+        const chatTarget: any = chats[chats.length - 1];
+        const responseTarget: any = responses[responses.length - 1];
+        const chatDate = new Date(chatTarget.timestamp);
+        const responseDate = new Date(responseTarget.timestamp);
+        if (chatDate > responseDate) {
+          arr.push(chatTarget);
+          chats.pop();
+        } else if (chatDate < responseDate) {
+          arr.push(responseTarget);
+          responses.pop();
+        } else {
+          arr.push(chatTarget);
+          chats.pop();
+          arr.push(responseTarget);
+          responses.pop();
+        }
+      }
+      if (chats.length > 0) {
+        arr.push(...chats);
+      } else if (responses.length > 0) {
+        arr.push(...responses);
+      }
+      props.updateChat(arr);
+    }
     databaseRef.on('value', (snapshot) => {
       parseChat(
         snapshot.child('chat').val(),
@@ -28,44 +64,8 @@ function NavBar(props) {
 
   useEffect(() => {
     setShowBubble(props.newChat);
-  }, [props.newChat]);
+  }, []);
 
-  async function parseChat(payload, payload2) {
-    const {firebaseAuth} = props;
-    const chats = payload ? Object.values(payload).filter((x: any) => x.uid && x.uid === firebaseAuth.auth.uid) : [];
-    const responses = payload2 ? Object.values(payload2).filter((x: any) => {
-      const index = x.message.indexOf(`$${firebaseAuth.auth.uid}`);
-      if (index === 0) {
-        x.message = x.message.replace(`$${firebaseAuth.auth.uid}`, '').trim();
-      }
-      return index === 0;
-    }) : [];
-    const arr = [];
-    while (chats.length > 0 && responses.length > 0) {
-      const chatTarget: any = chats[chats.length - 1];
-      const responseTarget: any = responses[responses.length - 1];
-      const chatDate = new Date(chatTarget.timestamp);
-      const responseDate = new Date(responseTarget.timestamp);
-      if (chatDate > responseDate) {
-        arr.push(chatTarget);
-        chats.pop();
-      } else if (chatDate < responseDate) {
-        arr.push(responseTarget);
-        responses.pop();
-      } else {
-        arr.push(chatTarget);
-        chats.pop();
-        arr.push(responseTarget);
-        responses.pop();
-      }
-    }
-    if (chats.length > 0) {
-      arr.push(...chats);
-    } else if (responses.length > 0) {
-      arr.push(...responses);
-    }
-    props.updateChat(arr);
-  }
   return (
     <div>
       <div className={classnames('gray-overlay', { none: !expand, fadeIn: expand })} />

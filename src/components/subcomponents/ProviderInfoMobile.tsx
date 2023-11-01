@@ -11,6 +11,7 @@ import { FiGlobe, FiPhone } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import Linkify from 'react-linkify';
 import { GOOGLE_API_KEY } from '../../config/keys';
+import { Store } from 'reducers/types';
 
 const classNames = require('classnames');
 
@@ -106,7 +107,7 @@ const ProviderInfo = (props) => {
               {props.item.website[0] ? <FiGlobe size="25px" style={{ paddingTop: '5px', color: '#007bff' }} /> : <div />}
               {props.item.website[0] ? (
                 <div style={{ paddingLeft: '15px' }}>
-                  <a href={props.item.website[0]} target="_blank">Visit Website</a>
+                  <a href={props.item.website[0]} target="_blank" rel="noopener noreferrer">Visit Website</a>
                 </div>
               ) : <div />}
             </div>
@@ -178,26 +179,27 @@ const ProviderInfo = (props) => {
 };
 
 function calculateHours(props) {
+  var i = 0;
   const rows = [];
   const startandFinish = [0]; // In pairs, keep track of the starting and ending days with same time
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const abbrevDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  for (var i = 1; i < 7; i++) {
+  for (i = 1; i < 7; i++) {
     // not both undefined
-    if (props.item.hours[days[i]] != props.item.hours[days[i - 1]]) {
-      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] != props.item.hours[days[i - 1]][0]
-      || props.item.hours[days[i]][1] != props.item.hours[days[i - 1]][1]) {
+    if (props.item.hours[days[i]] !== props.item.hours[days[i - 1]]) {
+      if (!props.item.hours[days[i]] || !props.item.hours[days[i - 1]] || props.item.hours[days[i]][0] !== props.item.hours[days[i - 1]][0]
+      || props.item.hours[days[i]][1] !== props.item.hours[days[i - 1]][1]) {
         startandFinish.push(i - 1);
         startandFinish.push(i);
       }
     }
-    if (i == 6) {
+    if (i === 6) {
       startandFinish.push(6);
     }
   }
-  for (var i = 0; i < startandFinish.length; i += 2) {
+  for (let i = 0; i < startandFinish.length; i += 2) {
     const children = [];
-    if (startandFinish[i] == startandFinish[i + 1]) {
+    if (startandFinish[i] === startandFinish[i + 1]) {
       children.push(<Col className="modal-col-flex-end" sm={5}>{days[startandFinish[i]]}</Col>);
     } else {
       const subchild = [<div>
@@ -270,7 +272,7 @@ function formatTime(arr, time, index) {
 
 export default compose<any>(
   withFirestore,
-  connect((state) => ({
+  connect((state: Store) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
   })),
