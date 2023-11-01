@@ -33,10 +33,18 @@ function validateEmail(email) {
 }
 
 async function sendSlackMessage(email) {
-    fetch("https://hooks.slack.com/services/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", {
-        body: "{'text':'The email: " + email + " has been added to the waitlist for MapScout.'}",
-        method: "POST"
-    })
+    const data = {
+        email: email
+    };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    };
+    fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions)
 }
 
 function Home({ firebaseAuth, firestore }) {
