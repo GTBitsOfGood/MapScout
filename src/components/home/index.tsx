@@ -12,7 +12,7 @@ import Modal from "react-bootstrap/Modal";
 import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
 
-const logo = require("../../assets/img/logo.svg");
+const logo = require("../../assets/img/logo.png");
 const background = require("../../assets/img/homepage-hero.png");
 
 const opts: Options = {
