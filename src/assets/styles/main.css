@@ -1016,7 +1016,7 @@ h2 {
 }
 
 .options-wrapper {
-    height: auto;
+    height: auto !important;
     min-width: 200px;
     max-width: fit-content;
     margin-top: 8px;
