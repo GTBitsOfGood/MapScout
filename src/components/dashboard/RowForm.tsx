@@ -217,7 +217,7 @@ const RowForm = (props) => {
               name="phoneNum"
               value={item.phoneNum[0]}
               onChange={onPhoneChange}
-              placeholder="(000) 000-0000"
+              placeholder="1 (000) 000-0000"
             />
             {
               item.phoneNum.length > 0
