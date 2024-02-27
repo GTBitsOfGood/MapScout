@@ -10,8 +10,7 @@ import { connect } from 'react-redux';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
 import { GOOGLE_API_KEY } from '../../config/keys';
-
-import Styles from './ProviderInfo.module.css'
+import Linkify from 'react-linkify'
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');
@@ -41,6 +40,9 @@ const ProviderInfo = (props) => {
       </div>
     );
   }
+
+
+  const categoriesToUse = props.categories || [];
   const iconStyle = {
     marginRight: '20px', 
     verticalAlign: 'middle' 
@@ -130,9 +132,42 @@ const ProviderInfo = (props) => {
           </Card>
         </Col>
       </Row>
-      <Row className="category-rows">
-      </Row>
+      <div className="modalHeader">
+        {
+        categoriesToUse
+          .filter((category) => props.item[category.id] && props.item[category.id].length)
+          .map((category) => (
+            <div>
+              <h5>{category.name}</h5>
+              <hr className="modal-hr" />
+              <div>
+                {
+                  category.select_type !== 0
+                    ? props.item[category.id].map((selected, index) => {
+                      if (index !== props.item[category.id].length - 1) {
+                        return (
+                          <div className="modal-text">
+                            {`${selected}, `}
+                          </div>
+                        );
+                      }
+                      return <div className="modal-text">{selected}</div>;
+                    })
+                    : (
+                      <Linkify>
+                        <p>{props.item[category.id]}</p>
+                      </Linkify>
+                    )
+                }
+              </div>
+              <br />
+            </div> 
+          ))
+              }
+      
+      </div>
     </Container>
+    
   );
 };
 
