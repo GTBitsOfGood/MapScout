@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  FaMapMarkerAlt, FaRegClock, FaPhone,
-} from 'react-icons/fa';
+import { FaMapMarkerAlt, FaRegClock, FaPhone, FaGlobe } from 'react-icons/fa';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -9,12 +7,10 @@ import Card from 'react-bootstrap/Card';
 import { withFirestore } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { FiGlobe } from 'react-icons/fi';
 import ReadMoreAndLess from 'react-read-more-less';
 import LazyLoad from 'react-lazy-load';
-import Linkify from 'react-linkify';
 import { GOOGLE_API_KEY } from '../../config/keys';
-import { Store } from 'reducers/types';
+import Linkify from 'react-linkify'
 
 const ProviderInfo = (props) => {
   const [image, setImage] = useState('bog');
@@ -37,53 +33,53 @@ const ProviderInfo = (props) => {
     fetchData();
   }, [props.item]);
 
-  const categoriesToUse = props.categories || [];
-
   if (isLoading) {
     return (
       <div className="spinner-wrap">
-        <div className="spinner" />
+        <div className="spinner"></div>
       </div>
     );
   }
 
+
+  const categoriesToUse = props.categories || [];
+  const iconStyle = {
+    marginRight: '20px', 
+    verticalAlign: 'middle' 
+  };
+
+  const infoStyle = {
+    display: 'flex', 
+    alignItems: 'center', 
+    marginBottom: '10px' 
+  };
+
   return (
-    <div style={{ padding: '1vh 4vw' }}>
-      <Row>
-        <Row>
-          <Col className="modalImage">
-            <Card>
-              <LazyLoad
-                debounce={false}
-                offsetVertical={500}
-              >
-                <Card.Img
-                  src={image}
-                />
-              </LazyLoad>
-            </Card>
-          </Col>
-          <Col xs={7}>
-            <div className="desc-Box">
-              <h3 style={{ paddingBottom: '0px' }}>{props.item.facilityName}</h3>
-              {props.item.description !== undefined && (
-              <ReadMoreAndLess
-                charLimit={250}
-                readMoreText="Read more"
-                readLessText="Read less"
-              >
+    <Container fluid className="provider-info-container">
+      <Row className="mb-3">
+        <Col md={5} className="modal-image-col">
+          <Card>
+            <LazyLoad debounce={false} offsetVertical={500}>
+              <Card.Img src={image} />
+            </LazyLoad>
+          </Card>
+        </Col>
+        <Col md={7}>
+          <div className="description-box">
+            <h3>{props.item.facilityName}</h3>
+            {props.item.description !== undefined && (
+              <ReadMoreAndLess charLimit={250} readMoreText="Read more" readLessText="Read less">
                 {`${props.item.description} `}
               </ReadMoreAndLess>
-              )}
-            </div>
-          </Col>
-        </Row>
-        <Row style={{ paddingTop: '20px', paddingRight: '19px' }}>
-          <Col xs={7}>
-            <div className="modal-card-text">
-              <FaMapMarkerAlt size="20px" style={{ paddingTop: '5px', color: '#007bff' }} />
-              <div style={{ paddingLeft: '15px' }}>
-                {props.item.address.toString().split(',').map((value, index) => {
+            )}
+          </div>
+        </Col>
+      </Row>
+      <Row className="info-rows">
+        <Col md={7}>
+        <div style={infoStyle}>
+            <FaMapMarkerAlt style={iconStyle} />
+            <div> {props.item.address.toString().split(',').map((value, index) => {
                   if (index === 0) {
                     return (
                       <div style={{ display: 'inline' }}>
@@ -102,53 +98,40 @@ const ProviderInfo = (props) => {
                     return <div style={{ display: 'inline' }}>{`${value},`}</div>;
                   }
                   return `${value},`;
-                })}
-              </div>
-            </div>
-
-            <div className="modal-card-text">
-              <FaPhone size="20px" style={{ paddingTop: '5px', color: '#007bff' }} />
-              <div style={{ paddingLeft: '15px' }}>
-                {props.item.phoneNum && props.item.phoneNum.join(', ')}
-              </div>
-            </div>
-
-            <div className="modal-card-text">
-              {props.item.website && props.item.website[0] ? <FiGlobe size="20px" style={{ paddingTop: '5px', color: '#007bff' }} /> : <div />}
-              {props.item.website && props.item.website[0] ? (
-                <div style={{ paddingLeft: '15px' }}>
-                  <a href={props.item.website[0]} target="_blank" rel="noopener noreferrer">Visit Website</a>
+                })}</div>
+          </div>
+          <div style={infoStyle}>
+            <FaPhone style={iconStyle} />
+            <div> {props.item.phoneNum && props.item.phoneNum.join(', ')}</div>
+          </div>
+          <div style={infoStyle}>
+            {props.item.website && props.item.website[0] && (
+              <>
+                <FaGlobe style={iconStyle} />
+                <div>
+                  <a href={props.item.website[0]} target="_blank" rel="noopener noreferrer">
+                    Visit Website
+                  </a>
                 </div>
-              ) : <div />}
-            </div>
-            <div className="modal-card-text">
-              <FaRegClock size="20px" style={{ paddingTop: '5px', color: '#007bff' }} />
-              <div className="modal-hours-container">
-                <Container>
-                  <h5>Hours</h5>
-                  <hr className="modal-hr" />
-                  {props.item.hours && calculateHours(props)}
-                </Container>
-              </div>
-            </div>
-          </Col>
-          <Col>
-            <Card>
-              <div>
-                <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank" rel="noopener noreferrer">
-                  <Card.Img
-                    src={streetView}
-                    alt="Google Map"
-                  />
-                </a>
-              </div>
-            </Card>
-          </Col>
-        </Row>
+              </>
+            )}
+          </div>
+          <div style={infoStyle}>
+            <FaRegClock style={iconStyle} />
+            <div className="modal-hours-container">
 
+            {props.item.hours && calculateHours(props)}
+            </div>
+          </div>
+        </Col>
+        <Col md={5}>
+          <Card>
+            <a href={`https://maps.google.com/?q=${props.item.address.toString()}`} target="_blank" rel="noopener noreferrer">
+              <Card.Img src={streetView} alt="Google Map" />
+            </a>
+          </Card>
+        </Col>
       </Row>
-      <br />
-
       <div className="modalHeader">
         {
         categoriesToUse
@@ -178,16 +161,16 @@ const ProviderInfo = (props) => {
                 }
               </div>
               <br />
-            </div>
+            </div> 
           ))
-      }
-
-        {/* TODO checkmarks for EPIC and Childcare change from alerts */}
-
+              }
+      
       </div>
-    </div>
+    </Container>
+    
   );
 };
+
 
 function calculateHours(props) {
   const rows = [];
@@ -282,7 +265,7 @@ function formatTime(arr, time, index) {
 
 export default compose<any>(
   withFirestore,
-  connect((state: Store) => ({
+  connect((state: Storage) => ({
     providers: state.firestore.ordered.providers,
     firebase: state.firebase,
   })),
