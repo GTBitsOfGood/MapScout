@@ -84,7 +84,8 @@
         "redux-thunk": "^2.2.0",
         "typescript": "^4.0.2",
         "url-loader": "^4.0.0",
-        "uuid": "^7.0.3"
+        "uuid": "^7.0.3",
+        "uuidv4": "^6.2.13"
     },
     "babel": {
         "presets": [

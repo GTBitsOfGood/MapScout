@@ -21,8 +21,7 @@ import promiseWithTimeout from '../../functions/promiseWithTimeout';
 import { GOOGLE_API_KEY } from '../../config/keys';
 import { storage } from '../../store';
 import { Store } from 'reducers/types';
-
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 let steps = [
   'Map', 'Hours', 'Tag', 'Text', 'Toggle', 
@@ -191,7 +190,7 @@ function AddProvider(props) {
   //     const delIndex = steps.indexOf("Toggle");
   //     delIndex !== -1 && steps.splice(delIndex, 1);
   //   }
-  // }
+  // }  
 
   async function addFirestore() {
     setIsLoading(true);
@@ -202,7 +201,6 @@ function AddProvider(props) {
       latitude: null,
       longitude: null,
     };
-
     try {
       if (i.address[0] && i.address[0].length > 0) {
         const response = await promiseWithTimeout(5000, fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
@@ -227,6 +225,7 @@ function AddProvider(props) {
       await promiseWithTimeout(5000, props.firestore.set({ collection: 'providers', doc: i.facilityName }, i));
       props.history.push(providerRoute);
       console.log(providerRoute);
+      console.log("adding")
     } catch (e) {
       setError('Failed to save changes. Please check your network connection or try again later.');
     } finally {
@@ -241,7 +240,6 @@ function AddProvider(props) {
       latitude: null,
       longitude: null,
     };
-
     try {
       if (i.address[0] && i.address[0].length > 0) {
         const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${
