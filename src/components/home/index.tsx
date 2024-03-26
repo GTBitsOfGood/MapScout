@@ -11,6 +11,7 @@ import { authRoute, providerRoute } from "../../routes/pathnames";
 import Modal from "react-bootstrap/Modal";
 import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
+import { features } from "./features";
 
 const logo = require("../../assets/img/logo.png");
 const background = require("../../assets/img/homepage-hero.png");
@@ -221,6 +222,26 @@ function Home({ firebaseAuth, firestore }) {
             >
                 <div className="modal-body">hello</div>
             </Modal>
+            {features.map((feature, index) => (
+                <section
+                    id="product"
+                    key={index}
+                    style={{
+                        backgroundColor: index % 2 === 1 ? '#ffffff' : '#E9D5FF',
+                        padding: '2rem 0',
+                    }}
+                >
+                <div style={{display: index % 2 === 1 ? 'flex-row' : 'flex-row-reverse'}}>
+                    <h1 className="mb-4 max-w-xl font-semibold text-purple-700">
+                    {feature.title}
+                    </h1>
+                    <p className="mb-0 max-w-xl">{feature.description}</p>
+                </div>
+                <div className="m-2 flex flex-1 items-center justify-center">
+                    <img style={{ maxHeight: '100%', maxWidth: '100%' }} src={feature.imageUrl} />
+                </div>
+                </section>
+            ))}
         </>
     );
 }
