@@ -12,6 +12,8 @@ import Modal from "react-bootstrap/Modal";
 import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
 import { features } from "./features";
+import { ourMaps } from "./our-maps";
+import { Card, Row, Col } from 'react-bootstrap';
 
 const logo = require("../../assets/img/logo.png");
 const background = require("../../assets/img/homepage-hero.png");
@@ -213,6 +215,45 @@ function Home({ firebaseAuth, firestore }) {
                         </div>
                     </section>
                 </div>
+                {features.map((feature, index) => (
+                    <section
+                        id="product"
+                        key={index}
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "2rem",
+                            padding: "2rem",
+                            backgroundColor: index % 2 === 1 ? "#F3F3F3" : "white",
+                        }}
+                    >
+                        <div style={{ 
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            gap: '2rem',
+                            flexDirection: index % 2 === 1 ? 'row' : 'row-reverse',
+                        }}>
+                            <div>
+                                <h1><b>{feature.title}</b></h1>
+                                <p>{feature.description}</p>
+                            </div>
+                            <img style={{ maxHeight: '100%', maxWidth: '100%' }} src={feature.imageUrl} />
+                        </div>
+                    </section>
+                ))}
+                <div style={{paddingTop:"2rem"}}>
+                    <h1><b>Our Maps</b></h1>
+                    <p>Currently, we are supporting nine unique clients with interactive resource maps that allow visitors to see what is offered near them and navigate often overwhelming systems.</p>
+                    <div style={{paddingTop:"2rem", display:"flex", flexDirection:"row", alignItems:"space-between", gap:"2rem"}}>
+                        {ourMaps.map((map, idx) => (
+                        <div key={idx} style={{display:"flex", flexDirection:"column", maxWidth:"30rem"}}>
+                            <img src={`../../assets/img/${map.image}.png`} style={{maxWidth:"100%", maxHeight:"100%"}}/>
+                            <h3 style={{paddingTop:"2rem"}}>{map.title}</h3>
+                            <a style={{paddingTop:"2rem"}}>{map.description}</a>
+                        </div>
+                        ))}
+                    </div>
+                </div>
             </div>
             <Modal
                 show={showEmailModal}
@@ -222,26 +263,6 @@ function Home({ firebaseAuth, firestore }) {
             >
                 <div className="modal-body">hello</div>
             </Modal>
-            {features.map((feature, index) => (
-                <section
-                    id="product"
-                    key={index}
-                    style={{
-                        backgroundColor: index % 2 === 1 ? '#ffffff' : '#E9D5FF',
-                        padding: '2rem 0',
-                    }}
-                >
-                <div style={{display: index % 2 === 1 ? 'flex-row' : 'flex-row-reverse'}}>
-                    <h1 className="mb-4 max-w-xl font-semibold text-purple-700">
-                    {feature.title}
-                    </h1>
-                    <p className="mb-0 max-w-xl">{feature.description}</p>
-                </div>
-                <div className="m-2 flex flex-1 items-center justify-center">
-                    <img style={{ maxHeight: '100%', maxWidth: '100%' }} src={feature.imageUrl} />
-                </div>
-                </section>
-            ))}
         </>
     );
 }
