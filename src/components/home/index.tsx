@@ -110,12 +110,21 @@ function Home({ firebaseAuth, firestore }) {
                                 alt="Deploys by Netlify"
                             />
                         </a>
-                        <Button
-                            as={Link}
-                            to={showProviderRoutes ? providerRoute : authRoute}
-                        >
-                            {showProviderRoutes ? "Go to Dashboard" : "Login"}
-                        </Button>
+                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" , gap:"20px", alignItems: "center" }}>
+                            <a href="https://bitsofgood.org/contact/" style={{ color: "black" }}>
+                                <b>Contact Us</b>
+                            </a>
+                            <a href="https://bitsofgood.org/about/" style={{ color: "black" }}>
+                                <b>About Us</b>
+                            </a>
+                            
+                            <Button
+                                as={Link}
+                                to={showProviderRoutes ? providerRoute : authRoute}
+                            >
+                                {showProviderRoutes ? "Go to Dashboard" : "Login"}
+                            </Button>
+                        </div>
                     </header>
                     <section id="homepage-body">
                         <div className="homepage-col">
