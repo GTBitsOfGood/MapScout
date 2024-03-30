@@ -24,7 +24,8 @@ import { Store } from 'reducers/types';
 const { v4: uuidv4 } = require('uuid');
 
 let steps = [
-  'Map', 'Hours', 'Tag', 'Text', 'Toggle', 
+  'Map', 'Hours', 'Tag', 'Text', 
+  // 'Toggle', disabled due to lack of use
   // 'Actions'
 ];
 
