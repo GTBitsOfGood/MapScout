@@ -145,8 +145,21 @@ const ExportCSV = (props) => {
             }
             isDifferent = false;
         }
+        console.log("first for loope");
+    
+    
+    
         for (let i = 0; i < mergedProviders.length; i++) {
+            try {
             mergedProviders[i].data["team"] = props.team.name;
+            } catch (error) {
+
+                alert(
+                    `Warning: You are uploading a CSV where the team column is not defined`
+                );
+                break;
+
+            }
             for (const property in mergedProviders[i].data) {
                 const trimmedProperty = property.trim();
                 if (property !== trimmedProperty) {
@@ -210,6 +223,8 @@ const ExportCSV = (props) => {
             
             
         }
+
+        console.log("second for loope");
 
         var columnArr = [];
         for (let i = 0; i < data.slice().length; i++) {
