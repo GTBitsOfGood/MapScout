@@ -676,7 +676,7 @@ const Map = (props) => {
                         + {moreFilters}
                     </Button>
                 )}
-                <FaRegQuestionCircle
+                {/* <FaRegQuestionCircle
                     data-tooltip-id="my-tooltip-1"
                     className="filter-tooltip-tutorial"
                     style={{ marginBottom: "4px" }}
@@ -762,7 +762,7 @@ const Map = (props) => {
                         </button>
                     </div>
                     </div>
-                </ReactTooltip>
+                </ReactTooltip> */}
             </div>
         </>
     );
