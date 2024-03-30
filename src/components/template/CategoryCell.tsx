@@ -96,8 +96,8 @@ export default ({
                   onChange={() => changeType(parseInt(myRef.current.value), index)}
                 >
                   <option value={0}>Description</option>
-                  <option value={1}>Single-Select</option>
-                  <option value={2}>Multi-Select</option>
+                  {/* <option value={1}>Single-Select</option> */}
+                  <option value={1}>Multi-Select</option>
                 </FormControl>
               </InputGroup>
             </Col>
