@@ -151,6 +151,7 @@ function NavBar(props) {
             {/*    SETTINGS */}
             {/*  </div> */}
             {/* </div> */}
+            <Link to={'/'} target="_blank" style={{ textDecoration: 'none' }}>
             <div className="cell" onClick={props.logout}>
               <div className="icon">
                 <FiPower />
@@ -159,6 +160,7 @@ function NavBar(props) {
                 LOGOUT
               </div>
             </div>
+            </Link>
           </div>
         </div>
       </div>
