@@ -12,8 +12,6 @@ import Modal from "react-bootstrap/Modal";
 import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
 import { ourMaps } from "./our-maps";
-import { PrismicProvider } from '@prismicio/react';
-import { client } from './prismic';
 import FeatureDisplays from "./FeatureDisplays";
 
 const logo = require("../../assets/img/logo.png");
@@ -216,16 +214,14 @@ function Home({ firebaseAuth, firestore }) {
                         </div>
                     </section>
                 </div>
-                <PrismicProvider client={client}>
-                    <FeatureDisplays />
-                </PrismicProvider>
+                <FeatureDisplays />
                 <div style={{paddingTop:"2rem"}}>
                     <h1><b>Our Maps</b></h1>
                     <p>Currently, we are supporting nine unique clients with interactive resource maps that allow visitors to see what is offered near them and navigate often overwhelming systems.</p>
                     <div style={{paddingTop:"2rem", display:"flex", flexDirection:"row", alignItems:"space-between", gap:"2rem"}}>
                         {ourMaps.map((map, idx) => (
                         <div key={idx} style={{display:"flex", flexDirection:"column", maxWidth:"30rem"}}>
-                            <img src={`../../assets/img/${map.image}.png`} style={{maxWidth:"100%", maxHeight:"100%"}}/>
+                            <img src={map.image} style={{maxWidth:"100%", maxHeight:"100%"}}/>
                             <h3 style={{paddingTop:"2rem"}}>{map.title}</h3>
                             <a style={{paddingTop:"2rem"}}>{map.description}</a>
                         </div>
