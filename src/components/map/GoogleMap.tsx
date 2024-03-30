@@ -30,7 +30,7 @@ export default ({
         setCenter({ lat, lng });
       }
     }
-  }, [selectedMarker, center, providers, zoom]);
+  }, [selectedMarker, providers]);
 
   return (
     <GoogleMapReact
