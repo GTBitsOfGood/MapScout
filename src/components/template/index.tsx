@@ -63,20 +63,40 @@ export default compose<any>(
 
   useEffect(() => {
     async function fetchData() {
-      const collections = firestore.collection('categories');
+      const saved = localStorage.getItem('saved');
+      console.log("saved:" + saved)
+      console.log("curr:" + team.name)
       const arr = [];
-      await collections
-        .where('team', '==', team.name)
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            if (!data.id) {
-              data.id = doc.id;
-            }
-            arr.push(data);
+      const collections = firestore.collection('categories');
+      // Note: this is a temperary workaround so the page does appears fine, however, further fix is neccessary to actually resolve the issue
+      if (team.name === '') {
+        await collections
+          .where('team', '==', saved)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (!data.id) {
+                data.id = doc.id;
+              }
+              arr.push(data);
+            });
           });
-        });
+      } else {
+        localStorage.setItem('saved', team.name);
+        await collections
+          .where('team', '==', team.name)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              if (!data.id) {
+                data.id = doc.id;
+              }
+              arr.push(data);
+            });
+          });
+      }
       arr.sort((a, b) => a.priority - b.priority);
       setCategories(arr);
       setDefaultCategories(arr);
