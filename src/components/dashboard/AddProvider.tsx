@@ -372,7 +372,7 @@ function AddProvider(props) {
                                                     && <Button onClick={prev} variant="link">Back</Button>
                                                 }
                           <Button
-                            onClick={step === steps.length - 1 ? addFirestore : next}
+                            onClick={step === steps.length - 1 ? props.selected && props.selected.facilityName ? updateFirestore: addFirestore : next}
                             disabled={!completed && step === steps.length - 1}
                             variant="primary"
                           >
