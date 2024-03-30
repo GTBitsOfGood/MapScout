@@ -12,7 +12,7 @@ server/__pycache__/*
 build/
 
 #env
-.env
+.env*
 .venv
 
 bitwarden.env
