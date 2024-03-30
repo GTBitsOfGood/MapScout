@@ -11,9 +11,10 @@ import { authRoute, providerRoute } from "../../routes/pathnames";
 import Modal from "react-bootstrap/Modal";
 import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
-import { features } from "./features";
 import { ourMaps } from "./our-maps";
-import { Card, Row, Col } from 'react-bootstrap';
+import { PrismicProvider } from '@prismicio/react';
+import { client } from './prismic';
+import FeatureDisplays from "./FeatureDisplays";
 
 const logo = require("../../assets/img/logo.png");
 const background = require("../../assets/img/homepage-hero.png");
@@ -102,7 +103,7 @@ function Home({ firebaseAuth, firestore }) {
                 <span id="homepage-background">
                     <img src={background} alt="background" />
                 </span>
-                <div style={{ position: "relative", zIndex: 1 }}>
+                <div style={{ position: "relative", zIndex: 1, height:"100vh" }}>
                     <header id="head" className="row-spaced">
                         <span id="head-logo">
                             <b>MapScout</b> <img src={logo} alt="logo" />
@@ -215,32 +216,9 @@ function Home({ firebaseAuth, firestore }) {
                         </div>
                     </section>
                 </div>
-                {features.map((feature, index) => (
-                    <section
-                        id="product"
-                        key={index}
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "2rem",
-                            padding: "2rem",
-                            backgroundColor: index % 2 === 1 ? "#F3F3F3" : "white",
-                        }}
-                    >
-                        <div style={{ 
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            gap: '2rem',
-                            flexDirection: index % 2 === 1 ? 'row' : 'row-reverse',
-                        }}>
-                            <div>
-                                <h1><b>{feature.title}</b></h1>
-                                <p>{feature.description}</p>
-                            </div>
-                            <img style={{ maxHeight: '100%', maxWidth: '100%' }} src={feature.imageUrl} />
-                        </div>
-                    </section>
-                ))}
+                <PrismicProvider client={client}>
+                    <FeatureDisplays />
+                </PrismicProvider>
                 <div style={{paddingTop:"2rem"}}>
                     <h1><b>Our Maps</b></h1>
                     <p>Currently, we are supporting nine unique clients with interactive resource maps that allow visitors to see what is offered near them and navigate often overwhelming systems.</p>
