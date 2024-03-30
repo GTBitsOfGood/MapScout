@@ -63,9 +63,7 @@ export default compose<any>(
 
   useEffect(() => {
     async function fetchData() {
-      const saved = localStorage.getItem('saved');
-      console.log("saved:" + saved)
-      console.log("curr:" + team.name)
+      const saved = localStorage.getItem('saved');  
       const arr = [];
       const collections = firestore.collection('categories');
       // Note: this is a temperary workaround so the page does appears fine, however, further fix is neccessary to actually resolve the issue
