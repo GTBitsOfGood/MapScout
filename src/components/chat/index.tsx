@@ -8,17 +8,28 @@ import { chatRef } from '../../store';
 import Discussion from './Discussion';
 import { updateNewChat as Update } from '../../functions/reduxActions';
 
+async function sendSlackMessage(email, message) {
+  const data = {
+      email: (email + "; Feedback: " +  message),
+  };
+
+  const requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+     
+  };
+  console.log(requestOptions);
+  fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions)
+}
+
 function Chat({ firebase, newChat, updateNewChat }) {
   const [message, setMessage] = useState('');
   const addToDo = async (newToDo) => {
     chatRef.push().set(newToDo);
   };
-
-  useEffect(() => {
-    if (newChat) {
-      updateNewChat(false);
-    }
-  }, [newChat, updateNewChat]);
 
   const inputChange = (e) => {
     setMessage(e.target.value);
@@ -35,6 +46,7 @@ function Chat({ firebase, newChat, updateNewChat }) {
         uid: firebase.auth.uid,
         username: firebase.auth.email,
       }).then(() => setMessage(''));
+      sendSlackMessage(firebase.auth.email, message);
     }
   };
 
