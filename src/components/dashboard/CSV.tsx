@@ -112,7 +112,7 @@ const ExportCSV = (props) => {
         var encodedUri = encodeURI(csvContent);
         window.open(encodedUri);
     }
-
+    
     async function handleDrop(data) {
         let oldProviders: { id: string }[] = Array.from(props.providers);
         let oldCategories: { id: string }[] = Array.from(props.categories);
@@ -145,9 +145,21 @@ const ExportCSV = (props) => {
             }
             isDifferent = false;
         }
-
+        console.log("first for loope");
+    
+    
+    
         for (let i = 0; i < mergedProviders.length; i++) {
+            try {
             mergedProviders[i].data["team"] = props.team.name;
+            } catch (error) {
+
+                alert(
+                    `Warning: You are uploading a CSV where the team column is not defined`
+                );
+                break;
+
+            }
             for (const property in mergedProviders[i].data) {
                 const trimmedProperty = property.trim();
                 if (property !== trimmedProperty) {
@@ -208,8 +220,11 @@ const ExportCSV = (props) => {
                         );
                     }
                 }
-            }
+            
+            
         }
+
+        console.log("second for loope");
 
         var columnArr = [];
         for (let i = 0; i < data.slice().length; i++) {
@@ -261,25 +276,28 @@ const ExportCSV = (props) => {
             }
         }
         setImportProviders(mergedProviders);
+   
     }
+
+        setImportProviders(null);
+}
 
     function handleRemoveFile() {
         setImportProviders(null);
     }
 
     async function handleSubmit() {
+        
         if (importProviders) {
-            let promises = [];
-            importProviders.forEach(async (provider) => {
-                await props.firestore
-                    .collection("providers")
-                    .doc(provider.data.facilityName)
-                    .set(provider.data);
-            });
-            await Promise.all(promises);
-            handleClose();
+            
+    let promises = importProviders.map((provider) => 
+    props.firestore.collection("providers").doc(provider.data.facilityName).set(provider.data));
+  await Promise.all(promises);
         }
     }
+
+
+
 
     return (
         <>
@@ -296,14 +314,37 @@ const ExportCSV = (props) => {
                     <Modal.Title>Import CSV</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <CSVReader
-                        onDrop={handleDrop}
-                        config={importConfig}
-                        addRemoveButton
-                        onRemoveFile={handleRemoveFile}
-                    >
-                        <span>Drop CSV file here or click to upload 1.</span>
-                    </CSVReader>
+                <CSVReader
+        config={importConfig}
+        onUploadAccepted={(results: any) => {
+            console.log('---------------------------');
+            console.log(results);
+            console.log('---------------------------');
+            handleDrop(results.data);
+        }}
+    >
+        {({
+            getRootProps,
+            acceptedFile,
+            ProgressBar,
+            getRemoveFileProps,
+        }: any) => (
+            <>
+                <div>
+                    <button type='button' {...getRootProps()}>
+                        Browse file
+                    </button>
+                    <div>
+                        {acceptedFile && acceptedFile.name}
+                    </div>
+                    <button {...getRemoveFileProps()} onClick={handleRemoveFile}>
+                        Remove
+                    </button>
+                </div>
+                <ProgressBar />
+            </>
+        )}
+    </CSVReader>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
