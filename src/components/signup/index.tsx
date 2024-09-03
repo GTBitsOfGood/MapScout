@@ -320,7 +320,7 @@ function SignUp({ firebase, history }) {
                                         placeholder={orgNamePlaceholder}
                                         autoComplete="something-unsupported"
                                         onChange={(event) =>
-                                            handleOrgName(event.target.value)
+                                            handleOrgName((event.target as HTMLInputElement).value)
                                         }
                                     />
                                 </Form.Group>
@@ -334,7 +334,7 @@ function SignUp({ firebase, history }) {
                                         value={orgURL}
                                         placeholder={orgURLPlaceholder}
                                         onChange={(event) =>
-                                            handleOrgURL(event.target.value)
+                                            handleOrgURL((event.target as HTMLInputElement).value)
                                         }
                                     />
                                 </Form.Group>

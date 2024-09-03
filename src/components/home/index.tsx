@@ -192,7 +192,7 @@ function Home({ firebaseAuth, firestore }) {
                                         type="email"
                                         value={email}
                                         onChange={(e) =>
-                                            setEmail(e.target.value)
+                                            setEmail((e.target as HTMLInputElement).value)
                                         }
                                         //onClick={addModal}
                                         placeholder="name@example.com"

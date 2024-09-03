@@ -179,11 +179,11 @@ const RowForm = (props) => {
                             onChange={(e) => {
                                 setItem({
                                     ...item,
-                                    [e.target.name]: e.target.value,
+                                    [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement).value,
                                 });
                                 props.setItem({
                                     ...item,
-                                    [e.target.name]: e.target.value,
+                                    [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement).value,
                                 });
                             }}
                             placeholder="Name"

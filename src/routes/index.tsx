@@ -10,7 +10,7 @@ import Home from "../components/home";
 import { homeRoute, aboutRoute, signupRoute } from "./pathnames";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function renderComponentWithErrorBoundary<P>(Component: React.ReactType) {
+function renderComponentWithErrorBoundary<P>(Component: React.JSXElementConstructor<any>) {
     return (props: P) => (
         <SentryWrapper>
             <Component {...props} />

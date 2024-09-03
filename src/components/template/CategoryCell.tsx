@@ -173,7 +173,7 @@ export default ({
                                         <FormControl
                                             value={optionName}
                                             onChange={(e) =>
-                                                setOptionName(e.target.value)
+                                                setOptionName((e.target as HTMLInputElement).value)
                                             }
                                             type="text"
                                             placeholder="Create New Option"

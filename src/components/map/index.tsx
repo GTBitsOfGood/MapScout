@@ -307,7 +307,7 @@ const Map = (props) => {
                         }
                     } else if (filterVal.length === 0) {
                         setActiveProviders(providers);
-                    } else if (distances !== {}) {
+                    } else if (Object.keys(distances).length !== 0) {
                         setDistances({});
                     }
                 } else {

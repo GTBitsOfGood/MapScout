@@ -328,7 +328,7 @@ export default compose<any>(
                 <InputGroup>
                     <FormControl
                         value={newCatName}
-                        onChange={(e) => setNewCatName(e.target.value)}
+                        onChange={(e) => setNewCatName((e.target as HTMLInputElement).value)}
                         type="text"
                         placeholder="Create New Category"
                     />

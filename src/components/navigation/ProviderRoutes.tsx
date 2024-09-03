@@ -1,5 +1,5 @@
 import React, {
-    ReactType,
+    JSXElementConstructor,
     useCallback,
     useEffect,
     useMemo,
@@ -43,7 +43,7 @@ import {
 type PrivateRouteProps = {
     exact?: boolean;
     path: string;
-    component: ReactType;
+    component: JSXElementConstructor<any>;
 };
 
 function DashboardContent({ isAuth, auth }) {

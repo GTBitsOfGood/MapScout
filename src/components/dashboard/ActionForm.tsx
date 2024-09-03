@@ -61,8 +61,8 @@ const ActionForm = (props) => {
                 placeholder="www.health.com"
                 onChange={(e) => {
                     const data = actions;
-                    actions[index].linkText = e.target.value;
-                    console.log(e.target.value);
+                    actions[index].linkText = (e.target as HTMLInputElement).value;
+                    console.log((e.target as HTMLInputElement).value);
                     setActions(data);
                     setTimeout(() => props.onChange(actions), 100);
                 }}
