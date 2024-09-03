@@ -1,10 +1,9 @@
 ---
 name: PR Template
 about: Template for Pull Requests.
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: ""
+assignees: ""
 ---
 
 ## PR Title/Tagline
@@ -17,26 +16,26 @@ What does this PR change and why?
 
 ### Important Changes
 
-- Database change / migration to run
-- Environment config change
-- Breaking API change
+-   Database change / migration to run
+-   Environment config change
+-   Breaking API change
 
 ### Related Github Issues
 
-- #[Number of Issue]
-- Or, remember to link to an issue on the sidebar
+-   #[Number of Issue]
+-   Or, remember to link to an issue on the sidebar
 
 ### Related PRs
 
-- #PRNUMBER
+-   #PRNUMBER
 
 ### Checklist
 
-- [ ]  Database schema docs have been updated or are not necessary
-- [ ]  Code follows design and style guidelines
-- [ ]  Code is commented with doc blocks
-- [ ]  Tests have been written and executed or are not necessary
-- [ ]  Latest code has been rebased from base branch (usually `develop`)
-- [ ]  Commits follow guidelines (concise, squashed, etc)
-- [ ]  Github issues have been linked in relevant commits
-- [ ]  Relevant reviewers (Senior Dev/EM/Designers) have been assigned to this PR
+-   [ ] Database schema docs have been updated or are not necessary
+-   [ ] Code follows design and style guidelines
+-   [ ] Code is commented with doc blocks
+-   [ ] Tests have been written and executed or are not necessary
+-   [ ] Latest code has been rebased from base branch (usually `develop`)
+-   [ ] Commits follow guidelines (concise, squashed, etc)
+-   [ ] Github issues have been linked in relevant commits
+-   [ ] Relevant reviewers (Senior Dev/EM/Designers) have been assigned to this PR

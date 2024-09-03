@@ -245,5 +245,5 @@ const mapStateToProps = (state) => ({
 
 export default compose<any>(
     withFirestore,
-    connect(mapStateToProps, mapDispatchToProps)
+    connect(mapStateToProps, mapDispatchToProps),
 )(Dashboard);

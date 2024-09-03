@@ -33,14 +33,31 @@ const getRoutes = async () => {
 
     // render the main component
     ReactDOM.render(
-        <TourProvider steps={steps} showBadge={false} showDots={false} startAt={0} components={{Close}} nextButton={nextButton} prevButton={() => <></>} styles={{popover: (base) => ({...base, borderRadius: 16, paddingLeft: 15, paddingRight: 15, paddingTop: 0})}}>
+        <TourProvider
+            steps={steps}
+            showBadge={false}
+            showDots={false}
+            startAt={0}
+            components={{ Close }}
+            nextButton={nextButton}
+            prevButton={() => <></>}
+            styles={{
+                popover: (base) => ({
+                    ...base,
+                    borderRadius: 16,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    paddingTop: 0,
+                }),
+            }}
+        >
             <Provider store={store}>
                 <ConnectedRouter history={history}>
                     {routes(strRoutes)}
                 </ConnectedRouter>
             </Provider>
         </TourProvider>,
-        document.getElementById("app")
+        document.getElementById("app"),
     );
 };
 

@@ -80,13 +80,13 @@ const ExportCSV = (props) => {
     function arrayToJson() {
         //Make a providers temp array to edit
         let providersCopy: { team: string; hours: string }[] = Array.from(
-            props.providers
+            props.providers,
         );
 
         //iterates through providers array and converts each provider to a JSON object
         for (let index = 0; index < props.providers.length; index++) {
             providersCopy[index].hours = JSON.stringify(
-                providersCopy[index].hours
+                providersCopy[index].hours,
             ); //stringify the hour property
             delete providersCopy[index].team; //deletes the team property from each provider
         }
@@ -104,7 +104,7 @@ const ExportCSV = (props) => {
         }
         let csvContent = "data:text/csv;charset=utf-8,";
 
-        dataArray.forEach(function(rowArray) {
+        dataArray.forEach(function (rowArray) {
             let row = rowArray.join(",");
             csvContent += row + "\r\n";
         });
@@ -112,7 +112,7 @@ const ExportCSV = (props) => {
         var encodedUri = encodeURI(csvContent);
         window.open(encodedUri);
     }
-    
+
     async function handleDrop(data) {
         let oldProviders: { id: string }[] = Array.from(props.providers);
         let oldCategories: { id: string }[] = Array.from(props.categories);
@@ -133,7 +133,7 @@ const ExportCSV = (props) => {
                     continue;
                 } else if (
                     oldProviders[i].id.localeCompare(
-                        mergedProviders[j].data.id
+                        mergedProviders[j].data.id,
                     ) === 0
                 ) {
                     //non-match in ID
@@ -146,25 +146,21 @@ const ExportCSV = (props) => {
             isDifferent = false;
         }
         console.log("first for loope");
-    
-    
-    
+
         for (let i = 0; i < mergedProviders.length; i++) {
             try {
-            mergedProviders[i].data["team"] = props.team.name;
+                mergedProviders[i].data["team"] = props.team.name;
             } catch (error) {
-
                 alert(
-                    `Warning: You are uploading a CSV where the team column is not defined`
+                    `Warning: You are uploading a CSV where the team column is not defined`,
                 );
                 break;
-
             }
             for (const property in mergedProviders[i].data) {
                 const trimmedProperty = property.trim();
                 if (property !== trimmedProperty) {
                     mergedProviders[i].data[trimmedProperty] = JSON.parse(
-                        JSON.stringify(mergedProviders[i].data[property])
+                        JSON.stringify(mergedProviders[i].data[property]),
                     );
                     delete mergedProviders[i].data[property];
                 }
@@ -184,7 +180,7 @@ const ExportCSV = (props) => {
                 ) {
                     // Handle default number categories
                     mergedProviders[i].data[trimmedProperty] = Number(
-                        mergedProviders[i].data[trimmedProperty]
+                        mergedProviders[i].data[trimmedProperty],
                     );
                 } else if (
                     trimmedProperty in defaultItem &&
@@ -192,7 +188,7 @@ const ExportCSV = (props) => {
                 ) {
                     // Handle default object categories
                     mergedProviders[i].data[trimmedProperty] = JSON.parse(
-                        mergedProviders[i].data[trimmedProperty]
+                        mergedProviders[i].data[trimmedProperty],
                     );
                 } else if (
                     columns.includes(trimmedProperty) &&
@@ -210,94 +206,90 @@ const ExportCSV = (props) => {
                             mergedProviders[i].data[trimmedProperty] =
                                 mergedProviders[i].data[trimmedProperty]
                                     ? mergedProviders[i].data[
-                                        trimmedProperty
-                                    ].split(",")
+                                          trimmedProperty
+                                      ].split(",")
                                     : [];
                         }
                     } else {
                         alert(
-                            `Warning: You are uploading a CSV where the ${trimmedProperty} column is not defined`
+                            `Warning: You are uploading a CSV where the ${trimmedProperty} column is not defined`,
                         );
                     }
                 }
-            
-            
-        }
+            }
 
-        console.log("second for loope");
+            console.log("second for loope");
 
-        var columnArr = [];
-        for (let i = 0; i < data.slice().length; i++) {
-            let entry = data.slice()[i].data;
-            for (var column in entry) {
-                let col = column; //column in csv
-                columnArr.push(col);
-                let val = entry[column]; // data corresponding the column
-                let containsName = false;
-                for (let j = 0; j < oldCategories.length; j++) {
-                    if (oldCategories[j]["id"] === col) {
-                        containsName = true;
-                        let options = oldCategories[j]["options"];
+            var columnArr = [];
+            for (let i = 0; i < data.slice().length; i++) {
+                let entry = data.slice()[i].data;
+                for (var column in entry) {
+                    let col = column; //column in csv
+                    columnArr.push(col);
+                    let val = entry[column]; // data corresponding the column
+                    let containsName = false;
+                    for (let j = 0; j < oldCategories.length; j++) {
+                        if (oldCategories[j]["id"] === col) {
+                            containsName = true;
+                            let options = oldCategories[j]["options"];
+                            if (val !== "") {
+                                let ele = { label: val, value: val };
+                                // push ele to option array
+                                options.push(ele);
+                            }
+                            break;
+                        }
+                    }
+                    console.log(containsName);
+                    if (!containsName) {
+                        // create a new object and push it to mergedCategories
+                        var arr = [];
                         if (val !== "") {
                             let ele = { label: val, value: val };
-                            // push ele to option array
-                            options.push(ele);
+                            arr.push(ele);
                         }
-                        break;
-                    }
-                }
-                console.log(containsName);
-                if (!containsName) {
-                    // create a new object and push it to mergedCategories
-                    var arr = [];
-                    if (val !== "") {
-                        let ele = { label: val, value: val };
-                        arr.push(ele);
-                    }
-                    // manually set priority and select_type to 0
-                    let newCatategories = {
-                        id: col,
-                        name: col,
-                        active: true,
-                        options: arr,
-                        priority: columnArr.length - 1,
-                        select_type: 2,
-                    };
+                        // manually set priority and select_type to 0
+                        let newCatategories = {
+                            id: col,
+                            name: col,
+                            active: true,
+                            options: arr,
+                            priority: columnArr.length - 1,
+                            select_type: 2,
+                        };
 
-                    oldCategories.push(newCatategories);
-                }
-                // if object does not contain in the csv column, set active to false and set priority to undefined
-                for (let j = 0; j < oldCategories.length; j++) {
-                    if (!columnArr.includes(oldCategories[j]["id"])) {
-                        oldCategories[j]["active"] = false;
-                        oldCategories[j]["priority"] = undefined;
+                        oldCategories.push(newCatategories);
+                    }
+                    // if object does not contain in the csv column, set active to false and set priority to undefined
+                    for (let j = 0; j < oldCategories.length; j++) {
+                        if (!columnArr.includes(oldCategories[j]["id"])) {
+                            oldCategories[j]["active"] = false;
+                            oldCategories[j]["priority"] = undefined;
+                        }
                     }
                 }
             }
+            setImportProviders(mergedProviders);
         }
-        setImportProviders(mergedProviders);
-   
-    }
 
         setImportProviders(null);
-}
+    }
 
     function handleRemoveFile() {
         setImportProviders(null);
     }
 
     async function handleSubmit() {
-        
         if (importProviders) {
-            
-    let promises = importProviders.map((provider) => 
-    props.firestore.collection("providers").doc(provider.data.facilityName).set(provider.data));
-  await Promise.all(promises);
+            let promises = importProviders.map((provider) =>
+                props.firestore
+                    .collection("providers")
+                    .doc(provider.data.facilityName)
+                    .set(provider.data),
+            );
+            await Promise.all(promises);
         }
     }
-
-
-
 
     return (
         <>
@@ -314,37 +306,40 @@ const ExportCSV = (props) => {
                     <Modal.Title>Import CSV</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <CSVReader
-        config={importConfig}
-        onUploadAccepted={(results: any) => {
-            console.log('---------------------------');
-            console.log(results);
-            console.log('---------------------------');
-            handleDrop(results.data);
-        }}
-    >
-        {({
-            getRootProps,
-            acceptedFile,
-            ProgressBar,
-            getRemoveFileProps,
-        }: any) => (
-            <>
-                <div>
-                    <button type='button' {...getRootProps()}>
-                        Browse file
-                    </button>
-                    <div>
-                        {acceptedFile && acceptedFile.name}
-                    </div>
-                    <button {...getRemoveFileProps()} onClick={handleRemoveFile}>
-                        Remove
-                    </button>
-                </div>
-                <ProgressBar />
-            </>
-        )}
-    </CSVReader>
+                    <CSVReader
+                        config={importConfig}
+                        onUploadAccepted={(results: any) => {
+                            console.log("---------------------------");
+                            console.log(results);
+                            console.log("---------------------------");
+                            handleDrop(results.data);
+                        }}
+                    >
+                        {({
+                            getRootProps,
+                            acceptedFile,
+                            ProgressBar,
+                            getRemoveFileProps,
+                        }: any) => (
+                            <>
+                                <div>
+                                    <button type="button" {...getRootProps()}>
+                                        Browse file
+                                    </button>
+                                    <div>
+                                        {acceptedFile && acceptedFile.name}
+                                    </div>
+                                    <button
+                                        {...getRemoveFileProps()}
+                                        onClick={handleRemoveFile}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                                <ProgressBar />
+                            </>
+                        )}
+                    </CSVReader>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -364,5 +359,5 @@ export default compose<any>(
     connect((state: Store) => ({
         firebase: state.firebase,
         team: state.item.team,
-    }))
+    })),
 )(ExportCSV);

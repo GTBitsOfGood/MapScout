@@ -36,17 +36,17 @@ function validateEmail(email) {
 
 async function sendSlackMessage(email) {
     const data = {
-        email: email
+        email: email,
     };
 
     const requestOptions = {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     };
-    fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions)
+    fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions);
 }
 
 function Home({ firebaseAuth, firestore }) {
@@ -101,7 +101,9 @@ function Home({ firebaseAuth, firestore }) {
                 <span id="homepage-background">
                     <img src={background} alt="background" />
                 </span>
-                <div style={{ position: "relative", zIndex: 1, height:"100vh" }}>
+                <div
+                    style={{ position: "relative", zIndex: 1, height: "100vh" }}
+                >
                     <header id="head" className="row-spaced">
                         <span id="head-logo">
                             <b>MapScout</b> <img src={logo} alt="logo" />
@@ -112,19 +114,39 @@ function Home({ firebaseAuth, firestore }) {
                                 alt="Deploys by Netlify"
                             />
                         </a>
-                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" , gap:"20px", alignItems: "center" }}>
-                            <a href="https://bitsofgood.org/contact/" style={{ color: "black" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                gap: "20px",
+                                alignItems: "center",
+                            }}
+                        >
+                            <a
+                                href="https://bitsofgood.org/contact/"
+                                style={{ color: "black" }}
+                            >
                                 <b>Contact Us</b>
                             </a>
-                            <a href="https://bitsofgood.org/about/" style={{ color: "black" }}>
+                            <a
+                                href="https://bitsofgood.org/about/"
+                                style={{ color: "black" }}
+                            >
                                 <b>About Us</b>
                             </a>
-                            
+
                             <Button
                                 as={Link}
-                                to={showProviderRoutes ? providerRoute : authRoute}
+                                to={
+                                    showProviderRoutes
+                                        ? providerRoute
+                                        : authRoute
+                                }
                             >
-                                {showProviderRoutes ? "Go to Dashboard" : "Login"}
+                                {showProviderRoutes
+                                    ? "Go to Dashboard"
+                                    : "Login"}
                             </Button>
                         </div>
                     </header>
@@ -215,16 +237,48 @@ function Home({ firebaseAuth, firestore }) {
                     </section>
                 </div>
                 <FeatureDisplays />
-                <div style={{paddingTop:"2rem"}}>
-                    <h1><b>Our Maps</b></h1>
-                    <p>Currently, we are supporting nine unique clients with interactive resource maps that allow visitors to see what is offered near them and navigate often overwhelming systems.</p>
-                    <div style={{paddingTop:"2rem", display:"flex", flexDirection:"row", alignItems:"space-between", gap:"2rem"}}>
+                <div style={{ paddingTop: "2rem" }}>
+                    <h1>
+                        <b>Our Maps</b>
+                    </h1>
+                    <p>
+                        Currently, we are supporting nine unique clients with
+                        interactive resource maps that allow visitors to see
+                        what is offered near them and navigate often
+                        overwhelming systems.
+                    </p>
+                    <div
+                        style={{
+                            paddingTop: "2rem",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "space-between",
+                            gap: "2rem",
+                        }}
+                    >
                         {ourMaps.map((map, idx) => (
-                        <div key={idx} style={{display:"flex", flexDirection:"column", maxWidth:"30rem"}}>
-                            <img src={map.image} style={{maxWidth:"100%", maxHeight:"100%"}}/>
-                            <h3 style={{paddingTop:"2rem"}}>{map.title}</h3>
-                            <a style={{paddingTop:"2rem"}}>{map.description}</a>
-                        </div>
+                            <div
+                                key={idx}
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    maxWidth: "30rem",
+                                }}
+                            >
+                                <img
+                                    src={map.image}
+                                    style={{
+                                        maxWidth: "100%",
+                                        maxHeight: "100%",
+                                    }}
+                                />
+                                <h3 style={{ paddingTop: "2rem" }}>
+                                    {map.title}
+                                </h3>
+                                <a style={{ paddingTop: "2rem" }}>
+                                    {map.description}
+                                </a>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -247,5 +301,5 @@ const mapStateToProps = (state) => ({
 
 export default compose<any>(
     withFirestore,
-    connect(mapStateToProps, null)
+    connect(mapStateToProps, null),
 )(React.memo(Home));

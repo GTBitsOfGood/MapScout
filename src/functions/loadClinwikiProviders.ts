@@ -51,7 +51,7 @@ async function providerFromId(nctId: string) {
             provider.address + query?.data?.study?.facilities[0]?.state
         ).replace(/[^a-zA-Z ]/g, "");
         const newCoords = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${filteredName}&key=${GOOGLE_API_KEY}`
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${filteredName}&key=${GOOGLE_API_KEY}`,
         ).then((r) => r.json());
         if (newCoords.status !== "ZERO_RESULTS") {
             provider.latitude =
@@ -87,11 +87,11 @@ async function loadClinwikiProviders(searchHash: string) {
             clinwikiIds.data.search.studies.map(async (id) => {
                 const provider = await providerFromId(id.nctId);
                 clinwikiProviders.push(provider);
-            })
+            }),
         );
     }
     return clinwikiProviders.filter(
-        (provider) => provider.latitude !== 0 && provider.longitude !== 0
+        (provider) => provider.latitude !== 0 && provider.longitude !== 0,
     );
 }
 

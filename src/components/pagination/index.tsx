@@ -1,5 +1,4 @@
-
-import React, {useState, Fragment, useEffect} from 'react';
+import React, { useState, Fragment, useEffect } from "react";
 
 const PaginationBar = () => {
     return (
@@ -7,6 +6,6 @@ const PaginationBar = () => {
             <Fragment> hello </Fragment>
         </div>
     );
-}
+};
 
 export default PaginationBar;

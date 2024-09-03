@@ -1,4 +1,5 @@
 # MapScout - Resource Map Maker
+
 https://mapscout.io
 
 Learn more about MapScout here: https://www.stephaniefhe.com/mapscout
@@ -19,10 +20,10 @@ Learn more about MapScout here: https://www.stephaniefhe.com/mapscout
 
 1. Install [Docker](https://docs.docker.com/engine/install/)
 2. Obtain the Bitwarden password from your EM. Create a `bitwarden.env` file and fill it in with the following contents:
-   ```
-   BW_PASSWORD=<your bitwarden password>
-   ```
-   This only needs to be done on your first run. After that, you should delete the file from your repository to avoid pushing it to Github.
+    ```
+    BW_PASSWORD=<your bitwarden password>
+    ```
+    This only needs to be done on your first run. After that, you should delete the file from your repository to avoid pushing it to Github.
 3. Start the application with Docker Compose: `docker compose up`
 
 If you make any changes to the packages, you may need to rebuild the images. To do this, append --build to the above docker compose up command.
