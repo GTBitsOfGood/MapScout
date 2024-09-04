@@ -36,7 +36,7 @@ Windows Users: If you come across this error `exec ./entrypoint.sh: no such file
 
 ## Gitflow
 
-The `master/main` branch automatically deploys to production, so all code should first go through the `develop` branch first. Mapscout only accepts code that has been approved from a Pull Request. In order to make changes to the code, we recommend the following steps:
+The `develop` branch automatically deploys to production, so all code should be reviewed first. Mapscout only accepts code that has been approved from a Pull Request. In order to make changes to the code, we recommend the following steps:
 
 1. Create a new branch from develop (e.i. `feature/coolLoginScreen`)
 
