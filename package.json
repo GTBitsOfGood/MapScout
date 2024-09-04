@@ -30,7 +30,7 @@
         "@react-firebase/database": "^0.3.11",
         "@reactour/mask": "^1.0.5",
         "@reactour/tour": "^3.3.0",
-        "@sentry/react": "^5.19.1",
+        "@sentry/react": "^8.28.0",
         "@slack/client": "^5.0.2",
         "@types/react": "^17.0.30",
         "autoprefixer": "9.8.0",
