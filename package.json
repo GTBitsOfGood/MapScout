@@ -19,23 +19,20 @@
         "secrets:logout": "(bw logout || exit 0)",
         "secrets:login": "bw login product@bitsofgood.org",
         "secrets:sync": "bw sync && bw get item 87ff5bbf-f14e-4dda-8962-ac2a0173fc46 | fx .notes > .env",
-        "lint": "eslint --fix .",
-        "lint:check": "eslint .",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "lint": "eslint --fix ."
     },
     "dependencies": {
         "@animate/blur": "0.0.5",
         "@babel/preset-env": "^7.21.4",
         "@babel/preset-react": "^7.18.6",
-        "@bitwarden/cli": "^2024.8.1",
+        "@bitwarden/cli": "^2024.8.2",
         "@khanacademy/react-multi-select": "^0.3.3",
         "@react-firebase/database": "^0.3.11",
         "@reactour/mask": "^1.0.5",
         "@reactour/tour": "^3.3.0",
         "@sentry/react": "^5.19.1",
         "@slack/client": "^5.0.2",
-        "@types/react": "^18.3.5",
+        "@types/react": "^17.0.30",
         "autoprefixer": "9.8.0",
         "babel-polyfill": "^6.26.0",
         "bootstrap": "^4.3.1",
@@ -43,7 +40,6 @@
         "connected-react-router": "^4.2.3",
         "cross-env": "^7.0.3",
         "dotenv": "^8.2.0",
-        "eslint": "^8",
         "firebase": "^7.16.0",
         "fx": "^35.0.0",
         "google-map-react": "^2.1.7",
@@ -114,15 +110,11 @@
         ]
     },
     "devDependencies": {
-        "@types/react-bootstrap": "^0.32.37",
         "eslint-config-airbnb": "19.0.4",
-        "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.25.3",
         "eslint-plugin-jsx-a11y": "^6.5.1",
         "eslint-plugin-only-warn": "^1.1.0",
-        "eslint-plugin-prettier": "^5.2.1",
         "eslint-plugin-react": "^7.28.0",
-        "eslint-plugin-react-hooks": "^4.3.0",
-        "prettier": "^3.3.3"
+        "eslint-plugin-react-hooks": "^4.3.0"
     }
 }
