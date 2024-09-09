@@ -7,7 +7,6 @@ module.exports = {
         "eslint:recommended",
         "plugin:react/recommended",
         "airbnb",
-        "plugin:prettier/recommended",
     ],
     globals: {
         Atomics: "readonly",
@@ -20,7 +19,7 @@ module.exports = {
         ecmaVersion: 2018,
         sourceType: "module",
     },
-    plugins: ["only-warn", "react", "prettier"],
+    plugins: ["only-warn", "react"],
     rules: {
         "react/jsx-props-no-spreading": ["off"],
     },
