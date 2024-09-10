@@ -399,7 +399,7 @@ export default compose<any>(
                         )}
                     </Droppable>
                 </DragDropContext>
-                <Modal show={showModal} dialogClassName="myModal" scrollable>
+                <Modal show={showModal} onHide={() => setShowModal(false)} dialogClassName="myModal" scrollable>
                     <Modal.Header style={{ backgroundColor: "#2F80ED" }}>
                         <div className="ml-auto">
                             <Button
