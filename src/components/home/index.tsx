@@ -283,7 +283,6 @@ function Home({ firebaseAuth, firestore }) {
                     </div>
                 </div>
             </div>
-            
             <Modal
                 show={showEmailModal}
                 onHide={() => setShowEmailModal(false)}
