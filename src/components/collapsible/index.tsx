@@ -3,6 +3,8 @@ import { useState, useRef} from "react";
 import './collapsible.css';
 import {FaAngleDown, FaAngleUp } from "react-icons/fa";
 
+//This is collapsible component, use it as if you are using any pre-designed component
+//Specify the Style of collapsible component as if you were styling a div using style prompt
 const Collapsible = ({style = {}, label, children}) => {
     const [isOpen, setOpen] = useState(false)
     const contentRef = useRef(null)
