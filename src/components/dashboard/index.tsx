@@ -16,7 +16,6 @@ import handleDrop from "./CSV";
 import importConfig from "./CSV";
 import handleRemoveFile from "./CSV";
 import handleSubmit from "./CSV";
-import Collapsible from "components/collapsible";
 
 const dash = require("../../assets/img/dash.svg");
 
