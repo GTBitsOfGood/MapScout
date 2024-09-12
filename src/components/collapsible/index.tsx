@@ -16,10 +16,10 @@ const Collapsible = ({style = {}, label, children}) => {
               ) : (
                 <FaAngleUp />
               )}</button>
-            <div ref={contentRef} 
+            <div
                 className={`content ${isOpen ? 'open' : ''}`}
                 style={{ maxHeight: isOpen ? `${contentRef.current.scrollHeight}px` : '0px' }}>
-                    <div className="container">{children}</div>
+                    <div ref={contentRef} className="container">{children}</div>
                 </div>
         </div>
     )
