@@ -13,6 +13,7 @@ import ModalRoot from "components/modals/ModalRoot";
 import "../modals/Modal.css";
 import { ourMaps } from "./our-maps";
 import FeatureDisplays from "./FeatureDisplays";
+import Collapsible from "components/collapsible";
 
 const logo = require("../../assets/img/logo.png");
 const background = require("../../assets/img/homepage-hero.png");
@@ -60,6 +61,11 @@ function Home({ firebaseAuth, firestore }) {
     const addModal = () => {
         setShowEmailModal(true);
     };
+
+    const customStyle ={
+        marginLeft: '0',
+        width: 'auto'
+    }
 
     useEffect(() => {
         if (
@@ -173,6 +179,9 @@ function Home({ firebaseAuth, firestore }) {
                                 <li>100% customer satisfaction</li>
                                 <li>Mobile friendly</li>
                             </ul>
+                            <Collapsible style={customStyle} label="Introducing APFF">
+                                <p>Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.Our Foundation is run by Firefighters, for Firefighters!.</p>
+                            </Collapsible>
                             <Form.Group
                                 controlId="formEmail"
                                 style={{
@@ -283,6 +292,7 @@ function Home({ firebaseAuth, firestore }) {
                     </div>
                 </div>
             </div>
+            
             <Modal
                 show={showEmailModal}
                 onHide={() => setShowEmailModal(false)}
