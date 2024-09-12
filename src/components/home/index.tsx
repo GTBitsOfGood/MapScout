@@ -61,11 +61,6 @@ function Home({ firebaseAuth, firestore }) {
         setShowEmailModal(true);
     };
 
-    const customStyle ={
-        marginLeft: '0',
-        width: 'auto'
-    }
-
     useEffect(() => {
         if (
             isLoaded(firebaseAuth) &&
