@@ -39,6 +39,7 @@
         "classnames": "^2.2.6",
         "connected-react-router": "^4.2.3",
         "cross-env": "^7.0.3",
+        "d3": "^7.9.0",
         "dotenv": "^8.2.0",
         "firebase": "^7.16.0",
         "fx": "^35.0.0",
