@@ -16,6 +16,7 @@ import handleDrop from "./CSV";
 import importConfig from "./CSV";
 import handleRemoveFile from "./CSV";
 import handleSubmit from "./CSV";
+import Collapsible from "components/collapsible";
 
 const dash = require("../../assets/img/dash.svg");
 
@@ -211,6 +212,10 @@ function Dashboard({ firestore, team, selectItem }) {
                                     </ListGroup.Item>
                                 ))}
                         </ListGroup>
+                        
+            <Collapsible label="Click to expand">
+                <p>Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.Our Foundation is run by Firefighters, for Firefighters!.</p>
+            </Collapsible>
                     </div>
                 </div>
             </div>
