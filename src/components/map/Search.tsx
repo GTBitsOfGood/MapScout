@@ -14,8 +14,8 @@ const Search = ({ filterProviders, primaryColor }) => {
     const [width, setWidth] = useState(getWidth());
     const isDesktop = width > 768;
 
-    let { searchZipcode, searchProviderName, hideLabel, showLabel } =
-        localizationStrings;
+    let { searchZipcode, searchProviderName, hideLabel, showLabel } = localizationStrings;
+
 
     return (
         <div style={{ width: "80%" }}>

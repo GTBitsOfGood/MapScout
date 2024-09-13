@@ -1,3 +1,4 @@
+import '@fontsource/inter/700.css'
 import { useTour } from "@reactour/tour";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import queryString from "query-string";
@@ -6,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
+import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
@@ -21,6 +23,9 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import searchIcon from '../../assets/img/searchicon.png';
+import Switch from 'react-switch';
+
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -63,7 +68,7 @@ const Map = (props) => {
     const [defaultLat, setDefaultLat] = useState(0);
     const [defaultLong, setDefaultLong] = useState(0);
     const [defaultZoom, setDefaultZoom] = useState(1);
-
+    const [isToggled, setIsToggled] = useState(defaultView);
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
@@ -77,6 +82,11 @@ const Map = (props) => {
         },
         [props.location.pathname],
     );
+
+    const handleToggle = (checked) => {
+        setIsToggled(checked);
+        switchView();
+    };
 
     const clinWikiMap = getTeam() === "clinwiki";
 
@@ -851,47 +861,73 @@ const Map = (props) => {
                         <div className="w-75">
                             <Row noGutters={!isDesktop}>
                                 <Col>
-                                    <Form.Control
-                                        placeholder={searchZipcode}
-                                        itemType="zipcode"
-                                        value={searchZip}
-                                        onChange={filterProviders}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        placeholder={searchProviderName}
-                                        itemType="search"
-                                        onChange={filterProviders}
-                                        value={searchName}
-                                    />
+                                <InputGroup className="mb-3">
+                                        <InputGroup.Text 
+                                            id="search-addon" 
+                                            style={{ 
+                                                backgroundColor: '#FAFBFC',
+                                                border: '1px solid #ced4da',  
+                                                borderRadius: '4px 0 0 4px',  
+                                                padding: '0.375rem 0.75rem',  
+                                                borderRight: 'none',
+                                                marginLeft: '10px'
+                                            }}
+                                        >
+                                            <img
+                                                src={searchIcon}
+                                                alt="Search"
+                                                style={{
+                                                    width: '15px',  
+                                                    height: '15px',
+                                                    verticalAlign: 'middle',
+                                                }}
+                                            />
+                                        </InputGroup.Text>
+                                        <Form.Control
+                                            placeholder={searchZipcode}
+                                            itemType="search"
+                                            onChange={filterProviders}
+                                            value={searchName}
+                                            style={{
+                                                flex: '0 0 485px',
+                                                backgroundColor: '#FAFBFC',
+                                                borderRadius: '0 4px 4px 0', 
+                                                borderLeft: 'none', 
+                                                borderTop: '1px solid #ced4da', 
+                                                borderRight: '1px solid #ced4da',
+                                                borderBottom: '1px solid #ced4da',
+                                                padding: '0.275rem 0.15rem',
+                                                marginBottom: '0', 
+                                            }}
+                                        />
+                                    </InputGroup>
                                 </Col>
                             </Row>
                         </div>
-                        <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center',  marginRight: '20px' }}>
+                                <div style={{ marginRight: '5px',  fontFamily: 'Inter, sans-serif'}}>
+                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
+                                </div>
+                                <Switch
+                                onChange={handleToggle}
+                                checked={isToggled}
+                                offColor="#E0E0E0"
+                                onColor={primaryColor}
+                                handleDiameter={18}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                height={24}
+                                width={44}
+                                />
+                            </div>
                             <Button
+                                style={{marginRight: '20px'}}
                                 className="button-tutorial"
                                 variant="primary"
                                 onClick={() => setIsOpen(true)}
                             >
-                                Open Tour
-                            </Button>
-                            <Button
-                                variant="primary"
-                                style={{
-                                    borderColor: primaryColor,
-                                    backgroundColor: primaryColor,
-                                }}
-                                onClick={switchView}
-                                className="switch-view-button"
-                            >
-                                {isDesktop
-                                    ? defaultView
-                                        ? hideLabel
-                                        : showLabel
-                                    : defaultView
-                                      ? showLabel
-                                      : hideLabel}
+                                Start Tutorial
                             </Button>
                         </div>
                     </div>
