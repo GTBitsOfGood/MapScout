@@ -21,6 +21,7 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { ProgressBar } from "components/subcomponents/chartcomponents/ProgressBar";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -75,7 +76,7 @@ const Map = (props) => {
         (e?) => {
             return props.location.pathname.replace("/", "");
         },
-        [props.location.pathname],
+        [props.location.pathname]
     );
 
     const clinWikiMap = getTeam() === "clinwiki";
@@ -87,14 +88,14 @@ const Map = (props) => {
                 temp = temp.filter((provider) =>
                     provider[filterName]
                         ? provider[filterName].some((r) =>
-                              filtersState[filterName].includes(r),
+                              filtersState[filterName].includes(r)
                           ) || filtersState[filterName].length === 0
-                        : true,
+                        : true
                 );
             });
             setActiveProviders(temp);
         },
-        [filtersState],
+        [filtersState]
     );
 
     const filterSearch = useCallback(
@@ -104,7 +105,7 @@ const Map = (props) => {
             temp = temp.filter((item) => regex.test(item.facilityName));
             filterByTags(temp);
         },
-        [filterByTags, providers],
+        [filterByTags, providers]
     );
 
     // set filterIds from firestore in useeffect
@@ -122,12 +123,12 @@ const Map = (props) => {
                 setFiltersState({
                     ...filtersState,
                     [filterName]: filtersState[filterName].filter(
-                        (filter) => filter !== filterVal,
+                        (filter) => filter !== filterVal
                     ),
                 });
             }
         },
-        [filtersState],
+        [filtersState]
     );
 
     useEffect(() => {
@@ -190,8 +191,9 @@ const Map = (props) => {
                 if (typeof parsed.searchHash == "string") {
                     clinWikiSearchHash = parsed.searchHash;
                 }
-                const clinwikiProviders =
-                    await loadClinwikiProviders(clinWikiSearchHash);
+                const clinwikiProviders = await loadClinwikiProviders(
+                    clinWikiSearchHash
+                );
                 provs = [...provs, ...clinwikiProviders];
             }
 
@@ -218,7 +220,7 @@ const Map = (props) => {
 
     const filterZipcode = async (filterVal) => {
         const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`,
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`
         );
         const responseJson = await response.json();
 
@@ -261,7 +263,7 @@ const Map = (props) => {
         });
 
         filteredProviders.sort((a, b) =>
-            a.latLongdistance > b.latLongdistance ? 1 : -1,
+            a.latLongdistance > b.latLongdistance ? 1 : -1
         );
 
         const filterActiveProviders = [];
@@ -275,7 +277,7 @@ const Map = (props) => {
         setZipProviders(filterActiveProviders);
         setTimeout(
             () => filterSearch(searchName, filterVal, filterActiveProviders),
-            100,
+            100
         );
     };
 
@@ -286,7 +288,7 @@ const Map = (props) => {
             });
             setActiveProviders(filterProviders);
         },
-        [activeProviders],
+        [activeProviders]
     );
 
     const filterProviders = useCallback(
@@ -323,7 +325,7 @@ const Map = (props) => {
             providers.length,
             filterZipcode,
             filterSearch,
-        ],
+        ]
     );
 
     //const filterProviders = async (e?) => {
@@ -361,7 +363,7 @@ const Map = (props) => {
             setUpperPageBound(newUpperBound);
             setCurrPage(newPage);
         },
-        [currPage, lowerPageBound, upperPageBound],
+        [currPage, lowerPageBound, upperPageBound]
     );
 
     useEffect(() => {
@@ -461,7 +463,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else if (currPage > maxPage - 3) {
@@ -474,7 +476,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else {
@@ -491,7 +493,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -506,7 +508,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -520,7 +522,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else {
@@ -537,7 +539,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -584,8 +586,8 @@ const Map = (props) => {
                     ...acc,
                     [cur]: [],
                 }),
-                {},
-            ),
+                {}
+            )
         );
     }
 
@@ -603,7 +605,7 @@ const Map = (props) => {
                         setFiltersState({
                             ...filtersState,
                             [item]: filtersState[item].filter(
-                                (i) => i !== title,
+                                (i) => i !== title
                             ),
                         });
                         setTimeout(() => filterProviders(), 100);
@@ -634,14 +636,14 @@ const Map = (props) => {
                     .filter(
                         ([key, value]: any[]) =>
                             Number.isInteger(value.priority) &&
-                            value.priority < FILTER_CUTOFF,
+                            value.priority < FILTER_CUTOFF
                     )
                     .sort(
                         ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
-                            aValue.priority - bValue.priority,
+                            aValue.priority - bValue.priority
                     )
                     .map(([key, value]: any[]) =>
-                        renderDropdown(value.name, key),
+                        renderDropdown(value.name, key)
                     )}
 
                 {moreFilter ? (
@@ -650,16 +652,16 @@ const Map = (props) => {
                             .filter(
                                 ([key, value]: any[]) =>
                                     !Number.isInteger(value.priority) ||
-                                    value.priority >= FILTER_CUTOFF,
+                                    value.priority >= FILTER_CUTOFF
                             )
                             .sort(
                                 (
                                     [aKey, aValue]: any[],
-                                    [bKey, bValue]: any[],
-                                ) => aValue.name.localeCompare(bValue.name),
+                                    [bKey, bValue]: any[]
+                                ) => aValue.name.localeCompare(bValue.name)
                             )
                             .map(([key, value]: any[]) =>
-                                renderDropdown(value.name, key),
+                                renderDropdown(value.name, key)
                             )}
                         <Button
                             variant="link"
@@ -786,7 +788,7 @@ const Map = (props) => {
                                         value: item.value,
                                         type: "checkbox",
                                         checked: !filtersState[key].includes(
-                                            item.value,
+                                            item.value
                                         ),
                                         getAttribute: (param) => "normalfilter",
                                     },
@@ -845,7 +847,7 @@ const Map = (props) => {
                             "ml-2",
                             "mb-3",
                             "pt-3",
-                            { "mr-2": !isDesktop },
+                            { "mr-2": !isDesktop }
                         )}
                     >
                         <div className="w-75">
@@ -890,8 +892,8 @@ const Map = (props) => {
                                         ? hideLabel
                                         : showLabel
                                     : defaultView
-                                      ? showLabel
-                                      : hideLabel}
+                                    ? showLabel
+                                    : hideLabel}
                             </Button>
                         </div>
                     </div>
@@ -906,8 +908,8 @@ const Map = (props) => {
                                     ? "50vw"
                                     : "100vw"
                                 : defaultView
-                                  ? "100vw"
-                                  : 0,
+                                ? "100vw"
+                                : 0,
                             display: !isDesktop && !defaultView && "none",
                         }}
                     >
@@ -962,10 +964,10 @@ const Map = (props) => {
                                                                 isDesktop
                                                             )
                                                                 setCurrmarker(
-                                                                    index,
+                                                                    index
                                                                 );
                                                         },
-                                                        300,
+                                                        300
                                                     )}
                                                     onClick={() =>
                                                         handleCellClick(index)
@@ -1015,8 +1017,8 @@ const Map = (props) => {
                                             handlePageChange(
                                                 Math.ceil(
                                                     activeProviders.length /
-                                                        PAGE_SIZE,
-                                                ),
+                                                        PAGE_SIZE
+                                                )
                                             )
                                         }
                                     />
@@ -1049,6 +1051,10 @@ const Map = (props) => {
                                                     ]
                                                 }
                                                 categories={categories}
+                                            />
+                                            <ProgressBar
+                                                value={300}
+                                                goal={600}
                                             />
                                         </Modal.Body>
                                     </Modal>
@@ -1092,8 +1098,8 @@ const Map = (props) => {
                                     ? "50vw"
                                     : 0
                                 : defaultView
-                                  ? 0
-                                  : "100vw",
+                                ? 0
+                                : "100vw",
                             display: !isDesktop && defaultView && "none",
                         }}
                         onMouseLeave={() => setPoint(true)}
@@ -1120,5 +1126,5 @@ export default compose<any>(
     withFirestore,
     connect((state: Store) => ({
         state,
-    })),
+    }))
 )(Map);
