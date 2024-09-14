@@ -165,6 +165,8 @@ export default compose<any>(
         const point = await categories[index];
         point.select_type = type;
         setIsLoading(false);
+
+        saveChanges();
     }
 
     async function rename(e, index) {
@@ -172,6 +174,8 @@ export default compose<any>(
         const point = items[index];
         point.name = e.target.value;
         setCategories(items);
+
+        saveChanges();
     }
 
     async function addOption(name, index) {
@@ -188,6 +192,8 @@ export default compose<any>(
             });
         }
         setIsLoading(false);
+
+        saveChanges();
     }
 
     async function removeOption(i, index) {
@@ -195,6 +201,8 @@ export default compose<any>(
         const point = categories[index];
         await point.options.splice(i, 1);
         setIsLoading(false);
+
+        saveChanges();
     }
 
     function disableCat(index) {
@@ -204,6 +212,8 @@ export default compose<any>(
             item.priority = i;
         });
         setCategories(items);
+
+        saveChanges();
     }
 
     async function enableCat(index) {
@@ -211,16 +221,21 @@ export default compose<any>(
         const point = await categories[index];
         point.active = true;
         setIsLoading(false);
+
+        saveChanges();
     }
 
     async function deleteCat(index) {
         setIsLoading(true);
         await categories.splice(index, 1);
         setIsLoading(false);
+
+        saveChanges();
     }
 
     async function createNewCat() {
         setIsLoading(true);
+
         await categories.unshift({
             name: newCatName,
             select_type: 2,
@@ -229,8 +244,11 @@ export default compose<any>(
             team: team.name,
             id: newCatName,
         });
+        
         setNewCatName("");
         setIsLoading(false);
+
+        saveChanges();
     }
 
     // function resetCategories() {
