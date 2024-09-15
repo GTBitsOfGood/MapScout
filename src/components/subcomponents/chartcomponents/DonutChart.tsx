@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { Button } from "./Button";
-/*
-    assuming input is:
-         data<{label : string, number : number, percentage : string}> = []
-         
-
- */
 
 interface Data {
     label: string;
@@ -27,7 +21,6 @@ const DonutChart = ({ data }) => {
         const radius = Math.min(width, height) / 4;
 
         const svg = d3.select(svgRef.current).attr("viewBox", "0 0 100 65");
-
         svg.selectAll("*").remove();
 
         const baseColor = d3.rgb("#7EAAFF");
@@ -82,7 +75,6 @@ const DonutChart = ({ data }) => {
             .style("text-anchor", "middle")
             .attr("font-size", "0.2rem");
 
-        // Add outer labels with leader lines
         const outerArc = d3
             .arc()
             .innerRadius(radius * 1)
@@ -100,7 +92,7 @@ const DonutChart = ({ data }) => {
                 pos[0] = radius * 1.45 * (midAngle < Math.PI ? 1 : -1);
                 return `translate(${pos})`;
             });
-        // Add label text
+
         outerLabel
             .append("text")
             .text((d) => d.data.label)
@@ -109,7 +101,6 @@ const DonutChart = ({ data }) => {
             .attr("font-size", "0.15rem")
             .attr("fill", "#7C7C7C");
 
-        // Add number text
         outerLabel
             .append("text")
             .text((d) => `($${formatNumberWithCommas(d.data.number)})`)
@@ -122,7 +113,6 @@ const DonutChart = ({ data }) => {
             .arc()
             .innerRadius(radius * 0.9)
             .outerRadius(radius * 0.8);
-        // Add leader lines
         svgGroup
             .selectAll(".leader-line")
             .data(pie(data))

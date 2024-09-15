@@ -21,8 +21,9 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { ProgressBar } from "components/subcomponents/chartcomponents/ProgressBar";
+import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
+import LineChart from "components/subcomponents/chartcomponents/LineChart";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -34,6 +35,21 @@ const data = [
     { label: "Programs", number: 5670, percentage: "27%" },
     { label: "Technology", number: 4410, percentage: "21%" },
     { label: "Uniforms", number: 3780, percentage: "18%" },
+];
+
+const data2 = [
+    { x: "Jan", y: 2500 },
+    { x: "Feb", y: 4500 },
+    { x: "Mar", y: 1050 },
+    { x: "Apr", y: 500 },
+    { x: "May", y: 2305 },
+    { x: "Jun", y: 3846 },
+    { x: "Jul", y: 4628 },
+    { x: "Aug", y: 678 },
+    { x: "Sep", y: 1835 },
+    { x: "Oct", y: 5084 },
+    { x: "Nov", y: 5943 },
+    { x: "Dec", y: 2085 },
 ];
 
 const FILTER_CUTOFF = 5;
@@ -1065,6 +1081,13 @@ const Map = (props) => {
                                                 goal={600}
                                             />
                                             <DonutChart data={data} />
+                                            <br></br>
+                                            <LineChart
+                                                title={
+                                                    "Total donations per month in 2023"
+                                                }
+                                                data={data2}
+                                            />
                                         </Modal.Body>
                                     </Modal>
                                 )}

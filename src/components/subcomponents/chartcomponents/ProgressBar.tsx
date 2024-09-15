@@ -8,6 +8,7 @@ const ProgressBar = ({ value, goal, units = "dollars" }) => {
 
     useEffect(() => {
         const svg = d3.select(svgRef.current).attr("viewBox", `0 0 100 1`);
+        svg.selectAll("*").remove();
         const xScale = d3.scaleLinear().domain([0, 100]).range([0, 100]);
         const progressWidth = xScale(percentage);
         const barRadius = Math.min(progressWidth, 0.25);
@@ -73,4 +74,4 @@ const ProgressBar = ({ value, goal, units = "dollars" }) => {
     );
 };
 
-export { ProgressBar };
+export default ProgressBar;
