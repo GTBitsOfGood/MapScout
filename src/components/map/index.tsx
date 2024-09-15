@@ -22,11 +22,19 @@ import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { ProgressBar } from "components/subcomponents/chartcomponents/ProgressBar";
+import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 
 const frame = require("../../assets/svg/Frame.svg");
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
+
+const data = [
+    { label: "Equipment", number: 7140, percentage: "34%" },
+    { label: "Programs", number: 5670, percentage: "27%" },
+    { label: "Technology", number: 4410, percentage: "21%" },
+    { label: "Uniforms", number: 3780, percentage: "18%" },
+];
 
 const FILTER_CUTOFF = 5;
 const PAGE_SIZE = 100;
@@ -1056,6 +1064,7 @@ const Map = (props) => {
                                                 value={300}
                                                 goal={600}
                                             />
+                                            <DonutChart data={data} />
                                         </Modal.Body>
                                     </Modal>
                                 )}
