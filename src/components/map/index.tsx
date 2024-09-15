@@ -1,4 +1,5 @@
-import '@fontsource/inter/700.css'
+import '@fontsource/inter'
+import './mapStyles.css'
 import { useTour } from "@reactour/tour";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import queryString from "query-string";
@@ -24,8 +25,9 @@ import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import searchIcon from '../../assets/img/searchicon.png';
+import dropdownIcon from '../../assets/svg/chevron-down.svg';
 import Switch from 'react-switch';
-
+import { func } from 'prop-types';
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -43,6 +45,7 @@ const getWidth = () =>
 const Map = (props) => {
     const { setIsOpen } = useTour();
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
+    const [filterActive, setFilterActive] = useState(false);
     const [lowerPageBound, setLowerPageBound] = useState(0);
     const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
@@ -637,9 +640,7 @@ const Map = (props) => {
                 className={classNames("filter-row", "padder", "filters")}
                 style={{ display: "flex", alignItems: "center" }}
             >
-                <div style={{ marginRight: "8px", marginBottom: "6px" }}>
-                    {filters}:
-                </div>
+                <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -775,49 +776,58 @@ const Map = (props) => {
         </>
     );
 
+    
+
     function renderDropdown(title, key) {
-        return (
-            <Dropdown key={key}>
-                <Dropdown.Toggle
-                    id={key}
-                    variant="light"
-                    style={{ marginRight: 5, marginBottom: 5 }}
-                >
-                    {title}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {filtersData[key].options.map((item, index) => (
-                        <div
-                            key={index}
-                            onClick={() =>
-                                filterProviders({
-                                    target: {
-                                        name: key,
-                                        value: item.value,
-                                        type: "checkbox",
-                                        checked: !filtersState[key].includes(
-                                            item.value,
-                                        ),
-                                        getAttribute: (param) => "normalfilter",
-                                    },
-                                })
+    return (
+        <Dropdown key={key} style={{ marginTop: '0px' }}>
+            <Dropdown.Toggle
+                id={key}
+                variant="light"
+                // className="custom-dropdown-toggle"
+                className={`custom-dropdown-toggle ${filterActive ? 'active' : ''}`}
+            >
+                {title}
+                <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                {filtersData[key].options.map((item, index) => (
+                    <div
+                        key={index}
+                        onClick={() => {
+                            filterProviders({
+                                target: {
+                                    name: key,
+                                    value: item.value,
+                                    type: 'checkbox',
+                                    checked: !filtersState[key].includes(item.value),
+                                    getAttribute: (param) => 'normalfilter',
+                                },
+                            });
+
+                            if (filterActive) {
+                                setFilterActive(false);
+                            } else {
+                                setFilterActive(true);
                             }
-                        >
-                            <Form.Check
-                                className="dropdown-item"
-                                name={key}
-                                type="checkbox"
-                                checked={filtersState[key].includes(item.value)}
-                                value={item.value}
-                                label={item.label}
-                                itemType="normalfilter"
-                            />
-                        </div>
-                    ))}
-                </Dropdown.Menu>
-            </Dropdown>
-        );
-    }
+                             
+                        }}
+                    >
+                        <Form.Check
+                            className="dropdown-item"
+                            name={key}
+                            type="checkbox"
+                            checked={filtersState[key].includes(item.value)}
+                            value={item.value}
+                            label={item.label}
+                            itemType="normalfilter"
+                        />
+                    </div>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
+    );
+}
 
     // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
@@ -853,63 +863,81 @@ const Map = (props) => {
                         className={classNames(
                             "row-spaced",
                             "ml-2",
-                            "mb-3",
                             "pt-3",
                             { "mr-2": !isDesktop },
                         )}
                     >
                         <div className="w-75">
                             <Row noGutters={!isDesktop}>
-                                <Col>
-                                <InputGroup className="mb-3">
+                                <Col
+                                    style={{paddingBottom:'0px',
+                                            marginBottom:'0px'
+                                    }}
+                                >
+                                    <InputGroup className="mb-3">
                                         <InputGroup.Text 
-                                            id="search-addon" 
-                                            style={{ 
-                                                backgroundColor: '#FAFBFC',
-                                                border: '1px solid #ced4da',  
-                                                borderRadius: '4px 0 0 4px',  
-                                                padding: '0.375rem 0.75rem',  
-                                                borderRight: 'none',
-                                                marginLeft: '10px'
-                                            }}
+                                            id="search-addon"
+                                            className="search" 
                                         >
                                             <img
                                                 src={searchIcon}
-                                                alt="Search"
-                                                style={{
-                                                    width: '15px',  
-                                                    height: '15px',
-                                                    verticalAlign: 'middle',
-                                                }}
+                                                alt="search"
+                                                className='imgSearch'
                                             />
                                         </InputGroup.Text>
+
                                         <Form.Control
                                             placeholder={searchZipcode}
                                             itemType="search"
                                             onChange={filterProviders}
                                             value={searchName}
-                                            style={{
-                                                flex: '0 0 485px',
-                                                backgroundColor: '#FAFBFC',
-                                                borderRadius: '0 4px 4px 0', 
-                                                borderLeft: 'none', 
-                                                borderTop: '1px solid #ced4da', 
-                                                borderRight: '1px solid #ced4da',
-                                                borderBottom: '1px solid #ced4da',
-                                                padding: '0.275rem 0.15rem',
-                                                marginBottom: '0', 
-                                            }}
+                                            className='search-bar'
                                         />
                                     </InputGroup>
                                 </Col>
                             </Row>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center',  marginRight: '20px' }}>
+                        <div  className="mb-3">
+                        <div className="right-container" style={{ display: 'flex'}}>
+                            <div style={{ display: 'flex', marginRight: '20px' }}>
+                                <div style={{ 
+                                    marginRight: '10px',  
+                                    fontWeight: '700',
+                                    fontFamily: 'Inter, sans-serif'}}>
+                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
+                                </div>
+                                <Switch 
+                                onChange={handleToggle}
+                                checked={isToggled}
+                                offColor="#E0E0E0"
+                                onColor={primaryColor}
+                                handleDiameter={18}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                height={24}
+                                width={44}
+                                />
+                            </div>
+                            <Button
+                                style={{
+                                    marginRight: '20px',
+                                    fontSize:'14px', 
+                                    fontFamily: 'Inter, sans-serif'}}
+                                className="button-tutorial"
+                                variant="primary"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                Start Tutorial
+                            </Button>
+                        </div>
+
+                        </div>
+                        {/* <div className="right-container" style={{ display: 'flex'}}>
+                            <div style={{ display: 'flex', marginRight: '20px' }}>
                                 <div style={{ marginRight: '5px',  fontFamily: 'Inter, sans-serif'}}>
                                 {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
                                 </div>
-                                <Switch
+                                <Switch 
                                 onChange={handleToggle}
                                 checked={isToggled}
                                 offColor="#E0E0E0"
@@ -923,13 +951,14 @@ const Map = (props) => {
                             </div>
                             <Button
                                 style={{marginRight: '20px'}}
-                                className="button-tutorial"
+                                // className="button-tutorial"
+                                className="tutorial"
                                 variant="primary"
                                 onClick={() => setIsOpen(true)}
                             >
                                 Start Tutorial
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className={classNames({ "row-nowrap": isDesktop })}>
@@ -974,7 +1003,7 @@ const Map = (props) => {
                                         {activeProviders.length}
                                         {clinWikiMap
                                             ? " trials found"
-                                            : " providers found"}
+                                            : " locations found"}
                                     </strong>
                                     <hr />
                                     {activeProviders

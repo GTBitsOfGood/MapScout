@@ -21,7 +21,7 @@ const localizationStrings = new LocalizedStrings({
         adminLogin: "Admin Login",
         signOut: "Sign Out",
         searchProviderName: "Search provider name",
-        searchZipcode: "Search providers or zipcode",
+        searchZipcode: "Search locations",
         hideLabel: "Hide map",
         showLabel: "Hide map",
         languagesLabel: "Languages",
