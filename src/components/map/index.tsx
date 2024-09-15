@@ -25,6 +25,7 @@ import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import searchIcon from '../../assets/img/searchicon.png';
+import x from '../../assets/img/x.png';
 import dropdownIcon from '../../assets/svg/chevron-down.svg';
 import Switch from 'react-switch';
 import { func } from 'prop-types';
@@ -45,7 +46,15 @@ const getWidth = () =>
 const Map = (props) => {
     const { setIsOpen } = useTour();
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
-    const [filterActive, setFilterActive] = useState(false);
+    // const [filterActive, setFilterActive] = useState(false);
+    const [filtersActive, setFiltersActive] = useState({
+        filter1: [],
+        filter2: [],
+    });
+    const [filterActiveState, setFilterActiveState] = useState({
+        filter1: false,
+        filter2: false,
+    });
     const [lowerPageBound, setLowerPageBound] = useState(0);
     const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
@@ -606,7 +615,18 @@ const Map = (props) => {
         return filtersState[item].map((title, key) => (
             <div
                 className="tag"
-                style={{ borderColor: "#007bff", color: "#007bff" }}
+                style={{ 
+                    border: "2px solid #0a1d7c",
+                    borderRadius: "50px",  
+                    backgroundColor: "#f1f4fa",
+                    textAlign: "center",
+                    display: "inline-block",
+                    margin: "4px 2px",
+                    color: "#0a1d7c",
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: '700',
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)"
+                }}
                 key={`${index}${key}`}
             >
                 {title}{" "}
@@ -623,7 +643,7 @@ const Map = (props) => {
                     }}
                 >
                     {" "}
-                    <FaTimesCircle />
+                    <img src={x} />
                 </span>
             </div>
         ));
@@ -672,18 +692,69 @@ const Map = (props) => {
                             .map(([key, value]: any[]) =>
                                 renderDropdown(value.name, key),
                             )}
-                        <Button
-                            variant="link"
+                        
+                        <Dropdown>
+                            <Dropdown.Toggle
+                                className="astext"
+                                id="more-filters-dropdown"
+                            >
+                                {lessFilters}
+                                <span className="custom-dropdown-icon">
+                                    <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                                </span>
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                    Option 1
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                    Option 2
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                    Option 3
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        {/* <Button
+                            className="astext"
                             style={{ color: "red" }}
                             onClick={() => setMoreFilter(false)}
                         >
-                            - {lessFilters}
-                        </Button>
+                            {lessFilters}
+                            <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
+                        </Button> */}
                     </>
                 ) : (
-                    <Button variant="link" onClick={() => setMoreFilter(true)}>
-                        + {moreFilters}
-                    </Button>
+                    <Dropdown>
+                        <Dropdown.Toggle
+                            className="astext"
+                            id="more-filters-dropdown"
+                        >
+                            {moreFilters}
+                            <span className="custom-dropdown-icon">
+                                <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                            </span>
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 1
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 2
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 3
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    // <Button 
+                    //     className="astext"
+                    //     onClick={() => setMoreFilter(true)}>
+                    //     {moreFilters}
+                    //     <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
+                    // </Button>
                 )}
                 {/* <FaRegQuestionCircle
                     data-tooltip-id="my-tooltip-1"
@@ -776,58 +847,59 @@ const Map = (props) => {
         </>
     );
 
-    
-
     function renderDropdown(title, key) {
-    return (
-        <Dropdown key={key} style={{ marginTop: '0px' }}>
-            <Dropdown.Toggle
-                id={key}
-                variant="light"
-                // className="custom-dropdown-toggle"
-                className={`custom-dropdown-toggle ${filterActive ? 'active' : ''}`}
-            >
-                {title}
-                <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                {filtersData[key].options.map((item, index) => (
-                    <div
-                        key={index}
-                        onClick={() => {
-                            filterProviders({
-                                target: {
-                                    name: key,
-                                    value: item.value,
-                                    type: 'checkbox',
-                                    checked: !filtersState[key].includes(item.value),
-                                    getAttribute: (param) => 'normalfilter',
-                                },
-                            });
+        return (
+            <Dropdown key={key} style={{ marginTop: '0px' }}>
+                <Dropdown.Toggle
+                    id={key}
+                    variant="light"
+                    className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
+                >
+                    {title}
+                    <span className="custom-dropdown-icon">
+                        <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                    </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {filtersData[key].options.map((item, index) => (
+                        <div
+                            key={index}
+                            onClick={() => {
+                                const newFilters = [...filtersState[key]];
+                                
+                                if (newFilters.includes(item.value)) {
+                                    const itemIndex = newFilters.indexOf(item.value);
+                                    newFilters.splice(itemIndex, 1);
+                                } else {
+                                    newFilters.push(item.value);
+                                }
 
-                            if (filterActive) {
-                                setFilterActive(false);
-                            } else {
-                                setFilterActive(true);
-                            }
-                             
-                        }}
-                    >
-                        <Form.Check
-                            className="dropdown-item"
-                            name={key}
-                            type="checkbox"
-                            checked={filtersState[key].includes(item.value)}
-                            value={item.value}
-                            label={item.label}
-                            itemType="normalfilter"
-                        />
-                    </div>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>
-    );
-}
+                                setFiltersState({
+                                    ...filtersState,
+                                    [key]: newFilters,
+                                });
+    
+                                setFilterActiveState({
+                                    ...filterActiveState,
+                                    [key]: newFilters.length > 0,  
+                                });
+                            }}
+                        >
+                            <Form.Check
+                                className="dropdown-item custom-checkbox"
+                                name={key}
+                                type="checkbox"
+                                checked={filtersState[key].includes(item.value)}
+                                value={item.value}
+                                label={item.label}
+                                itemType="normalfilter"
+                            />
+                        </div>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+    }
 
     // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
@@ -989,23 +1061,25 @@ const Map = (props) => {
                                         onClick={() => clearFilters()}
                                         className="tag clear-all"
                                         style={{
-                                            borderColor: "red",
-                                            color: "red",
+                                            border: "none",
+                                            color: "#2F76FF",
+                                            fontFamily: 'Inter, sans-serif',
+                                            fontWeight: '700',
                                         }}
                                     >
-                                        Clear All
+                                        Clear
                                     </div>
                                 )}
                             </div>
                             {!isEmpty(activeProviders) ? (
-                                <div>
-                                    <strong className="padder">
+                                <div className='container2'>
+                                    <strong className="custom-padder"
+                                    >
                                         {activeProviders.length}
                                         {clinWikiMap
                                             ? " trials found"
                                             : " locations found"}
                                     </strong>
-                                    <hr />
                                     {activeProviders
                                         .slice(lowerPageBound, upperPageBound)
                                         .map((i, index) => (
@@ -1014,7 +1088,7 @@ const Map = (props) => {
                                                     "result-tutorial":
                                                         index == 0,
                                                 })}
-                                            >
+                                            >   
                                                 <ProviderCell
                                                     key={i.id}
                                                     item={i}

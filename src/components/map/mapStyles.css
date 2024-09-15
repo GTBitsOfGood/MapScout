@@ -4,20 +4,20 @@
     display: flex;             
     justify-content: space-between; 
     align-items: center;       
-    background-color: #f8f9fa;  
-    color: #6c757d;             
-    border-color: #ced4da;      
+    background-color: #f8f9fa !important;             
+    border-color: #ced4da !important;   
+    color: #9F9999 !important;   
     border-radius: 4px;         
     padding: 8px 12px;          
     margin-right: 7px;          
     margin-bottom: 5px;
-    font-size: 14px;            
+    font-size: 16px;            
     text-align: left;           
     font-family: 'Inter', sans-serif;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.custom-dropdown-toggle:hover, 
+.custom-dropdown-toggle:hover,
 .custom-dropdown-toggle:focus {
     border-color: #0A1D7C !important; 
     background-color: #f8f9fa !important;
@@ -73,5 +73,39 @@
 
 .col {
     align-items: center;
+}
+
+.custom-checkbox input[type="checkbox"]:hover {
+    border: #0A1D7C;
+}
+
+.custom-checkbox input[type="checkbox"]:active {
+    background-color: #0056b3 !important;
+}
+
+.custom-padder {
+    padding-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.container2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.astext {
+    background:none !important;
+    border:none !important;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+    color: #9F9999 !important;
+    font-size: 16px !important;
+}
+
+.astext:hover {
+    color: black !important
 }
 
