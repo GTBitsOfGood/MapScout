@@ -698,20 +698,20 @@ const Map = (props) => {
                                 className="astext"
                                 id="more-filters-dropdown"
                             >
-                                {lessFilters}
+                                {moreFilters}
                                 <span className="custom-dropdown-icon">
                                     <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
                                 </span>
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
                                     Option 1
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
                                     Option 2
                                 </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setMoreFilter(false)}>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
                                     Option 3
                                 </Dropdown.Item>
                             </Dropdown.Menu>
