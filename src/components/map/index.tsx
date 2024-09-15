@@ -30,6 +30,7 @@ const frame = require("../../assets/svg/Frame.svg");
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
 
+//TO BE REMOVED
 const data = [
     { label: "Equipment", number: 7140, percentage: "34%" },
     { label: "Programs", number: 5670, percentage: "27%" },
@@ -37,6 +38,7 @@ const data = [
     { label: "Uniforms", number: 3780, percentage: "18%" },
 ];
 
+//TO BE REMOVED
 const data2 = [
     { x: "Jan", y: 2500 },
     { x: "Feb", y: 4500 },
@@ -1076,12 +1078,22 @@ const Map = (props) => {
                                                 }
                                                 categories={categories}
                                             />
+                                            {/*TO BE REMOVED */}
                                             <ProgressBar
                                                 value={300}
                                                 goal={600}
+                                                buttonLink={"google.com"}
+                                                buttonLabel={"Donate Now"}
                                             />
-                                            <DonutChart data={data} />
-                                            <br></br>
+                                            {/*TO BE REMOVED */}
+                                            <DonutChart
+                                                data={data}
+                                                buttonLink={
+                                                    "https://google.com"
+                                                }
+                                                buttonLabel={"Donate Now"}
+                                            />
+                                            {/*TO BE REMOVED */}
                                             <LineChart
                                                 title={
                                                     "Total donations per month in 2023"
