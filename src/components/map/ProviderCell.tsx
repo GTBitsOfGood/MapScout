@@ -50,7 +50,7 @@ export default ({
             style={{
                 borderLeftColor: primaryColor,
                 borderTopWidth: index === 0 ? 0 : 1,
-                paddingTop: index === 0 ? 0 : 18,
+                paddingTop: 18,
                 width: "100%",
             }}
             onMouseEnter={onMouseEnter}
