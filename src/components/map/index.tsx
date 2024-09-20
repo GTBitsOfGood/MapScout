@@ -1,3 +1,5 @@
+import '@fontsource/inter'
+import './mapStyles.css'
 import { useTour } from "@reactour/tour";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import queryString from "query-string";
@@ -6,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
+import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
@@ -21,6 +24,11 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import searchIcon from '../../assets/img/searchicon.png';
+import x from '../../assets/img/x.png';
+import dropdownIcon from '../../assets/svg/chevron-down.svg';
+import Switch from 'react-switch';
+import { func } from 'prop-types';
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -38,6 +46,15 @@ const getWidth = () =>
 const Map = (props) => {
     const { setIsOpen } = useTour();
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
+    // const [filterActive, setFilterActive] = useState(false);
+    const [filtersActive, setFiltersActive] = useState({
+        filter1: [],
+        filter2: [],
+    });
+    const [filterActiveState, setFilterActiveState] = useState({
+        filter1: false,
+        filter2: false,
+    });
     const [lowerPageBound, setLowerPageBound] = useState(0);
     const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
@@ -63,7 +80,7 @@ const Map = (props) => {
     const [defaultLat, setDefaultLat] = useState(0);
     const [defaultLong, setDefaultLong] = useState(0);
     const [defaultZoom, setDefaultZoom] = useState(1);
-
+    const [isToggled, setIsToggled] = useState(defaultView);
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
@@ -77,6 +94,11 @@ const Map = (props) => {
         },
         [props.location.pathname],
     );
+
+    const handleToggle = (checked) => {
+        setIsToggled(checked);
+        switchView();
+    };
 
     const clinWikiMap = getTeam() === "clinwiki";
 
@@ -593,7 +615,18 @@ const Map = (props) => {
         return filtersState[item].map((title, key) => (
             <div
                 className="tag"
-                style={{ borderColor: "#007bff", color: "#007bff" }}
+                style={{ 
+                    border: "2px solid #0a1d7c",
+                    borderRadius: "50px",  
+                    backgroundColor: "#f1f4fa",
+                    textAlign: "center",
+                    display: "inline-block",
+                    margin: "4px 2px",
+                    color: "#0a1d7c",
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: '700',
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)"
+                }}
                 key={`${index}${key}`}
             >
                 {title}{" "}
@@ -610,7 +643,7 @@ const Map = (props) => {
                     }}
                 >
                     {" "}
-                    <FaTimesCircle />
+                    <img src={x} />
                 </span>
             </div>
         ));
@@ -627,9 +660,7 @@ const Map = (props) => {
                 className={classNames("filter-row", "padder", "filters")}
                 style={{ display: "flex", alignItems: "center" }}
             >
-                <div style={{ marginRight: "8px", marginBottom: "6px" }}>
-                    {filters}:
-                </div>
+                <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -661,18 +692,69 @@ const Map = (props) => {
                             .map(([key, value]: any[]) =>
                                 renderDropdown(value.name, key),
                             )}
-                        <Button
-                            variant="link"
+                        
+                        <Dropdown>
+                            <Dropdown.Toggle
+                                className="astext"
+                                id="more-filters-dropdown"
+                            >
+                                {moreFilters}
+                                <span className="custom-dropdown-icon">
+                                    <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                                </span>
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                    Option 1
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                    Option 2
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                    Option 3
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        {/* <Button
+                            className="astext"
                             style={{ color: "red" }}
                             onClick={() => setMoreFilter(false)}
                         >
-                            - {lessFilters}
-                        </Button>
+                            {lessFilters}
+                            <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
+                        </Button> */}
                     </>
                 ) : (
-                    <Button variant="link" onClick={() => setMoreFilter(true)}>
-                        + {moreFilters}
-                    </Button>
+                    <Dropdown>
+                        <Dropdown.Toggle
+                            className="astext"
+                            id="more-filters-dropdown"
+                        >
+                            {moreFilters}
+                            <span className="custom-dropdown-icon">
+                                <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                            </span>
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 1
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 2
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
+                                Option 3
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    // <Button 
+                    //     className="astext"
+                    //     onClick={() => setMoreFilter(true)}>
+                    //     {moreFilters}
+                    //     <span className="custom-dropdown-icon"><img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} /></span>
+                    // </Button>
                 )}
                 {/* <FaRegQuestionCircle
                     data-tooltip-id="my-tooltip-1"
@@ -767,34 +849,44 @@ const Map = (props) => {
 
     function renderDropdown(title, key) {
         return (
-            <Dropdown key={key}>
+            <Dropdown key={key} style={{ marginTop: '0px' }}>
                 <Dropdown.Toggle
                     id={key}
                     variant="light"
-                    style={{ marginRight: 5, marginBottom: 5 }}
+                    className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
                 >
                     {title}
+                    <span className="custom-dropdown-icon">
+                        <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                    </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {filtersData[key].options.map((item, index) => (
                         <div
                             key={index}
-                            onClick={() =>
-                                filterProviders({
-                                    target: {
-                                        name: key,
-                                        value: item.value,
-                                        type: "checkbox",
-                                        checked: !filtersState[key].includes(
-                                            item.value,
-                                        ),
-                                        getAttribute: (param) => "normalfilter",
-                                    },
-                                })
-                            }
+                            onClick={() => {
+                                const newFilters = [...filtersState[key]];
+                                
+                                if (newFilters.includes(item.value)) {
+                                    const itemIndex = newFilters.indexOf(item.value);
+                                    newFilters.splice(itemIndex, 1);
+                                } else {
+                                    newFilters.push(item.value);
+                                }
+
+                                setFiltersState({
+                                    ...filtersState,
+                                    [key]: newFilters,
+                                });
+    
+                                setFilterActiveState({
+                                    ...filterActiveState,
+                                    [key]: newFilters.length > 0,  
+                                });
+                            }}
                         >
                             <Form.Check
-                                className="dropdown-item"
+                                className="dropdown-item custom-checkbox"
                                 name={key}
                                 type="checkbox"
                                 checked={filtersState[key].includes(item.value)}
@@ -843,57 +935,102 @@ const Map = (props) => {
                         className={classNames(
                             "row-spaced",
                             "ml-2",
-                            "mb-3",
                             "pt-3",
                             { "mr-2": !isDesktop },
                         )}
                     >
                         <div className="w-75">
                             <Row noGutters={!isDesktop}>
-                                <Col>
-                                    <Form.Control
-                                        placeholder={searchZipcode}
-                                        itemType="zipcode"
-                                        value={searchZip}
-                                        onChange={filterProviders}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        placeholder={searchProviderName}
-                                        itemType="search"
-                                        onChange={filterProviders}
-                                        value={searchName}
-                                    />
+                                <Col
+                                    style={{paddingBottom:'0px',
+                                            marginBottom:'0px'
+                                    }}
+                                >
+                                    <InputGroup className="mb-3">
+                                        <InputGroup.Text 
+                                            id="search-addon"
+                                            className="search" 
+                                        >
+                                            <img
+                                                src={searchIcon}
+                                                alt="search"
+                                                className='imgSearch'
+                                            />
+                                        </InputGroup.Text>
+
+                                        <Form.Control
+                                            placeholder={searchZipcode}
+                                            itemType="search"
+                                            onChange={filterProviders}
+                                            value={searchName}
+                                            className='search-bar'
+                                        />
+                                    </InputGroup>
                                 </Col>
                             </Row>
                         </div>
-                        <div>
+                        <div  className="mb-3">
+                        <div className="right-container" style={{ display: 'flex'}}>
+                            <div style={{ display: 'flex', marginRight: '20px' }}>
+                                <div style={{ 
+                                    marginRight: '10px',  
+                                    fontWeight: '700',
+                                    fontFamily: 'Inter, sans-serif'}}>
+                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
+                                </div>
+                                <Switch 
+                                onChange={handleToggle}
+                                checked={isToggled}
+                                offColor="#E0E0E0"
+                                onColor={primaryColor}
+                                handleDiameter={18}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                height={24}
+                                width={44}
+                                />
+                            </div>
                             <Button
+                                style={{
+                                    marginRight: '20px',
+                                    fontSize:'14px', 
+                                    fontFamily: 'Inter, sans-serif'}}
                                 className="button-tutorial"
                                 variant="primary"
                                 onClick={() => setIsOpen(true)}
                             >
-                                Open Tour
-                            </Button>
-                            <Button
-                                variant="primary"
-                                style={{
-                                    borderColor: primaryColor,
-                                    backgroundColor: primaryColor,
-                                }}
-                                onClick={switchView}
-                                className="switch-view-button"
-                            >
-                                {isDesktop
-                                    ? defaultView
-                                        ? hideLabel
-                                        : showLabel
-                                    : defaultView
-                                      ? showLabel
-                                      : hideLabel}
+                                Start Tutorial
                             </Button>
                         </div>
+
+                        </div>
+                        {/* <div className="right-container" style={{ display: 'flex'}}>
+                            <div style={{ display: 'flex', marginRight: '20px' }}>
+                                <div style={{ marginRight: '5px',  fontFamily: 'Inter, sans-serif'}}>
+                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
+                                </div>
+                                <Switch 
+                                onChange={handleToggle}
+                                checked={isToggled}
+                                offColor="#E0E0E0"
+                                onColor={primaryColor}
+                                handleDiameter={18}
+                                uncheckedIcon={false}
+                                checkedIcon={false}
+                                height={24}
+                                width={44}
+                                />
+                            </div>
+                            <Button
+                                style={{marginRight: '20px'}}
+                                // className="button-tutorial"
+                                className="tutorial"
+                                variant="primary"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                Start Tutorial
+                            </Button>
+                        </div> */}
                     </div>
                 </div>
                 <div className={classNames({ "row-nowrap": isDesktop })}>
@@ -924,23 +1061,25 @@ const Map = (props) => {
                                         onClick={() => clearFilters()}
                                         className="tag clear-all"
                                         style={{
-                                            borderColor: "red",
-                                            color: "red",
+                                            border: "none",
+                                            color: "#2F76FF",
+                                            fontFamily: 'Inter, sans-serif',
+                                            fontWeight: '700',
                                         }}
                                     >
-                                        Clear All
+                                        Clear
                                     </div>
                                 )}
                             </div>
                             {!isEmpty(activeProviders) ? (
-                                <div>
-                                    <strong className="padder">
+                                <div className='container2'>
+                                    <strong className="custom-padder"
+                                    >
                                         {activeProviders.length}
                                         {clinWikiMap
                                             ? " trials found"
-                                            : " providers found"}
+                                            : " locations found"}
                                     </strong>
-                                    <hr />
                                     {activeProviders
                                         .slice(lowerPageBound, upperPageBound)
                                         .map((i, index) => (
@@ -949,7 +1088,7 @@ const Map = (props) => {
                                                     "result-tutorial":
                                                         index == 0,
                                                 })}
-                                            >
+                                            >   
                                                 <ProviderCell
                                                     key={i.id}
                                                     item={i}

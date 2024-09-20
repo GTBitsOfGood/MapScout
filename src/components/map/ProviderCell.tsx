@@ -50,7 +50,7 @@ export default ({
             style={{
                 borderLeftColor: primaryColor,
                 borderTopWidth: index === 0 ? 0 : 1,
-                paddingTop: index === 0 ? 0 : 18,
+                paddingTop: 18,
                 width: "100%",
             }}
             onMouseEnter={onMouseEnter}
@@ -96,10 +96,10 @@ export default ({
                         )}
                 </h5>
                 <div style={{ color: "gray" }}>
-                    <FaMapMarkerAlt size="20px" /> {item.address[0]}
+                    {item.address[0]}
                     <div className="row-spaced">
                         <div>
-                            <FaPhone /> {item.phoneNum.join(", ")}
+                            {item.phoneNum.join(", ")}
                         </div>
                         {myDistance && (
                             <small>

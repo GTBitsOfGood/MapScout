@@ -128,14 +128,14 @@ h2 {
 .map-list {
     position: relative;
     width: 100vw;
-    height: calc(100vh - 70px);
+    height: calc(200vh - 70px);
     z-index: 2;
     overflow-y: scroll;
     background: white;
     padding-top: 10px;
 }
 
-.map-cell {
+/* .map-cell {
     border-top: solid #e0e0e0;
     background-color: white;
     padding-top: 18px;
@@ -147,10 +147,44 @@ h2 {
     height: calc(60vh - 12px);
 }
 
+
 .map-cell:hover {
-    border-left: solid #0069d9 10px;
+    
+} */
+
+.map-overlay {
+    height: calc(60vh - 12px);
 }
 
+.map-cell {
+    position: relative;
+    padding-top: 10px;
+    border-top: solid #e0e0e0;
+    background-color: white;
+    padding: 18px;
+    transition: border-left 0.2s;
+    overflow: hidden;
+    z-index: 1;
+    min-height: 100px; 
+}
+
+.map-cell::before {
+    content: ''; 
+    position: absolute; 
+    top: 10px; 
+    left: 8px; 
+    right: 8px; 
+    bottom: 8px; 
+    background-color: #f4f4f4; 
+    border-radius: 8px; 
+    opacity: 0; 
+    transition: opacity 0.3s; 
+    z-index: -1; 
+}
+
+.map-cell:hover::before {
+    opacity: 1; 
+}
 .scroll-indicator {
     margin-bottom: 12px;
     border-radius: 10px;
@@ -497,7 +531,6 @@ h2 {
     height: 100px;
     width: 100px;
     object-fit: contain;
-    border-radius: 5px;
     transition: filter 100ms;
 }
 
