@@ -2,25 +2,25 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 /*
-    Props:
-        title : string,
-        data : [{x : string, y : number}]
-            EX:
-                const data = [
-                    { x: "Jan", y: 2500 },
-                    { x: "Feb", y: 4500 },
-                    { x: "Mar", y: 1050 },
-                    { x: "Apr", y: 500 },
-                    { x: "May", y: 2305 },
-                    { x: "Jun", y: 3846 },
-                    { x: "Jul", y: 4628 },
-                    { x: "Aug", y: 678 },
-                    { x: "Sep", y: 1835 },
-                    { x: "Oct", y: 5084 },
-                    { x: "Nov", y: 5943 },
-                    { x: "Dec", y: 2085 },
-                ];
- */
+   Props:
+       title : string,
+       data : [{x : string, y : number}]
+           EX:
+               const data = [
+                   { x: "Jan", y: 2500 },
+                   { x: "Feb", y: 4500 },
+                   { x: "Mar", y: 1050 },
+                   { x: "Apr", y: 500 },
+                   { x: "May", y: 2305 },
+                   { x: "Jun", y: 3846 },
+                   { x: "Jul", y: 4628 },
+                   { x: "Aug", y: 678 },
+                   { x: "Sep", y: 1835 },
+                   { x: "Oct", y: 5084 },
+                   { x: "Nov", y: 5943 },
+                   { x: "Dec", y: 2085 },
+               ];
+*/
 const LineChart = ({ title, data }) => {
     const svgRef = useRef();
 
@@ -41,7 +41,10 @@ const LineChart = ({ title, data }) => {
             .range([0, width]);
         const yScale = d3
             .scaleLinear()
-            .domain([d3.min(data, (d) => d.y), d3.max(data, (d) => d.y)] as any)
+            .domain([
+                d3.min(data.map((d) => d.y)),
+                d3.max(data.map((d) => d.y)),
+            ] as any)
             .nice()
             .range([height - margin.bottom, margin.top]);
 
@@ -100,7 +103,7 @@ const LineChart = ({ title, data }) => {
 
         // Defines data-line behavior
         const line = d3
-            .line()
+            .line<{ x: string; y: number }>()
             .x((d) => xScale(d.x))
             .y((d) => yScale(d.y));
 
