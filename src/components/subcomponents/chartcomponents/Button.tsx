@@ -10,7 +10,8 @@ const Button = ({ link, label }) => {
                     borderRadius: "4px",
                     borderColor: "transparent",
                     backgroundColor: "#226DFF",
-                    padding: "7px 0px",
+                    padding: "12px 16px",
+                    fontSize: "1rem",
                 }}
             >
                 {label}

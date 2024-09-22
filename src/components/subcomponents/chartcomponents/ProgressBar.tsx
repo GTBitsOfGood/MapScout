@@ -3,13 +3,13 @@ import * as d3 from "d3";
 import { Button } from "./Button";
 
 /*
-    Props:
-        value : number,
-        goal : number,
-        units : string,
-        buttonLink : string,
-        buttonLabel : string
- */
+   Props:
+       value : number,
+       goal : number,
+       units : string,
+       buttonLink : string,
+       buttonLabel : string
+*/
 const ProgressBar = ({
     value,
     goal,
@@ -48,7 +48,6 @@ const ProgressBar = ({
     return (
         <div style={{ width: "100%", display: "block" }}>
             <div
-                className=""
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -59,7 +58,7 @@ const ProgressBar = ({
                     style={{
                         fontWeight: "600",
                         margin: "0",
-                        fontSize: "1.6vw",
+                        fontSize: "1.25rem",
                     }}
                 >
                     {`${value} ${units}`}
@@ -67,7 +66,7 @@ const ProgressBar = ({
                         style={{
                             color: "#333333",
                             opacity: "80%",
-                            fontSize: "1.4vw",
+                            fontSize: "1rem",
                             fontWeight: "normal",
                         }}
                     >
@@ -77,7 +76,7 @@ const ProgressBar = ({
                 <p
                     style={{
                         margin: "0",
-                        fontSize: "1.6vw",
+                        fontSize: "1rem",
                         position: "relative",
                         top: "8px",
                     }}
