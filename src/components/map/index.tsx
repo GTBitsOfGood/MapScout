@@ -29,11 +29,38 @@ import x from '../../assets/img/x.png';
 import dropdownIcon from '../../assets/svg/chevron-down.svg';
 import Switch from 'react-switch';
 import { func } from 'prop-types';
+import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
+import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
+import LineChart from "components/subcomponents/chartcomponents/LineChart";
 
 const frame = require("../../assets/svg/Frame.svg");
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
+
+//TO BE REMOVED
+const data = [
+    { label: "Equipment", number: 7140, percentage: "34%" },
+    { label: "Programs", number: 5670, percentage: "27%" },
+    { label: "Technology", number: 4410, percentage: "21%" },
+    { label: "Uniforms", number: 3780, percentage: "18%" },
+];
+
+//TO BE REMOVED
+const data2 = [
+    { x: "Jan", y: 2500 },
+    { x: "Feb", y: 4500 },
+    { x: "Mar", y: 1050 },
+    { x: "Apr", y: 500 },
+    { x: "May", y: 2305 },
+    { x: "Jun", y: 3846 },
+    { x: "Jul", y: 4628 },
+    { x: "Aug", y: 678 },
+    { x: "Sep", y: 1835 },
+    { x: "Oct", y: 5084 },
+    { x: "Nov", y: 5943 },
+    { x: "Dec", y: 2085 },
+];
 
 const FILTER_CUTOFF = 5;
 const PAGE_SIZE = 100;
@@ -92,7 +119,7 @@ const Map = (props) => {
         (e?) => {
             return props.location.pathname.replace("/", "");
         },
-        [props.location.pathname],
+        [props.location.pathname]
     );
 
     const handleToggle = (checked) => {
@@ -109,14 +136,14 @@ const Map = (props) => {
                 temp = temp.filter((provider) =>
                     provider[filterName]
                         ? provider[filterName].some((r) =>
-                              filtersState[filterName].includes(r),
+                              filtersState[filterName].includes(r)
                           ) || filtersState[filterName].length === 0
-                        : true,
+                        : true
                 );
             });
             setActiveProviders(temp);
         },
-        [filtersState],
+        [filtersState]
     );
 
     const filterSearch = useCallback(
@@ -126,7 +153,7 @@ const Map = (props) => {
             temp = temp.filter((item) => regex.test(item.facilityName));
             filterByTags(temp);
         },
-        [filterByTags, providers],
+        [filterByTags, providers]
     );
 
     // set filterIds from firestore in useeffect
@@ -144,12 +171,12 @@ const Map = (props) => {
                 setFiltersState({
                     ...filtersState,
                     [filterName]: filtersState[filterName].filter(
-                        (filter) => filter !== filterVal,
+                        (filter) => filter !== filterVal
                     ),
                 });
             }
         },
-        [filtersState],
+        [filtersState]
     );
 
     useEffect(() => {
@@ -212,8 +239,9 @@ const Map = (props) => {
                 if (typeof parsed.searchHash == "string") {
                     clinWikiSearchHash = parsed.searchHash;
                 }
-                const clinwikiProviders =
-                    await loadClinwikiProviders(clinWikiSearchHash);
+                const clinwikiProviders = await loadClinwikiProviders(
+                    clinWikiSearchHash
+                );
                 provs = [...provs, ...clinwikiProviders];
             }
 
@@ -240,7 +268,7 @@ const Map = (props) => {
 
     const filterZipcode = async (filterVal) => {
         const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`,
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${filterVal}&key=${GOOGLE_API_KEY}`
         );
         const responseJson = await response.json();
 
@@ -283,7 +311,7 @@ const Map = (props) => {
         });
 
         filteredProviders.sort((a, b) =>
-            a.latLongdistance > b.latLongdistance ? 1 : -1,
+            a.latLongdistance > b.latLongdistance ? 1 : -1
         );
 
         const filterActiveProviders = [];
@@ -297,7 +325,7 @@ const Map = (props) => {
         setZipProviders(filterActiveProviders);
         setTimeout(
             () => filterSearch(searchName, filterVal, filterActiveProviders),
-            100,
+            100
         );
     };
 
@@ -308,7 +336,7 @@ const Map = (props) => {
             });
             setActiveProviders(filterProviders);
         },
-        [activeProviders],
+        [activeProviders]
     );
 
     const filterProviders = useCallback(
@@ -345,7 +373,7 @@ const Map = (props) => {
             providers.length,
             filterZipcode,
             filterSearch,
-        ],
+        ]
     );
 
     //const filterProviders = async (e?) => {
@@ -383,7 +411,7 @@ const Map = (props) => {
             setUpperPageBound(newUpperBound);
             setCurrPage(newPage);
         },
-        [currPage, lowerPageBound, upperPageBound],
+        [currPage, lowerPageBound, upperPageBound]
     );
 
     useEffect(() => {
@@ -483,7 +511,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else if (currPage > maxPage - 3) {
@@ -496,7 +524,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else {
@@ -513,7 +541,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -528,7 +556,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -542,7 +570,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
             } else {
@@ -559,7 +587,7 @@ const Map = (props) => {
                             onClick={() => handlePageChange(number)}
                         >
                             {number}
-                        </Pagination.Item>,
+                        </Pagination.Item>
                     );
                 }
                 paginatedData.push(<Pagination.Ellipsis />);
@@ -606,8 +634,8 @@ const Map = (props) => {
                     ...acc,
                     [cur]: [],
                 }),
-                {},
-            ),
+                {}
+            )
         );
     }
 
@@ -636,7 +664,7 @@ const Map = (props) => {
                         setFiltersState({
                             ...filtersState,
                             [item]: filtersState[item].filter(
-                                (i) => i !== title,
+                                (i) => i !== title
                             ),
                         });
                         setTimeout(() => filterProviders(), 100);
@@ -665,14 +693,14 @@ const Map = (props) => {
                     .filter(
                         ([key, value]: any[]) =>
                             Number.isInteger(value.priority) &&
-                            value.priority < FILTER_CUTOFF,
+                            value.priority < FILTER_CUTOFF
                     )
                     .sort(
                         ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
-                            aValue.priority - bValue.priority,
+                            aValue.priority - bValue.priority
                     )
                     .map(([key, value]: any[]) =>
-                        renderDropdown(value.name, key),
+                        renderDropdown(value.name, key)
                     )}
 
                 {moreFilter ? (
@@ -681,16 +709,16 @@ const Map = (props) => {
                             .filter(
                                 ([key, value]: any[]) =>
                                     !Number.isInteger(value.priority) ||
-                                    value.priority >= FILTER_CUTOFF,
+                                    value.priority >= FILTER_CUTOFF
                             )
                             .sort(
                                 (
                                     [aKey, aValue]: any[],
-                                    [bKey, bValue]: any[],
-                                ) => aValue.name.localeCompare(bValue.name),
+                                    [bKey, bValue]: any[]
+                                ) => aValue.name.localeCompare(bValue.name)
                             )
                             .map(([key, value]: any[]) =>
-                                renderDropdown(value.name, key),
+                                renderDropdown(value.name, key)
                             )}
                         
                         <Dropdown>
@@ -936,7 +964,7 @@ const Map = (props) => {
                             "row-spaced",
                             "ml-2",
                             "pt-3",
-                            { "mr-2": !isDesktop },
+                            { "mr-2": !isDesktop }
                         )}
                     >
                         <div className="w-75">
@@ -1043,8 +1071,8 @@ const Map = (props) => {
                                     ? "50vw"
                                     : "100vw"
                                 : defaultView
-                                  ? "100vw"
-                                  : 0,
+                                ? "100vw"
+                                : 0,
                             display: !isDesktop && !defaultView && "none",
                         }}
                     >
@@ -1101,10 +1129,10 @@ const Map = (props) => {
                                                                 isDesktop
                                                             )
                                                                 setCurrmarker(
-                                                                    index,
+                                                                    index
                                                                 );
                                                         },
-                                                        300,
+                                                        300
                                                     )}
                                                     onClick={() =>
                                                         handleCellClick(index)
@@ -1154,8 +1182,8 @@ const Map = (props) => {
                                             handlePageChange(
                                                 Math.ceil(
                                                     activeProviders.length /
-                                                        PAGE_SIZE,
-                                                ),
+                                                        PAGE_SIZE
+                                                )
                                             )
                                         }
                                     />
@@ -1188,6 +1216,28 @@ const Map = (props) => {
                                                     ]
                                                 }
                                                 categories={categories}
+                                            />
+                                            {/*TO BE REMOVED */}
+                                            <ProgressBar
+                                                value={300}
+                                                goal={600}
+                                                buttonLink={"google.com"}
+                                                buttonLabel={"Donate Now"}
+                                            />
+                                            {/*TO BE REMOVED */}
+                                            <DonutChart
+                                                data={data}
+                                                buttonLink={
+                                                    "https://google.com"
+                                                }
+                                                buttonLabel={"Donate Now"}
+                                            />
+                                            {/*TO BE REMOVED */}
+                                            <LineChart
+                                                title={
+                                                    "Total donations per month in 2023"
+                                                }
+                                                data={data2}
                                             />
                                         </Modal.Body>
                                     </Modal>
@@ -1231,8 +1281,8 @@ const Map = (props) => {
                                     ? "50vw"
                                     : 0
                                 : defaultView
-                                  ? 0
-                                  : "100vw",
+                                ? 0
+                                : "100vw",
                             display: !isDesktop && defaultView && "none",
                         }}
                         onMouseLeave={() => setPoint(true)}
@@ -1259,5 +1309,5 @@ export default compose<any>(
     withFirestore,
     connect((state: Store) => ({
         state,
-    })),
+    }))
 )(Map);

@@ -24,5 +24,5 @@ const mapStateToProps = (state: Store) => ({
 
 export default compose<any>(
     withFirestore,
-    connect(mapStateToProps, {}),
+    connect(mapStateToProps, {})
 )(Settings);

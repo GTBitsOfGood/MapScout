@@ -23,7 +23,7 @@ export default ({
             setMyDistance(
                 distances.find((x) => Object.keys(x)[0] === item.facilityName)[
                     item.facilityName
-                ],
+                ]
             );
         } else if (myDistance) {
             setMyDistance(null);
