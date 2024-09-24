@@ -104,7 +104,20 @@
     color: #9F9999 !important;
     font-size: 16px !important;
 }
-
+.subMenu {
+    background: none !important;
+    border: none !important;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    color: black !important;
+    font-size: 16px !important;
+    text-align: center;
+    width: 100%;
+}
+.subMenu:hover {
+    background: #9F9999 !important
+}
 .astext:hover {
     color: black !important
 }
