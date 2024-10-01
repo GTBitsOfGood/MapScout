@@ -76,13 +76,12 @@
 }
 
 .custom-checkbox input[type="checkbox"]:hover {
-    border: #0A1D7C;
+    border: #0A1D7C !important;
 }
 
 .custom-checkbox input[type="checkbox"]:active {
     background-color: #0056b3 !important;
 }
-
 .custom-padder {
     padding-left: 20px;
     margin-bottom: 8px;
@@ -105,6 +104,9 @@
     font-size: 16px !important;
 }
 .subMenu {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
     background: none !important;
     border: none !important;
     margin: 0;
@@ -112,11 +114,10 @@
     cursor: pointer;
     color: black !important;
     font-size: 16px !important;
-    text-align: center;
     width: 100%;
 }
 .subMenu:hover {
-    background: #9F9999 !important
+    background: rgba(19, 70, 170, 0.06) !important
 }
 .astext:hover {
     color: black !important
