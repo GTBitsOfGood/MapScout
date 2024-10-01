@@ -9,12 +9,15 @@ import { withFirestore, isEmpty } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import CategoryCell from "./CategoryCell";
+import PrimaryCell from "./PrimaryCell";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import promiseWithTimeout from "../../functions/promiseWithTimeout";
 import { Store } from "reducers/types";
 import { TempTutorial } from "./TempTutorial";
 import { TempTutorialTwo } from "./TempTutorialTwo";
 import { ToggleSlider }  from "react-toggle-slider";
+import { BsPlus } from "react-icons/bs";
+import { Card } from "react-bootstrap";
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     const result = Array.from(list);
@@ -33,7 +36,7 @@ export default compose<any>(
 )(({ team, firestore }) => {
     const [categories, setCategories] = useState([]);
     const [message, setMessage] = useState(null);
-    const [newCatName, setNewCatName] = useState("");
+    const [newCatName, setNewCatName] = useState("Please edit name of new category");
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [, setDefaultCategories] = useState([]);
@@ -160,10 +163,18 @@ export default compose<any>(
             item.priority = index;
         });
         setCategories(items);
+        saveChanges();
     }
 
-    async function changeType(type, index) {
+    async function changeType(type, item) {
         setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const point = await categories[index];
         point.select_type = type;
         setIsLoading(false);
@@ -171,17 +182,32 @@ export default compose<any>(
         saveChanges();
     }
 
-    async function rename(e, index) {
+    async function rename(e, item) {
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const items = categories;
         const point = items[index];
         point.name = e.target.value;
+        point.id = e.target.value;
         setCategories(items);
 
         saveChanges();
     }
 
-    async function addOption(name, index) {
+    async function addOption(name, item) {
         setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const point = categories[index];
         if (
             point.options.findIndex(
@@ -198,8 +224,41 @@ export default compose<any>(
         saveChanges();
     }
 
-    async function removeOption(i, index) {
+    async function addPrimOption(name, colors, item) {
         setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
+        const point = categories[index];
+        if (
+            point.options.findIndex(
+                (x) => x.value.toLowerCase() === name.toLowerCase(),
+            ) === -1
+        ) {
+            console.log(item)
+            await point.options.push({
+                color: colors,
+                value: name,
+            });
+        }
+        setIsLoading(false);
+
+        saveChanges();
+    }
+
+    async function removeOption(i, item) {
+        setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const point = categories[index];
         await point.options.splice(i, 1);
         setIsLoading(false);
@@ -207,7 +266,14 @@ export default compose<any>(
         saveChanges();
     }
 
-    function disableCat(index) {
+    function disableCat(item) {
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const items: any[] = reorder(categories, index, categories.length - 1);
         items[categories.length - 1].active = false;
         items.forEach((item: any, i) => {
@@ -218,8 +284,15 @@ export default compose<any>(
         saveChanges();
     }
 
-    async function enableCat(index) {
+    async function enableCat(item) {
         setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         const point = await categories[index];
         point.active = true;
         setIsLoading(false);
@@ -227,8 +300,30 @@ export default compose<any>(
         saveChanges();
     }
 
-    async function deleteCat(index) {
+    async function deleteCat(item) {
         setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
+        await categories.splice(index, 1);
+        setIsLoading(false);
+
+        saveChanges();
+    }
+
+    async function deletePrim(item) {
+        setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
         await categories.splice(index, 1);
         setIsLoading(false);
 
@@ -237,17 +332,22 @@ export default compose<any>(
 
     async function createNewCat() {
         setIsLoading(true);
-
+        let type = 1
+        if (usePrimary) {
+            type = 2
+        }
         await categories.unshift({
             name: newCatName,
-            select_type: 2,
+            select_type: type,
             options: [],
             active: true,
             team: team.name,
             id: newCatName,
+            isPrimary: usePrimary,
         });
+        console.log(categories)
         
-        setNewCatName("");
+        setNewCatName("Please edit name of new category");
         setIsLoading(false);
 
         saveChanges();
@@ -258,7 +358,6 @@ export default compose<any>(
     // }
 
     async function saveChanges() {
-        setIsLoading(true);
         try {
             const collections = firestore.collection("categories");
             await collections
@@ -320,8 +419,6 @@ export default compose<any>(
             </div>
         );
     }
-
-    console.log(document.cookie);
     return (
         <div id="template-root">
             {(document.cookie == "" || document.cookie == null) && (
@@ -384,6 +481,28 @@ export default compose<any>(
                     </InputGroup.Append> */}
                 </InputGroup>
                 <br />
+                {usePrimary? (
+                <div>
+                    {categories
+                    .filter(
+                        (item, value) => item.isPrimary)
+                    .map((item, index) => (
+                        <p>
+                            <PrimaryCell
+                                item={item}
+                                index={index}
+                                disableCat={disableCat}
+                                enableCat={enableCat}
+                                deleteCat={deletePrim}
+                                changeType={changeType}
+                                rename={rename}
+                                addOption={addPrimOption}
+                                removeOption={removeOption}
+                            />
+                        </p>
+                    ))
+                    }
+                </div>) :(<></>)}
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(provided, snapshot) => (
@@ -391,7 +510,10 @@ export default compose<any>(
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
                             >
-                                {categories.map((item, index) => (
+                                {categories
+                                .filter(
+                                    (item, value) => !item.isPrimary)
+                                .map((item, index) => (
                                     <Draggable
                                         key={item.name}
                                         draggableId={item.name}
@@ -430,6 +552,12 @@ export default compose<any>(
                         )}
                     </Droppable>
                 </DragDropContext>
+                <button className="template-add"
+                onClick={(e) => {
+                    createNewCat();
+                }}>
+                <BsPlus /> Add Filter
+                </button>
                 <Modal show={showModal} onHide={() => setShowModal(false)} dialogClassName="myModal" scrollable>
                     <Modal.Header style={{ backgroundColor: "#2F80ED" }}>
                         <div className="ml-auto">

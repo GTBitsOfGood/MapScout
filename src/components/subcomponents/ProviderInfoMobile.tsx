@@ -27,7 +27,6 @@ const ProviderInfo = (props) => {
                 setImage(res2.url);
                 setIsLoading(false);
             } catch (e) {
-                console.log(e);
                 setIsLoading(false);
             }
         }

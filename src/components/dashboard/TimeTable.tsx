@@ -16,7 +16,6 @@ const daysOfWeek = [
 ];
 
 const TimeTable = (props) => {
-    console.log(props);
     const [days, setDays] = useState(
         daysOfWeek.map((item) => ({
             day: item,

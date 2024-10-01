@@ -478,6 +478,21 @@ h2 {
     overflow-x: hidden;
 }
 
+.template-add {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 4px;
+    background: rgba(19, 70, 170, 0.06);
+    border: 2px dashed #226DFF;
+    border-radius: 4px;
+    color: #226DFF;
+    width: 100%;
+}
+
 .reverse-column {
     display: flex;
     flex-direction: column;
@@ -489,6 +504,15 @@ h2 {
 .spinner-wrap {
     width: 100%;
     padding-top: 50px;
+}
+
+.category-delete-container {
+    display: flex;
+    justify-content: end;
+}
+
+.category-delete-button {
+    cursor: pointer;
 }
 
 .spinner {
@@ -1104,7 +1128,11 @@ h2 {
     justify-content: center;
     align-items: stretch;
     margin-bottom: 12px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
 }
+
 
 .category-grip {
     font-size: 27px;
@@ -1118,8 +1146,23 @@ h2 {
     justify-content: center;
 }
 
+.primary-grip {
+    font-size: 27px;
+    color: #4f4f4f;
+    transition: all 200ms;
+    height: 100%;
+    border-radius: 8px 0px 0px 8px;
+    background-color: #F2F2F2;
+    display: flex;
+    align-items: center;
+    justify-content: center;}
+
 .category-cell-wrapper:hover .category-grip {
     background: #226DFF;
+}
+
+.category-cell-wrapper:hover .primary-grip {
+    background: #E0E0E0;
 }
 
 .category-cell-container {
@@ -1168,6 +1211,8 @@ h2 {
     background-color: white !important;
     border: hidden;
     cursor: pointer;
+    align-self: flex-end;
+    margin-left: 2.5rem;
 }
 
 .add-option {
@@ -1184,7 +1229,34 @@ h2 {
 }
 
 .options-item {
-    flex-direction: row-reverse;
+    flex-direction: row;
+}
+
+.options-item-1{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.options-color {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    padding: 3px !important;
+    border-radius: 50% !important;
+    border: hidden !important;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.options-add-color {
+    width: 3.5rem !important;
+    height: 2.5rem !important;
+    padding: 1px !important;
+    border: hidden !important;
+    margin-right: px !important;
+    cursor: pointer;
+    overflow: hidden;
 }
 
 .options-label {

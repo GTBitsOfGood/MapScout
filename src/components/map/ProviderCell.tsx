@@ -36,7 +36,6 @@ export default ({
                 await setImage(item.imageURL);
                 setIsLoading(false);
             } catch (e) {
-                console.log(e);
                 setIsLoading(false);
             }
         }
