@@ -199,6 +199,31 @@ export default compose<any>(
         saveChanges();
     }
 
+    async function changeColor(color, name, item) {
+        setIsLoading(true);
+        let index = 0;
+        for (let i of categories) {
+            if(i.name === item.name) {
+                break;
+            }
+            index++;
+        }
+        const point = categories[index];
+        index = 0
+        for (let i of point.options) {
+            console.log(i)
+            if(i.value === name) {
+                break;
+            }
+            index++;
+        }
+        point.options[index].color = color
+        setIsLoading(false);
+
+        saveChanges();
+    }
+
+
     async function addOption(name, item) {
         setIsLoading(true);
         let index = 0;
@@ -497,6 +522,7 @@ export default compose<any>(
                                 changeType={changeType}
                                 rename={rename}
                                 addOption={addPrimOption}
+                                changeColor={changeColor}
                                 removeOption={removeOption}
                             />
                         </p>

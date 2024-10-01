@@ -21,6 +21,7 @@ export default ({
     disableCat,
     enableCat,
     addOption,
+    changeColor,
     removeOption,
     changeType,
     rename,
@@ -155,7 +156,7 @@ export default ({
                                                 className="options-color"
                                                 placeholder="Choose your color"
                                                 defaultValue={option.color}
-                                                onChange={(e) => setColor((e.target as HTMLInputElement).value)}
+                                                onChange={(e) => changeColor((e.target as HTMLInputElement).value, option.value, item)}
                                                 />
                                                 <div className="options-label">
                                                     {option.value}
