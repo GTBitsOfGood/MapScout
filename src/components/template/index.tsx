@@ -14,6 +14,7 @@ import promiseWithTimeout from "../../functions/promiseWithTimeout";
 import { Store } from "reducers/types";
 import { TempTutorial } from "./TempTutorial";
 import { TempTutorialTwo } from "./TempTutorialTwo";
+import { ToggleSlider }  from "react-toggle-slider";
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     const result = Array.from(list);
@@ -36,6 +37,7 @@ export default compose<any>(
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [, setDefaultCategories] = useState([]);
+    const [usePrimary, setUsePrimary] = useState(false);
     const staticData = {
         id: "Preview",
         address: ["123 Fake St, Philadelphia, PA 19133"],
@@ -330,8 +332,10 @@ export default compose<any>(
                 !document.cookie.includes("tut2") && <TempTutorialTwo />}
             <Container className="box">
                 <div className="row-spaced">
-                    <h2>Template Builder</h2>
-                    <Button
+                    <h2 className="template-title">Template Builder</h2>
+                </div>
+                <div className="primary-slider">
+                {/* <Button
                         variant="primary"
                         onClick={(e) => {
                             e.preventDefault();
@@ -339,12 +343,21 @@ export default compose<any>(
                         }}
                     >
                         Preview
-                    </Button>
+                    </Button> */}
+                    <div className="primary-slider-button">
+                    <p className="primary-slider-text">Enable Primary Single Select Filter</p>
+                    <ToggleSlider flip={usePrimary} onToggle={(e) => setUsePrimary(!usePrimary)}/>
+                    </div>
+                    <p className="primary-slider-desription">Activate to create a single filtering group where you can color code the options. We recommend if you have a primary filtering group.</p>
                 </div>
                 <br />
                 {message != null && <p style={{ color: "green" }}>{message}</p>}
+                <div className="template-header">
+                    <h3 className="template-header-title">Filters</h3>
+                    <p className="template-header-desription">The top 3 filters will be directly displayed under search in desktop view. Additional filters will be accessible under ‘More filters’ </p>
+                </div>
                 <InputGroup>
-                    <FormControl
+                    {/* <FormControl
                         value={newCatName}
                         onChange={(e) => setNewCatName((e.target as HTMLInputElement).value)}
                         type="text"
@@ -368,7 +381,7 @@ export default compose<any>(
                                 Add
                             </Button>
                         </div>
-                    </InputGroup.Append>
+                    </InputGroup.Append> */}
                 </InputGroup>
                 <br />
                 <DragDropContext onDragEnd={onDragEnd}>

@@ -34,6 +34,7 @@ export default ({
 
     return (
         <div className="category-cell-wrapper">
+            {console.log(item)}
             <div className="category-button-column">
                 {item.active ? (
                     <div className="category-grip">
@@ -53,7 +54,7 @@ export default ({
                         <IoIosRefresh />
                     </Button>
                 )}
-                {isDragged || (
+                {/* {isDragged || (
                     <Button
                         variant="light"
                         style={{
@@ -71,7 +72,7 @@ export default ({
                     >
                         <IoIosTrash style={{ marginTop: -16 }} />
                     </Button>
-                )}
+                )} */}
             </div>
             <div
                 className="category-cell-container"
@@ -86,6 +87,7 @@ export default ({
                                 <FormControl
                                     type="text"
                                     placeholder="Category Title"
+                                    className={"category-cell-head-title"}
                                     disabled={!item.active}
                                     value={title}
                                     style={{ fontWeight: "bolder" }}
@@ -97,6 +99,7 @@ export default ({
                                 <FormControl
                                     ref={myRef}
                                     as="select"
+                                    className={"category-cell-head-select"}
                                     disabled={!item.active}
                                     value={item.select_type}
                                     onChange={() =>
@@ -109,13 +112,14 @@ export default ({
                                     <option value={0}>Description</option>
                                     {/* <option value={1}>Single-Select</option> */}
                                     <option value={1}>Multi-Select</option>
+                                    <option value={2}>Single-Select</option>
                                 </FormControl>
                             </InputGroup>
                         </Col>
                         {item.active && (
                             <Col xs={2} md={2} lg={1}>
-                                <Button
-                                    variant="light"
+                                <div
+                                    className={"category-button-button"}
                                     onClick={() => setCollapsed(!collapsed)}
                                 >
                                     {collapsed ? (
@@ -123,7 +127,7 @@ export default ({
                                     ) : (
                                         <IoIosArrowUp />
                                     )}
-                                </Button>
+                                </div>
                             </Col>
                         )}
                     </Row>
@@ -192,6 +196,7 @@ export default ({
                                                     optionName.length <= 0
                                                 }
                                                 variant="primary"
+                                                className={"category-button-add"}
                                             >
                                                 Add
                                             </Button>
