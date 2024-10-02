@@ -12,7 +12,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
-import { Container } from 'react-bootstrap';
 import { FaRegQuestionCircle, FaTimesCircle } from "react-icons/fa";
 import { connect } from "react-redux";
 import { isEmpty, isLoaded, withFirestore } from "react-redux-firebase";
@@ -33,6 +32,7 @@ import { func } from 'prop-types';
 import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
+import backArrow from '../../assets/img/back-arrow.png';
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -1087,7 +1087,9 @@ const Map = (props) => {
                                             <div className="containerInfo d-flex flex-column" style={{ height: "80vh" }}>
                                                 <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)", overflowY: 'scroll' }}>
                                                     <div className="header d-flex justify-content-end">
-                                                        <button onClick={() => setShowInfo(false)}>X</button>
+                                                        <button onClick={() => setShowInfo(false)} style={{ background: 'none', border: 'none', padding: 0 }}>
+                                                            <img src={backArrow} alt="Back" style={{ width: '24px', height: '24px' }} />
+                                                        </button>
                                                     </div>
                                                     <div className="content d-flex flex-column">
                                                         <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
