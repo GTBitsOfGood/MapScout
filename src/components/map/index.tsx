@@ -1256,8 +1256,8 @@ const Map = (props) => {
                                             />
                                             {/*TO BE REMOVED */}
                                             <ProgressBar
-                                                value={300}
-                                                goal={600}
+                                                current={300}
+                                                total={600}
                                                 buttonLink={"google.com"}
                                                 buttonLabel={"Donate Now"}
                                             />
