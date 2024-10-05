@@ -456,23 +456,14 @@ export default compose<any>(
                 <div className="row-spaced">
                     <h2 className="template-title">Template Builder</h2>
                 </div>
-                <div className="primary-slider">
-                {/* <Button
-                        variant="primary"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setShowModal(true);
-                        }}
-                    >
-                        Preview
-                    </Button> */}
+                {/* <div className="primary-slider">
                     <div className="primary-slider-button">
                     <p className="primary-slider-text">Enable Primary Single Select Filter</p>
                     <ToggleSlider flip={usePrimary} onToggle={(e) => setUsePrimary(!usePrimary)}/>
                     </div>
                     <p className="primary-slider-desription">Activate to create a single filtering group where you can color code the options. We recommend if you have a primary filtering group.</p>
                 </div>
-                <br />
+                <br /> */}
                 {message != null && <p style={{ color: "green" }}>{message}</p>}
                 <div className="template-header">
                     <h3 className="template-header-title">Filters</h3>
