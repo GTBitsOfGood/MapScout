@@ -119,6 +119,10 @@ h2 {
     white-space: nowrap;
 }
 
+.containerInfo {
+    display: flex;
+}
+
 .map-google-map {
     width: 100vw;
     height: calc(100vh - 70px);

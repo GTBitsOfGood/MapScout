@@ -33,6 +33,7 @@ import { MdChevronRight } from "react-icons/md";
 import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
+import backArrow from '../../assets/img/back-arrow.png';
 import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
 import Collapsible from "components/collapsible";
 
@@ -115,6 +116,14 @@ const Map = (props) => {
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
     const [isOpen, setOpen] = useState(false);
+
+    const [showInfo, setShowInfo] = useState(false)
+
+    function handleCellClick(index) {
+        setSelectedIndex(index);
+        setShowInfo(true)
+    }
+
     const items = [];
     items.push();
 
@@ -680,11 +689,6 @@ const Map = (props) => {
         ));
     }
 
-    function handleCellClick(index) {
-        setSelectedIndex(index);
-        setShowModal(true);
-    }
-
     const renderTagControl = () => (
         <>
             <div
@@ -1016,26 +1020,32 @@ const Map = (props) => {
                                         marginBottom: "0px",
                                     }}
                                 >
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Text
-                                            id="search-addon"
-                                            className="search"
-                                        >
-                                            <img
-                                                src={searchIcon}
-                                                alt="search"
-                                                className="imgSearch"
-                                            />
-                                        </InputGroup.Text>
-
-                                        <Form.Control
-                                            placeholder={searchZipcode}
-                                            itemType="search"
-                                            onChange={filterProviders}
-                                            value={searchName}
-                                            className="search-bar"
-                                        />
-                                    </InputGroup>
+                                    {showInfo ? (
+                                            <Button
+                                                onClick={() => setShowInfo(false)}
+                                                style={{ display: 'flex', alignItems: 'center', fontFamily: 'Inter, sans-serif', fontWeight: '700', backgroundColor: '#ffffff', border: 'none' }}
+                                            >
+                                                <img src={backArrow} alt="Back" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
+                                                Back
+                                            </Button>
+                                        ) : (
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Text id="search-addon" className="search">
+                                                    <img
+                                                        src={searchIcon}
+                                                        alt="search"
+                                                        className="imgSearch"
+                                                    />
+                                                </InputGroup.Text>
+                                                <Form.Control
+                                                    placeholder={searchZipcode}
+                                                    itemType="search"
+                                                    onChange={filterProviders}
+                                                    value={searchName}
+                                                    className="search-bar"
+                                                />
+                                            </InputGroup>
+                                    )}
                                 </Col>
                             </Row>
                         </div>
@@ -1091,33 +1101,7 @@ const Map = (props) => {
                                 </Button>
                             </div>
                         </div>
-                        {/* <div className="right-container" style={{ display: 'flex'}}>
-                            <div style={{ display: 'flex', marginRight: '20px' }}>
-                                <div style={{ marginRight: '5px',  fontFamily: 'Inter, sans-serif'}}>
-                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
-                                </div>
-                                <Switch 
-                                onChange={handleToggle}
-                                checked={isToggled}
-                                offColor="#E0E0E0"
-                                onColor={primaryColor}
-                                handleDiameter={18}
-                                uncheckedIcon={false}
-                                checkedIcon={false}
-                                height={24}
-                                width={44}
-                                />
-                            </div>
-                            <Button
-                                style={{marginRight: '20px'}}
-                                // className="button-tutorial"
-                                className="tutorial"
-                                variant="primary"
-                                onClick={() => setIsOpen(true)}
-                            >
-                                Start Tutorial
-                            </Button>
-                        </div> */}
+
                     </div>
                 </div>
                 <div className={classNames({ "row-nowrap": isDesktop })}>
@@ -1135,70 +1119,100 @@ const Map = (props) => {
                             display: !isDesktop && !defaultView && "none",
                         }}
                     >
-                        {renderTagControl()}
+                        {!showInfo && renderTagControl()}
                         <div>
                             <div
                                 className={classNames("tag-row padder", {
                                     "result-tutorial": isEmpty(activeProviders),
                                 })}
                             >
-                                {Object.keys(filtersState).map(renderTag)}
-                                {evaluateFilters() && (
-                                    <div
-                                        onClick={() => clearFilters()}
-                                        className="tag clear-all"
-                                        style={{
-                                            border: "none",
-                                            color: "#2F76FF",
-                                            fontFamily: "Inter, sans-serif",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        Clear
-                                    </div>
-                                )}
-                            </div>
-                            {!isEmpty(activeProviders) ? (
-                                <div className="container2">
-                                    <strong className="custom-padder">
-                                        {activeProviders.length}
-                                        {clinWikiMap
-                                            ? " trials found"
-                                            : " locations found"}
-                                    </strong>
-                                    {activeProviders
-                                        .slice(lowerPageBound, upperPageBound)
-                                        .map((i, index) => (
+                                {!showInfo && (
+                                    <>
+                                        {Object.keys(filtersState).map(renderTag)}
+                                        {evaluateFilters() && (
                                             <div
-                                                className={classNames({
-                                                    "result-tutorial":
-                                                        index == 0,
-                                                })}
+                                                onClick={() => clearFilters()}
+                                                className="tag clear-all"
+                                                style={{
+                                                    border: "none",
+                                                    color: "#2F76FF",
+                                                    fontFamily: 'Inter, sans-serif',
+                                                    fontWeight: '700',
+                                                }}
                                             >
-                                                <ProviderCell
-                                                    key={i.id}
-                                                    item={i}
-                                                    index={index}
-                                                    primaryColor={primaryColor}
-                                                    onMouseEnter={debounce(
-                                                        () => {
-                                                            if (
-                                                                defaultView &&
-                                                                isDesktop
-                                                            )
-                                                                setCurrmarker(
-                                                                    index
-                                                                );
-                                                        },
-                                                        300
-                                                    )}
-                                                    onClick={() =>
-                                                        handleCellClick(index)
-                                                    }
-                                                    distances={distances}
-                                                />
+                                                Clear
                                             </div>
-                                        ))}
+                                        )}
+                                    </>
+                                )}
+                                </div>
+                            {!isEmpty(activeProviders) ? (
+                                <div className='container2'>
+                                    {showInfo ? (
+                                        isDesktop &&
+                                        activeProviders &&
+                                        activeProviders[selectedIndex] &&
+                                        (
+                                            <div className="containerInfo d-flex flex-column" style={{ height: "80vh" }}>
+                                                <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)", overflowY: 'scroll' }}>
+                                                    <div className="content d-flex flex-column">
+                                                        <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
+                                                        <div className="mt-2"> 
+                                                            <ProgressBar current={300} total={600} buttonLink={"google.com"} buttonLabel={"Donate Now"} />
+                                                        </div>
+                                                        <div className="mt-2"> 
+                                                            <DonutChart data={data} buttonLink={"https://google.com"} buttonLabel={"Donate Now"} />
+                                                        </div>
+                                                        <div className="mt-2"> 
+                                                            <LineChart title={"Total donations per month in 2023"} data={data2} />
+                                                        </div>
+                                                        <div className="mt-2">
+                                                            <LineChart title={"Total donations per month in 2023"} data={data2} />
+                                                        </div>
+                                                        <div className="mt-2">
+                                                            
+                                                            <Collapsible label={"Graph"}>
+                                                                <ChartComponentForm/>
+                                                            </Collapsible>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    ) : (
+                                        <>
+                                            <strong className="custom-padder">
+                                                {activeProviders.length}
+                                                {clinWikiMap ? " trials found" : " locations found"}
+                                            </strong>
+                                            {activeProviders
+                                                .slice(lowerPageBound, upperPageBound)
+                                                .map((i, index) => (
+                                                    <div
+                                                        className={classNames({
+                                                            "result-tutorial": index == 0,
+                                                        })}
+                                                        key={i.id}
+                                                    >   
+                                                        <ProviderCell
+                                                            item={i}
+                                                            index={index}
+                                                            primaryColor={primaryColor}
+                                                            onMouseEnter={debounce(() => {
+                                                                if (defaultView && isDesktop) {
+                                                                    setCurrmarker(index);
+                                                                }
+                                                            }, 300)}
+                                                            onClick={() => handleCellClick(index)}
+                                                            distances={distances}
+                                                        />
+                                                    </div>
+                                                ))}
+                                        </>
+                                    
+                                    
+                                    )}
                                 </div>
                             ) : (
                                 <Row>
@@ -1249,89 +1263,6 @@ const Map = (props) => {
                             ) : (
                                 <div />
                             )}
-                        </div>
-                        <div>
-                            {isDesktop &&
-                                activeProviders &&
-                                activeProviders[selectedIndex] && (
-                                    <Modal
-                                        show={showModal}
-                                        onHide={() => setShowModal(false)}
-                                        dialogClassName="myModal"
-                                        scrollable
-                                    >
-                                        <Modal.Header
-                                            style={{
-                                                backgroundColor: primaryColor,
-                                            }}
-                                            closeButton
-                                        />
-                                        <Modal.Body className="modal-body">
-                                            <ProviderInfo
-                                                item={
-                                                    activeProviders[
-                                                        selectedIndex
-                                                    ]
-                                                }
-                                                categories={categories}
-                                            />
-                                            {/*TO BE REMOVED */}
-                                            <ProgressBar
-                                                current={300}
-                                                total={600}
-                                                buttonLink={"google.com"}
-                                                buttonLabel={"Donate Now"}
-                                            />
-                                            {/*TO BE REMOVED */}
-                                            <DonutChart
-                                                data={data}
-                                                buttonLink={
-                                                    "https://google.com"
-                                                }
-                                                buttonLabel={"Donate Now"}
-                                            />
-                                            {/*TO BE REMOVED */}
-                                            <LineChart
-                                                title={
-                                                    "Total donations per month in 2023"
-                                                }
-                                                data={data2}
-                                            />
-                                            <Collapsible label={'Graph'}>
-                                                <ChartComponentForm />
-                                            </Collapsible>
-                                        </Modal.Body>
-                                    </Modal>
-                                )}
-
-                            {!isDesktop &&
-                                activeProviders &&
-                                activeProviders[selectedIndex] && (
-                                    <Modal
-                                        show={showModal}
-                                        onHide={() => setShowModal(false)}
-                                        dialogClassName="modalMobile"
-                                        scrollable
-                                    >
-                                        <Modal.Header
-                                            style={{
-                                                backgroundColor: primaryColor,
-                                            }}
-                                            closeButton
-                                        />
-                                        <Modal.Body className="modal-body">
-                                            <ProviderInfoMobile
-                                                item={
-                                                    activeProviders[
-                                                        selectedIndex
-                                                    ]
-                                                }
-                                                width={width}
-                                                categories={categories}
-                                            />
-                                        </Modal.Body>
-                                    </Modal>
-                                )}
                         </div>
                     </div>
                     <div
