@@ -203,9 +203,6 @@ export default ({
                                     </InputGroup>
                                 </div>
                             </div>
-                            <div className="category-delete-container">
-                                <p className="category-delete-button" onClick={() => deleteCat(item)}>Delete Filter</p>
-                            </div>
                         </div>
                     ) : (
                         <div className="p-2">
@@ -213,6 +210,9 @@ export default ({
                             property type
                         </div>
                     )}
+                    <div className="category-delete-container">
+                        <p className="category-delete-button" onClick={() => deleteCat(item)}>Delete Filter</p>
+                    </div>
                 </Collapse>
             </div>
         </div>
