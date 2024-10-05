@@ -250,8 +250,6 @@ function AddProvider(props) {
                 ),
             );
             props.history.push(providerRoute);
-            console.log(providerRoute);
-            console.log("adding");
         } catch (e) {
             setError(
                 "Failed to save changes. Please check your network connection or try again later.",

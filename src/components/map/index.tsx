@@ -1,5 +1,5 @@
-import '@fontsource/inter'
-import './mapStyles.css'
+import "@fontsource/inter";
+import "./mapStyles.css";
 import { useTour } from "@reactour/tour";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import queryString from "query-string";
@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import InputGroup from 'react-bootstrap/InputGroup';
+import InputGroup from "react-bootstrap/InputGroup";
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
@@ -24,15 +24,18 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import searchIcon from '../../assets/img/searchicon.png';
-import x from '../../assets/img/x.png';
-import dropdownIcon from '../../assets/svg/chevron-down.svg';
-import Switch from 'react-switch';
-import { func } from 'prop-types';
+import searchIcon from "../../assets/img/searchicon.png";
+import x from "../../assets/img/x.png";
+import dropdownIcon from "../../assets/svg/chevron-down.svg";
+import Switch from "react-switch";
+import { func } from "prop-types";
+import { MdChevronRight } from "react-icons/md";
 import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
 import backArrow from '../../assets/img/back-arrow.png';
+import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
+import Collapsible from "components/collapsible";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -63,7 +66,7 @@ const data2 = [
     { x: "Dec", y: 2085 },
 ];
 
-const FILTER_CUTOFF = 5;
+const FILTER_CUTOFF = 3;
 const PAGE_SIZE = 100;
 
 const getWidth = () =>
@@ -652,17 +655,17 @@ const Map = (props) => {
         return filtersState[item].map((title, key) => (
             <div
                 className="tag"
-                style={{ 
+                style={{
                     border: "2px solid #0a1d7c",
-                    borderRadius: "50px",  
+                    borderRadius: "50px",
                     backgroundColor: "#f1f4fa",
                     textAlign: "center",
                     display: "inline-block",
                     margin: "4px 2px",
                     color: "#0a1d7c",
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: '700',
-                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)"
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: "700",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
                 }}
                 key={`${index}${key}`}
             >
@@ -693,6 +696,8 @@ const Map = (props) => {
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
+                {
+                console.log((filtersData))}
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -707,24 +712,8 @@ const Map = (props) => {
                         renderDropdown(value.name, key)
                     )}
 
-                {moreFilter ? (
-                    <>
-                        {Object.entries(filtersData)
-                            .filter(
-                                ([key, value]: any[]) =>
-                                    !Number.isInteger(value.priority) ||
-                                    value.priority >= FILTER_CUTOFF
-                            )
-                            .sort(
-                                (
-                                    [aKey, aValue]: any[],
-                                    [bKey, bValue]: any[]
-                                ) => aValue.name.localeCompare(bValue.name)
-                            )
-                            .map(([key, value]: any[]) =>
-                                renderDropdown(value.name, key)
-                            )}
-                        
+                {Object.keys(filtersData).length > FILTER_CUTOFF ? (
+                    <>  
                         <Dropdown>
                             <Dropdown.Toggle
                                 className="astext"
@@ -732,20 +721,30 @@ const Map = (props) => {
                             >
                                 {moreFilters}
                                 <span className="custom-dropdown-icon">
-                                    <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                                    <img
+                                        src={dropdownIcon}
+                                        alt="dropdown icon"
+                                        style={{ height: "16px" }}
+                                    />
                                 </span>
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                    Option 1
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                    Option 2
-                                </Dropdown.Item>
-                                <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                    Option 3
-                                </Dropdown.Item>
+                            {Object.entries(filtersData)
+                                .filter(
+                                    ([key, value]: any[]) =>
+                                        !Number.isInteger(value.priority) ||
+                                        value.priority >= FILTER_CUTOFF
+                                )
+                                .sort(
+                                    (
+                                        [aKey, aValue]: any[],
+                                        [bKey, bValue]: any[]
+                                    ) => aValue.name.localeCompare(bValue.name)
+                                )
+                                .map(([key, value]: any[]) =>
+                                    renderMoreDropdown(value.name, key)
+                                )}
                             </Dropdown.Menu>
                         </Dropdown>
                         {/* <Button
@@ -758,29 +757,7 @@ const Map = (props) => {
                         </Button> */}
                     </>
                 ) : (
-                    <Dropdown>
-                        <Dropdown.Toggle
-                            className="astext"
-                            id="more-filters-dropdown"
-                        >
-                            {moreFilters}
-                            <span className="custom-dropdown-icon">
-                                <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
-                            </span>
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 1
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 2
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 3
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div></div>
                     // <Button 
                     //     className="astext"
                     //     onClick={() => setMoreFilter(true)}>
@@ -881,17 +858,84 @@ const Map = (props) => {
 
     function renderDropdown(title, key) {
         return (
-            <Dropdown key={key} style={{ marginTop: '0px' }}>
+            <Dropdown key={key} style={{ marginTop: "0px" }}>
                 <Dropdown.Toggle
                     id={key}
                     variant="light"
-                    className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
+                    className={`custom-dropdown-toggle ${
+                        filterActiveState[key] ? "active" : ""
+                    }`}
                 >
                     {title}
                     <span className="custom-dropdown-icon">
-                        <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                        <img
+                            src={dropdownIcon}
+                            alt="dropdown icon"
+                            style={{ height: "16px" }}
+                        />
                     </span>
                 </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {filtersData[key].options.map((item, index) => (
+                        <div
+                            key={index}
+                            onClick={() => {
+                                const newFilters = [...filtersState[key]];
+
+                                if (newFilters.includes(item.value)) {
+                                    const itemIndex = newFilters.indexOf(
+                                        item.value
+                                    );
+                                    newFilters.splice(itemIndex, 1);
+                                } else {
+                                    newFilters.push(item.value);
+                                }
+
+                                setFiltersState({
+                                    ...filtersState,
+                                    [key]: newFilters,
+                                });
+
+                                setFilterActiveState({
+                                    ...filterActiveState,
+                                    [key]: newFilters.length > 0,
+                                });
+                            }}
+                        >
+                            <Form.Check
+                                className="dropdown-item custom-checkbox"
+                                name={key}
+                                type="checkbox"
+                                checked={filtersState[key].includes(item.value)}
+                                value={item.value}
+                                label={item.label}
+                                itemType="normalfilter"
+                            />
+                        </div>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+    }
+
+    function renderMoreDropdown(title, key) {
+        return (
+            // <Dropdown key={key} style={{ marginTop: '0px' }}>
+            //     <Dropdown.Toggle
+            //         id={key}
+            //         variant="light"
+            //         className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
+            //     >
+            //         {title}
+            //         <span className="custom-dropdown-icon">
+            //             <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+            //         </span>
+            //     </Dropdown.Toggle>
+                <Dropdown key={key} drop='right'>
+                    <Dropdown.Toggle className="subMenu" id="sub-dropdown">
+                        {title}
+                        <MdChevronRight/>
+                    </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {filtersData[key].options.map((item, index) => (
                         <div
@@ -929,7 +973,7 @@ const Map = (props) => {
                         </div>
                     ))}
                 </Dropdown.Menu>
-            </Dropdown>
+             </Dropdown>
         );
     }
 
@@ -964,18 +1008,16 @@ const Map = (props) => {
             <div>
                 <div>
                     <div
-                        className={classNames(
-                            "row-spaced",
-                            "ml-2",
-                            "pt-3",
-                            { "mr-2": !isDesktop }
-                        )}
+                        className={classNames("row-spaced", "ml-2", "pt-3", {
+                            "mr-2": !isDesktop,
+                        })}
                     >
                         <div className="w-75">
                             <Row noGutters={!isDesktop}>
                                 <Col
-                                    style={{paddingBottom:'0px',
-                                            marginBottom:'0px'
+                                    style={{
+                                        paddingBottom: "0px",
+                                        marginBottom: "0px",
                                     }}
                                 >
                                     {showInfo ? (
@@ -1007,40 +1049,57 @@ const Map = (props) => {
                                 </Col>
                             </Row>
                         </div>
-                        <div  className="mb-3">
-                        <div className="right-container" style={{ display: 'flex'}}>
-                            <div style={{ display: 'flex', marginRight: '20px' }}>
-                                <div style={{ 
-                                    marginRight: '10px',  
-                                    fontWeight: '700',
-                                    fontFamily: 'Inter, sans-serif'}}>
-                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
-                                </div>
-                                <Switch 
-                                onChange={handleToggle}
-                                checked={isToggled}
-                                offColor="#E0E0E0"
-                                onColor={primaryColor}
-                                handleDiameter={18}
-                                uncheckedIcon={false}
-                                checkedIcon={false}
-                                height={24}
-                                width={44}
-                                />
-                            </div>
-                            <Button
-                                style={{
-                                    marginRight: '20px',
-                                    fontSize:'14px', 
-                                    fontFamily: 'Inter, sans-serif'}}
-                                className="button-tutorial"
-                                variant="primary"
-                                onClick={() => setIsOpen(true)}
+                        <div className="mb-3">
+                            <div
+                                className="right-container"
+                                style={{ display: "flex" }}
                             >
-                                Start Tutorial
-                            </Button>
-                        </div>
-
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        marginRight: "20px",
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            marginRight: "10px",
+                                            fontWeight: "700",
+                                            fontFamily: "Inter, sans-serif",
+                                        }}
+                                    >
+                                        {isDesktop
+                                            ? isToggled
+                                                ? hideLabel
+                                                : showLabel
+                                            : isToggled
+                                            ? showLabel
+                                            : hideLabel}
+                                    </div>
+                                    <Switch
+                                        onChange={handleToggle}
+                                        checked={isToggled}
+                                        offColor="#E0E0E0"
+                                        onColor={primaryColor}
+                                        handleDiameter={18}
+                                        uncheckedIcon={false}
+                                        checkedIcon={false}
+                                        height={24}
+                                        width={44}
+                                    />
+                                </div>
+                                <Button
+                                    style={{
+                                        marginRight: "20px",
+                                        fontSize: "14px",
+                                        fontFamily: "Inter, sans-serif",
+                                    }}
+                                    className="button-tutorial"
+                                    variant="primary"
+                                    onClick={() => setIsOpen(true)}
+                                >
+                                    Start Tutorial
+                                </Button>
+                            </div>
                         </div>
 
                     </div>
@@ -1062,25 +1121,31 @@ const Map = (props) => {
                     >
                         {!showInfo && renderTagControl()}
                         <div>
-                        {!showInfo && (
-                                <>
-                                    {Object.keys(filtersState).map(renderTag)}
-                                    {evaluateFilters() && (
-                                        <div
-                                            onClick={() => clearFilters()}
-                                            className="tag clear-all"
-                                            style={{
-                                                border: "none",
-                                                color: "#2F76FF",
-                                                fontFamily: 'Inter, sans-serif',
-                                                fontWeight: '700',
-                                            }}
-                                        >
-                                            Clear
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                            <div
+                                className={classNames("tag-row padder", {
+                                    "result-tutorial": isEmpty(activeProviders),
+                                })}
+                            >
+                                {!showInfo && (
+                                    <>
+                                        {Object.keys(filtersState).map(renderTag)}
+                                        {evaluateFilters() && (
+                                            <div
+                                                onClick={() => clearFilters()}
+                                                className="tag clear-all"
+                                                style={{
+                                                    border: "none",
+                                                    color: "#2F76FF",
+                                                    fontFamily: 'Inter, sans-serif',
+                                                    fontWeight: '700',
+                                                }}
+                                            >
+                                                Clear
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                                </div>
                             {!isEmpty(activeProviders) ? (
                                 <div className='container2'>
                                     {showInfo ? (
@@ -1093,7 +1158,7 @@ const Map = (props) => {
                                                     <div className="content d-flex flex-column">
                                                         <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
                                                         <div className="mt-2"> 
-                                                            <ProgressBar value={300} goal={600} buttonLink={"google.com"} buttonLabel={"Donate Now"} />
+                                                            <ProgressBar current={300} total={600} buttonLink={"google.com"} buttonLabel={"Donate Now"} />
                                                         </div>
                                                         <div className="mt-2"> 
                                                             <DonutChart data={data} buttonLink={"https://google.com"} buttonLabel={"Donate Now"} />
@@ -1101,6 +1166,16 @@ const Map = (props) => {
                                                         <div className="mt-2"> 
                                                             <LineChart title={"Total donations per month in 2023"} data={data2} />
                                                         </div>
+                                                        <div className="mt-2">
+                                                            <LineChart title={"Total donations per month in 2023"} data={data2} />
+                                                        </div>
+                                                        <div className="mt-2">
+                                                            
+                                                            <Collapsible label={"Graph"}>
+                                                                <ChartComponentForm/>
+                                                            </Collapsible>
+                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -1138,39 +1213,6 @@ const Map = (props) => {
                                     
                                     
                                     )}
-                                    {/* {activeProviders
-                                        .slice(lowerPageBound, upperPageBound)
-                                        .map((i, index) => (
-                                            <div
-                                                className={classNames({
-                                                    "result-tutorial":
-                                                        index == 0,
-                                                })}
-                                            >   
-                                                <ProviderCell
-                                                    key={i.id}
-                                                    item={i}
-                                                    index={index}
-                                                    primaryColor={primaryColor}
-                                                    onMouseEnter={debounce(
-                                                        () => {
-                                                            if (
-                                                                defaultView &&
-                                                                isDesktop
-                                                            )
-                                                                setCurrmarker(
-                                                                    index
-                                                                );
-                                                        },
-                                                        300
-                                                    )}
-                                                    onClick={() =>
-                                                        handleCellClick(index)
-                                                    }
-                                                    distances={distances}
-                                                />
-                                            </div>
-                                        ))} */}
                                 </div>
                             ) : (
                                 <Row>
@@ -1221,37 +1263,6 @@ const Map = (props) => {
                             ) : (
                                 <div />
                             )}
-                        </div>
-                        <div>
-
-                            {!isDesktop &&
-                                activeProviders &&
-                                activeProviders[selectedIndex] && (
-                                    <Modal
-                                        show={showModal}
-                                        onHide={() => setShowModal(false)}
-                                        dialogClassName="modalMobile"
-                                        scrollable
-                                    >
-                                        <Modal.Header
-                                            style={{
-                                                backgroundColor: primaryColor,
-                                            }}
-                                            closeButton
-                                        />
-                                        <Modal.Body className="modal-body">
-                                            <ProviderInfoMobile
-                                                item={
-                                                    activeProviders[
-                                                        selectedIndex
-                                                    ]
-                                                }
-                                                width={width}
-                                                categories={categories}
-                                            />
-                                        </Modal.Body>
-                                    </Modal>
-                                )}
                         </div>
                     </div>
                     <div
