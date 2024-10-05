@@ -978,26 +978,32 @@ const Map = (props) => {
                                             marginBottom:'0px'
                                     }}
                                 >
-                                    <InputGroup className="mb-3">
-                                        <InputGroup.Text 
-                                            id="search-addon"
-                                            className="search" 
-                                        >
-                                            <img
-                                                src={searchIcon}
-                                                alt="search"
-                                                className='imgSearch'
-                                            />
-                                        </InputGroup.Text>
-
-                                        <Form.Control
-                                            placeholder={searchZipcode}
-                                            itemType="search"
-                                            onChange={filterProviders}
-                                            value={searchName}
-                                            className='search-bar'
-                                        />
-                                    </InputGroup>
+                                    {showInfo ? (
+                                            <Button
+                                                onClick={() => setShowInfo(false)}
+                                                style={{ display: 'flex', alignItems: 'center', fontFamily: 'Inter, sans-serif', fontWeight: '700', backgroundColor: '#ffffff', border: 'none' }}
+                                            >
+                                                <img src={backArrow} alt="Back" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
+                                                Back
+                                            </Button>
+                                        ) : (
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Text id="search-addon" className="search">
+                                                    <img
+                                                        src={searchIcon}
+                                                        alt="search"
+                                                        className="imgSearch"
+                                                    />
+                                                </InputGroup.Text>
+                                                <Form.Control
+                                                    placeholder={searchZipcode}
+                                                    itemType="search"
+                                                    onChange={filterProviders}
+                                                    value={searchName}
+                                                    className="search-bar"
+                                                />
+                                            </InputGroup>
+                                    )}
                                 </Col>
                             </Row>
                         </div>
@@ -1054,7 +1060,7 @@ const Map = (props) => {
                             display: !isDesktop && !defaultView && "none",
                         }}
                     >
-                        {renderTagControl()}
+                        {!showInfo && renderTagControl()}
                         <div>
                             <div
                                 className={classNames("tag-row padder", {
@@ -1076,7 +1082,7 @@ const Map = (props) => {
                                         Clear
                                     </div>
                                 )}
-                            </div>
+                                </div>
                             {!isEmpty(activeProviders) ? (
                                 <div className='container2'>
                                     {showInfo ? (
@@ -1086,11 +1092,6 @@ const Map = (props) => {
                                         (
                                             <div className="containerInfo d-flex flex-column" style={{ height: "80vh" }}>
                                                 <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)", overflowY: 'scroll' }}>
-                                                    <div className="header d-flex justify-content-end">
-                                                        <button onClick={() => setShowInfo(false)} style={{ background: 'none', border: 'none', padding: 0 }}>
-                                                            <img src={backArrow} alt="Back" style={{ width: '24px', height: '24px' }} />
-                                                        </button>
-                                                    </div>
                                                     <div className="content d-flex flex-column">
                                                         <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
                                                         <div className="mt-2"> 
