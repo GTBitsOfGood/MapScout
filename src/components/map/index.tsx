@@ -33,6 +33,7 @@ import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
 import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
+import Collapsible from "components/collapsible";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -1276,7 +1277,9 @@ const Map = (props) => {
                                                 }
                                                 data={data2}
                                             />
-                                            <ChartComponentForm />
+                                            <Collapsible label={'Graph'}>
+                                                <ChartComponentForm />
+                                            </Collapsible>
                                         </Modal.Body>
                                     </Modal>
                                 )}
