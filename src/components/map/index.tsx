@@ -1062,27 +1062,25 @@ const Map = (props) => {
                     >
                         {!showInfo && renderTagControl()}
                         <div>
-                            <div
-                                className={classNames("tag-row padder", {
-                                    "result-tutorial": isEmpty(activeProviders),
-                                })}
-                            >
-                                {Object.keys(filtersState).map(renderTag)}
-                                {evaluateFilters() && (
-                                    <div
-                                        onClick={() => clearFilters()}
-                                        className="tag clear-all"
-                                        style={{
-                                            border: "none",
-                                            color: "#2F76FF",
-                                            fontFamily: 'Inter, sans-serif',
-                                            fontWeight: '700',
-                                        }}
-                                    >
-                                        Clear
-                                    </div>
-                                )}
-                                </div>
+                        {!showInfo && (
+                                <>
+                                    {Object.keys(filtersState).map(renderTag)}
+                                    {evaluateFilters() && (
+                                        <div
+                                            onClick={() => clearFilters()}
+                                            className="tag clear-all"
+                                            style={{
+                                                border: "none",
+                                                color: "#2F76FF",
+                                                fontFamily: 'Inter, sans-serif',
+                                                fontWeight: '700',
+                                            }}
+                                        >
+                                            Clear
+                                        </div>
+                                    )}
+                                </>
+                            )}
                             {!isEmpty(activeProviders) ? (
                                 <div className='container2'>
                                     {showInfo ? (
