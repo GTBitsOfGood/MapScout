@@ -21,12 +21,13 @@ export default ({
     disableCat,
     enableCat,
     addOption,
+    changeColor,
     removeOption,
     changeType,
     rename,
-    isDragged,
 }) => {
     const [optionName, setOptionName] = useState("");
+    const [color, setColor] = useState("#379bf0");
     const [title, setTitle] = useState(item.name);
     const [collapsed, setCollapsed] = useState(false);
 
@@ -36,9 +37,8 @@ export default ({
         <div className="category-cell-wrapper">
             <div className="category-button-column">
                 {item.active ? (
-                    <div className="category-grip">
-                        <FiMoreVertical style={{ marginRight: -20 }} />
-                        <FiMoreVertical />
+                    <div className="primary-grip">
+                        <p style={{ marginRight: 10, marginLeft: 10, }}>{index + 1}</p>
                     </div>
                 ) : (
                     <Button
@@ -65,8 +65,8 @@ export default ({
                         }}
                         onClick={
                             item.active
-                                ? () => disableCat(item)
-                                : () => deleteCat(item)
+                                ? () => disableCat(index)
+                                : () => deleteCat(index)
                         }
                     >
                         <IoIosTrash style={{ marginTop: -16 }} />
@@ -99,7 +99,7 @@ export default ({
                                     ref={myRef}
                                     as="select"
                                     className={"category-cell-head-select"}
-                                    disabled={!item.active}
+                                    disabled
                                     value={item.select_type}
                                     onChange={() =>
                                         changeType(
@@ -150,9 +150,18 @@ export default ({
                                             key={i}
                                             className="options-item row-spaced mt-1"
                                         >
-                                        <div className="options-label">
-                                            {option.value}
-                                        </div>
+                                            <div className="options-item-1">
+                                                <FormControl
+                                                type="color"
+                                                className="options-color"
+                                                placeholder="Choose your color"
+                                                defaultValue={option.color}
+                                                onChange={(e) => changeColor((e.target as HTMLInputElement).value, option.value, item)}
+                                                />
+                                                <div className="options-label">
+                                                    {option.value}
+                                                </div>
+                                            </div>
                                             <div
                                                 onClick={() =>
                                                     removeOption(i, item)
@@ -172,20 +181,27 @@ export default ({
                             </div>
                             <div className="add-option">
                                 <div className="row-spaced">
-                                    <InputGroup>
+                                        <FormControl
+                                        type="color"
+                                        className="options-add-color"
+                                        placeholder="Choose your color"
+                                        defaultValue={color}
+                                        onChange={(e) => setColor((e.target as HTMLInputElement).value)}
+                                        />
                                         <FormControl
                                             value={optionName}
                                             onChange={(e) =>
                                                 setOptionName((e.target as HTMLInputElement).value)
                                             }
                                             type="text"
+                                            defaultValue="#563d7c"
                                             placeholder="Create New Option"
                                         />
-                                        <InputGroup.Append>
                                             <Button
                                                 onClick={() => {
                                                     addOption(
                                                         optionName,
+                                                        color,
                                                         item,
                                                     );
                                                     setOptionName("");
@@ -199,9 +215,10 @@ export default ({
                                             >
                                                 Add
                                             </Button>
-                                        </InputGroup.Append>
-                                    </InputGroup>
                                 </div>
+                            </div>
+                            <div className="category-delete-container">
+                                <p className="category-delete-button" onClick={() => deleteCat(item)}>Delete Filter</p>
                             </div>
                         </div>
                     ) : (
@@ -210,9 +227,6 @@ export default ({
                             property type
                         </div>
                     )}
-                    <div className="category-delete-container">
-                        <p className="category-delete-button" onClick={() => deleteCat(item)}>Delete Filter</p>
-                    </div>
                 </Collapse>
             </div>
         </div>

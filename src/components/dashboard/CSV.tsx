@@ -116,11 +116,6 @@ const ExportCSV = (props) => {
     async function handleDrop(data) {
         let oldProviders: { id: string }[] = Array.from(props.providers);
         let oldCategories: { id: string }[] = Array.from(props.categories);
-        console.log("older categories", oldCategories);
-        console.log("older Providers", oldProviders);
-        console.log("---------------------------");
-        console.log("data", data);
-        console.log("---------------------------");
 
         let mergedProviders = data.slice();
         let isDifferent = false;
@@ -145,7 +140,6 @@ const ExportCSV = (props) => {
             }
             isDifferent = false;
         }
-        console.log("first for loope");
 
         for (let i = 0; i < mergedProviders.length; i++) {
             try {
@@ -199,7 +193,6 @@ const ExportCSV = (props) => {
                         .collection("categories")
                         .doc(trimmedProperty)
                         .get();
-                    console.log(columns);
                     if (doc.data()) {
                         const selectType = doc.data()["select_type"];
                         if (selectType === 2) {
@@ -218,7 +211,6 @@ const ExportCSV = (props) => {
                 }
             }
 
-            console.log("second for loope");
 
             var columnArr = [];
             for (let i = 0; i < data.slice().length; i++) {
@@ -240,7 +232,6 @@ const ExportCSV = (props) => {
                             break;
                         }
                     }
-                    console.log(containsName);
                     if (!containsName) {
                         // create a new object and push it to mergedCategories
                         var arr = [];
@@ -309,9 +300,6 @@ const ExportCSV = (props) => {
                     <CSVReader
                         config={importConfig}
                         onUploadAccepted={(results: any) => {
-                            console.log("---------------------------");
-                            console.log(results);
-                            console.log("---------------------------");
                             handleDrop(results.data);
                         }}
                     >

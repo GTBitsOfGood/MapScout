@@ -45,8 +45,6 @@ const ActionForm = (props) => {
             onClick={() => {
                 const data = actions;
                 data[index].selected = !data[index].selected; //! UNSURE
-                console.log(data);
-                console.log(actions[index].selected);
                 setActions(data);
                 setTimeout(() => props.onChange(actions), 100);
             }}
@@ -62,7 +60,6 @@ const ActionForm = (props) => {
                 onChange={(e) => {
                     const data = actions;
                     actions[index].linkText = (e.target as HTMLInputElement).value;
-                    console.log((e.target as HTMLInputElement).value);
                     setActions(data);
                     setTimeout(() => props.onChange(actions), 100);
                 }}

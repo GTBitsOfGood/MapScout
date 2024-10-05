@@ -29,6 +29,7 @@ import x from "../../assets/img/x.png";
 import dropdownIcon from "../../assets/svg/chevron-down.svg";
 import Switch from "react-switch";
 import { func } from "prop-types";
+import { MdChevronRight } from "react-icons/md";
 import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
@@ -64,7 +65,7 @@ const data2 = [
     { x: "Dec", y: 2085 },
 ];
 
-const FILTER_CUTOFF = 5;
+const FILTER_CUTOFF = 3;
 const PAGE_SIZE = 100;
 
 const getWidth = () =>
@@ -691,6 +692,8 @@ const Map = (props) => {
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
+                {
+                console.log((filtersData))}
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -705,24 +708,8 @@ const Map = (props) => {
                         renderDropdown(value.name, key)
                     )}
 
-                {moreFilter ? (
-                    <>
-                        {Object.entries(filtersData)
-                            .filter(
-                                ([key, value]: any[]) =>
-                                    !Number.isInteger(value.priority) ||
-                                    value.priority >= FILTER_CUTOFF
-                            )
-                            .sort(
-                                (
-                                    [aKey, aValue]: any[],
-                                    [bKey, bValue]: any[]
-                                ) => aValue.name.localeCompare(bValue.name)
-                            )
-                            .map(([key, value]: any[]) =>
-                                renderDropdown(value.name, key)
-                            )}
-
+                {Object.keys(filtersData).length > FILTER_CUTOFF ? (
+                    <>  
                         <Dropdown>
                             <Dropdown.Toggle
                                 className="astext"
@@ -739,21 +726,21 @@ const Map = (props) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item
-                                    onClick={() => setMoreFilter(true)}
-                                >
-                                    Option 1
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick={() => setMoreFilter(true)}
-                                >
-                                    Option 2
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick={() => setMoreFilter(true)}
-                                >
-                                    Option 3
-                                </Dropdown.Item>
+                            {Object.entries(filtersData)
+                                .filter(
+                                    ([key, value]: any[]) =>
+                                        !Number.isInteger(value.priority) ||
+                                        value.priority >= FILTER_CUTOFF
+                                )
+                                .sort(
+                                    (
+                                        [aKey, aValue]: any[],
+                                        [bKey, bValue]: any[]
+                                    ) => aValue.name.localeCompare(bValue.name)
+                                )
+                                .map(([key, value]: any[]) =>
+                                    renderMoreDropdown(value.name, key)
+                                )}
                             </Dropdown.Menu>
                         </Dropdown>
                         {/* <Button
@@ -766,34 +753,8 @@ const Map = (props) => {
                         </Button> */}
                     </>
                 ) : (
-                    <Dropdown>
-                        <Dropdown.Toggle
-                            className="astext"
-                            id="more-filters-dropdown"
-                        >
-                            {moreFilters}
-                            <span className="custom-dropdown-icon">
-                                <img
-                                    src={dropdownIcon}
-                                    alt="dropdown icon"
-                                    style={{ height: "16px" }}
-                                />
-                            </span>
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 1
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 2
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={() => setMoreFilter(true)}>
-                                Option 3
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    // <Button
+                    <div></div>
+                    // <Button 
                     //     className="astext"
                     //     onClick={() => setMoreFilter(true)}>
                     //     {moreFilters}
@@ -950,6 +911,65 @@ const Map = (props) => {
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
+        );
+    }
+
+    function renderMoreDropdown(title, key) {
+        return (
+            // <Dropdown key={key} style={{ marginTop: '0px' }}>
+            //     <Dropdown.Toggle
+            //         id={key}
+            //         variant="light"
+            //         className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
+            //     >
+            //         {title}
+            //         <span className="custom-dropdown-icon">
+            //             <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+            //         </span>
+            //     </Dropdown.Toggle>
+                <Dropdown key={key} drop='right'>
+                    <Dropdown.Toggle className="subMenu" id="sub-dropdown">
+                        {title}
+                        <MdChevronRight/>
+                    </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {filtersData[key].options.map((item, index) => (
+                        <div
+                            key={index}
+                            onClick={() => {
+                                const newFilters = [...filtersState[key]];
+                                
+                                if (newFilters.includes(item.value)) {
+                                    const itemIndex = newFilters.indexOf(item.value);
+                                    newFilters.splice(itemIndex, 1);
+                                } else {
+                                    newFilters.push(item.value);
+                                }
+
+                                setFiltersState({
+                                    ...filtersState,
+                                    [key]: newFilters,
+                                });
+    
+                                setFilterActiveState({
+                                    ...filterActiveState,
+                                    [key]: newFilters.length > 0,  
+                                });
+                            }}
+                        >
+                            <Form.Check
+                                className="dropdown-item custom-checkbox"
+                                name={key}
+                                type="checkbox"
+                                checked={filtersState[key].includes(item.value)}
+                                value={item.value}
+                                label={item.label}
+                                itemType="normalfilter"
+                            />
+                        </div>
+                    ))}
+                </Dropdown.Menu>
+             </Dropdown>
         );
     }
 
