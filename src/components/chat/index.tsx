@@ -20,7 +20,6 @@ async function sendSlackMessage(email, message) {
         },
         body: JSON.stringify(data),
     };
-    console.log(requestOptions);
     fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions);
 }
 
