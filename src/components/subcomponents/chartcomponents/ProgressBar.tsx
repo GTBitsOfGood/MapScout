@@ -4,21 +4,21 @@ import { Button } from "./Button";
 
 /*
    Props:
-       value : number,
-       goal : number,
+       current : number,
+       total : number,
        units : string,
        buttonLink : string,
        buttonLabel : string
 */
 const ProgressBar = ({
-    value,
-    goal,
+    current,
+    total,
     units = "dollars",
     buttonLink,
     buttonLabel,
 }) => {
     const svgRef = useRef();
-    const percentage = Math.min((value / goal) * 100, 100);
+    const percentage = Math.min((current / total) * 100, 100);
     buttonLink = !/^https?:\/\//i.test(buttonLink)
         ? "http://" + buttonLink
         : buttonLink; //make sures external link has proper formatting
@@ -61,7 +61,7 @@ const ProgressBar = ({
                         fontSize: "1.25rem",
                     }}
                 >
-                    {`${value} ${units}`}
+                    {`${current} ${units}`}
                     <span
                         style={{
                             color: "#333333",
@@ -70,7 +70,7 @@ const ProgressBar = ({
                             fontWeight: "normal",
                         }}
                     >
-                        {` out of ${goal} ${units} goal`}
+                        {` out of ${total} ${units} total`}
                     </span>
                 </p>
                 <p

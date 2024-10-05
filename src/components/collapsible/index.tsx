@@ -18,7 +18,7 @@ const Collapsible = ({style = {}, label, children}) => {
               )}</button>
             <div ref={contentRef} 
                 className={`content ${isOpen ? 'open' : ''}`}
-                style={{ maxHeight: isOpen ? `${contentRef.current.scrollHeight}px` : '0px' }}>
+                style={{ height: isOpen ? `${contentRef.current.scrollHeight}px` : '0px' }}>
                     <div className="container">{children}</div>
                 </div>
         </div>

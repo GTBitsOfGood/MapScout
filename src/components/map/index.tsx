@@ -1,5 +1,5 @@
-import '@fontsource/inter'
-import './mapStyles.css'
+import "@fontsource/inter";
+import "./mapStyles.css";
 import { useTour } from "@reactour/tour";
 import { loadClinwikiProviders } from "functions/loadClinwikiProviders";
 import queryString from "query-string";
@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import InputGroup from 'react-bootstrap/InputGroup';
+import InputGroup from "react-bootstrap/InputGroup";
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
@@ -24,15 +24,17 @@ import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import searchIcon from '../../assets/img/searchicon.png';
-import x from '../../assets/img/x.png';
-import dropdownIcon from '../../assets/svg/chevron-down.svg';
+import searchIcon from "../../assets/img/searchicon.png";
+import x from "../../assets/img/x.png";
+import dropdownIcon from "../../assets/svg/chevron-down.svg";
+import Switch from "react-switch";
+import { func } from "prop-types";
 import { MdChevronRight } from "react-icons/md";
-import Switch from 'react-switch';
-import { func } from 'prop-types';
 import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
 import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
 import LineChart from "components/subcomponents/chartcomponents/LineChart";
+import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
+import Collapsible from "components/collapsible";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -644,17 +646,17 @@ const Map = (props) => {
         return filtersState[item].map((title, key) => (
             <div
                 className="tag"
-                style={{ 
+                style={{
                     border: "2px solid #0a1d7c",
-                    borderRadius: "50px",  
+                    borderRadius: "50px",
                     backgroundColor: "#f1f4fa",
                     textAlign: "center",
                     display: "inline-block",
                     margin: "4px 2px",
                     color: "#0a1d7c",
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: '700',
-                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)"
+                    fontFamily: "Inter, sans-serif",
+                    fontWeight: "700",
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
                 }}
                 key={`${index}${key}`}
             >
@@ -715,7 +717,11 @@ const Map = (props) => {
                             >
                                 {moreFilters}
                                 <span className="custom-dropdown-icon">
-                                    <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                                    <img
+                                        src={dropdownIcon}
+                                        alt="dropdown icon"
+                                        style={{ height: "16px" }}
+                                    />
                                 </span>
                             </Dropdown.Toggle>
 
@@ -848,15 +854,21 @@ const Map = (props) => {
 
     function renderDropdown(title, key) {
         return (
-            <Dropdown key={key} style={{ marginTop: '0px' }}>
+            <Dropdown key={key} style={{ marginTop: "0px" }}>
                 <Dropdown.Toggle
                     id={key}
                     variant="light"
-                    className={`custom-dropdown-toggle ${filterActiveState[key] ? 'active' : ''}`}
+                    className={`custom-dropdown-toggle ${
+                        filterActiveState[key] ? "active" : ""
+                    }`}
                 >
                     {title}
                     <span className="custom-dropdown-icon">
-                        <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
+                        <img
+                            src={dropdownIcon}
+                            alt="dropdown icon"
+                            style={{ height: "16px" }}
+                        />
                     </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -865,9 +877,11 @@ const Map = (props) => {
                             key={index}
                             onClick={() => {
                                 const newFilters = [...filtersState[key]];
-                                
+
                                 if (newFilters.includes(item.value)) {
-                                    const itemIndex = newFilters.indexOf(item.value);
+                                    const itemIndex = newFilters.indexOf(
+                                        item.value
+                                    );
                                     newFilters.splice(itemIndex, 1);
                                 } else {
                                     newFilters.push(item.value);
@@ -877,10 +891,10 @@ const Map = (props) => {
                                     ...filtersState,
                                     [key]: newFilters,
                                 });
-    
+
                                 setFilterActiveState({
                                     ...filterActiveState,
-                                    [key]: newFilters.length > 0,  
+                                    [key]: newFilters.length > 0,
                                 });
                             }}
                         >
@@ -990,29 +1004,27 @@ const Map = (props) => {
             <div>
                 <div>
                     <div
-                        className={classNames(
-                            "row-spaced",
-                            "ml-2",
-                            "pt-3",
-                            { "mr-2": !isDesktop }
-                        )}
+                        className={classNames("row-spaced", "ml-2", "pt-3", {
+                            "mr-2": !isDesktop,
+                        })}
                     >
                         <div className="w-75">
                             <Row noGutters={!isDesktop}>
                                 <Col
-                                    style={{paddingBottom:'0px',
-                                            marginBottom:'0px'
+                                    style={{
+                                        paddingBottom: "0px",
+                                        marginBottom: "0px",
                                     }}
                                 >
                                     <InputGroup className="mb-3">
-                                        <InputGroup.Text 
+                                        <InputGroup.Text
                                             id="search-addon"
-                                            className="search" 
+                                            className="search"
                                         >
                                             <img
                                                 src={searchIcon}
                                                 alt="search"
-                                                className='imgSearch'
+                                                className="imgSearch"
                                             />
                                         </InputGroup.Text>
 
@@ -1021,46 +1033,63 @@ const Map = (props) => {
                                             itemType="search"
                                             onChange={filterProviders}
                                             value={searchName}
-                                            className='search-bar'
+                                            className="search-bar"
                                         />
                                     </InputGroup>
                                 </Col>
                             </Row>
                         </div>
-                        <div  className="mb-3">
-                        <div className="right-container" style={{ display: 'flex'}}>
-                            <div style={{ display: 'flex', marginRight: '20px' }}>
-                                <div style={{ 
-                                    marginRight: '10px',  
-                                    fontWeight: '700',
-                                    fontFamily: 'Inter, sans-serif'}}>
-                                {isDesktop ? (isToggled ? hideLabel : showLabel) : (isToggled ? showLabel : hideLabel)}
-                                </div>
-                                <Switch 
-                                onChange={handleToggle}
-                                checked={isToggled}
-                                offColor="#E0E0E0"
-                                onColor={primaryColor}
-                                handleDiameter={18}
-                                uncheckedIcon={false}
-                                checkedIcon={false}
-                                height={24}
-                                width={44}
-                                />
-                            </div>
-                            <Button
-                                style={{
-                                    marginRight: '20px',
-                                    fontSize:'14px', 
-                                    fontFamily: 'Inter, sans-serif'}}
-                                className="button-tutorial"
-                                variant="primary"
-                                onClick={() => setIsOpen(true)}
+                        <div className="mb-3">
+                            <div
+                                className="right-container"
+                                style={{ display: "flex" }}
                             >
-                                Start Tutorial
-                            </Button>
-                        </div>
-
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        marginRight: "20px",
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            marginRight: "10px",
+                                            fontWeight: "700",
+                                            fontFamily: "Inter, sans-serif",
+                                        }}
+                                    >
+                                        {isDesktop
+                                            ? isToggled
+                                                ? hideLabel
+                                                : showLabel
+                                            : isToggled
+                                            ? showLabel
+                                            : hideLabel}
+                                    </div>
+                                    <Switch
+                                        onChange={handleToggle}
+                                        checked={isToggled}
+                                        offColor="#E0E0E0"
+                                        onColor={primaryColor}
+                                        handleDiameter={18}
+                                        uncheckedIcon={false}
+                                        checkedIcon={false}
+                                        height={24}
+                                        width={44}
+                                    />
+                                </div>
+                                <Button
+                                    style={{
+                                        marginRight: "20px",
+                                        fontSize: "14px",
+                                        fontFamily: "Inter, sans-serif",
+                                    }}
+                                    className="button-tutorial"
+                                    variant="primary"
+                                    onClick={() => setIsOpen(true)}
+                                >
+                                    Start Tutorial
+                                </Button>
+                            </div>
                         </div>
                         {/* <div className="right-container" style={{ display: 'flex'}}>
                             <div style={{ display: 'flex', marginRight: '20px' }}>
@@ -1121,8 +1150,8 @@ const Map = (props) => {
                                         style={{
                                             border: "none",
                                             color: "#2F76FF",
-                                            fontFamily: 'Inter, sans-serif',
-                                            fontWeight: '700',
+                                            fontFamily: "Inter, sans-serif",
+                                            fontWeight: "700",
                                         }}
                                     >
                                         Clear
@@ -1130,9 +1159,8 @@ const Map = (props) => {
                                 )}
                             </div>
                             {!isEmpty(activeProviders) ? (
-                                <div className='container2'>
-                                    <strong className="custom-padder"
-                                    >
+                                <div className="container2">
+                                    <strong className="custom-padder">
                                         {activeProviders.length}
                                         {clinWikiMap
                                             ? " trials found"
@@ -1146,7 +1174,7 @@ const Map = (props) => {
                                                     "result-tutorial":
                                                         index == 0,
                                                 })}
-                                            >   
+                                            >
                                                 <ProviderCell
                                                     key={i.id}
                                                     item={i}
@@ -1249,8 +1277,8 @@ const Map = (props) => {
                                             />
                                             {/*TO BE REMOVED */}
                                             <ProgressBar
-                                                value={300}
-                                                goal={600}
+                                                current={300}
+                                                total={600}
                                                 buttonLink={"google.com"}
                                                 buttonLabel={"Donate Now"}
                                             />
@@ -1269,6 +1297,9 @@ const Map = (props) => {
                                                 }
                                                 data={data2}
                                             />
+                                            <Collapsible label={'Graph'}>
+                                                <ChartComponentForm />
+                                            </Collapsible>
                                         </Modal.Body>
                                     </Modal>
                                 )}
