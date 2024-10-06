@@ -17,6 +17,7 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
 import ActionForm from "./ActionForm";
+import ContentForm from "./ContentForm";
 
 function validURL(str) {
     const pattern = new RegExp(
@@ -26,7 +27,7 @@ function validURL(str) {
             "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
             "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
             "(\\#[-a-z\\d_]*)?$",
-        "i",
+        "i"
     ); // fragment locator
     return !!pattern.test(str);
 }
@@ -46,10 +47,11 @@ const RowForm = (props) => {
         website: [],
         image: "modalimage.png",
         imageURL: null,
+        content: {},
     };
 
     const [item, setItem] = useState(
-        props.item.facilityName ? props.item : defaultItem,
+        props.item.facilityName ? props.item : defaultItem
     );
     const [showModal, setShowModal] = useState(false);
 
@@ -138,6 +140,17 @@ const RowForm = (props) => {
         props.setItem(newItem);
     }
 
+    const onContentChange = (content) => {
+        const newItem = {
+            ...item,
+            content: {
+                sections: content,
+            },
+        };
+        setItem(newItem);
+        props.setItem(newItem);
+    };
+
     const handleUploadSuccess = async (file) => {
         const filename = file.name;
         await storage.ref("images").child(filename).put(file);
@@ -168,7 +181,7 @@ const RowForm = (props) => {
     };
 
     switch (props.step) {
-        case 0:
+        case "Map":
             return (
                 <>
                     <Form.Group>
@@ -179,11 +192,15 @@ const RowForm = (props) => {
                             onChange={(e) => {
                                 setItem({
                                     ...item,
-                                    [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement).value,
+                                    [(e.target as HTMLInputElement).name]: (
+                                        e.target as HTMLInputElement
+                                    ).value,
                                 });
                                 props.setItem({
                                     ...item,
-                                    [(e.target as HTMLInputElement).name]: (e.target as HTMLInputElement).value,
+                                    [(e.target as HTMLInputElement).name]: (
+                                        e.target as HTMLInputElement
+                                    ).value,
                                 });
                             }}
                             placeholder="Name"
@@ -231,9 +248,9 @@ const RowForm = (props) => {
                                     style={{
                                         color: isValidNumberForRegion(
                                             parseIncompletePhoneNumber(
-                                                item.phoneNum[0],
+                                                item.phoneNum[0]
                                             ),
-                                            "US",
+                                            "US"
                                         )
                                             ? "green"
                                             : "red",
@@ -241,9 +258,9 @@ const RowForm = (props) => {
                                 >
                                     {isValidNumberForRegion(
                                         parseIncompletePhoneNumber(
-                                            item.phoneNum[0],
+                                            item.phoneNum[0]
                                         ),
-                                        "US",
+                                        "US"
                                     )
                                         ? "Valid number"
                                         : "Invalid number"}
@@ -343,14 +360,14 @@ const RowForm = (props) => {
                 </>
             );
 
-        case 1:
+        case "Hours":
             return (
                 <TimeTable
                     hours={props.item.hours || {}}
                     onChange={onTimeChange}
                 />
             );
-        case 2:
+        case "Tag":
             return (
                 <>
                     {Object.entries(props.filters).map(
@@ -370,11 +387,11 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
-        case 3:
+        case "Text":
             return (
                 <>
                     {Object.entries(props.descriptions).map(
@@ -394,11 +411,11 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
-        case 4:
+        case "Toggle":
             return (
                 <>
                     {Object.entries(props.categories).map(
@@ -420,17 +437,24 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
-        case 5:
+        case "Actions":
             return (
                 <ActionForm
                     // actions={props.item.actions || {}}
                     links={props.item.links || {}}
                     onChange={onActionTableChange}
                 />
+            );
+        case "Content":
+            return (
+                <ContentForm
+                    content={props.item.content?.sections ?? []}
+                    onChange={onContentChange}
+                ></ContentForm>
             );
         default:
             return null;

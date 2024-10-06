@@ -33,6 +33,7 @@ let steps = [
     "Text",
     // 'Toggle', disabled due to lack of use
     // 'Actions'
+    "Content",
 ];
 
 function AddProvider(props) {
@@ -163,6 +164,8 @@ function AddProvider(props) {
     useEffect(() => {
         function updateSteps() {
             if (filters && !Object.keys(filters).length) {
+                console.log("HERE");
+                console.log(filters);
                 const delIndex = steps.indexOf("Tag");
                 delIndex !== -1 && steps.splice(delIndex, 1);
             }
@@ -214,9 +217,9 @@ function AddProvider(props) {
                     fetch(
                         `https://maps.googleapis.com/maps/api/geocode/json?address=${i.address[0].replace(
                             /\s/g,
-                            "%20",
-                        )}&key=${GOOGLE_API_KEY}`,
-                    ),
+                            "%20"
+                        )}&key=${GOOGLE_API_KEY}`
+                    )
                 );
                 const responseJson = await response.json();
                 if (
@@ -228,7 +231,7 @@ function AddProvider(props) {
                 }
                 if (!i.imageURL) {
                     const res = await fetch(
-                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`,
+                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`
                     );
                     const blob = await res.blob();
                     const filename = i.facilityName + ".jpeg";
@@ -246,15 +249,15 @@ function AddProvider(props) {
                 5000,
                 props.firestore.set(
                     { collection: "providers", doc: i.facilityName },
-                    i,
-                ),
+                    i
+                )
             );
             props.history.push(providerRoute);
             console.log(providerRoute);
             console.log("adding");
         } catch (e) {
             setError(
-                "Failed to save changes. Please check your network connection or try again later.",
+                "Failed to save changes. Please check your network connection or try again later."
             );
         } finally {
             setIsLoading(false);
@@ -273,8 +276,8 @@ function AddProvider(props) {
                 const response = await fetch(
                     `https://maps.googleapis.com/maps/api/geocode/json?address=${i.address[0].replace(
                         /\s/g,
-                        "%20",
-                    )}&key=${GOOGLE_API_KEY}`,
+                        "%20"
+                    )}&key=${GOOGLE_API_KEY}`
                 );
                 const responseJson = await response.json();
                 if (
@@ -286,7 +289,7 @@ function AddProvider(props) {
                 }
                 if (!i.imageURL) {
                     const res = await fetch(
-                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`,
+                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`
                     );
                     const blob = await res.blob();
                     const filename = i.facilityName + ".jpeg";
@@ -308,7 +311,7 @@ function AddProvider(props) {
                     querySnapshot.forEach((doc) => {
                         firestore.update(
                             { collection: "providers", doc: doc.id },
-                            i,
+                            i
                         );
                     });
                 });
@@ -316,7 +319,7 @@ function AddProvider(props) {
             props.history.push(providerRoute);
         } catch (e) {
             setError(
-                "Failed to save changes. Please check your network connection or try again later.",
+                "Failed to save changes. Please check your network connection or try again later."
             );
         } finally {
             setIsLoading(false);
@@ -355,9 +358,9 @@ function AddProvider(props) {
                 </Alert>
             )}
 
-            <Row>
+            <Row className="align-items-start">
                 <Col xs={12} md={4} lg={3}>
-                    <div className="step-wrapper">
+                    <div className="step-wrapper" style={{ marginTop: "64px" }}>
                         <Steps
                             current={step}
                             direction={width > 768 ? "vertical" : "horizontal"}
@@ -458,7 +461,7 @@ function AddProvider(props) {
                                                 }
                                             >
                                                 <RowForm
-                                                    step={step}
+                                                    step={steps[step]}
                                                     item={item}
                                                     setItem={(i) => {
                                                         const c =
@@ -468,9 +471,9 @@ function AddProvider(props) {
                                                             isValidNumberForRegion(
                                                                 parseIncompletePhoneNumber(
                                                                     i
-                                                                        .phoneNum[0],
+                                                                        .phoneNum[0]
                                                                 ),
-                                                                "US",
+                                                                "US"
                                                             );
                                                         setItem(i);
                                                         setCompleted(c);
@@ -499,5 +502,5 @@ export default compose<any>(
         firebase: state.firebase,
         selected: state.item.selected,
         team: state.item.team,
-    })),
+    }))
 )(AddProvider);
