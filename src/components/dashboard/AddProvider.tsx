@@ -33,6 +33,7 @@ let steps = [
     "Text",
     // 'Toggle', disabled due to lack of use
     // 'Actions'
+    "Content",
 ];
 
 function AddProvider(props) {
@@ -353,9 +354,9 @@ function AddProvider(props) {
                 </Alert>
             )}
 
-            <Row>
+            <Row className="align-items-start">
                 <Col xs={12} md={4} lg={3}>
-                    <div className="step-wrapper">
+                    <div className="step-wrapper" style={{ marginTop: "64px" }}>
                         <Steps
                             current={step}
                             direction={width > 768 ? "vertical" : "horizontal"}
@@ -456,7 +457,7 @@ function AddProvider(props) {
                                                 }
                                             >
                                                 <RowForm
-                                                    step={step}
+                                                    step={steps[step]}
                                                     item={item}
                                                     setItem={(i) => {
                                                         const c =
