@@ -27,7 +27,7 @@ function validURL(str) {
             "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
             "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
             "(\\#[-a-z\\d_]*)?$",
-        "i"
+        "i",
     ); // fragment locator
     return !!pattern.test(str);
 }
@@ -248,9 +248,9 @@ const RowForm = (props) => {
                                     style={{
                                         color: isValidNumberForRegion(
                                             parseIncompletePhoneNumber(
-                                                item.phoneNum[0]
+                                                item.phoneNum[0],
                                             ),
-                                            "US"
+                                            "US",
                                         )
                                             ? "green"
                                             : "red",
@@ -258,9 +258,9 @@ const RowForm = (props) => {
                                 >
                                     {isValidNumberForRegion(
                                         parseIncompletePhoneNumber(
-                                            item.phoneNum[0]
+                                            item.phoneNum[0],
                                         ),
-                                        "US"
+                                        "US",
                                     )
                                         ? "Valid number"
                                         : "Invalid number"}
@@ -387,7 +387,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        )
+                        ),
                     )}
                 </>
             );
@@ -411,7 +411,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        )
+                        ),
                     )}
                 </>
             );
@@ -437,7 +437,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        )
+                        ),
                     )}
                 </>
             );
