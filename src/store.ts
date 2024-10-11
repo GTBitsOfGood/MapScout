@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import { routerMiddleware, connectRouter } from "connected-react-router";
+import { routerMiddleware } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { createLogger } from "redux-logger";
 import thunkMiddleware from "redux-thunk";
@@ -7,7 +7,7 @@ import freeze from "redux-freeze";
 import { reactReduxFirebase } from "react-redux-firebase";
 import { reduxFirestore } from "redux-firestore";
 import firebase from "firebase/app";
-import rootReducer from "./reducers/index";
+import createRootReducer from "./reducers";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
@@ -47,7 +47,7 @@ if (process.env.NODE_ENV !== "production") {
 const middleware = applyMiddleware(...middlewares);
 
 const store = createStoreWithFirebase(
-    connectRouter(history)(rootReducer),
+    createRootReducer(history),
     middleware,
 );
 
