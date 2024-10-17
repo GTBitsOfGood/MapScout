@@ -60,8 +60,9 @@ function Dashboard({ firestore, team, selectItem }) {
                 setCategories(c);
             }
         }
-        fetchData().then(() => setIsLoading(false));
-    }, [team]);
+        fetchData()
+        setIsLoading(false);
+    }, [team, isLoading]);
 
     if (isLoading) {
         return (
