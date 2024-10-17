@@ -35,11 +35,11 @@ export default compose<any>(
     connect(mapStateToProps, {}),
 )(({ team, firestore }) => {
     const [categories, setCategories] = useState([]);
+    const [providers, setProviders] = useState([]);
     const [message, setMessage] = useState(null);
     const [newCatName, setNewCatName] = useState("Please edit name of new category");
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [, setDefaultCategories] = useState([]);
     const [usePrimary, setUsePrimary] = useState(false);
     const staticData = {
         id: "Preview",
@@ -107,7 +107,6 @@ export default compose<any>(
             }
             arr.sort((a, b) => a.priority - b.priority);
             setCategories(arr);
-            setDefaultCategories(arr);
             if (team.name === "") {
                 await collections2
                     .where("team", "==", saved)
@@ -136,7 +135,7 @@ export default compose<any>(
                         });
                     });
             }
-            console.log(arr2)
+            setProviders(arr2)
             setIsLoading(false);
         }
         fetchData();
@@ -242,7 +241,6 @@ export default compose<any>(
         const point = categories[index];
         index = 0
         for (let i of point.options) {
-            console.log(i)
             if(i.value === name) {
                 break;
             }
@@ -295,7 +293,6 @@ export default compose<any>(
                 (x) => x.value.toLowerCase() === name.toLowerCase(),
             ) === -1
         ) {
-            console.log(item)
             await point.options.push({
                 color: colors,
                 value: name,
@@ -401,7 +398,6 @@ export default compose<any>(
             id: newCatName,
             isPrimary: usePrimary,
         });
-        console.log(categories)
         
         setNewCatName("Please edit name of new category");
         setIsLoading(false);
@@ -465,6 +461,56 @@ export default compose<any>(
                 });
         } catch {
             alert("Unable to load categories");
+        }
+
+        try {
+            const collections = firestore.collection("providers");
+            await collections
+                .where("team", "==", team.name)
+                .get()
+                .then(async (querySnapshot) => {
+                    promiseWithTimeout(
+                        10000,
+                        providers.forEach((cat) => {
+                            firestore.set(
+                                { collection: "providers", doc: cat.id },
+                                cat,
+                            );
+                        }),
+                    ).then(
+                        (complete) => {
+                            // code that executes after the timeout has completed.
+                            promiseWithTimeout(
+                                10000,
+                                querySnapshot.forEach((doc) => {
+                                    if (
+                                        providers.findIndex(
+                                            (x) => x.id === doc.id,
+                                        ) === -1
+                                    )
+                                        doc.ref.delete();
+                                }),
+                            ).then(
+                                (complete) => {
+                                    setShowModal(false);
+                                    setIsLoading(false);
+                                },
+                                () => {
+                                    alert(
+                                        "Unable to delete removed categories in Providers",
+                                    );
+                                },
+                            );
+                        },
+                        () => {
+                            // code that takes care of the canceled promise.
+                            // Note that .then rather than .done should be used in this case.
+                            alert("Unable to save Providers");
+                        },
+                    );
+                });
+        } catch {
+            alert("Unable to load Providers");
         }
     }
 
