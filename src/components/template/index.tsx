@@ -73,7 +73,9 @@ export default compose<any>(
         async function fetchData() {
             const saved = localStorage.getItem("saved");
             const arr = [];
+            const arr2 = [];
             const collections = firestore.collection("categories");
+            const collections2 = firestore.collection("providers");
             // Note: this is a temperary workaround so the page does appears fine, however, further fix is neccessary to actually resolve the issue
             if (team.name === "") {
                 await collections
@@ -106,6 +108,35 @@ export default compose<any>(
             arr.sort((a, b) => a.priority - b.priority);
             setCategories(arr);
             setDefaultCategories(arr);
+            if (team.name === "") {
+                await collections2
+                    .where("team", "==", saved)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            if (!data.id) {
+                                data.id = doc.id;
+                            }
+                            arr2.push(data);
+                        });
+                    });
+            } else {
+                localStorage.setItem("saved", team.name);
+                await collections2
+                    .where("team", "==", team.name)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            if (!data.id) {
+                                data.id = doc.id;
+                            }
+                            arr2.push(data);
+                        });
+                    });
+            }
+            console.log(arr2)
             setIsLoading(false);
         }
         fetchData();
