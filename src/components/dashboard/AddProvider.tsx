@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Steps, { Step } from "rc-steps";
 import "rc-steps/assets/index.css";
 import "rc-steps/assets/iconfont.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -18,6 +19,8 @@ import {
     parseIncompletePhoneNumber,
 } from "libphonenumber-js";
 import RowForm from "./RowForm";
+// import {SimpleEditor} from "./test"
+import "./TextComponent.styles.css"
 import { providerRoute } from "../../routes/pathnames";
 import useWindowSize from "../../functions/useWindowSize";
 import promiseWithTimeout from "../../functions/promiseWithTimeout";
@@ -47,6 +50,10 @@ function AddProvider(props) {
     const [descriptions, setDescriptions] = useState(null);
     const [categories, setCategories] = useState(null);
     const [error, setError] = useState("");
+    const [content, setContent] = useState('<p>Initial content goes here...</p>');
+    const handleEditorChange = (newContent: string) => {
+        setContent(newContent);  
+      };
 
     // async function fetchData() {
     //   const collections = props.firestore.collection('categories');
@@ -478,6 +485,7 @@ function AddProvider(props) {
                                                     descriptions={descriptions}
                                                     categories={categories}
                                                 />
+                                                {/* <SimpleEditor/> */}
                                             </div>
                                         </div>
                                     </Form>
