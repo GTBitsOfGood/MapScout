@@ -19,8 +19,6 @@ import {
     parseIncompletePhoneNumber,
 } from "libphonenumber-js";
 import RowForm from "./RowForm";
-import {SimpleEditor} from "./test"
-import "./TextComponent.module.css"
 import { providerRoute } from "../../routes/pathnames";
 import useWindowSize from "../../functions/useWindowSize";
 import promiseWithTimeout from "../../functions/promiseWithTimeout";
@@ -28,6 +26,14 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import { storage } from "../../store";
 import { Store } from "reducers/types";
 const { v4: uuidv4 } = require("uuid");
+import EmbedForm from "./embedComponent/EmbedForm"
+// import DirectoryComponent from "./embedComponent/DirectoryComponent";
+
+const eventInfo = {
+    title: "Tour Our Station",
+    videoUrl: "https://youtu.be/4rSOnKAnJ8M",
+    thumbnail: "https://picsum.photos/200",
+};
 
 let steps = [
     "Map",
@@ -485,7 +491,8 @@ function AddProvider(props) {
                                                     descriptions={descriptions}
                                                     categories={categories}
                                                 />
-                                                <SimpleEditor/>
+
+                                                {/* <DirectoryComponent eventInfo={eventInfo} /> */}
                                             </div>
                                         </div>
                                     </Form>
