@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProviderGallerySlide from "./ProviderGallerySlide";
 import { storage } from "../../store";
 
@@ -9,59 +9,79 @@ interface GallerySlide {
 }
 
 export default function ProviderGallery({
-    slidesArray,
+    slidesArray = [],
 }: {
-    slidesArray: GallerySlide[];
+    slidesArray?: GallerySlide[];
 }) {
-    const [slides, setSlides] = useState(slidesArray);
+    const [slides, setSlides] = useState<GallerySlide[]>(slidesArray);
+
+    const defaultSlide: GallerySlide = {
+        title: "",
+        description: "",
+        imgLink: "",
+    };
+
+    useEffect(() => {
+        if (!slides || slides.length === 0) {
+            setSlides([{ ...defaultSlide }]);
+        }
+    }, [slides]);
 
     const handleSlideDataChange = (
         index: number,
         field: keyof GallerySlide,
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
-        let newSlides = [...slides];
-        newSlides[index][field] = e.target.value;
+        const newSlides = slides.map((slide, i) =>
+            i === index ? { ...slide, [field]: e.target.value } : slide
+        );
         setSlides(newSlides);
     };
 
     const handleDelete = (index: number) => {
-        if (slides.length != 1) {
-            // min 1 slide present
-            let newSlides = [...slides];
-            newSlides.splice(index, 1);
+        if (slides.length > 1) {
+            const newSlides = slides.filter((_, i) => i !== index);
             setSlides(newSlides);
         }
     };
 
     const handleAdd = (index: number) => {
-        const defaultSlide = {
-            title: "",
-            description: "",
-            imgLink: "",
-        };
-        let newSlides = [...slides];
+        const newSlides = [...slides];
+        const newSlide = { ...defaultSlide };
 
         if (index === newSlides.length - 1) {
-            newSlides.push(defaultSlide);
+            newSlides.push(newSlide);
         } else {
-            newSlides.splice(index + 1, 0, defaultSlide);
+            newSlides.splice(index + 1, 0, newSlide);
         }
         setSlides(newSlides);
     };
 
-    const handleUpload = async (file, index) => {
+    const handleUpload = async (file, index: number) => {
         const filename = file.name;
-        await storage.ref("images").child(filename).put(file);
-        let newSlides = [...slides];
-        await storage
-            .ref("images")
-            .child(filename)
-            .getDownloadURL()
-            .then((url) => {
-                newSlides[index].imgLink = url;
-                setSlides(newSlides);
-            });
+        const fileRef = storage.ref("images").child(filename);
+
+        await fileRef.put(file);
+        const url = await fileRef.getDownloadURL();
+
+        const newSlides = slides.map((slide, i) =>
+            i === index ? { ...slide, imgLink: url } : slide
+        );
+        setSlides(newSlides);
+    };
+
+    const renderSlides = () => {
+        return slides.map((slide, i) => (
+            <ProviderGallerySlide
+                {...slide}
+                index={i}
+                key={i}
+                handleSlideDataChange={handleSlideDataChange}
+                handleDelete={handleDelete}
+                handleAdd={handleAdd}
+                handleUpload={handleUpload}
+            />
+        ));
     };
 
     return (
@@ -70,19 +90,7 @@ export default function ProviderGallery({
                 <h4>Current Data:</h4>
                 <pre>{JSON.stringify(slides, null, 2)}</pre>
             </div>
-            {slides.map((slide, i) => {
-                return (
-                    <ProviderGallerySlide
-                        {...slide}
-                        index={i}
-                        key={i}
-                        handleSlideDataChange={handleSlideDataChange}
-                        handleDelete={handleDelete}
-                        handleAdd={handleAdd}
-                        handleUpload={handleUpload}
-                    />
-                );
-            })}
+            {renderSlides()}
         </div>
     );
 }
