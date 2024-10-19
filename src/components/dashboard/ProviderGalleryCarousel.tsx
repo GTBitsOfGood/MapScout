@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import ProviderGallerySlide from "./ProviderGallerySlide";
-import { storage } from "../../store";
 
 interface GallerySlide {
     title: string;
@@ -13,76 +11,171 @@ export default function ProviderGalleryCarousel({
 }: {
     slidesArray: GallerySlide[];
 }) {
-    const [slides, setSlides] = useState(slidesArray);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const handleSlideDataChange = (
-        index: number,
-        field: keyof GallerySlide,
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        let newSlides = [...slides];
-        newSlides[index][field] = e.target.value;
-        setSlides(newSlides);
+    const goToPrevious = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? slidesArray.length - 1 : prevIndex - 1
+        );
     };
 
-    const handleDelete = (index: number) => {
-        if (slides.length != 1) {
-            // min 1 slide present
-            let newSlides = [...slides];
-            newSlides.splice(index, 1);
-            setSlides(newSlides);
-        }
+    const goToNext = () => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === slidesArray.length - 1 ? 0 : prevIndex + 1
+        );
     };
 
-    const handleAdd = (index: number) => {
-        const defaultSlide = {
-            title: "",
-            description: "",
-            imgLink: "",
-        };
-        let newSlides = [...slides];
-
-        if (index === newSlides.length - 1) {
-            newSlides.push(defaultSlide);
-        } else {
-            newSlides.splice(index + 1, 0, defaultSlide);
-        }
-        setSlides(newSlides);
-    };
-
-    const handleUpload = async (file, index) => {
-        const filename = file.name;
-        await storage.ref("images").child(filename).put(file);
-        let newSlides = [...slides];
-        await storage
-            .ref("images")
-            .child(filename)
-            .getDownloadURL()
-            .then((url) => {
-                newSlides[index].imgLink = url;
-                setSlides(newSlides);
-            });
-    };
+    const isActive = (index: number) => currentIndex === index;
 
     return (
-        <div style={{ width: "100%", margin: "0px" }}>
-            <div>
-                <h4>Current Data:</h4>
-                <pre>{JSON.stringify(slides, null, 2)}</pre>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <div style={{ display: "flex", gap: "32px" }}>
+                <button
+                    onClick={goToPrevious}
+                    style={{
+                        cursor: "pointer",
+                        fontSize: "24px",
+                        background: "none",
+                        border: "none",
+                        outline: "none",
+                        fontFamily: "Fabric External MDL2 Assets",
+                        color: "#06C",
+                    }}
+                >
+                    {`<`}
+                </button>
+
+                {/* Card */}
+                <div
+                    style={{
+                        display: "flex",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        width: "568px",
+                        height: "368px",
+                        boxShadow: "0px 2px 5px 0px rgba(0, 0, 0, 0.25)",
+                        overflow: "hidden",
+                    }}
+                >
+                    {/*Left-side */}
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "50%",
+                            paddingLeft: "16px",
+                            paddingRight: "16px",
+                        }}
+                    >
+                        {/* Card Title */}
+                        <div
+                            style={{
+                                width: "100%",
+                                height: "35%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                paddingTop: "32px",
+                            }}
+                        >
+                            <h2
+                                style={{
+                                    margin: 0,
+                                    fontSize: "1.5rem",
+                                    color: "#333",
+                                    width: "100%",
+                                }}
+                            >
+                                {slidesArray[currentIndex].title}
+                            </h2>
+                        </div>
+
+                        {/* Card Description */}
+                        <div
+                            style={{
+                                overflowY: "auto",
+                                height: "50%,",
+                                maxHeight: "190px",
+                            }}
+                        >
+                            <p
+                                style={{
+                                    margin: 0,
+                                    color: "rgba(148, 142, 142, 0.90)",
+                                    fontWeight: "300",
+                                }}
+                            >
+                                {slidesArray[currentIndex].description}
+                            </p>
+                        </div>
+                    </div>
+                    {/*Right-side*/}
+                    <div
+                        style={{
+                            display: "flex",
+                            overflow: "hidden",
+                            height: "100%",
+                            width: "50%",
+                        }}
+                    >
+                        <img
+                            src={slidesArray[currentIndex].imgLink}
+                            alt={slidesArray[currentIndex].title}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </div>
+                </div>
+                <button
+                    onClick={goToNext}
+                    style={{
+                        cursor: "pointer",
+                        fontSize: "24px",
+                        background: "none",
+                        border: "none",
+                        outline: "none",
+                        fontFamily: "Fabric External MDL2 Assets",
+                        color: "#06C",
+                    }}
+                >
+                    {`>`}
+                </button>
             </div>
-            {slides.map((slide, i) => {
-                return (
-                    <ProviderGallerySlide
-                        {...slide}
-                        index={i}
-                        key={i}
-                        handleSlideDataChange={handleSlideDataChange}
-                        handleDelete={handleDelete}
-                        handleAdd={handleAdd}
-                        handleUpload={handleUpload}
-                    />
-                );
-            })}
+
+            {/* bubbles */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "8px",
+                    marginTop: "32px",
+                }}
+            >
+                {slidesArray.map((_, index) => (
+                    <div
+                        key={index}
+                        style={{
+                            width: isActive(index) ? "30px" : "10px",
+                            height: "10px",
+                            borderRadius: isActive(index) ? "15px" : "50%",
+                            backgroundColor: isActive(index)
+                                ? "#0A1D7C"
+                                : "#115EA333",
+                            transition: "width 0.3s, height 0.3s",
+                        }}
+                    ></div>
+                ))}
+            </div>
         </div>
     );
 }

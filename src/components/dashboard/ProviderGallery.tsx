@@ -86,10 +86,12 @@ export default function ProviderGallery({
 
     return (
         <div style={{ width: "100%", margin: "0px" }}>
+            {/*TO BE DELETED */}
             <div>
                 <h4>Current Data:</h4>
                 <pre>{JSON.stringify(slides, null, 2)}</pre>
             </div>
+
             {renderSlides()}
         </div>
     );
