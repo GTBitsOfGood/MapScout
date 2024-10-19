@@ -19,8 +19,8 @@ import {
     parseIncompletePhoneNumber,
 } from "libphonenumber-js";
 import RowForm from "./RowForm";
-// import {SimpleEditor} from "./test"
-import "./TextComponent.styles.css"
+import {SimpleEditor} from "./test"
+import "./TextComponent.module.css"
 import { providerRoute } from "../../routes/pathnames";
 import useWindowSize from "../../functions/useWindowSize";
 import promiseWithTimeout from "../../functions/promiseWithTimeout";
@@ -485,7 +485,7 @@ function AddProvider(props) {
                                                     descriptions={descriptions}
                                                     categories={categories}
                                                 />
-                                                {/* <SimpleEditor/> */}
+                                                <SimpleEditor/>
                                             </div>
                                         </div>
                                     </Form>
