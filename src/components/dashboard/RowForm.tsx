@@ -19,6 +19,40 @@ import Button from "react-bootstrap/Button";
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
 
+{
+    /*TO BE DELETED */
+}
+import ProviderGallery from "./ProviderGallery";
+{
+    /*TO BE DELETED */
+}
+const galleryData = [
+    {
+        title: "testVal1",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal2",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal3",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal4",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+];
+
 function validURL(str) {
     const pattern = new RegExp(
         "^(https?:\\/\\/)?" + // protocol
@@ -27,7 +61,7 @@ function validURL(str) {
             "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
             "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
             "(\\#[-a-z\\d_]*)?$",
-        "i",
+        "i"
     ); // fragment locator
     return !!pattern.test(str);
 }
@@ -248,9 +282,9 @@ const RowForm = (props) => {
                                     style={{
                                         color: isValidNumberForRegion(
                                             parseIncompletePhoneNumber(
-                                                item.phoneNum[0],
+                                                item.phoneNum[0]
                                             ),
-                                            "US",
+                                            "US"
                                         )
                                             ? "green"
                                             : "red",
@@ -258,9 +292,9 @@ const RowForm = (props) => {
                                 >
                                     {isValidNumberForRegion(
                                         parseIncompletePhoneNumber(
-                                            item.phoneNum[0],
+                                            item.phoneNum[0]
                                         ),
-                                        "US",
+                                        "US"
                                     )
                                         ? "Valid number"
                                         : "Invalid number"}
@@ -357,6 +391,8 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
+                    {/*TO BE DELETED */}
+                    <ProviderGallery slidesArray={galleryData} />
                 </>
             );
 
@@ -387,7 +423,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
@@ -411,7 +447,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
@@ -437,7 +473,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
