@@ -19,6 +19,39 @@ import Button from "react-bootstrap/Button";
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
 
+import ProviderGallery from "./ProviderGallery";
+import Collapsible from "components/collapsible";
+
+{
+    /*TO BE DELETED */
+}
+const galleryData = [
+    {
+        title: "testVal1",
+        description: "testing testing",
+        imgLink:
+            "https://www.goodhousekeeping.com/life/pets/g4531/cutest-dog-breeds/",
+    },
+    {
+        title: "testVal2",
+        description: "testing testing",
+        imgLink:
+            "https://www.goodhousekeeping.com/life/pets/g4531/cutest-dog-breeds/",
+    },
+    {
+        title: "testVal3",
+        description: "testing testing",
+        imgLink:
+            "https://www.goodhousekeeping.com/life/pets/g4531/cutest-dog-breeds/",
+    },
+    {
+        title: "testVal4",
+        description: "testing testing",
+        imgLink:
+            "https://www.goodhousekeeping.com/life/pets/g4531/cutest-dog-breeds/",
+    },
+];
+
 function validURL(str) {
     const pattern = new RegExp(
         "^(https?:\\/\\/)?" + // protocol
@@ -27,7 +60,7 @@ function validURL(str) {
             "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
             "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
             "(\\#[-a-z\\d_]*)?$",
-        "i",
+        "i"
     ); // fragment locator
     return !!pattern.test(str);
 }
@@ -248,9 +281,9 @@ const RowForm = (props) => {
                                     style={{
                                         color: isValidNumberForRegion(
                                             parseIncompletePhoneNumber(
-                                                item.phoneNum[0],
+                                                item.phoneNum[0]
                                             ),
-                                            "US",
+                                            "US"
                                         )
                                             ? "green"
                                             : "red",
@@ -258,9 +291,9 @@ const RowForm = (props) => {
                                 >
                                     {isValidNumberForRegion(
                                         parseIncompletePhoneNumber(
-                                            item.phoneNum[0],
+                                            item.phoneNum[0]
                                         ),
-                                        "US",
+                                        "US"
                                     )
                                         ? "Valid number"
                                         : "Invalid number"}
@@ -357,6 +390,8 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
+                    {/*TO BE DELETED */}
+                    <ProviderGallery slidesArray={galleryData} />
                 </>
             );
 
@@ -387,7 +422,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
@@ -411,7 +446,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
@@ -437,7 +472,7 @@ const RowForm = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                        ),
+                        )
                     )}
                 </>
             );
