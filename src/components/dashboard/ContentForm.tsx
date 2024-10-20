@@ -8,6 +8,7 @@ import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
 import { ReactComponent as CheckmarkIcon } from "../../assets/svg/checkmark.svg";
 
 import styles from "./ContentForm.module.css";
+import Directory from "./Directory";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -141,9 +142,9 @@ const SectionCard = ({
             </Row>
             <Row
                 className="flex-fill m-0 w-100"
-                style={{ borderRadius: "8px", backgroundColor: "#FFFFFF" }}
+                style={{ borderRadius: "8px", backgroundColor: "#FFFFFF"}}
             >
-                {index}
+                <Directory />
             </Row>
         </Container>
     );

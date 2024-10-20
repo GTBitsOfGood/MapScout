@@ -11,7 +11,7 @@ const Collapsible = ({style = {}, label, children}) => {
     const toogle = () => {setOpen(!isOpen)}
     return (
         <div className = "collapsible" style={style}>
-            <button onClick={toogle} className="title">{label}{!isOpen ? (
+            <button type="button" onClick={toogle} className="title">{label}{!isOpen ? (
                 <FaAngleDown />
               ) : (
                 <FaAngleUp />
