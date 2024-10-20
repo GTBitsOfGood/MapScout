@@ -48,7 +48,6 @@ const DirectoryComponent: React.FC<DirectoryComponentProps> = ({ eventInfo }) =>
   );
 };
 
-// Styles for the component using CSSProperties typing from react
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     width: '100%',
