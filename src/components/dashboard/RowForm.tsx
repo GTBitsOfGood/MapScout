@@ -18,6 +18,8 @@ import Button from "react-bootstrap/Button";
 
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
+import EmbedForm from "./embed-component/EmbedForm";
+
 
 function validURL(str) {
     const pattern = new RegExp(
@@ -357,6 +359,9 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
+
+                    {/* <EmbedForm/> */}
+                    
                 </>
             );
 
