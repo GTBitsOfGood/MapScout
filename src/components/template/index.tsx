@@ -307,6 +307,7 @@ export default compose<any>(
     async function removeOption(i, item) {
         setIsLoading(true);
         let index = 0;
+        let index2 = 0;
         for (let i of categories) {
             if(i.name === item.name) {
                 break;
@@ -314,6 +315,17 @@ export default compose<any>(
             index++;
         }
         const point = categories[index];
+        providers.forEach((val) => {
+            if (item.id in val) {
+                for (let curr of val[item.id as keyof typeof val]) {
+                    if (point.options[i].value == curr) {
+                        break;
+                    }
+                    index2++;
+                };
+            val[item.id as keyof typeof val].splice(index2, 1);
+            }
+        });
         await point.options.splice(i, 1);
         setIsLoading(false);
 
@@ -363,6 +375,11 @@ export default compose<any>(
             }
             index++;
         }
+        providers.forEach((val) => {
+            if (item.id in val) {
+                delete val[item.id as keyof typeof val];
+            }
+        });
         await categories.splice(index, 1);
         
         categories.forEach((item: any, index) => {
