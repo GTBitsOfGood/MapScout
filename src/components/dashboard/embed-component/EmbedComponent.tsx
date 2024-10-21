@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Collapsible from 'components/collapsible'; // Import your collapsible component
+import Collapsible from 'components/collapsible'; 
 import ReactPlayer from 'react-player';
 
 interface EventInfo {
@@ -8,11 +8,11 @@ interface EventInfo {
   thumbnail: string;
 }
 
-interface DirectoryComponentProps {
+interface EmbedComponentProps {
   eventInfo: EventInfo;
 }
 
-const DirectoryComponent: React.FC<DirectoryComponentProps> = ({ eventInfo }) => {
+const EmbedComponent: React.FC<EmbedComponentProps> = ({ eventInfo }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlayVideo = () => {
@@ -107,4 +107,4 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-export default DirectoryComponent;
+export default EmbedComponent;

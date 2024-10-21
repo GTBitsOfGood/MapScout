@@ -18,7 +18,7 @@ import Button from "react-bootstrap/Button";
 
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
-import EmbedForm from "./embedComponent/EmbedForm";
+import EmbedForm from "./embed-component/EmbedForm";
 
 
 function validURL(str) {
@@ -359,7 +359,9 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
+
                     {/* <EmbedForm/> */}
+                    
                 </>
             );
 

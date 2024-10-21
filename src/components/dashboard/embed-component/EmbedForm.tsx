@@ -126,8 +126,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'absolute',
     bottom: '20px',
     right: '20px',
-    color: '#f44336',
-    fontWeight: 'bold',
+    fontWeight: '500',
     cursor: 'pointer',
   }
 };
