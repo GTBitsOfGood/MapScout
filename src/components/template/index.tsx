@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -36,6 +36,7 @@ export default compose<any>(
     withFirestore,
     connect(mapStateToProps, {}),
 )(({ team, firestore }) => {
+    let timerInterval: NodeJS.Timeout | null = null;
     const [categories, setCategories] = useState([]);
     const [providers, setProviders] = useState([]);
     const [message, setMessage] = useState(null);
@@ -68,6 +69,7 @@ export default compose<any>(
         team: team.name,
         website: ["https://www.mapscout.io"],
     };
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     const [dummy, setDummy] = useState(staticData);
 
@@ -214,6 +216,25 @@ export default compose<any>(
         saveChanges();
     }
 
+    function countdownTimer(seconds: number): void {
+        let remainingTime = seconds;
+      
+        if (timerInterval) {
+          clearInterval(timerInterval);
+        }
+      
+        timerInterval = setInterval(() => {
+          if (remainingTime > 0) {
+            console.log(`Time left: ${remainingTime} seconds`);
+            remainingTime--;
+          } else {
+            console.log("Time's up!");
+            clearInterval(timerInterval!);
+            saveChanges();
+          }
+        }, 1000);
+      }
+
     async function rename(e, item) {
         let index = 0;
         for (let i of categories) {
@@ -226,8 +247,7 @@ export default compose<any>(
         const point = items[index];
         point.name = e.target.value;
         setCategories(items);
-
-        saveChanges();
+        countdownTimer(3);
     }
 
     async function changeColor(color, name, item) {
