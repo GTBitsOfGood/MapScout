@@ -399,7 +399,7 @@ function AddProvider(props) {
                         )}
                     </div>
                 </Col>
-                <Col xs={12} md={8} lg={9}>
+                <Col xs={12} md={8} lg={9} style={{overflow: "scroll", height: "100vh"}}>
                     <Flipper flipKey={step}>
                         <Flipped flipId="form">
                             <div className="bg-white p-3">
