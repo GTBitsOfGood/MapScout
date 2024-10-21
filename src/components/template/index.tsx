@@ -18,6 +18,8 @@ import { TempTutorialTwo } from "./TempTutorialTwo";
 import { ToggleSlider }  from "react-toggle-slider";
 import { BsPlus } from "react-icons/bs";
 import { Card } from "react-bootstrap";
+import { uuid } from "uuidv4";
+const { v4: uuidv4 } = require("uuid");
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     const result = Array.from(list);
@@ -223,7 +225,6 @@ export default compose<any>(
         const items = categories;
         const point = items[index];
         point.name = e.target.value;
-        point.id = e.target.value;
         setCategories(items);
 
         saveChanges();
@@ -363,6 +364,10 @@ export default compose<any>(
             index++;
         }
         await categories.splice(index, 1);
+        
+        categories.forEach((item: any, index) => {
+            item.priority = index;
+        });
         setIsLoading(false);
 
         saveChanges();
@@ -378,6 +383,9 @@ export default compose<any>(
             index++;
         }
         await categories.splice(index, 1);
+        categories.forEach((item: any, index) => {
+            item.priority = index;
+        });
         setIsLoading(false);
 
         saveChanges();
@@ -395,11 +403,12 @@ export default compose<any>(
             options: [],
             active: true,
             team: team.name,
-            id: newCatName,
+            id: uuidv4(),
             isPrimary: usePrimary,
+            priority: categories.length
         });
-        
         setNewCatName("Please edit name of new category");
+        console.log(categories)
         setIsLoading(false);
 
         saveChanges();
@@ -579,6 +588,10 @@ export default compose<any>(
                     {categories
                     .filter(
                         (item, value) => item.isPrimary)
+                    .sort(
+                        ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                            aValue.priority - bValue.priority
+                    )
                     .map((item, index) => (
                         <p>
                             <PrimaryCell
@@ -607,6 +620,10 @@ export default compose<any>(
                                 {categories
                                 .filter(
                                     (item, value) => !item.isPrimary)
+                                // .sort(
+                                //     ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                                //         aValue.priority - bValue.priority
+                                // )
                                 .map((item, index) => (
                                     <Draggable
                                         key={item.name}

@@ -740,7 +740,7 @@ const Map = (props) => {
                                     (
                                         [aKey, aValue]: any[],
                                         [bKey, bValue]: any[]
-                                    ) => aValue.name.localeCompare(bValue.name)
+                                    ) => aValue.priority - bValue.priority
                                 )
                                 .map(([key, value]: any[]) =>
                                     renderMoreDropdown(value.name, key)
