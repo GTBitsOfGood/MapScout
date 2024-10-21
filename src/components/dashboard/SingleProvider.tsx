@@ -6,6 +6,8 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { Link } from "react-router-dom";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import { formRoute } from "../../routes/pathnames";
+import Directory from "./Directory";
+import Collapsible from "components/collapsible";
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update
@@ -56,6 +58,36 @@ const SingleProvider = (props) => (
         >
             <Container>
                 <ProviderInfo item={props.item} categories={props.categories} />
+                <div style={{ width: "724px", height: "522px" }}>
+                    <Directory
+                        directoryItems={[
+                            {
+                                name: "bob",
+                                description: "firefighter",
+                                details: "bob@gmail.com",
+                                image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+                            },
+                            {
+                                name: "bob",
+                                description: "firefighter",
+                                details: "bob@gmail.com",
+                                image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+                            },
+                            {
+                                name: "bob",
+                                description: "firefighter",
+                                details: "bob@gmail.com",
+                                image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+                            },
+                            {
+                                name: "bob",
+                                description: "firefighter",
+                                details: "bob@gmail.com",
+                                image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+                            },
+                        ]}
+                    ></Directory>
+                </div>
             </Container>
         </div>
     </div>
