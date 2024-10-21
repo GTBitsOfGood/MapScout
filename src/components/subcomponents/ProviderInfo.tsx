@@ -11,6 +11,64 @@ import ReadMoreAndLess from "react-read-more-less";
 import LazyLoad from "react-lazy-load";
 import { GOOGLE_API_KEY } from "../../config/keys";
 import Linkify from "react-linkify";
+import ProviderGalleryCarousel from "components/dashboard/ProviderGalleryCarousel";
+import Collapsible from "components/collapsible";
+
+{
+    /*TO BE DELETED */
+}
+const galleryData = [
+    {
+        title: "Urban Tree Fundraiser",
+        description:
+            "Last Friday, we gathered for food, fun, and giving back at Urban Tree cidery. All proceeds from the evening went to our Bereavement fund. Everyone remembered to bring a sweater because the back deck got cold. We enjoyed drinks, games, and more!",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal2",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal3",
+        description: "testing testing",
+        imgLink:
+            "https://static.vecteezy.com/system/resources/thumbnails/005/857/332/small_2x/funny-portrait-of-cute-corgi-dog-outdoors-free-photo.jpg",
+    },
+    {
+        title: "testVal4",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal1",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal2",
+        description: "testing testing",
+        imgLink:
+            "https://static.vecteezy.com/system/resources/thumbnails/005/857/332/small_2x/funny-portrait-of-cute-corgi-dog-outdoors-free-photo.jpg",
+    },
+    {
+        title: "testVal3",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+    {
+        title: "testVal4",
+        description: "testing testing",
+        imgLink:
+            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+    },
+];
+
 
 const ProviderInfo = (props) => {
     const [image, setImage] = useState("bog");
@@ -23,7 +81,7 @@ const ProviderInfo = (props) => {
             try {
                 const res2 = await fetch(
                     `https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${GOOGLE_API_KEY}&format=png&visual_refresh=true` +
-                        `&markers=${props.item.latitude},${props.item.longitude}`,
+                    `&markers=${props.item.latitude},${props.item.longitude}`,
                 );
                 setStreetView(res2.url);
                 setImage(props.item.imageURL);
@@ -101,7 +159,7 @@ const ProviderInfo = (props) => {
                                         index ===
                                         props.item.address.toString().split(",")
                                             .length -
-                                            1
+                                        1
                                     ) {
                                         return (
                                             <div style={{ display: "inline" }}>
@@ -163,6 +221,14 @@ const ProviderInfo = (props) => {
                     </Card>
                 </Col>
             </Row>
+            <Row className="info-rows">
+                <Col md={12}>
+                    <Collapsible label={"Gallery"}>
+                        {/*TO BE DELETED */}
+                        <ProviderGalleryCarousel slidesArray={galleryData} />
+                    </Collapsible>
+                </Col>
+            </Row>
             <div className="modalHeader">
                 {categoriesToUse
                     .filter(
@@ -181,7 +247,7 @@ const ProviderInfo = (props) => {
                                             if (
                                                 index !==
                                                 props.item[category.id].length -
-                                                    1
+                                                1
                                             ) {
                                                 return (
                                                     <div className="modal-text">
@@ -230,9 +296,9 @@ function calculateHours(props) {
                 !props.item.hours[days[i]] ||
                 !props.item.hours[days[i - 1]] ||
                 props.item.hours[days[i]][0] !==
-                    props.item.hours[days[i - 1]][0] ||
+                props.item.hours[days[i - 1]][0] ||
                 props.item.hours[days[i]][1] !==
-                    props.item.hours[days[i - 1]][1]
+                props.item.hours[days[i - 1]][1]
             ) {
                 startandFinish.push(i - 1);
                 startandFinish.push(i);
@@ -267,13 +333,13 @@ function calculateHours(props) {
             <Col className="modal-col-flex-start">
                 {props.item.hours[days[startandFinish[i]]]
                     ? props.item.hours[days[startandFinish[i]]].map(
-                          (time, index) =>
-                              formatTime(
-                                  props.item.hours[days[startandFinish[i]]],
-                                  time,
-                                  index,
-                              ),
-                      )
+                        (time, index) =>
+                            formatTime(
+                                props.item.hours[days[startandFinish[i]]],
+                                time,
+                                index,
+                            ),
+                    )
                     : "CLOSED"}
             </Col>,
         );
