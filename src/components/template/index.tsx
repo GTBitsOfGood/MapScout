@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import InputGroup from "react-bootstrap/InputGroup";
 import FormControl from "react-bootstrap/FormControl";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -18,6 +18,8 @@ import { TempTutorialTwo } from "./TempTutorialTwo";
 import { ToggleSlider }  from "react-toggle-slider";
 import { BsPlus } from "react-icons/bs";
 import { Card } from "react-bootstrap";
+import { uuid } from "uuidv4";
+const { v4: uuidv4 } = require("uuid");
 
 function reorder<T>(list: T[], startIndex: number, endIndex: number) {
     const result = Array.from(list);
@@ -34,12 +36,13 @@ export default compose<any>(
     withFirestore,
     connect(mapStateToProps, {}),
 )(({ team, firestore }) => {
+    let timerInterval: NodeJS.Timeout | null = null;
     const [categories, setCategories] = useState([]);
+    const [providers, setProviders] = useState([]);
     const [message, setMessage] = useState(null);
     const [newCatName, setNewCatName] = useState("Please edit name of new category");
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [, setDefaultCategories] = useState([]);
     const [usePrimary, setUsePrimary] = useState(false);
     const staticData = {
         id: "Preview",
@@ -66,6 +69,7 @@ export default compose<any>(
         team: team.name,
         website: ["https://www.mapscout.io"],
     };
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     const [dummy, setDummy] = useState(staticData);
 
@@ -73,7 +77,9 @@ export default compose<any>(
         async function fetchData() {
             const saved = localStorage.getItem("saved");
             const arr = [];
+            const arr2 = [];
             const collections = firestore.collection("categories");
+            const collections2 = firestore.collection("providers");
             // Note: this is a temperary workaround so the page does appears fine, however, further fix is neccessary to actually resolve the issue
             if (team.name === "") {
                 await collections
@@ -105,7 +111,35 @@ export default compose<any>(
             }
             arr.sort((a, b) => a.priority - b.priority);
             setCategories(arr);
-            setDefaultCategories(arr);
+            if (team.name === "") {
+                await collections2
+                    .where("team", "==", saved)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            if (!data.id) {
+                                data.id = doc.id;
+                            }
+                            arr2.push(data);
+                        });
+                    });
+            } else {
+                localStorage.setItem("saved", team.name);
+                await collections2
+                    .where("team", "==", team.name)
+                    .get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            if (!data.id) {
+                                data.id = doc.id;
+                            }
+                            arr2.push(data);
+                        });
+                    });
+            }
+            setProviders(arr2)
             setIsLoading(false);
         }
         fetchData();
@@ -182,6 +216,25 @@ export default compose<any>(
         saveChanges();
     }
 
+    function countdownTimer(seconds: number): void {
+        let remainingTime = seconds;
+      
+        if (timerInterval) {
+          clearInterval(timerInterval);
+        }
+      
+        timerInterval = setInterval(() => {
+          if (remainingTime > 0) {
+            console.log(`Time left: ${remainingTime} seconds`);
+            remainingTime--;
+          } else {
+            console.log("Time's up!");
+            clearInterval(timerInterval!);
+            saveChanges();
+          }
+        }, 1000);
+      }
+
     async function rename(e, item) {
         let index = 0;
         for (let i of categories) {
@@ -193,10 +246,8 @@ export default compose<any>(
         const items = categories;
         const point = items[index];
         point.name = e.target.value;
-        point.id = e.target.value;
         setCategories(items);
-
-        saveChanges();
+        countdownTimer(3);
     }
 
     async function changeColor(color, name, item) {
@@ -211,7 +262,6 @@ export default compose<any>(
         const point = categories[index];
         index = 0
         for (let i of point.options) {
-            console.log(i)
             if(i.value === name) {
                 break;
             }
@@ -264,7 +314,6 @@ export default compose<any>(
                 (x) => x.value.toLowerCase() === name.toLowerCase(),
             ) === -1
         ) {
-            console.log(item)
             await point.options.push({
                 color: colors,
                 value: name,
@@ -278,6 +327,7 @@ export default compose<any>(
     async function removeOption(i, item) {
         setIsLoading(true);
         let index = 0;
+        let index2 = 0;
         for (let i of categories) {
             if(i.name === item.name) {
                 break;
@@ -285,6 +335,17 @@ export default compose<any>(
             index++;
         }
         const point = categories[index];
+        providers.forEach((val) => {
+            if (item.id in val) {
+                for (let curr of val[item.id as keyof typeof val]) {
+                    if (point.options[i].value == curr) {
+                        break;
+                    }
+                    index2++;
+                };
+            val[item.id as keyof typeof val].splice(index2, 1);
+            }
+        });
         await point.options.splice(i, 1);
         setIsLoading(false);
 
@@ -334,7 +395,16 @@ export default compose<any>(
             }
             index++;
         }
+        providers.forEach((val) => {
+            if (item.id in val) {
+                delete val[item.id as keyof typeof val];
+            }
+        });
         await categories.splice(index, 1);
+        
+        categories.forEach((item: any, index) => {
+            item.priority = index;
+        });
         setIsLoading(false);
 
         saveChanges();
@@ -350,6 +420,9 @@ export default compose<any>(
             index++;
         }
         await categories.splice(index, 1);
+        categories.forEach((item: any, index) => {
+            item.priority = index;
+        });
         setIsLoading(false);
 
         saveChanges();
@@ -367,12 +440,12 @@ export default compose<any>(
             options: [],
             active: true,
             team: team.name,
-            id: newCatName,
+            id: uuidv4(),
             isPrimary: usePrimary,
+            priority: categories.length
         });
-        console.log(categories)
-        
         setNewCatName("Please edit name of new category");
+        console.log(categories)
         setIsLoading(false);
 
         saveChanges();
@@ -434,6 +507,56 @@ export default compose<any>(
                 });
         } catch {
             alert("Unable to load categories");
+        }
+
+        try {
+            const collections = firestore.collection("providers");
+            await collections
+                .where("team", "==", team.name)
+                .get()
+                .then(async (querySnapshot) => {
+                    promiseWithTimeout(
+                        10000,
+                        providers.forEach((cat) => {
+                            firestore.set(
+                                { collection: "providers", doc: cat.id },
+                                cat,
+                            );
+                        }),
+                    ).then(
+                        (complete) => {
+                            // code that executes after the timeout has completed.
+                            promiseWithTimeout(
+                                10000,
+                                querySnapshot.forEach((doc) => {
+                                    if (
+                                        providers.findIndex(
+                                            (x) => x.id === doc.id,
+                                        ) === -1
+                                    )
+                                        doc.ref.delete();
+                                }),
+                            ).then(
+                                (complete) => {
+                                    setShowModal(false);
+                                    setIsLoading(false);
+                                },
+                                () => {
+                                    alert(
+                                        "Unable to delete removed categories in Providers",
+                                    );
+                                },
+                            );
+                        },
+                        () => {
+                            // code that takes care of the canceled promise.
+                            // Note that .then rather than .done should be used in this case.
+                            alert("Unable to save Providers");
+                        },
+                    );
+                });
+        } catch {
+            alert("Unable to load Providers");
         }
     }
 
@@ -502,6 +625,10 @@ export default compose<any>(
                     {categories
                     .filter(
                         (item, value) => item.isPrimary)
+                    .sort(
+                        ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                            aValue.priority - bValue.priority
+                    )
                     .map((item, index) => (
                         <p>
                             <PrimaryCell
@@ -530,6 +657,10 @@ export default compose<any>(
                                 {categories
                                 .filter(
                                     (item, value) => !item.isPrimary)
+                                // .sort(
+                                //     ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                                //         aValue.priority - bValue.priority
+                                // )
                                 .map((item, index) => (
                                     <Draggable
                                         key={item.name}
