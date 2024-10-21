@@ -500,7 +500,7 @@ const ChartComponentForm = () => {
 
     return (
         <div className="chart-container">
-            <h1 className="chart-header">Chart</h1>
+            {/* <h1 className="chart-header">Chart</h1> */}
             <div className="radio-group">
                 <label>
                     <input
