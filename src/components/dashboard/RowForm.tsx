@@ -19,13 +19,6 @@ import Button from "react-bootstrap/Button";
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
 
-{
-    /*TO BE DELETED */
-}
-import ProviderGallery from "./ProviderGallery";
-{
-    /*TO BE DELETED */
-}
 const galleryData = [
     {
         title: "testVal1",
@@ -391,8 +384,6 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
-                    {/*TO BE DELETED */}
-                    <ProviderGallery slidesArray={galleryData} />
                 </>
             );
 

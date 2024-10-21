@@ -10,6 +10,7 @@ import { ReactComponent as CheckmarkIcon } from "../../assets/svg/checkmark.svg"
 import styles from "./ContentForm.module.css";
 import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
 import Collapsible from "components/collapsible";
+import ProviderGallery from "./ProviderGallery";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -143,7 +144,7 @@ const SectionCard = ({
                 </button>
             </Row>
             {components.map((v, i) =>
-                <Row className="flex-fill m-0 w-100">
+                <Row className="flex-fill m-0 w-100" key={i}>
                     {v}
                 </Row>
             )}
@@ -158,22 +159,39 @@ const SectionCard = ({
                             fontWeight: "500",
                             fontFamily: "Inter, sans-serif",
                         }} id="dropdown-basic">
-                        Add Section
+                        + Add Filter
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => setComponents([...components,
-                        <Collapsible
-                            titleStyle={{
-                                background: "white",
-                                color: "var(--chart-blue)",
-                                fontSize: "1.25rem",
-                                fontStyle: "normal",
-                                lineHeight: "24px"
-                            }} label={"Chart"}>
-                            <ChartComponentForm />
-                        </Collapsible>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                                <Collapsible
+                                    titleStyle={{
+                                        background: "white",
+                                        color: "var(--chart-blue)",
+                                        fontSize: "1.25rem",
+                                        fontStyle: "normal",
+                                        lineHeight: "24px"
+                                    }}
+                                    label={"Chart"}>
+                                    <ChartComponentForm />
+                                </Collapsible>
                         ])}>Chart</Dropdown.Item>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                            <Collapsible
+                                style={{width: "100%"}}
+                                titleStyle={{
+                                    background: "white",
+                                    color: "var(--chart-blue)",
+                                    fontSize: "1.25rem",
+                                    fontStyle: "normal",
+                                    lineHeight: "24px"
+                                }}
+                                label={"Gallery"}>
+                                <ProviderGallery />
+                            </Collapsible>
+                            ])}>Gallery</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>
@@ -320,6 +338,7 @@ const ContentForm = ({ content, onChange }) => {
                 style={{
                     backgroundColor: "#E3E9F5",
                     padding: "16px 16px 28px 16px",
+                    width: "calc(100% - 264px)"
                 }}
             >
                 {selectedSection === null ? null : (
