@@ -75,6 +75,7 @@ const DirectoryFormItem = ({
                     placeholder="ex. Hannah"
                     value={item.name}
                     onChange={handleNameChange}
+                    style={{marginLeft: "2px"}}
                 />
             </Form.Group>
             <Form.Group>
@@ -84,6 +85,7 @@ const DirectoryFormItem = ({
                     placeholder="ex. Designer"
                     value={item.description}
                     onChange={handleDescriptionChange}
+                    style={{ marginLeft: "2px" }}
                 />
             </Form.Group>
             <Form.Group>
@@ -93,6 +95,7 @@ const DirectoryFormItem = ({
                     placeholder="ex. Contact, Phone, Email, More info"
                     value={item.details}
                     onChange={handleDetailsChange}
+                    style={{ marginLeft: "2px" }}
                 />
             </Form.Group>
             <Form.Group>
@@ -129,7 +132,7 @@ const DirectoryFormItem = ({
     );
 };
 
-const DirectoryForm = ({items}) => {
+const DirectoryForm = ({ items }) => {
     const [isOpen, setIsOpen] = useState(false);
     const defaultDirectoryItem: DirectoryItem = {
         name: "",
@@ -158,79 +161,38 @@ const DirectoryForm = ({items}) => {
                 flexDirection: "column",
             }}
         >
-            <div style={{ display: "flex", height: "32px" }}>
+            <div
+                className={`${styles.directory}`}
+                style={{
+                    paddingRight: "5px",
+                    marginTop: "16px",
+                    overflowY: "scroll",
+                }}
+            >
+                {/* {directoryItems.length} */}
+                {directoryItems.map((directoryItem, index) => (
+                    // console.log()
+                    <DirectoryFormItem
+                        key={index}
+                        index={index}
+                        item={directoryItem}
+                        directoryItems={directoryItems}
+                        setDirectoryItems={setDirectoryItems}
+                    ></DirectoryFormItem>
+                ))}
                 <button
+                    className={`addButton ${styles.addButton}`}
                     type="button"
-                    style={{
-                        border: "none",
-                        background: "none",
-                        margin: "none",
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                    }}
                     onClick={() => {
-                        setIsOpen(!isOpen);
+                        setDirectoryItems([
+                            ...directoryItems,
+                            defaultDirectoryItem,
+                        ]);
                     }}
                 >
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <div
-                            style={{
-                                color: "#226DFF",
-                                fontSize: "20px",
-                                marginRight: "8px",
-                                fontWeight: "600",
-                            }}
-                        >
-                            Directory
-                        </div>
-                        <InfoIcon fill="#226DFF"></InfoIcon>
-                    </div>
-                    <ChevronIcon
-                        fill="#226DFF"
-                        style={{
-                            transform: `rotate(${isOpen ? "0deg" : "180deg"})`,
-                            height: "32px",
-                            width: "32px",
-                        }}
-                    ></ChevronIcon>
+                    + Add Item
                 </button>
             </div>
-            <Collapse in={isOpen}>
-                <div
-                    className={`${styles.directory}`}
-                    style={{
-                        paddingRight: "5px",
-                        marginTop: "16px",
-                        overflowY: "scroll",
-                    }}
-                >
-                    {/* {directoryItems.length} */}
-                    {directoryItems.map((directoryItem, index) => (
-                        // console.log()
-                        <DirectoryFormItem
-                            key={index}
-                            index={index}
-                            item={directoryItem}
-                            directoryItems={directoryItems}
-                            setDirectoryItems={setDirectoryItems}
-                        ></DirectoryFormItem>
-                    ))}
-                    <button
-                        className={`addButton ${styles.addButton}`}
-                        type="button"
-                        onClick={() => {
-                            setDirectoryItems([
-                                ...directoryItems,
-                                defaultDirectoryItem,
-                            ]);
-                        }}
-                    >
-                        + Add Item
-                    </button>
-                </div>
-            </Collapse>
         </div>
     );
 };

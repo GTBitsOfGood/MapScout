@@ -5,7 +5,7 @@
 }
 
 .collapsible .content.open {
-    max-height: 1000px;
+    /* max-height: 1000px; */
     overflow: scroll;
 }
 

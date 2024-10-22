@@ -10,6 +10,11 @@ const ImageModal = (props) => {
         setImage(img[0]);
         setUploaded(true);
     };
+    
+    const clear = () =>{
+        setImage(null);
+        setUploaded(false);
+    }
 
     return (
         <div>
@@ -50,7 +55,7 @@ const ImageModal = (props) => {
                     </Button>
                     <Button
                         className="saveButton btn btn-success"
-                        onClick={() => props.handleSuccess(image)}
+                        onClick={() => {props.handleSuccess(image); clear();}}
                     >
                         Save
                     </Button>

@@ -2,10 +2,10 @@
   display: grid;
   gap: 16px;
   padding: 16px;
-  box-shadow: 0px 2px 5px 0px #00000040;
   border-radius: 4px;
   background: #FFFFFF;
   gap: 16px;
+  width: 100%;
 }
 
 .oneColumn {
