@@ -6,6 +6,7 @@ import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import { Link } from "react-router-dom";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import { formRoute } from "../../routes/pathnames";
+import Directory from "./Directory";
 
 // updateFirestore = async () => {
 //     //Change 'ages' to the specific parameter to update

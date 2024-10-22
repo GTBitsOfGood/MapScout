@@ -20,7 +20,7 @@ const Collapsible = ({style = {}, titleStyle={}, label, children}) => {
               )}</button>
             <div ref={contentRef} 
                 className={`content ${isOpen ? 'open' : ''}`}
-                style={{ height: isOpen ? `${contentRef.current.scrollHeight}px` : '0px' }}>
+                style={{ height: isOpen ? `fit-content` : '0px'}}>
                     <div className="container">{children}</div>
                 </div>
         </div>

@@ -13,6 +13,7 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import Linkify from "react-linkify";
 import ProviderGalleryCarousel from "components/dashboard/ProviderGalleryCarousel";
 import Collapsible from "components/collapsible";
+import Directory from "components/dashboard/Directory";
 
 {
     /*TO BE DELETED */
@@ -68,7 +69,33 @@ const galleryData = [
             "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
     },
 ];
-
+const directoryData =
+    [
+        {
+            name: "bob",
+            description: "firefighter",
+            details: "bob@gmail.com",
+            image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+        },
+        {
+            name: "bob",
+            description: "firefighter",
+            details: "bob@gmail.com",
+            image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+        },
+        {
+            name: "bob",
+            description: "firefighter",
+            details: "bob@gmail.com",
+            image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+        },
+        {
+            name: "bob",
+            description: "firefighter",
+            details: "bob@gmail.com",
+            image: "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
+        },
+    ];
 
 const ProviderInfo = (props) => {
     const [image, setImage] = useState("bog");
@@ -221,11 +248,22 @@ const ProviderInfo = (props) => {
                     </Card>
                 </Col>
             </Row>
+            {/* Sample components that in the future should be added dynamically
+            based on the response from firebase */}
             <Row className="info-rows">
                 <Col md={12}>
                     <Collapsible label={"Gallery"}>
                         {/*TO BE DELETED */}
                         <ProviderGalleryCarousel slidesArray={galleryData} />
+                    </Collapsible>
+                </Col>
+            </Row>
+            <Row className="info-rows">
+                <Col md={12}>
+                    <Collapsible label={"Directory"}>
+                        <Directory
+                            directoryItems={directoryData}
+                        ></Directory>
                     </Collapsible>
                 </Col>
             </Row>

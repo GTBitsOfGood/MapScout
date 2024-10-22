@@ -8,6 +8,7 @@ import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
 import { ReactComponent as CheckmarkIcon } from "../../assets/svg/checkmark.svg";
 
 import styles from "./ContentForm.module.css";
+import DirectoryForm from "./DirectoryForm";
 import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
 import Collapsible from "components/collapsible";
 import ProviderGallery from "./ProviderGallery";
@@ -192,6 +193,21 @@ const SectionCard = ({
                                 <ProviderGallery />
                             </Collapsible>
                             ])}>Gallery</Dropdown.Item>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                            <Collapsible
+                                style={{ width: "100%" }}
+                                titleStyle={{
+                                    background: "white",
+                                    color: "var(--chart-blue)",
+                                    fontSize: "1.25rem",
+                                    fontStyle: "normal",
+                                    lineHeight: "24px"
+                                }}
+                                label={"Directory"}>
+                                <DirectoryForm items={[]} />
+                            </Collapsible>
+                            ])}>Directory</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>

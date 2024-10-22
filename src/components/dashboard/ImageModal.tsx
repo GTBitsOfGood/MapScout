@@ -10,15 +10,30 @@ const ImageModal = (props) => {
         setImage(img[0]);
         setUploaded(true);
     };
+    
+    const clear = () =>{
+        setImage(null);
+        setUploaded(false);
+    }
 
     return (
         <div>
             {!uploaded && (
                 <Dropzone accept="image/*" onDrop={handleDrop}>
                     {({ getRootProps, getInputProps }) => (
-                        <div {...getRootProps({ className: "dropzone" })}>
+                        <div
+                            {...getRootProps({ className: "dropzone" })}
+                            style={{
+                                ...(props.dropzoneHeight && {
+                                    height: props.dropzoneHeight,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    display: "flex",
+                                }),
+                            }}
+                        >
                             <input {...getInputProps()} />
-                            <p>Drag'n'drop files, or click to select files</p>
+                            <p style={{marginBottom: "0px"}}>Drag'n'drop files, or click to select files</p>
                         </div>
                     )}
                 </Dropzone>
@@ -40,7 +55,7 @@ const ImageModal = (props) => {
                     </Button>
                     <Button
                         className="saveButton btn btn-success"
-                        onClick={() => props.handleSuccess(image)}
+                        onClick={() => {props.handleSuccess(image); clear();}}
                     >
                         Save
                     </Button>
