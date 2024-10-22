@@ -519,28 +519,8 @@ export default compose<any>(
                         }),
                     ).then(
                         (complete) => {
-                            // code that executes after the timeout has completed.
-                            promiseWithTimeout(
-                                10000,
-                                querySnapshot.forEach((doc) => {
-                                    if (
-                                        providers.findIndex(
-                                            (x) => x.facilityName === doc.facilityName,
-                                        ) === -1
-                                    )
-                                        doc.ref.delete();
-                                }),
-                            ).then(
-                                (complete) => {
-                                    setShowModal(false);
-                                    setIsLoading(false);
-                                },
-                                () => {
-                                    alert(
-                                        "Unable to delete removed categories in Providers",
-                                    );
-                                },
-                            );
+                            setShowModal(false);
+                            setIsLoading(false);
                         },
                         () => {
                             // code that takes care of the canceled promise.
