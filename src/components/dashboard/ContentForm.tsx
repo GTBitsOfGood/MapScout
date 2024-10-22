@@ -1,7 +1,7 @@
 import "@fontsource/inter";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, Form, Row } from "react-bootstrap";
 // import grabberIcon from "../../assets/svg/grabber.svg";
 import { ReactComponent as GrabberIcon } from "../../assets/svg/grabber.svg";
 import { ReactComponent as PencilIcon } from "../../assets/svg/pencil.svg";
@@ -9,6 +9,9 @@ import { ReactComponent as CheckmarkIcon } from "../../assets/svg/checkmark.svg"
 
 import styles from "./ContentForm.module.css";
 import DirectoryForm from "./DirectoryForm";
+import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
+import Collapsible from "components/collapsible";
+import ProviderGallery from "./ProviderGallery";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -98,8 +101,9 @@ const SectionCard = ({
     isEditing,
     setIsEditing,
 }) => {
+    const [components, setComponents] = useState([]);
     return (
-        <Container fluid className="p-0 h-100 d-flex flex-column">
+        <Container fluid className="p-0 h-100 d-flex flex-column" style={{ overflowY: "scroll" }}>
             <Row
                 className=" w-100 d-inline-flex flex-row align-items-center justify-content-between"
                 style={{
@@ -140,16 +144,72 @@ const SectionCard = ({
                     Delete Section
                 </button>
             </Row>
+            {components.map((v, i) =>
+                <Row className="flex-fill m-0 w-100" key={i}>
+                    {v}
+                </Row>
+            )}
             <Row
-                className="m-0 w-100"
-                style={{
-                    height: "600px",
-                    maxHeight: "700px",
-                    borderRadius: "8px",
-                    backgroundColor: "#FFFFFF",
-                }}
+                className="flex-fill m-0 w-100"
             >
-                <DirectoryForm items={[]} />
+                <Dropdown>
+                    <Dropdown.Toggle className={styles.deleteButton}
+                        style={{
+                            color: "white",
+                            fontSize: "16px",
+                            fontWeight: "500",
+                            fontFamily: "Inter, sans-serif",
+                        }} id="dropdown-basic">
+                        + Add Filter
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                                <Collapsible
+                                    titleStyle={{
+                                        background: "white",
+                                        color: "var(--chart-blue)",
+                                        fontSize: "1.25rem",
+                                        fontStyle: "normal",
+                                        lineHeight: "24px"
+                                    }}
+                                    label={"Chart"}>
+                                    <ChartComponentForm />
+                                </Collapsible>
+                        ])}>Chart</Dropdown.Item>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                            <Collapsible
+                                style={{width: "100%"}}
+                                titleStyle={{
+                                    background: "white",
+                                    color: "var(--chart-blue)",
+                                    fontSize: "1.25rem",
+                                    fontStyle: "normal",
+                                    lineHeight: "24px"
+                                }}
+                                label={"Gallery"}>
+                                <ProviderGallery />
+                            </Collapsible>
+                            ])}>Gallery</Dropdown.Item>
+                        <Dropdown.Item onClick={() =>
+                            setComponents([...components,
+                            <Collapsible
+                                style={{ width: "100%" }}
+                                titleStyle={{
+                                    background: "white",
+                                    color: "var(--chart-blue)",
+                                    fontSize: "1.25rem",
+                                    fontStyle: "normal",
+                                    lineHeight: "24px"
+                                }}
+                                label={"Directory"}>
+                                <DirectoryForm items={[]} />
+                            </Collapsible>
+                            ])}>Directory</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </Row>
         </Container>
     );
@@ -185,9 +245,8 @@ const SectionButton = ({
                         maxWidth: "12px",
                         borderTopLeftRadius: "8px",
                         borderBottomLeftRadius: "8px",
-                        backgroundColor: `${
-                            isSelected ? "#226DFF" : "transparent"
-                        }`,
+                        backgroundColor: `${isSelected ? "#226DFF" : "transparent"
+                            }`,
                     }}
                 ></Col>
                 <Col
@@ -295,6 +354,7 @@ const ContentForm = ({ content, onChange }) => {
                 style={{
                     backgroundColor: "#E3E9F5",
                     padding: "16px 16px 28px 16px",
+                    width: "calc(100% - 264px)"
                 }}
             >
                 {selectedSection === null ? null : (
