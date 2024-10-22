@@ -102,9 +102,6 @@ export default compose<any>(
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             const data = doc.data();
-                            if (!data.id) {
-                                data.id = doc.id;
-                            }
                             arr.push(data);
                         });
                     });
@@ -118,9 +115,6 @@ export default compose<any>(
                     .then((querySnapshot) => {
                         querySnapshot.forEach((doc) => {
                             const data = doc.data();
-                            if (!data.id) {
-                                data.id = doc.id;
-                            }
                             arr2.push(data);
                         });
                     });
@@ -519,7 +513,7 @@ export default compose<any>(
                         10000,
                         providers.forEach((cat) => {
                             firestore.set(
-                                { collection: "providers", doc: cat.id },
+                                { collection: "providers", doc: cat.facilityName },
                                 cat,
                             );
                         }),
@@ -531,7 +525,7 @@ export default compose<any>(
                                 querySnapshot.forEach((doc) => {
                                     if (
                                         providers.findIndex(
-                                            (x) => x.id === doc.id,
+                                            (x) => x.facilityName === doc.facilityName,
                                         ) === -1
                                     )
                                         doc.ref.delete();
