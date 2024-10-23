@@ -146,8 +146,8 @@ const Map = (props) => {
             setTempProviders(temp);
             Object.keys(filtersState).forEach((filterName) => {
                 temp = temp.filter((provider) =>
-                    provider[filterName]
-                        ? provider[filterName].some((r) =>
+                    provider['filters'][filterName]
+                        ? provider['filters'][filterName].some((r) =>
                               filtersState[filterName].includes(r)
                           ) || filtersState[filterName].length === 0
                         : true
@@ -702,7 +702,7 @@ const Map = (props) => {
                     .filter(
                         ([key, value]: any[]) =>
                             Number.isInteger(value.priority) &&
-                            value.priority < FILTER_CUTOFF
+                            value.priority <= FILTER_CUTOFF
                     )
                     .sort(
                         ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
@@ -734,13 +734,13 @@ const Map = (props) => {
                                 .filter(
                                     ([key, value]: any[]) =>
                                         !Number.isInteger(value.priority) ||
-                                        value.priority >= FILTER_CUTOFF
+                                        value.priority > FILTER_CUTOFF
                                 )
                                 .sort(
                                     (
                                         [aKey, aValue]: any[],
                                         [bKey, bValue]: any[]
-                                    ) => aValue.name.localeCompare(bValue.name)
+                                    ) => aValue.priority - bValue.priority
                                 )
                                 .map(([key, value]: any[]) =>
                                     renderMoreDropdown(value.name, key)
