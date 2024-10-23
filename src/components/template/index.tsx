@@ -198,7 +198,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -232,7 +232,7 @@ export default compose<any>(
     async function rename(e, item) {
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -248,7 +248,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -272,7 +272,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -297,7 +297,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -323,7 +323,7 @@ export default compose<any>(
         let index = 0;
         let index2 = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -349,7 +349,7 @@ export default compose<any>(
     function disableCat(item) {
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -368,7 +368,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -384,7 +384,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;
@@ -408,7 +408,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.name === item.name) {
+            if(i.id === item.id) {
                 break;
             }
             index++;

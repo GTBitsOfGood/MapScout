@@ -48,6 +48,7 @@ const RowForm = (props) => {
         image: "modalimage.png",
         imageURL: null,
         content: {},
+        filters: {},
     };
 
     const [item, setItem] = useState(
@@ -56,10 +57,6 @@ const RowForm = (props) => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        const itemFields = Object.keys(props.filters);
-        itemFields.forEach((field) => {
-            defaultItem[field] = [];
-        });
         setItem(props.item.facilityName ? props.item : defaultItem);
     }, []);
 
@@ -376,11 +373,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <MultiSelect
                                     options={options}
-                                    selected={item[key] || []}
+                                    selected={item['filters'][key] || []}
                                     onSelectedChanged={(selected) => {
                                         const newItem = {
                                             ...item,
-                                            [key]: selected,
+                                            ['filters']: {
+                                                ...item['filters'],
+                                                [key]: selected,
+                                            }
                                         };
                                         setItem(newItem);
                                         props.setItem(newItem);
@@ -400,11 +400,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    value={item[key]}
+                                    value={item['filters'][key]}
                                     onChange={(e: any) => {
                                         const newItem = {
                                             ...item,
-                                            [key]: e.target.value,
+                                            ['filters']: {
+                                                ...item['filters'],
+                                                [key]: e.target.value
+                                            }
                                         };
                                         setItem(newItem);
                                         props.setItem(newItem);
