@@ -6,6 +6,7 @@
   background: #FFFFFF;
   gap: 16px;
   width: 100%;
+  overflow: scroll;
 }
 
 .oneColumn {

@@ -252,7 +252,14 @@ const ProviderInfo = (props) => {
             based on the response from firebase */}
             <Row className="info-rows">
                 <Col md={12}>
-                    <Collapsible label={"Gallery"}>
+                    <Collapsible
+                        label={"Gallery"}
+                        style={{
+                            maxWidth: "1000px",
+                            marginLeft: "auto",
+                            marginRight: "auto"
+                        }}
+                    >
                         {/*TO BE DELETED */}
                         <ProviderGalleryCarousel slidesArray={galleryData} />
                     </Collapsible>
@@ -260,7 +267,14 @@ const ProviderInfo = (props) => {
             </Row>
             <Row className="info-rows">
                 <Col md={12}>
-                    <Collapsible label={"Directory"}>
+                    <Collapsible
+                        label={"Directory"}
+                        style={{
+                            maxWidth: "1000px",
+                            marginLeft: "auto",
+                            marginRight: "auto"
+                        }}
+                    >
                         <Directory
                             directoryItems={directoryData}
                         ></Directory>
