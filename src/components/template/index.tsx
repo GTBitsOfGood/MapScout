@@ -390,8 +390,8 @@ export default compose<any>(
             index++;
         }
         providers.forEach((val) => {
-            if (item.id in val) {
-                delete val[item.id as keyof typeof val];
+            if (item.id in val['filters']) {
+                delete val['filters'][item.id];
             }
         });
         await categories.splice(index, 1);
@@ -610,7 +610,7 @@ export default compose<any>(
                                 index={index}
                                 disableCat={disableCat}
                                 enableCat={enableCat}
-                                deleteCat={deletePrim}
+                                deleteCat={deleteCat}
                                 changeType={changeType}
                                 rename={rename}
                                 addOption={addPrimOption}
