@@ -428,7 +428,7 @@ export default compose<any>(
         if (usePrimary) {
             type = 2
         }
-        await categories.unshift({
+        await categories.push({
             name: newCatName,
             select_type: type,
             options: [],
