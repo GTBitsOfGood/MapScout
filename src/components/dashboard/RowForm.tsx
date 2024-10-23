@@ -18,6 +18,8 @@ import Button from "react-bootstrap/Button";
 
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
+import EmbedForm from "./embed-component/EmbedForm";
+
 
 const galleryData = [
     {
@@ -381,6 +383,9 @@ const RowForm = (props) => {
                             as="textarea"
                         />
                     </Form.Group>
+
+                    {/* <EmbedForm/> */}
+                    
                 </>
             );
 

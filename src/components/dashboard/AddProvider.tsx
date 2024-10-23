@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Steps, { Step } from "rc-steps";
 import "rc-steps/assets/index.css";
 import "rc-steps/assets/iconfont.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -25,6 +26,15 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import { storage } from "../../store";
 import { Store } from "reducers/types";
 const { v4: uuidv4 } = require("uuid");
+import {TextComponent} from "./TextComponent"
+import EmbedForm from "./embed-component/EmbedForm";
+import EventInfoComponent from "./EventInfoComponent";
+
+// const eventInfo = {
+//     title: "Tour Our Station",
+//     videoUrl: "https://youtu.be/4rSOnKAnJ8M",
+//     thumbnail: "https://picsum.photos/200",
+// };
 
 let steps = [
     "Map",
@@ -47,6 +57,17 @@ function AddProvider(props) {
     const [descriptions, setDescriptions] = useState(null);
     const [single, setSingle] = useState(null);
     const [error, setError] = useState("");
+    const [content, setContent] = useState('ex. "Changing lives one bit at a time..."');
+    const handleUpdate = (updatedContent: string) => {
+        setContent(updatedContent);
+    };
+
+    const eventInfo2 = {
+        title: "Introducing APFF",
+        description:
+          "Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.",
+        highlight: "Our Foundation is run by Firefighters, for Firefighters!"
+    };
 
     // async function fetchData() {
     //   const collections = props.firestore.collection('categories');
@@ -478,6 +499,15 @@ function AddProvider(props) {
                                                     descriptions={descriptions}
                                                     single={single}
                                                 />
+
+                                                {/* <EmbedComponent eventInfo={eventInfo} /> */}
+                                                {/* <EmbedForm/> */}
+                                                {/* <TextComponent content={content} onContentUpdate={handleUpdate} /> */}
+                                                {/* <EventInfoComponent
+                                                    title={eventInfo2.title}
+                                                    description={eventInfo2.description}
+                                                    highlight={eventInfo2.highlight}
+                                                /> */}
                                             </div>
                                         </div>
                                     </Form>
