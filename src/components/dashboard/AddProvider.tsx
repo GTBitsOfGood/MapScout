@@ -26,15 +26,14 @@ import { GOOGLE_API_KEY } from "../../config/keys";
 import { storage } from "../../store";
 import { Store } from "reducers/types";
 const { v4: uuidv4 } = require("uuid");
-import {TextComponent} from "./TextComponent"
 import EmbedForm from "./embed-component/EmbedForm";
-import EventInfoComponent from "./EventInfoComponent";
+import EmbedComponent from "./embed-component/EmbedComponent";
 
-// const eventInfo = {
-//     title: "Tour Our Station",
-//     videoUrl: "https://youtu.be/4rSOnKAnJ8M",
-//     thumbnail: "https://picsum.photos/200",
-// };
+const eventInfo = {
+    title: "Tour Our Station",
+    videoUrl: "https://www.youtube.com/watch?v=oZcKTf4RLQ8&ab_channel=HorizonsHealth",
+    thumbnail: "https://picsum.photos/200",
+};
 
 let steps = [
     "Map",
@@ -62,12 +61,12 @@ function AddProvider(props) {
         setContent(updatedContent);
     };
 
-    const eventInfo2 = {
-        title: "Introducing APFF",
-        description:
-          "Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.",
-        highlight: "Our Foundation is run by Firefighters, for Firefighters!"
-    };
+    // const eventInfo2 = {
+    //     title: "Introducing APFF",
+    //     description:
+    //       "Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.",
+    //     highlight: "Our Foundation is run by Firefighters, for Firefighters!"
+    // };
 
     // async function fetchData() {
     //   const collections = props.firestore.collection('categories');
@@ -477,7 +476,7 @@ function AddProvider(props) {
                                                     animate ? "fade-in" : "hide"
                                                 }
                                             >
-                                                <RowForm
+                                                {/* <RowForm
                                                     step={steps[step]}
                                                     item={item}
                                                     setItem={(i) => {
@@ -498,16 +497,12 @@ function AddProvider(props) {
                                                     filters={filters}
                                                     descriptions={descriptions}
                                                     categories={categories}
-                                                />
-
-                                                {/* <EmbedComponent eventInfo={eventInfo} /> */}
-                                                {/* <EmbedForm/> */}
-                                                {/* <TextComponent content={content} onContentUpdate={handleUpdate} /> */}
-                                                {/* <EventInfoComponent
-                                                    title={eventInfo2.title}
-                                                    description={eventInfo2.description}
-                                                    highlight={eventInfo2.highlight}
                                                 /> */}
+
+                                                {/* <EmbedComponent eventInfo={eventInfo}/> */}
+
+                                                {/* <EmbedForm/> */}
+
                                             </div>
                                         </div>
                                     </Form>
