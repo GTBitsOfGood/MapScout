@@ -335,7 +335,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                             <input
                                 id="current"
                                 type="number"
-                                value={chartState.data.current || ""}
+                                value={chartState.data.current}
                                 onChange={(e) =>
                                     handleDataChange(
                                         "current",
@@ -343,6 +343,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                     )
                                 }
                                 placeholder="ex. 10"
+                                min={0}
                             />
                         </div>
                         <div className="field" style={{ width: "30%" }}>
@@ -352,7 +353,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                             <input
                                 id="goal"
                                 type="number"
-                                value={chartState.data.total || ""}
+                                value={chartState.data.total}
                                 onChange={(e) =>
                                     handleDataChange(
                                         "total",
@@ -360,6 +361,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                     )
                                 }
                                 placeholder="ex. 1000"
+                                min={0}
                             />
                         </div>
                         <div className="radio-group">
