@@ -107,7 +107,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
         const outerArc = d3
             .arc()
             .innerRadius(radius * 1)
-            .outerRadius(radius * 1.1);
+            .outerRadius(radius * 1.3);
 
         // Defines outer info label group and controls their positioning
         const outerLabel = svgGroup
@@ -145,7 +145,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
         const leaderArc = d3
             .arc()
             .innerRadius(radius * 0.9)
-            .outerRadius(radius * 0.8);
+            .outerRadius(radius * 0.95);
 
         // Adds and controls how the lines are generated and positions them between inner and outer label
         svgGroup
@@ -159,7 +159,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
                 const posB = outerArc.centroid(d);
                 const posC = outerArc.centroid(d);
                 const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-                posC[0] = radius * 1.1 * (midAngle < Math.PI ? 1 : -1);
+                posC[0] = radius * 1.3 * (midAngle < Math.PI ? 1 : -1);
                 return [posA, posB, posC];
             })
             .style("fill", "none")
