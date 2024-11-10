@@ -33,11 +33,7 @@ interface ChartForm {
     data: ChartData;
 }
 
-const ChartComponentForm = ({
-    chartState,
-    setChartState,
-    deleteComponent,
-}) => {
+const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
     const handleTypeChange = (type: ChartType) => {
         setChartState({
             type,
@@ -80,20 +76,21 @@ const ChartComponentForm = ({
     ) => {
         const newData =
             chartState.type === "donut"
-                ? [...(chartState.data.donutData || [])]
-                : [...(chartState.data.lineData || [])];
-        newData[index] = { ...newData[index], [key]: value };
+                ? chartState.data.donutData.map((row) => ({ ...row }))
+                : chartState.data.lineData.map((row) => ({ ...row }));
 
-        //handles update to percentage column for DonutData
-        if (newData.length > 0 && chartState.type === "donut") {
-            let sum = 0;
+        newData[index][key] = value;
+
+        if (chartState.type === "donut") {
+            const total = newData.reduce((sum, row) => sum + row.number, 0);
             newData.forEach((row) => {
-                sum += row.number;
-            });
-            newData.forEach((row) => {
-                row.percentage = ((row.number / sum) * 100).toFixed(1) + "%";
+                row.percentage =
+                    total > 0
+                        ? ((row.number / total) * 100).toFixed(1) + "%"
+                        : "0%";
             });
         }
+
         setChartState({
             ...chartState,
             data: {
@@ -169,6 +166,7 @@ const ChartComponentForm = ({
                                                     parseFloat(e.target.value)
                                                 )
                                             }
+                                            min={0}
                                             required
                                         />
                                     </td>
@@ -492,7 +490,7 @@ const ChartComponentForm = ({
                     </div>
                 );
             default:
-                return <></>
+                return <></>;
         }
     };
 

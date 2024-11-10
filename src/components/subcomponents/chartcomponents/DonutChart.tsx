@@ -46,7 +46,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
         const opacityScale = d3
             .scaleLinear()
             .domain([0, data.length - 1])
-            .range([1, 0.2]);
+            .range([1, 0.3]);
 
         // Method to process and sort the data
         const pie = d3
@@ -74,8 +74,8 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
             .enter()
             .append("path")
             .attr("d", arc as any)
-            .attr("fill", (_, i): any => {
-                const opacity = opacityScale(i);
+            .attr("fill", (d): any => {
+                const opacity = opacityScale(d.index);
                 return d3.rgb(baseColor.r, baseColor.g, baseColor.b, opacity);
             })
             .attr("stroke", "#fff")
