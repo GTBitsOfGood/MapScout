@@ -1,6 +1,9 @@
 import React from "react";
 
 const Button = ({ link, label }) => {
+    if (!link || !label) {
+        return null;
+    }
     return (
         <a href={link} target="_blank">
             <button

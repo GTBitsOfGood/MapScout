@@ -39,7 +39,7 @@ const ProviderInfo = (props) => {
                     case "donut":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -56,7 +56,7 @@ const ProviderInfo = (props) => {
                     case "progress":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -76,7 +76,7 @@ const ProviderInfo = (props) => {
                     case "line":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -84,7 +84,6 @@ const ProviderInfo = (props) => {
                                 }}
                             >
                                 <LineChart
-                                    title={data.title}
                                     data={data.data.lineData}
                                 ></LineChart>
                             </Collapsible>

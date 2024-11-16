@@ -10,7 +10,7 @@ interface DonutData {
 }
 
 interface LineData {
-    x: string;
+    x: number;
     y: number;
 }
 
@@ -79,7 +79,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 ? chartState.data.donutData.map((row) => ({ ...row }))
                 : chartState.data.lineData.map((row) => ({ ...row }));
 
-        newData[index][key] = value;
+        newData[index][key] = value !== "" ? parseFloat(value as string) : "";
 
         if (chartState.type === "donut") {
             const total = newData.reduce((sum, row) => sum + row.number, 0);
@@ -203,7 +203,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                 <tr key={index}>
                                     <td>
                                         <input
-                                            type="text"
+                                            type="number"
                                             value={row.x}
                                             onChange={(e) =>
                                                 handleArrayDataChange(
@@ -223,7 +223,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                                 handleArrayDataChange(
                                                     index,
                                                     "y",
-                                                    parseFloat(e.target.value)
+                                                    e.target.value
                                                 )
                                             }
                                             required
@@ -541,6 +541,10 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 />
             </div>
             {renderFields()}
+            <div>
+                <h4>Current Data:</h4>
+                <pre>{JSON.stringify(chartState, null, 2)}</pre>
+            </div>
             <div className="footer">
                 <button
                     type="button"
