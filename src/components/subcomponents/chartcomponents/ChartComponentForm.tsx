@@ -42,6 +42,8 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
         });
     };
 
+    const randomId = Math.random();
+
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChartState({ ...chartState, title: e.target.value });
     };
@@ -502,7 +504,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="donut"
                         checked={chartState.type === "donut"}
                         onChange={() => handleTypeChange("donut")}
@@ -512,7 +514,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="progress"
                         checked={chartState.type === "progress"}
                         onChange={() => handleTypeChange("progress")}
@@ -522,7 +524,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="line"
                         checked={chartState.type === "line"}
                         onChange={() => handleTypeChange("line")}
