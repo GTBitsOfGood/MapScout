@@ -651,8 +651,7 @@ const Map = (props) => {
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
-                {
-                console.log((filtersData))}
+
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
