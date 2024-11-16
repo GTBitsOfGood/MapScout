@@ -1,7 +1,7 @@
 import React from "react";
 
 const Button = ({ link, label }) => {
-    if (!link || !label) {
+    if (link.indexOf(".") === -1 || !label) {
         return null;
     }
     return (

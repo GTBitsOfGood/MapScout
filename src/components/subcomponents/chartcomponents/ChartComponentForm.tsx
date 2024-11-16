@@ -175,7 +175,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                                         "number",
                                                         0
                                                     );
-                                                    e.target.value = "0"; // To update the DOM directly
+                                                    e.target.value = "0";
                                                 }
                                             }}
                                             min={0}
