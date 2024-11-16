@@ -168,6 +168,16 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                                     parseFloat(e.target.value)
                                                 )
                                             }
+                                            onBlur={(e) => {
+                                                if (e.target.value === "") {
+                                                    handleArrayDataChange(
+                                                        index,
+                                                        "number",
+                                                        0
+                                                    );
+                                                    e.target.value = "0"; // To update the DOM directly
+                                                }
+                                            }}
                                             min={0}
                                             required
                                         />
