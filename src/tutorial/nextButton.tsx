@@ -25,6 +25,6 @@ export default (props: {
             backgroundColor: "#244D75",
         }}
     >
-        {props.currentStep == 0 ? "Got it!" : "Next"}
+        {props.currentStep === 0 ? "Got it!" : "Next"}
     </Button>
 );

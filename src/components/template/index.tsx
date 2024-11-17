@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { withFirestore, isEmpty } from "react-redux-firebase";
+import { withFirestore } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import CategoryCell from "./CategoryCell";
@@ -12,8 +12,8 @@ import PrimaryCell from "./PrimaryCell";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import promiseWithTimeout from "../../functions/promiseWithTimeout";
 import { Store } from "reducers/types";
-import { TempTutorial } from "./TempTutorial";
-import { TempTutorialTwo } from "./TempTutorialTwo";
+// import { TempTutorial } from "./TempTutorial";
+// import { TempTutorialTwo } from "./TempTutorialTwo";
 import { BsPlus } from "react-icons/bs";
 const { v4: uuidv4 } = require("uuid");
 
@@ -44,6 +44,7 @@ export default compose<any>(
         id: "Preview",
         address: ["123 Fake St, Philadelphia, PA 19133"],
         buildingNum: [],
+        stationNum: [45],
         description:
             "This is an example provider showcasing all enabled categories",
         facilityName: "Preview",
@@ -71,27 +72,14 @@ export default compose<any>(
 
     useEffect(() => {
         async function fetchData() {
-            const saved = localStorage.getItem("saved");
             const arr = [];
             const arr2 = [];
             const collections = firestore.collection("categories");
             const collections2 = firestore.collection("providers");
             // Note: this is a temperary workaround so the page does appears fine, however, further fix is neccessary to actually resolve the issue
             if (team.name === "") {
-                await collections
-                    .where("team", "==", saved)
-                    .get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            const data = doc.data();
-                            if (!data.id) {
-                                data.id = doc.id;
-                            }
-                            arr.push(data);
-                        });
-                    });
+                console.error("Team NOT FETCHED ERROR");
             } else {
-                localStorage.setItem("saved", team.name);
                 await collections
                     .where("team", "==", team.name)
                     .get()
@@ -105,17 +93,8 @@ export default compose<any>(
             arr.sort((a, b) => a.priority - b.priority);
             setCategories(arr);
             if (team.name === "") {
-                await collections2
-                    .where("team", "==", saved)
-                    .get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            const data = doc.data();
-                            arr2.push(data);
-                        });
-                    });
+                console.error("Team NOT FETCHED ERROR");
             } else {
-                localStorage.setItem("saved", team.name);
                 await collections2
                     .where("team", "==", team.name)
                     .get()
@@ -153,27 +132,6 @@ export default compose<any>(
         setDummy(newDummy);
     }, [categories]);
 
-    // async function fetchData() {
-    //   const collections = firestore.collection('categories');
-    //   const arr = [];
-    //   await collections
-    //     .where('team', '==', team.name)
-    //     .get()
-    //     .then((querySnapshot) => {
-    //       querySnapshot.forEach((doc) => {
-    //         const data = doc.data();
-    //         if (!data.id) {
-    //           data.id = doc.id;
-    //         }
-    //         arr.push(data);
-    //       });
-    //     });
-    //   arr.sort((a, b) => a.priority - b.priority);
-    //   setCategories(arr);
-    //   setDefaultCategories(arr);
-    //   setIsLoading(false);
-    // }
-
     function onDragEnd(result) {
         if (!result.destination) {
             return;
@@ -194,7 +152,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -208,30 +166,30 @@ export default compose<any>(
 
     function countdownTimer(seconds: number): void {
         let remainingTime = seconds;
-      
+
         if (timerInterval) {
-          clearInterval(timerInterval);
+            clearInterval(timerInterval);
         }
-      
+
         timerInterval = setInterval(() => {
-          if (remainingTime > 0) {
-            console.log(`Time left: ${remainingTime} seconds`);
-            remainingTime--;
-          } else {
-            console.log("Time's up!");
-            clearInterval(timerInterval!);
-            saveChanges();
-          }
+            if (remainingTime > 0) {
+                console.log(`Time left: ${remainingTime} seconds`);
+                remainingTime--;
+            } else {
+                console.log("Time's up!");
+                clearInterval(timerInterval!);
+                saveChanges();
+            }
         }, 1000);
-      }
+    }
 
     async function rename(e, item) {
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
-            index++;
+            index+=1;
         }
         const items = categories;
         const point = items[index];
@@ -244,7 +202,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -252,7 +210,7 @@ export default compose<any>(
         const point = categories[index];
         index = 0
         for (let i of point.options) {
-            if(i.value === name) {
+            if (i.value === name) {
                 break;
             }
             index++;
@@ -268,7 +226,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -293,7 +251,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -319,7 +277,7 @@ export default compose<any>(
         let index = 0;
         let index2 = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -333,7 +291,7 @@ export default compose<any>(
                     }
                     index2++;
                 };
-            val[item.id as keyof typeof val].splice(index2, 1);
+                val[item.id as keyof typeof val].splice(index2, 1);
             }
         });
         await point.options.splice(i, 1);
@@ -345,7 +303,7 @@ export default compose<any>(
     function disableCat(item) {
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -364,7 +322,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -380,7 +338,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -391,7 +349,7 @@ export default compose<any>(
             }
         });
         await categories.splice(index, 1);
-        
+
         categories.forEach((item: any, index) => {
             item.priority = index;
         });
@@ -404,7 +362,7 @@ export default compose<any>(
         setIsLoading(true);
         let index = 0;
         for (let i of categories) {
-            if(i.id === item.id) {
+            if (i.id === item.id) {
                 break;
             }
             index++;
@@ -507,10 +465,10 @@ export default compose<any>(
                 .then(async (querySnapshot) => {
                     promiseWithTimeout(
                         10000,
-                        providers.forEach((cat) => {
+                        providers.forEach((doc) => {
                             firestore.set(
-                                { collection: "providers", doc: cat.facilityName },
-                                cat,
+                                { collection: "providers", doc: doc.id },
+                                doc,
                             );
                         }),
                     ).then(
@@ -539,15 +497,16 @@ export default compose<any>(
     }
     return (
         <div id="template-root">
-            {(document.cookie == "" || document.cookie == null) && (
+            {/* Uncomment to enable tutorial. Should be adapted to the new UI */}
+            {/* {(document.cookie == "" || document.cookie == null) && (
                 <TempTutorial />
             )}
             {document.cookie.includes("tut=true") &&
                 !isEmpty(categories) &&
-                !document.cookie.includes("tut2") && <TempTutorialTwo />}
+                !document.cookie.includes("tut2") && <TempTutorialTwo />} */}
             <Container className="box">
                 <div className="row-spaced">
-                    <h2 className="template-title">Template Builder</h2>
+                    <h2 className="template-title">Filter Builder</h2>
                 </div>
                 {/* <div className="primary-slider">
                     <div className="primary-slider-button">
@@ -590,33 +549,33 @@ export default compose<any>(
                     </InputGroup.Append> */}
                 </InputGroup>
                 <br />
-                {usePrimary? (
-                <div>
-                    {categories
-                    .filter(
-                        (item, value) => item.isPrimary)
-                    .sort(
-                        ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
-                            aValue.priority - bValue.priority
-                    )
-                    .map((item, index) => (
-                        <p>
-                            <PrimaryCell
-                                item={item}
-                                index={index}
-                                disableCat={disableCat}
-                                enableCat={enableCat}
-                                deleteCat={deleteCat}
-                                changeType={changeType}
-                                rename={rename}
-                                addOption={addPrimOption}
-                                changeColor={changeColor}
-                                removeOption={removeOption}
-                            />
-                        </p>
-                    ))
-                    }
-                </div>) :(<></>)}
+                {usePrimary ? (
+                    <div>
+                        {categories
+                            .filter(
+                                (item, value) => item.isPrimary)
+                            .sort(
+                                ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                                    aValue.priority - bValue.priority
+                            )
+                            .map((item, index) => (
+                                <p>
+                                    <PrimaryCell
+                                        item={item}
+                                        index={index}
+                                        // disableCat={disableCat}
+                                        enableCat={enableCat}
+                                        deleteCat={deleteCat}
+                                        changeType={changeType}
+                                        rename={rename}
+                                        addOption={addPrimOption}
+                                        changeColor={changeColor}
+                                        removeOption={removeOption}
+                                    />
+                                </p>
+                            ))
+                        }
+                    </div>) : (<></>)}
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                         {(provided, snapshot) => (
@@ -625,56 +584,56 @@ export default compose<any>(
                                 ref={provided.innerRef}
                             >
                                 {categories
-                                .filter(
-                                    (item, value) => !item.isPrimary)
-                                // .sort(
-                                //     ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
-                                //         aValue.priority - bValue.priority
-                                // )
-                                .map((item, index) => (
-                                    <Draggable
-                                        key={item.name}
-                                        draggableId={item.name}
-                                        index={index}
-                                    >
-                                        {(provided, snapshot) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={
-                                                    provided.draggableProps
-                                                        .style
-                                                }
-                                            >
-                                                <CategoryCell
-                                                    item={item}
-                                                    index={index}
-                                                    disableCat={disableCat}
-                                                    enableCat={enableCat}
-                                                    deleteCat={deleteCat}
-                                                    changeType={changeType}
-                                                    rename={rename}
-                                                    addOption={addOption}
-                                                    removeOption={removeOption}
-                                                    isDragged={
-                                                        snapshot.isDragging
+                                    .filter(
+                                        (item, value) => !item.isPrimary)
+                                    // .sort(
+                                    //     ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
+                                    //         aValue.priority - bValue.priority
+                                    // )
+                                    .map((item, index) => (
+                                        <Draggable
+                                            key={item.name}
+                                            draggableId={item.name}
+                                            index={index}
+                                        >
+                                            {(provided, snapshot) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={
+                                                        provided.draggableProps
+                                                            .style
                                                     }
-                                                />
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
+                                                >
+                                                    <CategoryCell
+                                                        item={item}
+                                                        index={index}
+                                                        disableCat={disableCat}
+                                                        enableCat={enableCat}
+                                                        deleteCat={deleteCat}
+                                                        changeType={changeType}
+                                                        rename={rename}
+                                                        addOption={addOption}
+                                                        removeOption={removeOption}
+                                                        isDragged={
+                                                            snapshot.isDragging
+                                                        }
+                                                    />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
                                 {provided.placeholder}
                             </div>
                         )}
                     </Droppable>
                 </DragDropContext>
                 <button className="template-add"
-                onClick={(e) => {
-                    createNewCat();
-                }}>
-                <BsPlus /> Add Filter
+                    onClick={(e) => {
+                        createNewCat();
+                    }}>
+                    <BsPlus /> Add Filter
                 </button>
                 {/* Bandaid fix for content showing below sticky button */}
                 <div style={{ marginBottom: "-18px", height: "18px", width: "100%", position: "sticky", bottom: "-28px", backgroundColor: "white", zIndex: "2" }} />

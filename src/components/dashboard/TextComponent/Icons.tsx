@@ -148,3 +148,106 @@ export const X = ({ size = 16, color = "currentColor" }) => (
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
+
+export const DropdownArrow = () => (
+  <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M12.7803 6.71967C13.0732 7.01256 13.0732 7.48744 12.7803 7.78033L8.53033 12.0303C8.23744 12.3232 7.76256 12.3232 7.46967 12.0303L3.21967 7.78033C2.92678 7.48744 2.92678 7.01256 3.21967 6.71967C3.51256 6.42678 3.98744 6.42678 4.28033 6.71967L8 10.4393L11.7197 6.71967C12.0126 6.42678 12.4874 6.42678 12.7803 6.71967Z" fill="#333333"/>
+  </svg>
+);
+
+export const TextIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h18v2H3V5zm4 4h10v2H7V9zm0 4h10v2H7v-2zm0 4h10v2H7v-2z" fill="#333333"/>
+  </svg>
+);
+
+export const AlignLeftIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h18v2H3V5zm0 4h12v2H3V9zm0 4h18v2H3v-2zm0 4h12v2H3v-2z" fill="#333333"/>
+  </svg>
+);
+
+export const AlignCenterIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h18v2H3V5zm3 4h12v2H6V9zm-3 4h18v2H3v-2zm3 4h12v2H6v-2z" fill="#333333"/>
+  </svg>
+);
+
+export const AlignRightIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h18v2H3V5zm6 4h12v2H9V9zm-6 4h18v2H3v-2zm6 4h12v2H9v-2z" fill="#333333"/>
+  </svg>
+);
+
+export const JustifyIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h18v2H3V5zm0 4h18v2H3V9zm0 4h18v2H3v-2zm0 4h18v2H3v-2z" fill="#333333"/>
+  </svg>
+);
+
+export const BulletListIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="3" cy="6" r="1" />
+    <circle cx="3" cy="18" r="1" />
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+  </svg>
+);
+
+export const NumberedListIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="8" y1="6" x2="21" y2="6" />
+    <line x1="8" y1="18" x2="21" y2="18" />
+
+    <text x="1" y="8" fontSize="8" fill={color} fontFamily="Arial">1</text>
+    <text x="1" y="20" fontSize="8" fill={color} fontFamily="Arial">2</text>
+  </svg>
+);
+
+export const ImageIcon = ({ size = 16, color = "currentColor" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Frame of the image */}
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+    {/* Circle inside the image to represent an object */}
+    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+    {/* Line representing a mountain or shape */}
+    <path d="M21 15l-5-5L5 21"></path>
+  </svg>
+);
+
+
+
+
+
+
+

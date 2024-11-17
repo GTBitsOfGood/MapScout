@@ -134,11 +134,12 @@ h2 {
     width: 100vw;
     height: calc(200vh - 70px);
     z-index: 2;
-    overflow-y: scroll;
     background: white;
     padding-top: 10px;
 }
-
+.map-list::-webkit-scrollbar {
+    display: none;
+}
 /* .map-cell {
     border-top: solid #e0e0e0;
     background-color: white;
@@ -220,7 +221,9 @@ h2 {
     padding-left: 12px;
     padding-right: 12px;
 }
-
+.padder::-webkit-scrollbar {
+    display: none;
+}
 .point {
     cursor: pointer;
     background: white;
@@ -670,12 +673,17 @@ h2 {
     flex-direction: row;
 }
 
+.modal-image-col {
+    height: 50%;
+}
+
 .modal-hours-container {
     display: flex;
     flex-direction: column;
     font-size: 13px;
-    padding-left: 15px;
-    width: 30vw;
+    padding-left: 0px;
+    width: fit-content;
+    white-space: nowrap;
 }
 
 .modal-hours-container h5 {
@@ -1412,14 +1420,18 @@ h2 {
 #discussion-root {
     margin-top: 12px;
     margin-bottom: 20px;
-}
+    }
 
 #discussion-scroll {
     display: flex;
     flex-direction: column-reverse;
     max-height: 440px;
-    width: 100%;
+    width: 60vw;
     overflow-y: scroll;
+}
+
+#discussion-scroll::-webkit-scrollbar {
+    display: none;
 }
 
 .chat-bubble {
@@ -1730,7 +1742,7 @@ h2 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 635px;
+    width: 800px;
 }
 
 .provider-entry {

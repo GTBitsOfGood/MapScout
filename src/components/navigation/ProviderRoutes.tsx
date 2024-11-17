@@ -65,23 +65,20 @@ function DashboardContent({ isAuth, auth }) {
         />
     );
 
-    return useMemo(
-        () => (
-            <div className="dashboard-content">
-                <Switch>
-                    <PrivateRoute
-                        exact
-                        path={providerRoute}
-                        component={Dashboard}
-                    />
-                    <PrivateRoute path={formRoute} component={AddProvider} />
-                    <PrivateRoute path={templateRoute} component={Template} />
-                    <PrivateRoute path={chatRoute} component={Chat} />
-                    <PrivateRoute path={settingsRoute} component={settings} />
-                </Switch>
-            </div>
-        ),
-        [],
+    return (
+        <div className="dashboard-content">
+            <Switch>
+                <PrivateRoute
+                    exact
+                    path={providerRoute}
+                    component={Dashboard}
+                />
+                <PrivateRoute path={formRoute} component={AddProvider} />
+                <PrivateRoute path={templateRoute} component={Template} />
+                <PrivateRoute path={chatRoute} component={Chat} />
+                <PrivateRoute path={settingsRoute} component={settings} />
+            </Switch>
+        </div>
     );
 }
 

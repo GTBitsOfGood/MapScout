@@ -145,7 +145,7 @@ function NavBar(props) {
                                         fadeIn: expand,
                                     })}
                                 >
-                                    TEMPLATE
+                                    FILTERS
                                 </div>
                             </div>
                         </Link>

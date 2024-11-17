@@ -9,10 +9,8 @@ import Col from "react-bootstrap/Col";
 import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 import Row from "react-bootstrap/Row";
-import { FaRegQuestionCircle, FaTimesCircle } from "react-icons/fa";
 import { connect } from "react-redux";
 import { isEmpty, isLoaded, withFirestore } from "react-redux-firebase";
 import { Store } from "reducers/types";
@@ -20,51 +18,19 @@ import { compose } from "redux";
 import { GOOGLE_API_KEY } from "../../config/keys";
 import localizationStrings from "../../utils/Localization";
 import ProviderInfo from "../subcomponents/ProviderInfo";
-import ProviderInfoMobile from "../subcomponents/ProviderInfoMobile";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
-import { Tooltip as ReactTooltip } from "react-tooltip";
 import searchIcon from "../../assets/img/searchicon.png";
 import x from "../../assets/img/x.png";
 import dropdownIcon from "../../assets/svg/chevron-down.svg";
 import Switch from "react-switch";
-import { func } from "prop-types";
 import { MdChevronRight } from "react-icons/md";
-import ProgressBar from "components/subcomponents/chartcomponents/ProgressBar";
-import DonutChart from "components/subcomponents/chartcomponents/DonutChart";
-import LineChart from "components/subcomponents/chartcomponents/LineChart";
 import backArrow from '../../assets/img/back-arrow.png';
-import ChartComponentForm from "components/subcomponents/chartcomponents/ChartComponentForm";
-import Collapsible from "components/collapsible";
 
 const frame = require("../../assets/svg/Frame.svg");
 
 const debounce = require("lodash/debounce");
 const classNames = require("classnames");
-
-//TO BE REMOVED
-const data = [
-    { label: "Equipment", number: 7140, percentage: "34%" },
-    { label: "Programs", number: 5670, percentage: "27%" },
-    { label: "Technology", number: 4410, percentage: "21%" },
-    { label: "Uniforms", number: 3780, percentage: "18%" },
-];
-
-//TO BE REMOVED
-const data2 = [
-    { x: "Jan", y: 2500 },
-    { x: "Feb", y: 4500 },
-    { x: "Mar", y: 1050 },
-    { x: "Apr", y: 500 },
-    { x: "May", y: 2305 },
-    { x: "Jun", y: 3846 },
-    { x: "Jul", y: 4628 },
-    { x: "Aug", y: 678 },
-    { x: "Sep", y: 1835 },
-    { x: "Oct", y: 5084 },
-    { x: "Nov", y: 5943 },
-    { x: "Dec", y: 2085 },
-];
 
 const FILTER_CUTOFF = 3;
 const PAGE_SIZE = 100;
@@ -77,11 +43,6 @@ const getWidth = () =>
 const Map = (props) => {
     const { setIsOpen } = useTour();
     const [upperPageBound, setUpperPageBound] = useState(PAGE_SIZE);
-    // const [filterActive, setFilterActive] = useState(false);
-    const [filtersActive, setFiltersActive] = useState({
-        filter1: [],
-        filter2: [],
-    });
     const [filterActiveState, setFilterActiveState] = useState({
         filter1: false,
         filter2: false,
@@ -89,8 +50,6 @@ const Map = (props) => {
     const [lowerPageBound, setLowerPageBound] = useState(0);
     const [currPage, setCurrPage] = useState(1);
     const [providers, setProviders] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [moreFilter, setMoreFilter] = useState(false);
     const [defaultView, setDefaultView] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -99,12 +58,9 @@ const Map = (props) => {
     const [, setZipProviders] = useState([]);
     const [searchName, setSearchName] = useState("");
     const [searchZip, setSearchZip] = useState("");
-    // const [name, setName] = useState(null);
-    // const [markers, setMarkers] = useState(null);
     const [currmarker, setCurrmarker] = useState(-1);
     const [point, setPoint] = useState(true);
     const [distances, setDistances] = useState({});
-    //const [prevSearchLen, setPrevSearchLen] = useState(0);
 
     const [primaryColor, setPrimaryColor] = useState("");
     const [, setSecondaryColor] = useState("");
@@ -115,7 +71,6 @@ const Map = (props) => {
     const [filtersState, setFiltersState] = useState({});
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
-    const [isOpen, setOpen] = useState(false);
 
     const [showInfo, setShowInfo] = useState(false)
 
@@ -1003,9 +958,10 @@ const Map = (props) => {
             className={classNames("bg-white", {
                 "overflow-scroll": !isDesktop,
             })}
+            style={{ "height": "100vh" }}
         >
             {/* <NavBar /> */}
-            <div>
+            <div style={{ "height": "100%" }}>
                 <div>
                     <div
                         className={classNames("row-spaced", "ml-2", "pt-3", {
@@ -1021,13 +977,15 @@ const Map = (props) => {
                                     }}
                                 >
                                     {showInfo ? (
-                                            <Button
+                                        <div style={{display: "flex", flexDirection: "row", alignItems: "center",}}>
+                                            <a
                                                 onClick={() => setShowInfo(false)}
-                                                style={{ display: 'flex', alignItems: 'center', fontFamily: 'Inter, sans-serif', fontWeight: '700', backgroundColor: '#ffffff', border: 'none' }}
+                                                style={{ cursor: "pointer", marginRight: "10px", marginLeft: "10px",}}
                                             >
-                                                <img src={backArrow} alt="Back" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
-                                                Back
-                                            </Button>
+                                                <img src={backArrow} alt="Back" style={{ width: '80%', height: '80%', marginBottom: '8px' }} />      
+                                            </a>                                          
+                                            <h4 style={{ fontWeight: "bold", }}>{providers[selectedIndex].facilityName + " #" + providers[selectedIndex].stationNum}</h4>
+                                            </div>
                                         ) : (
                                             <InputGroup className="mb-3">
                                                 <InputGroup.Text id="search-addon" className="search">
@@ -1052,7 +1010,7 @@ const Map = (props) => {
                         <div className="mb-3">
                             <div
                                 className="right-container"
-                                style={{ display: "flex" }}
+                                style={{ display: "flex"}}
                             >
                                 <div
                                     style={{
@@ -1061,11 +1019,20 @@ const Map = (props) => {
                                     }}
                                 >
                                     <div
-                                        style={{
-                                            marginRight: "10px",
-                                            fontWeight: "700",
-                                            fontFamily: "Inter, sans-serif",
-                                        }}
+                                        style={
+                                            isDesktop
+                                                ? {
+                                                    marginRight: "10px",
+                                                    fontWeight: "700",
+                                                    fontFamily: "Inter, sans-serif",
+                                                }
+                                                : {
+                                                    marginRight: "0px", 
+                                                    fontWeight: "600", 
+                                                    fontFamily: "Inter, sans-serif",
+                                                    fontSize: "12px", 
+                                                }
+                                        }
                                     >
                                         {isDesktop
                                             ? isToggled
@@ -1087,24 +1054,26 @@ const Map = (props) => {
                                         width={44}
                                     />
                                 </div>
-                                <Button
-                                    style={{
-                                        marginRight: "20px",
-                                        fontSize: "14px",
-                                        fontFamily: "Inter, sans-serif",
-                                    }}
-                                    className="button-tutorial"
-                                    variant="primary"
-                                    onClick={() => setIsOpen(true)}
-                                >
-                                    Start Tutorial
-                                </Button>
+                                {isDesktop && (
+                                    <Button
+                                        style={{
+                                            marginRight: "20px",
+                                            fontSize: "14px",
+                                            fontFamily: "Inter, sans-serif",
+                                        }}
+                                        className="button-tutorial"
+                                        variant="primary"
+                                        onClick={() => setIsOpen(true)}
+                                    >
+                                        Start Tutorial
+                                    </Button>
+                                )}
                             </div>
                         </div>
 
                     </div>
                 </div>
-                <div className={classNames({ "row-nowrap": isDesktop })}>
+                <div className={classNames({ "row-nowrap": isDesktop })} style={{ "height": "calc(100% - 70px)" }}>
                     <div
                         className={classNames("map-list")}
                         style={{
@@ -1117,10 +1086,11 @@ const Map = (props) => {
                                 ? "100vw"
                                 : 0,
                             display: !isDesktop && !defaultView && "none",
+                            "height": "100%"
                         }}
                     >
                         {!showInfo && renderTagControl()}
-                        <div>
+                        <div style={{ "height": "calc(100% - 43px)", "overflowY": "scroll" }}>
                             <div
                                 className={classNames("tag-row padder", {
                                     "result-tutorial": isEmpty(activeProviders),
@@ -1149,7 +1119,6 @@ const Map = (props) => {
                             {!isEmpty(activeProviders) ? (
                                 <div className='container2'>
                                     {showInfo ? (
-                                        isDesktop &&
                                         activeProviders &&
                                         activeProviders[selectedIndex] &&
                                         (
@@ -1157,25 +1126,8 @@ const Map = (props) => {
                                                 <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)", overflowY: 'scroll' }}>
                                                     <div className="content d-flex flex-column">
                                                         <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
-                                                        <div className="mt-2"> 
-                                                            <ProgressBar current={300} total={600} buttonLink={"google.com"} buttonLabel={"Donate Now"} />
-                                                        </div>
-                                                        <div className="mt-2"> 
-                                                            <DonutChart data={data} buttonLink={"https://google.com"} buttonLabel={"Donate Now"} />
-                                                        </div>
-                                                        <div className="mt-2"> 
-                                                            <LineChart title={"Total donations per month in 2023"} data={data2} />
-                                                        </div>
                                                         <div className="mt-2">
-                                                            <LineChart title={"Total donations per month in 2023"} data={data2} />
-                                                        </div>
-                                                        <div className="mt-2">
-                                                            
-                                                            <Collapsible label={"Graph"}>
-                                                                <ChartComponentForm/>
-                                                            </Collapsible>
-                                                        </div>
-                                                        
+                                                        </div>                              
                                                     </div>
                                                 </div>
                                             </div>
@@ -1190,9 +1142,9 @@ const Map = (props) => {
                                                 .slice(lowerPageBound, upperPageBound)
                                                 .map((i, index) => (
                                                     <div
-                                                        className={classNames({
-                                                            "result-tutorial": index == 0,
-                                                        })}
+                                                        // className={classNames({
+                                                        //     "result-tutorial": index == 0,
+                                                        // })}
                                                         key={i.id}
                                                     >   
                                                         <ProviderCell

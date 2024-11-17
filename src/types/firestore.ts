@@ -45,6 +45,7 @@ export type ProviderHours = {
 export type ProviderProps = {
     address: string;
     buildingNum?: string;
+    stationNum?: string;
     description?: string;
     facilityName: string;
     hours?: ProviderHours;

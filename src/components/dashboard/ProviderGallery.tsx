@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Provider } from "react";
 import ProviderGallerySlide from "./ProviderGallerySlide";
 import { storage } from "../../store";
+import { Button } from "react-bootstrap";
 
 interface GallerySlide {
     title: string;
@@ -8,24 +9,30 @@ interface GallerySlide {
     imgLink: string;
 }
 
+interface GalleryState {
+    slidesArray: GallerySlide[];
+}
+
 export default function ProviderGallery({
-    slidesArray = [],
+    galleryState,
+    setGalleryState,
+    deleteComponent,
 }: {
-    slidesArray?: GallerySlide[];
+    galleryState: GalleryState;
+    setGalleryState: (newState: GalleryState) => void;
+    deleteComponent: () => void;
 }) {
-    const [slides, setSlides] = useState<GallerySlide[]>(slidesArray);
+    const { slidesArray: slides } = galleryState;
+
+    const setSlides = (newSlides) => {
+        setGalleryState({ ...galleryState, slidesArray: newSlides });
+    };
 
     const defaultSlide: GallerySlide = {
         title: "",
         description: "",
         imgLink: "",
     };
-
-    useEffect(() => {
-        if (!slides || slides.length === 0) {
-            setSlides([{ ...defaultSlide }]);
-        }
-    }, [slides]);
 
     const handleSlideDataChange = (
         index: number,
@@ -39,10 +46,8 @@ export default function ProviderGallery({
     };
 
     const handleDelete = (index: number) => {
-        if (slides.length > 1) {
-            const newSlides = slides.filter((_, i) => i !== index);
-            setSlides(newSlides);
-        }
+        const newSlides = slides.filter((_, i) => i !== index);
+        setSlides(newSlides);
     };
 
     const handleAdd = (index: number) => {
@@ -85,12 +90,46 @@ export default function ProviderGallery({
     };
 
     return (
-        <div style={{ width: "100%", margin: "0px" }}>
+        <div
+            style={{
+                width: "100%",
+                margin: "0px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+            }}
+        >
             {renderSlides()}
-            {/*TO BE DELETED */}
-            <div>
-                <h4>Current Data:</h4>
-                <pre>{JSON.stringify(slides, null, 2)}</pre>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                    onClick={() => handleAdd(slides.length - 1)}
+                    style={{
+                        backgroundColor: "white",
+                        color: "#226DFF",
+                        fontWeight: "500",
+                        letterSpacing: "-0.176px",
+                        lineHeight: "150%",
+                        fontSize: "1rem",
+                        padding: "8px",
+                        border: "border: 1px solid #226DFF",
+                        width: "fit-content",
+                    }}
+                >
+                    + Add slide
+                </Button>
+                <button
+                    type="button"
+                    id="delete"
+                    style={{
+                        color: "red",
+                        border: "1px solid red",
+                        padding: "5px",
+                        borderRadius: "4px",
+                    }}
+                    onClick={deleteComponent}
+                >
+                    Delete Component
+                </button>
             </div>
         </div>
     );

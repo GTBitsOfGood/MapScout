@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player';
 interface EventInfo {
   title: string,
   videoUrl: string;
-  thumbnail: string;
+  // thumbnail: string;
 }
 
 interface EmbedComponentProps {
@@ -13,6 +13,7 @@ interface EmbedComponentProps {
 
 const EmbedComponent: React.FC<EmbedComponentProps> = ({ eventInfo }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const DEFAULT_THUMBNAIL = "https://joeferry.com/wp-content/plugins/video-thumbnails/default.jpg";
 
   const handlePlayVideo = () => {
     setIsPlaying(true);
@@ -22,7 +23,7 @@ const EmbedComponent: React.FC<EmbedComponentProps> = ({ eventInfo }) => {
       <div style={styles.innerContent}>
         {!isPlaying ? (
           <div style={styles.videoThumbnail} onClick={handlePlayVideo}>
-            <img src={eventInfo.thumbnail} alt="Video thumbnail" style={styles.thumbnail} />
+            <img src={DEFAULT_THUMBNAIL} alt="Video thumbnail" style={styles.thumbnail} />
             <div style={styles.playButtonOverlay}>
               <div style={styles.circleButton}>
                 <span style={styles.triangle}></span>

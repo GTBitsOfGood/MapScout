@@ -1,7 +1,6 @@
 import React from "react";
 import Popup from "reactjs-popup";
 import Button from "react-bootstrap/Button";
-
 import { FaInfoCircle, FaTimes } from "react-icons/fa";
 
 type MapMarkerProps = {
@@ -9,6 +8,7 @@ type MapMarkerProps = {
     selectedIndex: number;
     name: string;
     address: string;
+    stationNum: number;
     lng: number;
     lat: number;
     onShowMoreClick: () => void;
@@ -21,29 +21,34 @@ export default ({
     selectedIndex,
     name,
     address,
+    stationNum,
     onShowMoreClick,
     onMarkerClick,
     primaryColor,
 }: MapMarkerProps) => (
     <Popup
-        trigger={
-            <div
-                style={{ cursor: "pointer", width: "18px", height: "18px" }}
-                onClick={onMarkerClick}
-            >
+        trigger={    
+            <div style={{ cursor: "pointer", width: "18px", height: "18px" }} onClick={onMarkerClick}>
                 {selectedIndex === index ? (
                     <svg
-                        fill="#FFB930"
-                        stroke="white"
-                        strokeWidth="2"
-                        width="25px"
+                        width="30px"
                         height="30px"
-                        fillRule="nonzero"
+                        viewBox="0 0 30 30"
+                        xmlns="http://www.w3.org/2000/svg"
                     >
-                        {/* <div>
-            <img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"120%", height:"120%"}}/> */}
-                        <path d="M1 12.5C1 7.5 5 1 13 1 21 1 25 7.5 25 12.5 25 21.5 17 26.333 13 31 9 26.5 1 21.112 1 12.5ZM18 12.5a5 5 0 1 0-10 0 5 5 0 1 0 10 0" />
-                        {/* </div>  */}
+                        <circle cx="15" cy="15" r="14" fill="#FFB930" stroke="white" strokeWidth="1" />
+                        <text
+                            x="50%"
+                            y="50%"
+                            textAnchor="middle"
+                            fill="white"
+                            fontSize="12px"
+                            fontFamily="Arial"
+                            dy=".3em"
+                            fontWeight="bold"
+                        >
+                            {stationNum}
+                        </text>
                     </svg>
                 ) : (
                     <svg
@@ -52,11 +57,9 @@ export default ({
                         strokeWidth="2"
                         width="18px"
                         height="18px"
+                        viewBox="0 0 30 30"
                     >
-                        {/* <div>
-            <img src={process.env.PUBLIC_URL + '/logo.png'} style={{width:"120%", height:"120%"}}/> */}
-                        <path d="M1,9a8,8 0 1,0 16,0a8,8 0 1,0 -16,0" />
-                        {/* </div> */}
+                        <circle cx="15" cy="15" r="14" />
                     </svg>
                 )}
             </div>

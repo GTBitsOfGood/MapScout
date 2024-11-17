@@ -111,7 +111,7 @@ export default ({
                                     <option value={0}>Description</option>
                                     {/* <option value={1}>Single-Select</option> */}
                                     <option value={1}>Multi-Select</option>
-                                    <option value={2}>Single-Select</option>
+                                    {/* <option value={2}>Single-Select</option> */}
                                 </FormControl>
                             </InputGroup>
                         </Col>

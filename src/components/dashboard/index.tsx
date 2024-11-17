@@ -3,11 +3,9 @@ import { compose } from "redux";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
-import { withFirestore, isEmpty } from "react-redux-firebase";
+import { withFirestore } from "react-redux-firebase";
 import { formRoute } from "../../routes/pathnames";
-import SingleProvider from "./SingleProvider";
 import { selectItem } from "../../functions/reduxActions";
-import CSV from "./CSV";
 import { useCSVReader } from "react-papaparse";
 import Modal from "react-bootstrap/Modal";
 import handleDrop from "./CSV";
@@ -19,8 +17,6 @@ import { BsPlus } from "react-icons/bs";
 import Collapsible from "components/collapsible";
 import { ProviderProps } from "types/firestore";
 import ProviderInfo from "components/subcomponents/ProviderInfo";
-
-const dash = require("../../assets/img/dash.svg");
 
 function ProviderEntry({ provider, setLoading, resetIndex, firestore, selectItem, categories }: { provider: ProviderProps, setLoading: Function, resetIndex: Function, firestore: any, selectItem: Function, categories: Array<String> }) {
     return <Collapsible
@@ -83,6 +79,7 @@ function ProviderEntry({ provider, setLoading, resetIndex, firestore, selectItem
                 </div>
             </div>
         }
+        defaultState={false}
     >
         <Container>
             <ProviderInfo item={provider} categories={categories} />
@@ -153,7 +150,7 @@ function Dashboard({ firestore, team, selectItem }) {
                 className="admin-list-container"
             >
                 <div className="list-wrapper">
-                    <img src={dash} alt="empty dash" />
+                    {/* <img src={dash} alt="empty dash" /> */}
                     <h1
                         style={{
                             textAlign: "center",

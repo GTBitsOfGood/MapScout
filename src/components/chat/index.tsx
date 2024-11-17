@@ -23,28 +23,34 @@ async function sendSlackMessage(email, message) {
     fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions);
 }
 
-function Chat({ firebase, newChat, updateNewChat }) {
+const addToDo = (newToDo) => {
+    return chatRef.push().set(newToDo);
+};
+
+function Chat({firebase}) {
     const [message, setMessage] = useState("");
-    const addToDo = async (newToDo) => {
-        chatRef.push().set(newToDo);
-    };
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
     const inputChange = (e) => {
         setMessage(e.target.value);
     };
-
-    const formSubmit = (e) => {
+    
+    const formSubmit = async (e) => {
         e.preventDefault();
         if (message !== "") {
             const currentdate = new Date();
             const datetime = currentdate.toISOString();
-            addToDo({
+            await addToDo({
                 message,
                 timestamp: datetime,
                 uid: firebase.auth.uid,
                 username: firebase.auth.email,
-            }).then(() => setMessage(""));
-            sendSlackMessage(firebase.auth.email, message);
+            });
+            await sendSlackMessage(firebase.auth.email, message);
+            // Keep the state updates after all the async functions are done!
+            // For some reason, updating them first causes them to not update the state
+            setIsSubmitted(true);
+            setMessage("");
         }
     };
 
@@ -58,6 +64,23 @@ function Chat({ firebase, newChat, updateNewChat }) {
                 </div>
                 <div className="mr-5 ml-5">
                     <Discussion />
+                    { isSubmitted && (
+                        <div
+                        className="chat-bubble"
+                        style={{
+                            alignSelf: "flex-start",
+                            borderColor: "#E5E5E5",
+                            borderTopLeftRadius: 30,
+                            borderTopRightRadius: 30,
+                            borderTopWidth: 8,
+                            borderBottomLeftRadius: 0,
+                            borderBottomRightRadius: 30,
+                            marginBottom: 6
+                        }}
+                    >
+                        <div className="chat-message">Thanks for your feedback, we have recieved your message, our team will reach out to you shortely!</div>
+                    </div>
+                    )}
                     <Form onSubmit={formSubmit}>
                         <Form.Control
                             placeholder="Enter message"

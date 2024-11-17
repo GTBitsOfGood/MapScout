@@ -15,7 +15,6 @@ import GoogleSuggest from "./GoogleSuggest";
 import ImageModal from "./ImageModal";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
 
@@ -65,6 +64,7 @@ const RowForm = (props) => {
         address: [],
         description: "",
         buildingNum: [],
+        stationNum: "",
         childcare: [false],
         epic: [false],
         hours: {},
@@ -380,6 +380,17 @@ const RowForm = (props) => {
                             rows="4"
                             as="textarea"
                         />
+                    </Form.Group>
+                    <Form.Group>
+                                <Form.Label >Station #</Form.Label>
+                                <Form.Control
+                                    name="stationNum"
+                                    type="number"
+                                    value={item.stationNum}
+                                    onChange={handleInputChange}
+                                    placeholder="#"
+                                    style={{ width: '100px' }}
+                                />
                     </Form.Group>
                 </>
             );

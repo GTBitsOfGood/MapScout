@@ -1,0 +1,148 @@
+:root {
+  --color-pink: #ee415f;
+  --color-green: #58ce97;
+  --color-orange: #fc7d4a;
+  --color-red: #d14758;
+  --color-pale-pink: #ef6e85;
+  --color-coral: #f3907e;
+  --color-peach: #ecb38d;
+  --color-aqua: #a0ded0;
+  --color-pale-aqua: #c0ebe1;
+  --color-lightest-blue: #f8fcff;
+  --color-blue: #4c88e9;
+  --color-black: #242e39;
+  --color-gray-1: #3b424b;
+  --color-gray-2: #68707d;
+  --color-gray-3: #949fab;
+  --color-gray-4: #c7cdd4;
+  --color-gray-5: #edf1f6;
+  --color-gray-6: #f7f9fb;
+  --color-white: #fff;
+}
+
+body {
+  color: var(--color-black);
+  font-size: 16px;
+  font-family: sans-serif;
+  line-height: 1.6;
+}
+
+.menu {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-white);
+  z-index: 1;
+  margin-bottom: 20px;
+}
+
+.ProseMirror {
+  padding: 10px 8px 8px; 
+  border: 1px solid var(--color-gray-4);
+  border-radius: 4px;
+}
+
+.ProseMirror-focused {
+  border-color: var(--color-gray-4) !important; 
+  outline: none;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5em; 
+  margin: 0; 
+}
+
+.ProseMirror li {
+  margin-left: 0; 
+}
+
+.inner-box {
+  border: 1px solid var(--color-gray-4); 
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 4px; 
+}
+
+.button,
+.button-save,
+.button-remove,
+.menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin: 0;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: currentColor;
+}
+
+.button:hover,
+.button.is-active,
+.menu-button:hover,
+.menu-button.is-active {
+  background-color: var(--color-gray-5);
+}
+
+.button:disabled,
+.menu-button:disabled {
+  color: var(--color-gray-4);
+}
+
+.button-save {
+  background-color: var(--color-green);
+  color: var(--color-white);
+}
+
+.button-remove {
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+}
+
+.text-style-dropdown::after {
+  content: "▾";
+  font-size: 12px;
+  color: var(--color-gray-2);
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.fixed-image {
+  width: 300px;
+  height: 200px;
+}
+
+blockquote {
+  border-left: 4px solid #ddd;
+  margin-left: 0;
+  padding-left: 1em;
+  color: #555;
+  font-style: italic;
+}
+
+
+
+

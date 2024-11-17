@@ -57,12 +57,13 @@ export default ({
             resetBoundsOnResize={true}
         >
             {providers.map(
-                ({ latitude, longitude, facilityName, address }, i) => (
+                ({ latitude, longitude, facilityName, address, stationNum }, i) => (
                     <MapMarker
                         lat={latitude}
                         lng={longitude}
                         name={facilityName}
                         address={address[0]}
+                        stationNum={stationNum}
                         index={i}
                         selectedIndex={selected}
                         primaryColor={primaryColor}

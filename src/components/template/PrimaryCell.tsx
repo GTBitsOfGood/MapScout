@@ -5,12 +5,10 @@ import FormControl from "react-bootstrap/FormControl";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 import { Collapse } from "react-collapse";
-import { FiMoreVertical } from "react-icons/fi";
 import {
     IoIosArrowDown,
     IoIosArrowUp,
     IoIosRefresh,
-    IoIosTrash,
     IoMdClose,
 } from "react-icons/io";
 
@@ -18,7 +16,6 @@ export default ({
     item,
     index,
     deleteCat,
-    disableCat,
     enableCat,
     addOption,
     changeColor,

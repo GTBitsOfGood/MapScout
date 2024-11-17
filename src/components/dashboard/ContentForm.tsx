@@ -12,6 +12,7 @@ import ChartComponentForm from "components/subcomponents/chartcomponents/ChartCo
 import Collapsible from "components/collapsible";
 import ProviderGallery from "./ProviderGallery";
 import EmbedForm from "./embed-component/EmbedForm";
+import { SimpleEditor } from "./TextComponent/SimpleEditor";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -101,9 +102,164 @@ const SectionCard = ({
     isEditing,
     setIsEditing,
 }) => {
-    const [components, setComponents] = useState([]);
+    // const [components, setComponents] = useState(section.components);
+    // const [componentStates, setComponentStates] = useState({});
+    /* 
+        components = [{
+            type: "Chart",
+            data: {},
+        }]
+    */
+    const { components } = section;
+
+    const getDefaultData = (componentType) => {
+        switch (componentType) {
+            case "Chart":
+                return {
+                    type: "donut",
+                    title: "",
+                    data: {
+                        showNumber: true,
+                    },
+                };
+            case "Directory":
+                return {
+                    items: [
+                        { name: "", description: "", details: "", image: "" },
+                    ],
+                };
+            case "Embed":
+                return {
+                    embedLink: "",
+                    title: "",
+                };
+            case "Gallery":
+                return {
+                    slidesArray: [
+                        {
+                            title: "",
+                            description: "",
+                            imgLink: "",
+                        },
+                    ],
+                };
+            case "Text":
+                return {
+                    title: "Text",
+                    description: '<p>ex. "Changing lives one bit at a time..."</p>'
+                }
+            default:
+                return {};
+        }
+    };
+
+    const addComponent = (componentType) => {
+        const componentObject = {
+            type: componentType,
+            data: getDefaultData(componentType),
+        };
+        updateComponents([...components, componentObject]);
+    };
+    const updateIthComponent = (newData, i) => {
+        // console.log("here");
+        // console.log(newData);
+        const newComponents = components.map((component, iterator) => {
+            return iterator === i
+                ? { ...components[i], data: newData }
+                : component;
+        });
+        updateComponents(newComponents);
+    };
+    const deleteIthComponent = (i) => {
+        const newComponents = components.filter((_, iterator) => {
+            return iterator !== i;
+        });
+        updateComponents(newComponents);
+    };
+    const updateComponents = (newComponents) => {
+        const newSections = sections.map((sec, i) => {
+            return i === index
+                ? { ...section, components: newComponents }
+                : sec;
+        });
+        // console.log(newSections);
+        setSections(newSections);
+        // console.log(sect)
+        // console.log(sections);
+    };
+
+    const switchRender = (type, data, i) => {
+        switch (type) {
+            case "Chart":
+                return (
+                    <ChartComponentForm
+                        chartState={data}
+                        setChartState={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></ChartComponentForm>
+                );
+            case "Directory":
+                return (
+                    <DirectoryForm
+                        directoryState={data}
+                        setDirectoryState={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></DirectoryForm>
+                );
+            case "Embed":
+                return (
+                    <EmbedForm
+                        embedState={data}
+                        setEmbedState={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></EmbedForm>
+                );
+            case "Gallery":
+                return (
+                    <ProviderGallery
+                        galleryState={data}
+                        setGalleryState={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></ProviderGallery>
+                );
+            case "Text":
+                return (
+                    <SimpleEditor
+                        editorState={data}
+                        setEditorState={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></SimpleEditor>
+                );
+            default:
+                return <></>;
+        }
+    };
     return (
-        <Container fluid className="p-0 h-100 d-flex flex-column" style={{ overflowY: "scroll" }}>
+        <Container
+            fluid
+            className={`${styles.card} p-0 h-100 d-flex flex-column`}
+            style={{ overflowY: "scroll" }}
+        >
             <Row
                 className=" w-100 d-inline-flex flex-row align-items-center justify-content-between"
                 style={{
@@ -111,6 +267,9 @@ const SectionCard = ({
                     margin: "0px 0px 16px 0px",
                     // whiteSpace: "nowrap",
                     // overflow: "hidden",
+                    paddingLeft: "5px",
+                    paddingTop: "5px",
+                    paddingRight: "5px",
                 }}
             >
                 <EditableText
@@ -136,7 +295,7 @@ const SectionCard = ({
                     }}
                     onClick={() => {
                         setSelectedSection(null);
-                        setSections((sections) =>
+                        setSections(
                             sections.filter((_, i) => i !== index)
                         );
                     }}
@@ -144,14 +303,24 @@ const SectionCard = ({
                     Delete Section
                 </button>
             </Row>
-            {components.map((v, i) =>
+            {components.map((v, i) => (
                 <Row className="flex-fill m-0 w-100" key={i}>
-                    {v}
+                    <Collapsible
+                        style={{ width: "100%" }}
+                        titleStyle={{
+                            background: "white",
+                            color: "var(--chart-blue)",
+                            fontSize: "1.25rem",
+                            fontStyle: "normal",
+                            lineHeight: "24px",
+                        }}
+                        label={v.type}
+                    >
+                        {switchRender(v.type, v.data, i)}
+                    </Collapsible>
                 </Row>
-            )}
-            <Row
-                className="flex-fill m-0 w-100"
-            >
+            ))}
+            <Row className="flex-fill m-0 w-100">
                 <Dropdown>
                     <Dropdown.Toggle
                         style={{
@@ -159,70 +328,35 @@ const SectionCard = ({
                             fontSize: "16px",
                             fontWeight: "500",
                             fontFamily: "Inter, sans-serif",
-                        }} id="dropdown-basic">
+                        }}
+                        id="dropdown-basic"
+                    >
                         + Add Filter
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={() =>
-                            setComponents([...components,
-                                <Collapsible
-                                    titleStyle={{
-                                        background: "white",
-                                        color: "var(--chart-blue)",
-                                        fontSize: "1.25rem",
-                                        fontStyle: "normal",
-                                        lineHeight: "24px"
-                                    }}
-                                    label={"Chart"}>
-                                    <ChartComponentForm />
-                                </Collapsible>
-                        ])}>Chart</Dropdown.Item>
-                        <Dropdown.Item onClick={() =>
-                            setComponents([...components,
-                            <Collapsible
-                                style={{width: "100%"}}
-                                titleStyle={{
-                                    background: "white",
-                                    color: "var(--chart-blue)",
-                                    fontSize: "1.25rem",
-                                    fontStyle: "normal",
-                                    lineHeight: "24px"
-                                }}
-                                label={"Gallery"}>
-                                <ProviderGallery />
-                            </Collapsible>
-                            ])}>Gallery</Dropdown.Item>
-                        <Dropdown.Item onClick={() =>
-                            setComponents([...components,
-                            <Collapsible
-                                style={{ width: "100%" }}
-                                titleStyle={{
-                                    background: "white",
-                                    color: "var(--chart-blue)",
-                                    fontSize: "1.25rem",
-                                    fontStyle: "normal",
-                                    lineHeight: "24px"
-                                }}
-                                label={"Directory"}>
-                                <DirectoryForm items={[]} />
-                            </Collapsible>
-                            ])}>Directory</Dropdown.Item>
-                        <Dropdown.Item onClick={() =>
-                            setComponents([...components,
-                            <Collapsible
-                                style={{ width: "100%" }}
-                                titleStyle={{
-                                    background: "white",
-                                    color: "var(--chart-blue)",
-                                    fontSize: "1.25rem",
-                                    fontStyle: "normal",
-                                    lineHeight: "24px"
-                                }}
-                                label={"Embed"}>
-                                <EmbedForm/>
-                            </Collapsible>
-                            ])}>Embed</Dropdown.Item>
+                        <Dropdown.Item
+                            onClick={() => {
+                                // console.log("")
+                                addComponent("Chart");
+                            }}
+                        >
+                            Chart
+                        </Dropdown.Item>
+                        <Dropdown.Item
+                            onClick={() => addComponent("Directory")}
+                        >
+                            Directory
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => addComponent("Embed")}>
+                            Embed
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => addComponent("Gallery")}>
+                            Gallery
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => addComponent("Text")}>
+                            Text
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>
@@ -306,6 +440,7 @@ const ContentForm = ({ content, onChange }) => {
 
     const updateSections = (newSections) => {
         setSections(newSections);
+        console.log("Sections:", newSections);
         onChange(newSections);
     };
 
@@ -369,7 +504,7 @@ const ContentForm = ({ content, onChange }) => {
                 style={{
                     backgroundColor: "#E3E9F5",
                     padding: "16px 16px 28px 16px",
-                    width: "calc(100% - 264px)"
+                    width: "calc(100% - 264px)",
                 }}
             >
                 {selectedSection === null ? null : (

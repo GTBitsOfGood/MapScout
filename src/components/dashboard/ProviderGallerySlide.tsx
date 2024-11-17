@@ -64,13 +64,18 @@ export default function ProviderGallerySlide({
             </Form>
             <div
                 style={{
-                    marginBottom: "24px",
+                    marginBottom: "16px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "16px",
                 }}
             >
-                <div style={{ display: "flex", justifyContent: "end" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "end",
+                    }}
+                >
                     <Button
                         onClick={() => handleDelete(index)}
                         style={{
@@ -82,22 +87,6 @@ export default function ProviderGallerySlide({
                         Delete
                     </Button>
                 </div>
-                <Button
-                    onClick={() => handleAdd(index)}
-                    style={{
-                        backgroundColor: "white",
-                        color: "#226DFF",
-                        fontWeight: "500",
-                        letterSpacing: "-0.176px",
-                        lineHeight: "150%",
-                        fontSize: "1rem",
-                        padding: "8px",
-                        border: "border: 1px solid #226DFF",
-                        width: "fit-content",
-                    }}
-                >
-                    + Add slide
-                </Button>
             </div>
         </div>
     );

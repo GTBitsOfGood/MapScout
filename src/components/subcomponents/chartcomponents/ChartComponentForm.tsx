@@ -33,19 +33,12 @@ interface ChartForm {
     data: ChartData;
 }
 
-const ChartComponentForm = () => {
-    const [chartState, setChartState] = useState<ChartForm>({
-        type: "donut",
-        title: "",
-        data: {
-            showNumber: true,
-        },
-    });
-
-    /*
-        Handles type property update and persists state data
-    */
-    const handleTypeChange = (type: "donut" | "progress" | "line") => {
+const ChartComponentForm = ({
+    chartState,
+    setChartState,
+    deleteComponent,
+}) => {
+    const handleTypeChange = (type: ChartType) => {
         setChartState({
             type,
             data: { ...chartState.data },
@@ -58,10 +51,10 @@ const ChartComponentForm = () => {
     };
 
     const handleDataChange = (key: string, value: string | number) => {
-        setChartState((prev) => ({
-            ...prev,
-            data: { ...prev.data, [key]: value },
-        }));
+        setChartState({
+            ...chartState,
+            data: { ...chartState.data, [key]: value },
+        });
     };
 
     /*
@@ -85,31 +78,29 @@ const ChartComponentForm = () => {
         key: string,
         value: string | number
     ) => {
-        setChartState((prev) => {
-            const newData =
-                prev.type === "donut"
-                    ? [...(prev.data.donutData || [])]
-                    : [...(prev.data.lineData || [])];
-            newData[index] = { ...newData[index], [key]: value };
+        const newData =
+            chartState.type === "donut"
+                ? [...(chartState.data.donutData || [])]
+                : [...(chartState.data.lineData || [])];
+        newData[index] = { ...newData[index], [key]: value };
 
-            //handles update to percentage column for DonutData
-            if (newData.length > 0 && chartState.type === "donut") {
-                let sum = 0;
-                newData.forEach((row) => {
-                    sum += row.number;
-                });
-                newData.forEach((row) => {
-                    row.percentage =
-                        ((row.number / sum) * 100).toFixed(1) + "%";
-                });
-            }
-            return {
-                ...prev,
-                data: {
-                    ...prev.data,
-                    [prev.type === "donut" ? "donutData" : "lineData"]: newData,
-                },
-            };
+        //handles update to percentage column for DonutData
+        if (newData.length > 0 && chartState.type === "donut") {
+            let sum = 0;
+            newData.forEach((row) => {
+                sum += row.number;
+            });
+            newData.forEach((row) => {
+                row.percentage = ((row.number / sum) * 100).toFixed(1) + "%";
+            });
+        }
+        setChartState({
+            ...chartState,
+            data: {
+                ...chartState.data,
+                [chartState.type === "donut" ? "donutData" : "lineData"]:
+                    newData,
+            },
         });
     };
 
@@ -117,22 +108,25 @@ const ChartComponentForm = () => {
         Function to add a data "row", another object, to the DonutData[] or LineData[] and sets the object with respective default values
     */
     const addDataRow = () => {
-        setChartState((prev) => {
-            if (prev.type === "donut") {
-                const donutData = [
-                    ...(prev.data.donutData || []),
-                    { label: "Item X", number: 0, percentage: "0%" },
-                ];
-                return { ...prev, data: { ...prev.data, donutData } };
-            } else if (prev.type === "line") {
-                const lineData = [
-                    ...(prev.data.lineData || []),
-                    { x: "Item X", y: 0 },
-                ];
-                return { ...prev, data: { ...prev.data, lineData } };
-            }
-            return prev;
-        });
+        if (chartState.type === "donut") {
+            const donutData = [
+                ...(chartState.data.donutData || []),
+                { label: "Item X", number: 0, percentage: "0%" },
+            ];
+            setChartState({
+                ...chartState,
+                data: { ...chartState.data, donutData },
+            });
+        } else if (chartState.type === "line") {
+            const lineData = [
+                ...(chartState.data.lineData || []),
+                { x: "Item X", y: 0 },
+            ];
+            setChartState({
+                ...chartState,
+                data: { ...chartState.data, lineData },
+            });
+        }
     };
 
     const renderDataTable = () => {
@@ -199,7 +193,7 @@ const ChartComponentForm = () => {
                 );
             case "line":
                 return (
-                    <table className="data-table">
+                    <table className="data-table" style={{ width: "100%" }}>
                         <thead>
                             <tr>
                                 <th>X-axis</th>
@@ -322,6 +316,7 @@ const ChartComponentForm = () => {
                             <div className="chart-table-container">
                                 {renderDataTable()}
                                 <button
+                                    type="button"
                                     onClick={addDataRow}
                                     className="add-button"
                                 >
@@ -448,7 +443,7 @@ const ChartComponentForm = () => {
                 );
             case "line":
                 return (
-                    <div className="chart-container" style={{ width: "100%" }}>
+                    <div className="chart-container">
                         <div className="field" style={{ width: "100%" }}>
                             <label htmlFor="xLabel">X-axis label</label>
                             <input
@@ -486,6 +481,7 @@ const ChartComponentForm = () => {
                             >
                                 {renderDataTable()}
                                 <button
+                                    type="button"
                                     onClick={addDataRow}
                                     className="add-button"
                                 >
@@ -495,12 +491,13 @@ const ChartComponentForm = () => {
                         </div>
                     </div>
                 );
+            default:
+                return <></>
         }
     };
 
     return (
         <div className="chart-container">
-            {/* <h1 className="chart-header">Chart</h1> */}
             <div className="radio-group">
                 <label>
                     <input
@@ -545,15 +542,19 @@ const ChartComponentForm = () => {
             </div>
             {renderFields()}
             <div className="footer">
-                <button id="delete">Delete</button>
-            </div>
-            {/*
-                TO BE REMOVED
-                Used to see chartState state as you fill in form
-            */}
-            <div>
-                <h4>Current Data:</h4>
-                <pre>{JSON.stringify(chartState, null, 2)}</pre>
+                <button
+                    type="button"
+                    id="delete"
+                    style={{
+                        color: "red",
+                        border: "1px solid red",
+                        padding: "5px",
+                        borderRadius: "4px",
+                    }}
+                    onClick={deleteComponent}
+                >
+                    Delete Component
+                </button>
             </div>
         </div>
     );

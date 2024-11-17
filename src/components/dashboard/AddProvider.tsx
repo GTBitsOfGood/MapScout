@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Steps, { Step } from "rc-steps";
 import "rc-steps/assets/index.css";
 import "rc-steps/assets/iconfont.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -48,72 +48,12 @@ function AddProvider(props) {
     const [descriptions, setDescriptions] = useState(null);
     const [single, setSingle] = useState(null);
     const [error, setError] = useState("");
-    const [content, setContent] = useState('ex. "Changing lives one bit at a time..."');
+    const [content, setContent] = useState(
+        'ex. "Changing lives one bit at a time..."'
+    );
     const handleUpdate = (updatedContent: string) => {
         setContent(updatedContent);
     };
-
-    // const eventInfo2 = {
-    //     title: "Introducing APFF",
-    //     description:
-    //       "Atlanta Professional Fire Foundation supports the firefighters of Atlanta and their families when they need assistance. Due to a growing number of hazards, our brothers & sisters are at greater risk than ever before while protecting the citizens of Atlanta. APFF provides assistance for Illness, Injury, PTSD, Line of Duty Death and Bereavement. APFF also funds Tuition Reimbursement, Tools & Equipment Purchases, Training Opportunities, Living Condition Improvements, Affordable Housing and Fellowship Events.",
-    //     highlight: "Our Foundation is run by Firefighters, for Firefighters!"
-    // };
-
-    // async function fetchData() {
-    //   const collections = props.firestore.collection('categories');
-    //   const f = await collections
-    //     .where('team', '==', props.team.name)
-    //     .where('active', '==', true)
-    //     .where('select_type', '==', 2)
-    //     .get()
-    //     .then((querySnapshot) => {
-    //       const idToData = {};
-    //       querySnapshot.forEach((doc) => {
-    //         const data = doc.data();
-    //         idToData[doc.id] = {
-    //           name: data.name,
-    //           options: data.options,
-    //         };
-    //       });
-    //       return idToData;
-    //     });
-    //   const d = await collections
-    //     .where('team', '==', props.team.name)
-    //     .where('active', '==', true)
-    //     .where('select_type', '==', 0)
-    //     .get()
-    //     .then((querySnapshot) => {
-    //       const idToData = {};
-    //       querySnapshot.forEach((doc) => {
-    //         const data = doc.data();
-    //         idToData[doc.id] = {
-    //           name: data.name,
-    //           options: data.options,
-    //         };
-    //       });
-    //       return idToData;
-    //     });
-    //   const c = await collections
-    //     .where('team', '==', props.team.name)
-    //     .where('active', '==', true)
-    //     .where('select_type', '==', 1)
-    //     .get()
-    //     .then((querySnapshot) => {
-    //       const idToData = {};
-    //       querySnapshot.forEach((doc) => {
-    //         const data = doc.data();
-    //         idToData[doc.id] = {
-    //           name: data.name,
-    //           options: data.options,
-    //         };
-    //       });
-    //       return idToData;
-    //     });
-    //   setFilters(f);
-    //   setDescriptions(d);
-    //   setCategories(c);
-    // }
 
     useEffect(() => {
         async function fetchData() {
@@ -180,36 +120,79 @@ function AddProvider(props) {
                 delIndex !== -1 && steps.splice(delIndex, 1);
             }
 
+            if (filters && Object.keys(filters).length) {
+                const delIndex = steps.indexOf("Tag");
+                delIndex == -1 && steps.push("Tag");
+            }
+
             if (descriptions && !Object.keys(descriptions).length) {
                 const delIndex = steps.indexOf("Text");
                 delIndex !== -1 && steps.splice(delIndex, 1);
+            }
+
+            if (descriptions && Object.keys(descriptions).length) {
+                const delIndex = steps.indexOf("Text");
+                delIndex == -1 && steps.push("Text");
             }
 
             if (single && !Object.keys(single).length) {
                 const delIndex = steps.indexOf("Toggle");
                 delIndex !== -1 && steps.splice(delIndex, 1);
             }
-        }
 
+            if (single && Object.keys(single).length) {
+                const delIndex = steps.indexOf("Toggle");
+                delIndex == -1 && steps.push("Toggle");
+            }
+        }
         updateSteps();
     }, [filters, descriptions, single]);
 
-    // function updateSteps() {
-    //   if (filters && !Object.keys(filters).length) {
-    //     const delIndex = steps.indexOf("Tag");
-    //     delIndex !== -1 && steps.splice(delIndex, 1);
-    //   }
+    const validateComponents = (i) => {
+        if (!i.content) {
+            return true;
+        }
+        const components = (i.content?.sections ?? []).flatMap(
+            (section) => section.components
+        );
+        return components.every((component) => {
+            return validateComponent(component);
+        });
+    };
 
-    //   if (descriptions && !Object.keys(descriptions).length) {
-    //     const delIndex = steps.indexOf("Text");
-    //     delIndex !== -1 && steps.splice(delIndex, 1);
-    //   }
-
-    //   if (categories && !Object.keys(categories).length) {
-    //     const delIndex = steps.indexOf("Toggle");
-    //     delIndex !== -1 && steps.splice(delIndex, 1);
-    //   }
-    // }
+    const validateComponent = (component) => {
+        const { type, data } = component;
+        switch (type) {
+            case "Chart":
+                switch (data.type) {
+                    case "donut":
+                        return !!(data.data.donutData?.length > 0);
+                    case "progress":
+                        return (
+                            data.data.current != null &&
+                            !isNaN(data.data.current) &&
+                            data.data.total != null &&
+                            !isNaN(data.data.total)
+                        );
+                    case "line":
+                        return !!(data.data.lineData?.length > 0);
+                    default:
+                        return true;
+                }
+            case "Gallery":
+                return data.slidesArray.every((slide) => {
+                    return slide.title !== "";
+                });
+            case "Directory":
+                return data.items.every((item) => {
+                    return item.name !== "";
+                });
+            case "Embed":
+                return data.embedLink !== "";
+            default:
+                return true;
+        }
+    };
 
     async function addFirestore() {
         setIsLoading(true);
@@ -227,9 +210,9 @@ function AddProvider(props) {
                     fetch(
                         `https://maps.googleapis.com/maps/api/geocode/json?address=${i.address[0].replace(
                             /\s/g,
-                            "%20",
-                        )}&key=${GOOGLE_API_KEY}`,
-                    ),
+                            "%20"
+                        )}&key=${GOOGLE_API_KEY}`
+                    )
                 );
                 const responseJson = await response.json();
                 if (
@@ -241,7 +224,7 @@ function AddProvider(props) {
                 }
                 if (!i.imageURL) {
                     const res = await fetch(
-                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`,
+                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`
                     );
                     const blob = await res.blob();
                     const filename = i.facilityName + ".jpeg";
@@ -257,15 +240,15 @@ function AddProvider(props) {
             }
             await promiseWithTimeout(
                 5000,
-                props.firestore.set(
-                    { collection: "providers", doc: i.facilityName },
-                    i,
-                ),
+                props.firestore.set({
+                    collection: "providers",
+                    doc: i.id
+                }, i)
             );
             props.history.push(providerRoute);
         } catch (e) {
             setError(
-                "Failed to save changes. Please check your network connection or try again later.",
+                "Failed to save changes. Please check your network connection or try again later."
             );
         } finally {
             setIsLoading(false);
@@ -284,8 +267,8 @@ function AddProvider(props) {
                 const response = await fetch(
                     `https://maps.googleapis.com/maps/api/geocode/json?address=${i.address[0].replace(
                         /\s/g,
-                        "%20",
-                    )}&key=${GOOGLE_API_KEY}`,
+                        "%20"
+                    )}&key=${GOOGLE_API_KEY}`
                 );
                 const responseJson = await response.json();
                 if (
@@ -297,7 +280,7 @@ function AddProvider(props) {
                 }
                 if (!i.imageURL) {
                     const res = await fetch(
-                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`,
+                        `https://maps.googleapis.com/maps/api/streetview?size=500x500&location=${i.latitude},${i.longitude}&fov=80&heading=70&pitch=0&key=${GOOGLE_API_KEY}`
                     );
                     const blob = await res.blob();
                     const filename = i.facilityName + ".jpeg";
@@ -319,7 +302,7 @@ function AddProvider(props) {
                     querySnapshot.forEach((doc) => {
                         firestore.update(
                             { collection: "providers", doc: doc.id },
-                            i,
+                            i
                         );
                     });
                 });
@@ -327,7 +310,7 @@ function AddProvider(props) {
             props.history.push(providerRoute);
         } catch (e) {
             setError(
-                "Failed to save changes. Please check your network connection or try again later.",
+                "Failed to save changes. Please check your network connection or try again later."
             );
         } finally {
             setIsLoading(false);
@@ -388,13 +371,13 @@ function AddProvider(props) {
                                     disabled={!completed}
                                     onClick={
                                         props.selected &&
-                                        props.selected.facilityName
+                                            props.selected.facilityName
                                             ? updateFirestore
                                             : addFirestore
                                     }
                                 >
                                     {props.selected &&
-                                    props.selected.facilityName
+                                        props.selected.facilityName
                                         ? "Edit"
                                         : "Add"}{" "}
                                     Provider
@@ -411,7 +394,12 @@ function AddProvider(props) {
                         )}
                     </div>
                 </Col>
-                <Col xs={12} md={8} lg={9} style={{overflow: "scroll", height: "100vh"}}>
+                <Col
+                    xs={12}
+                    md={8}
+                    lg={9}
+                    style={{ overflow: "scroll", height: "100vh" }}
+                >
                     <Flipper flipKey={step}>
                         <Flipped flipId="form">
                             <div className="bg-white p-3">
@@ -434,10 +422,10 @@ function AddProvider(props) {
                                                     <Button
                                                         onClick={
                                                             step ===
-                                                            steps.length - 1
+                                                                steps.length - 1
                                                                 ? props.selected &&
-                                                                  props.selected
-                                                                      .facilityName
+                                                                    props.selected
+                                                                        .facilityName
                                                                     ? updateFirestore
                                                                     : addFirestore
                                                                 : next
@@ -445,15 +433,15 @@ function AddProvider(props) {
                                                         disabled={
                                                             !completed &&
                                                             step ===
-                                                                steps.length - 1
+                                                            steps.length - 1
                                                         }
                                                         variant="primary"
                                                     >
                                                         {step ===
-                                                        steps.length - 1
+                                                            steps.length - 1
                                                             ? props.selected &&
-                                                              props.selected
-                                                                  .facilityName
+                                                                props.selected
+                                                                    .facilityName
                                                                 ? "Edit Provider"
                                                                 : "Add Provider"
                                                             : "Next"}
@@ -479,9 +467,12 @@ function AddProvider(props) {
                                                             isValidNumberForRegion(
                                                                 parseIncompletePhoneNumber(
                                                                     i
-                                                                        .phoneNum[0],
+                                                                        .phoneNum[0]
                                                                 ),
-                                                                "US",
+                                                                "US"
+                                                            ) &&
+                                                            validateComponents(
+                                                                i
                                                             );
                                                         setItem(i);
                                                         setCompleted(c);
@@ -510,5 +501,5 @@ export default compose<any>(
         firebase: state.firebase,
         selected: state.item.selected,
         team: state.item.team,
-    })),
+    }))
 )(AddProvider);
