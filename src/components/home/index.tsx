@@ -73,13 +73,29 @@ function Home({ firebaseAuth, firestore }) {
         }
     }, [firebaseAuth]);
 
-    useEffect(() => {
-        if (!validateEmail(email) || emailDisabled) setEmailDisabled(false);
-        else {
-            setEmailDisabled(true);
-            setShowEmailBtnModal(true);
-        }
-    }, [email]);
+    // useEffect(() => {
+    //     const validEmail = validateEmail(email);
+
+    //     // if (!validEmail) {
+    //     //     if (emailDisabled) {
+    //     //         setEmailDisabled(false); // Only update if necessary
+    //     //     }
+    //     // } else {
+    //     //     console.log("here");
+    //     //     if (!emailDisabled) {
+    //     //         setEmailDisabled(true); // Only update if necessary
+    //     //         setShowEmailBtnModal(true); // Show the modal for valid email
+    //     //     }
+    //     // }
+    //     // if (!validateEmail(email) || emailDisabled) {
+    //     //     console.log("here1");
+    //     //     setEmailDisabled(false);
+    //     // } else {
+    //     //     console.log("here");
+    //     //     setEmailDisabled(true);
+    //     //     setShowEmailBtnModal(true);
+    //     // }
+    // }, [email]);
 
     async function handleSubmit() {
         const payload = { email };
@@ -168,6 +184,7 @@ function Home({ firebaseAuth, firestore }) {
                                 <b>complete control</b> over the information and
                                 search filters you present.
                             </p>
+                            <p>hi {emailDisabled.toString()}</p>
                             <ul style={{ marginLeft: 20 }}>
                                 <li>Completely free for nonprofits</li>
                                 <li>100% customer satisfaction</li>
@@ -191,9 +208,32 @@ function Home({ firebaseAuth, firestore }) {
                                     <Form.Control
                                         type="email"
                                         value={email}
-                                        onChange={(e) =>
-                                            setEmail((e.target as HTMLInputElement).value)
-                                        }
+                                        onChange={(e) => {
+                                            const emailValue = (
+                                                e.target as HTMLInputElement
+                                            ).value;
+                                            setEmail(emailValue);
+                                            const validEmail =
+                                                validateEmail(emailValue);
+                                            if (validEmail) {
+                                                setEmailDisabled(false);
+                                            } else {
+                                                setEmailDisabled(true);
+                                            }
+                                        }}
+                                        onInput={(e) => {
+                                            const emailValue = (
+                                                e.target as HTMLInputElement
+                                            ).value;
+                                            setEmail(emailValue);
+                                            const validEmail =
+                                                validateEmail(emailValue);
+                                            if (validEmail) {
+                                                setEmailDisabled(false);
+                                            } else {
+                                                setEmailDisabled(true);
+                                            }
+                                        }}
                                         //onClick={addModal}
                                         placeholder="name@example.com"
                                         aria-label="Sign up for our waitlist"
@@ -213,10 +253,7 @@ function Home({ firebaseAuth, firestore }) {
                                     </Modal>
                                     <InputGroup.Append>
                                         <Button
-                                            disabled={
-                                                emailDisabled ||
-                                                !validateEmail(email)
-                                            }
+                                            disabled={emailDisabled}
                                             onClick={handleSubmit}
                                             id="emailSignup"
                                         >
@@ -301,5 +338,5 @@ const mapStateToProps = (state) => ({
 
 export default compose<any>(
     withFirestore,
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, null)
 )(React.memo(Home));

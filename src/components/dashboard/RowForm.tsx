@@ -18,33 +18,6 @@ import Button from "react-bootstrap/Button";
 import ActionForm from "./ActionForm";
 import ContentForm from "./ContentForm";
 
-const galleryData = [
-    {
-        title: "testVal1",
-        description: "testing testing",
-        imgLink:
-            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
-    },
-    {
-        title: "testVal2",
-        description: "testing testing",
-        imgLink:
-            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
-    },
-    {
-        title: "testVal3",
-        description: "testing testing",
-        imgLink:
-            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
-    },
-    {
-        title: "testVal4",
-        description: "testing testing",
-        imgLink:
-            "https://images.squarespace-cdn.com/content/v1/54822a56e4b0b30bd821480c/45ed8ecf-0bb2-4e34-8fcf-624db47c43c8/Golden+Retrievers+dans+pet+care.jpeg",
-    },
-];
-
 function validURL(str) {
     const pattern = new RegExp(
         "^(https?:\\/\\/)?" + // protocol
@@ -97,6 +70,12 @@ const RowForm = (props) => {
             newItem = { ...item, [e.target.name]: [e.target.value] };
         }
         props.setItem(newItem);
+    }
+
+    function handleStationNumChange(e) {
+        const newItem = { ...item, [e.target.name]: [e.target.value] };
+        setItem(newItem);
+        // props.setItem(newItem);
     }
 
     function onPhoneChange(e) {
@@ -382,15 +361,26 @@ const RowForm = (props) => {
                         />
                     </Form.Group>
                     <Form.Group>
-                                <Form.Label >Station #</Form.Label>
-                                <Form.Control
-                                    name="stationNum"
-                                    type="number"
-                                    value={item.stationNum}
-                                    onChange={handleInputChange}
-                                    placeholder="#"
-                                    style={{ width: '100px' }}
-                                />
+                        <Form.Label>Station #</Form.Label>
+                        <Form.Control
+                            name="stationNum"
+                            type="number"
+                            value={item.stationNum}
+                            onChange={handleStationNumChange}
+                            onBlur={(e) => {
+                                let value = Number(e.target.value);
+                                value = Math.max(value, 0);
+                                const newItem = {
+                                    ...item,
+                                    [e.target.name]: [value],
+                                };
+                                setItem(newItem);
+                                props.setItem(newItem);
+                            }}
+                            placeholder="#"
+                            style={{ width: "100px" }}
+                            min="0"
+                        />
                     </Form.Group>
                 </>
             );
@@ -411,14 +401,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <MultiSelect
                                     options={options}
-                                    selected={item['filters'][key] || []}
+                                    selected={item["filters"][key] || []}
                                     onSelectedChanged={(selected) => {
                                         const newItem = {
                                             ...item,
-                                            ['filters']: {
-                                                ...item['filters'],
+                                            ["filters"]: {
+                                                ...item["filters"],
                                                 [key]: selected,
-                                            }
+                                            },
                                         };
                                         setItem(newItem);
                                         props.setItem(newItem);
@@ -438,14 +428,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    value={item['filters'][key]}
+                                    value={item["filters"][key]}
                                     onChange={(e: any) => {
                                         const newItem = {
                                             ...item,
-                                            ['filters']: {
-                                                ...item['filters'],
-                                                [key]: e.target.value
-                                            }
+                                            ["filters"]: {
+                                                ...item["filters"],
+                                                [key]: e.target.value,
+                                            },
                                         };
                                         setItem(newItem);
                                         props.setItem(newItem);

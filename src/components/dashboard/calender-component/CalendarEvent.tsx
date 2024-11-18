@@ -236,7 +236,11 @@ export default function CalendarEvent({
                                 if (num > 10 || num < 1) return;
                                 handleDisplayNumberChange(num);
                             }}
-                            style={{ maxWidth: "7%" }}
+                            style={{
+                                paddingLeft: "10px",
+                                maxWidth: "60px",
+                                paddingRight: "10px",
+                            }}
                         />
                     </Form.Group>
                 )}
@@ -473,7 +477,7 @@ export default function CalendarEvent({
                         Delete
                     </Button>
                 </div>
-                <Button
+                {/* <Button
                     onClick={() => handleAdd(index)}
                     style={{
                         backgroundColor: "white",
@@ -488,7 +492,7 @@ export default function CalendarEvent({
                     }}
                 >
                     + Add event
-                </Button>
+                </Button> */}
             </div>
         </div>
     );

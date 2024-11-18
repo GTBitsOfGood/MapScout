@@ -19,6 +19,7 @@ import LineChart from "./chartcomponents/LineChart";
 import GeneralInfo from "components/dashboard/GeneralInfo";
 import ReadMoreAndLess from "react-read-more-less";
 import EventInfoComponent from "components/dashboard/EventInfoComponent";
+import UpcomingEventsContainer from "components/dashboard/calender-component/UpcomingEventContainer";
 
 const ProviderInfo = (props) => {
     const [image, setImage] = useState("bog");
@@ -123,7 +124,7 @@ const ProviderInfo = (props) => {
                 const eventInfo = {
                     title: data.title,
                     videoUrl: data.embedLink,
-                }
+                };
                 return (
                     <Collapsible
                         label={eventInfo.title}
@@ -146,7 +147,25 @@ const ProviderInfo = (props) => {
                             marginRight: "auto",
                         }}
                     >
-                        <EventInfoComponent description={data.description}></EventInfoComponent>
+                        <EventInfoComponent
+                            description={data.description}
+                        ></EventInfoComponent>
+                    </Collapsible>
+                );
+            case "Calendar":
+                return (
+                    <Collapsible
+                        label={"Upcoming Events"}
+                        style={{
+                            maxWidth: "1000px",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                    >
+                        <UpcomingEventsContainer
+                            events={data.events}
+                            displayNumber={data.displayNumber}
+                        ></UpcomingEventsContainer>
                     </Collapsible>
                 );
             default:
@@ -161,7 +180,7 @@ const ProviderInfo = (props) => {
             try {
                 const res2 = await fetch(
                     `https://maps.googleapis.com/maps/api/staticmap?center=${props.item.latitude},${props.item.longitude}&zoom=16&scale=2&size=335x250&maptype=roadmap&key=${GOOGLE_API_KEY}&format=png&visual_refresh=true` +
-                    `&markers=${props.item.latitude},${props.item.longitude}`
+                        `&markers=${props.item.latitude},${props.item.longitude}`
                 );
                 setStreetView(res2.url);
                 setImage(props.item.imageURL);
@@ -183,14 +202,15 @@ const ProviderInfo = (props) => {
 
     const categoriesToUse = props.categories || [];
 
-
-
     return (
         <Container fluid className="provider-info-container">
             <Row className="mb-3">
                 <Card style={{ width: "100%" }}>
                     <LazyLoad debounce={false} offsetVertical={500}>
-                        <Card.Img style={{ maxHeight: "60vh", objectFit: "cover" }} src={image} />
+                        <Card.Img
+                            style={{ maxHeight: "60vh", objectFit: "cover" }}
+                            src={image}
+                        />
                     </LazyLoad>
                 </Card>
             </Row>
@@ -203,7 +223,7 @@ const ProviderInfo = (props) => {
                             marginLeft: "auto",
                             marginRight: "auto",
                         }}
-                        containerStyle={{ placeItems: "flex-start", }}
+                        containerStyle={{ placeItems: "flex-start" }}
                     >
                         <GeneralInfo item={props.item} />
                     </Collapsible>
@@ -213,9 +233,7 @@ const ProviderInfo = (props) => {
                 // console.log(component);
                 return (
                     <Row className="info-rows">
-                        <Col md={12}>
-                            {renderComponent(component)}
-                        </Col>
+                        <Col md={12}>{renderComponent(component)}</Col>
                     </Row>
                 );
             })}
@@ -262,7 +280,7 @@ const ProviderInfo = (props) => {
                         </div>
                     ))}
             </div>
-        </Container >
+        </Container>
     );
 };
 

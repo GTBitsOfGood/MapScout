@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CalendarEvent from "./CalendarEvent";
+import { Button } from "react-bootstrap";
 
 export interface ICalendarEvent {
     eventName: string;
@@ -35,8 +36,12 @@ export interface ICalendarData {
 
 export default function CalendarForm({
     calendarData,
+    setCalendarData,
+    deleteComponent,
 }: {
     calendarData: ICalendarData;
+    setCalendarData: (newState: ICalendarData) => void;
+    deleteComponent: () => void;
 }) {
     const defaultEvent: ICalendarEvent = {
         eventName: "",
@@ -57,15 +62,27 @@ export default function CalendarForm({
         buttonText: "",
     };
 
-    const [events, setEvents] = useState<ICalendarEvent[]>(
-        calendarData.events.length > 0
-            ? calendarData.events
-            : [{ ...defaultEvent }]
-    );
+    // const [events, setEvents] = useState<ICalendarEvent[]>(
+    //     calendarData.events.length > 0
+    //         ? calendarData.events
+    //         : [{ ...defaultEvent }]
+    // );
 
-    const [displayNumber, setDisplayNumber] = useState<number>(
-        calendarData.displayNumber
-    );
+    // const [displayNumber, setDisplayNumber] = useState<number>(
+    //     calendarData.displayNumber
+    // );
+
+    const setEvents = (callback) => {
+        const prevEvents = [...calendarData.events];
+        const updatedEvents = callback(prevEvents);
+        setCalendarData({ ...calendarData, events: updatedEvents });
+    };
+
+    const setDisplayNumber = (newDisplayNumber) => {
+        setCalendarData({ ...calendarData, displayNumber: newDisplayNumber });
+    };
+
+    const { events, displayNumber } = calendarData;
 
     const handleEventDataChange = (
         index: number,
@@ -102,9 +119,9 @@ export default function CalendarForm({
     };
 
     const handleDelete = (index: number) => {
-        if (events.length > 1) {
-            setEvents((prevEvents) => prevEvents.filter((_, i) => i !== index));
-        }
+        // if (events.length > 1) {
+        setEvents((prevEvents) => prevEvents.filter((_, i) => i !== index));
+        // }
     };
 
     const handleAdd = (index: number) => {
@@ -138,12 +155,50 @@ export default function CalendarForm({
     };
 
     return (
-        <div style={{ width: "100%", margin: "0px" }}>
+        <div
+            style={{
+                width: "100%",
+                margin: "0px",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             {renderEvents()}
-            <div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                    onClick={() => handleAdd(events.length - 1)}
+                    style={{
+                        backgroundColor: "white",
+                        color: "#226DFF",
+                        fontWeight: "500",
+                        letterSpacing: "-0.176px",
+                        lineHeight: "150%",
+                        fontSize: "1rem",
+                        padding: "8px",
+                        border: "border: 1px solid #226DFF",
+                        width: "fit-content",
+                    }}
+                >
+                    + Add event
+                </Button>
+                <button
+                    type="button"
+                    id="delete"
+                    style={{
+                        color: "red",
+                        border: "1px solid red",
+                        padding: "5px",
+                        borderRadius: "4px",
+                    }}
+                    onClick={deleteComponent}
+                >
+                    Delete Component
+                </button>
+            </div>
+            {/* <div>
                 <h4>Current Data:</h4>
                 <pre>{JSON.stringify({ displayNumber, events }, null, 2)}</pre>
-            </div>
+            </div> */}
         </div>
     );
 }

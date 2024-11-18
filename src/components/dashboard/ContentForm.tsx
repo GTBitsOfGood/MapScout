@@ -13,6 +13,7 @@ import Collapsible from "components/collapsible";
 import ProviderGallery from "./ProviderGallery";
 import EmbedForm from "./embed-component/EmbedForm";
 import { SimpleEditor } from "./TextComponent/SimpleEditor";
+import CalendarForm from "./calender-component/CalendarForm";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -146,8 +147,33 @@ const SectionCard = ({
             case "Text":
                 return {
                     title: "Text",
-                    description: '<p>ex. "Changing lives one bit at a time..."</p>'
-                }
+                    description:
+                        '<p>ex. "Changing lives one bit at a time..."</p>',
+                };
+            case "Calendar":
+                return {
+                    events: [
+                        {
+                            eventName: "",
+                            fromDate: "",
+                            toDate: "",
+                            fromTime: "",
+                            toTime: "",
+                            isAllDay: false,
+                            isCustom: false,
+                            address: "",
+                            description: "",
+                            repeatDays: [],
+                            customEndDate: "",
+                            customEndOccurrences: 1,
+                            isOn: true,
+                            isAfter: false,
+                            buttonLink: "",
+                            buttonText: "",
+                        },
+                    ],
+                    displayNumber: 5,
+                };
             default:
                 return {};
         }
@@ -250,6 +276,18 @@ const SectionCard = ({
                         }}
                     ></SimpleEditor>
                 );
+            case "Calendar":
+                return (
+                    <CalendarForm
+                        calendarData={data}
+                        setCalendarData={(newState) => {
+                            updateIthComponent(newState, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></CalendarForm>
+                );
             default:
                 return <></>;
         }
@@ -295,9 +333,7 @@ const SectionCard = ({
                     }}
                     onClick={() => {
                         setSelectedSection(null);
-                        setSections(
-                            sections.filter((_, i) => i !== index)
-                        );
+                        setSections(sections.filter((_, i) => i !== index));
                     }}
                 >
                     Delete Section
@@ -315,6 +351,7 @@ const SectionCard = ({
                             lineHeight: "24px",
                         }}
                         label={v.type}
+                        defaultState={false}
                     >
                         {switchRender(v.type, v.data, i)}
                     </Collapsible>
@@ -357,6 +394,9 @@ const SectionCard = ({
                         <Dropdown.Item onClick={() => addComponent("Text")}>
                             Text
                         </Dropdown.Item>
+                        <Dropdown.Item onClick={() => addComponent("Calendar")}>
+                            Calendar
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </Row>
@@ -394,8 +434,9 @@ const SectionButton = ({
                         maxWidth: "12px",
                         borderTopLeftRadius: "8px",
                         borderBottomLeftRadius: "8px",
-                        backgroundColor: `${isSelected ? "#226DFF" : "transparent"
-                            }`,
+                        backgroundColor: `${
+                            isSelected ? "#226DFF" : "transparent"
+                        }`,
                     }}
                 ></Col>
                 <Col
