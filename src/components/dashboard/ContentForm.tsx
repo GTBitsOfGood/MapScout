@@ -169,8 +169,9 @@ const SectionCard = ({
             case "Text":
                 return {
                     title: "Text",
-                    description: '<p>ex. "Changing lives one bit at a time..."</p>'
-                }
+                    description:
+                        '<p>ex. "Changing lives one bit at a time..."</p>',
+                };
             default:
                 return {};
         }
@@ -330,9 +331,7 @@ const SectionCard = ({
                     }}
                     onClick={() => {
                         setSelectedSection(null);
-                        setSections(
-                            sections.filter((_, i) => i !== index)
-                        );
+                        setSections(sections.filter((_, i) => i !== index));
                     }}
                 >
                     Delete Section
@@ -350,6 +349,7 @@ const SectionCard = ({
                             lineHeight: "24px",
                         }}
                         label={v.type}
+                        defaultState={false}
                     >
                         {switchRender(v.type, v.data, i)}
                     </Collapsible>
@@ -370,19 +370,13 @@ const SectionCard = ({
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Calendar")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Calendar")}>
                             Calendar
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Chart")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Chart")}>
                             Chart
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Directory")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Directory")}>
                             Directory
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => addComponent("Embed")}>
@@ -431,8 +425,9 @@ const SectionButton = ({
                         maxWidth: "12px",
                         borderTopLeftRadius: "8px",
                         borderBottomLeftRadius: "8px",
-                        backgroundColor: `${isSelected ? "#226DFF" : "transparent"
-                            }`,
+                        backgroundColor: `${
+                            isSelected ? "#226DFF" : "transparent"
+                        }`,
                     }}
                 ></Col>
                 <Col

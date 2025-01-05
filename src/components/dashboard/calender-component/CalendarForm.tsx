@@ -62,11 +62,21 @@ export default function CalendarForm({
         buttonText: "",
     };
 
-    const events = calendarData.events;
+    // const [displayNumber, setDisplayNumber] = useState<number>(
+    //     calendarData.displayNumber
+    // );
 
-    const [displayNumber, setDisplayNumber] = useState<number>(
-        calendarData.displayNumber
-    );
+    const setEvents = (callback) => {
+        const prevEvents = [...calendarData.events];
+        const updatedEvents = callback(prevEvents);
+        setCalendarData({ ...calendarData, events: updatedEvents });
+    };
+
+    const setDisplayNumber = (newDisplayNumber) => {
+        setCalendarData({ ...calendarData, displayNumber: newDisplayNumber });
+    };
+
+    const { events, displayNumber } = calendarData;
 
     const handleEventDataChange = (
         index: number,
@@ -145,11 +155,18 @@ export default function CalendarForm({
     };
 
     return (
-        <div style={{ width: "100%", margin: "0px" }}>
+        <div
+            style={{
+                width: "100%",
+                margin: "0px",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             {renderEvents()}
             <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button
-                    onClick={() => handleAdd(events.length-1)}
+                    onClick={() => handleAdd(events.length - 1)}
                     style={{
                         backgroundColor: "white",
                         color: "#226DFF",

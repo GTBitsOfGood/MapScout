@@ -178,14 +178,10 @@ function AddProvider(props) {
         const { type, data } = component;
         switch (type) {
             case "Calendar":
-                return data.events.every((event: ICalendarEvent) => {
-                    return (
-                        event.eventName.length > 0 && 
-                        event.fromDate.length > 0 &&
-                        event.toDate.length > 0 &&
-                        event.fromTime.length > 0 &&
-                        event.toTime.length > 0
-                    )
+                return data.events.every((event) => {
+                    const validFields = event.eventName && event.fromDate && event.toDate;
+                    const validTimes = !event.isAllDay ? event.fromTime && event.toTime : true;
+                    return validFields && validTimes;
                 });
             case "Chart":
                 switch (data.type) {

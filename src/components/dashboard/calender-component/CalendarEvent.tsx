@@ -235,7 +235,11 @@ export default function CalendarEvent({
                                 if (num > 10 || num < 1) return;
                                 handleDisplayNumberChange(num);
                             }}
-                            style={{ width: "65px" }}
+                            style={{
+                                paddingLeft: "10px",
+                                maxWidth: "60px",
+                                paddingRight: "10px",
+                            }}
                         />
                     </Form.Group>
                 )}

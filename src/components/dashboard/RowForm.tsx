@@ -71,6 +71,12 @@ const RowForm = (props) => {
         }
     }
 
+    function handleStationNumChange(e) {
+        const newItem = { ...item, [e.target.name]: [e.target.value] };
+        setItem(newItem);
+        // props.setItem(newItem);
+    }
+
     function onPhoneChange(e) {
         let newItem = {};
         if (e.target.value.length === 4 && e.target.value[0] === "(") {
@@ -334,15 +340,26 @@ const RowForm = (props) => {
                         />
                     </Form.Group>
                     <Form.Group>
-                                <Form.Label >Station #</Form.Label>
-                                <Form.Control
-                                    name="stationNum"
-                                    type="number"
-                                    value={item.stationNum}
-                                    onChange={handleInputChange}
-                                    placeholder="#"
-                                    style={{ width: '100px' }}
-                                />
+                        <Form.Label>Station #</Form.Label>
+                        <Form.Control
+                            name="stationNum"
+                            type="number"
+                            value={item.stationNum}
+                            onChange={handleStationNumChange}
+                            onBlur={(e) => {
+                                let value = Number(e.target.value);
+                                value = Math.max(value, 0);
+                                const newItem = {
+                                    ...item,
+                                    [e.target.name]: [value],
+                                };
+                                setItem(newItem);
+                                props.setItem(newItem);
+                            }}
+                            placeholder="#"
+                            style={{ width: "100px" }}
+                            min="0"
+                        />
                     </Form.Group>
                 </>
             );
@@ -364,14 +381,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <MultiSelect
                                     options={options}
-                                    selected={item['filters'][key] || []}
+                                    selected={item["filters"][key] || []}
                                     onSelectedChanged={(selected) => {
                                         const newItem = {
                                             ...item,
-                                            ['filters']: {
-                                                ...item['filters'],
+                                            ["filters"]: {
+                                                ...item["filters"],
                                                 [key]: selected,
-                                            }
+                                            },
                                         };
                                         setItem(newItem);
                                     }}
@@ -391,14 +408,14 @@ const RowForm = (props) => {
                                 <Form.Label>{name}</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    value={item['filters'][key]}
+                                    value={item["filters"][key]}
                                     onChange={(e: any) => {
                                         const newItem = {
                                             ...item,
-                                            ['filters']: {
-                                                ...item['filters'],
-                                                [key]: e.target.value
-                                            }
+                                            ["filters"]: {
+                                                ...item["filters"],
+                                                [key]: e.target.value,
+                                            },
                                         };
                                         setItem(newItem);
                                     }}
