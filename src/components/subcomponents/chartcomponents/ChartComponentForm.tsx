@@ -10,7 +10,7 @@ interface DonutData {
 }
 
 interface LineData {
-    x: string;
+    x: number;
     y: number;
 }
 
@@ -33,11 +33,7 @@ interface ChartForm {
     data: ChartData;
 }
 
-const ChartComponentForm = ({
-    chartState,
-    setChartState,
-    deleteComponent,
-}) => {
+const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
     const handleTypeChange = (type: ChartType) => {
         setChartState({
             type,
@@ -45,6 +41,8 @@ const ChartComponentForm = ({
             title: chartState.title,
         });
     };
+
+    const randomId = Math.random();
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChartState({ ...chartState, title: e.target.value });
@@ -80,20 +78,21 @@ const ChartComponentForm = ({
     ) => {
         const newData =
             chartState.type === "donut"
-                ? [...(chartState.data.donutData || [])]
-                : [...(chartState.data.lineData || [])];
-        newData[index] = { ...newData[index], [key]: value };
+                ? chartState.data.donutData.map((row) => ({ ...row }))
+                : chartState.data.lineData.map((row) => ({ ...row }));
 
-        //handles update to percentage column for DonutData
-        if (newData.length > 0 && chartState.type === "donut") {
-            let sum = 0;
+        newData[index][key] = value !== "" ? parseFloat(value as string) : "";
+
+        if (chartState.type === "donut") {
+            const total = newData.reduce((sum, row) => sum + row.number, 0);
             newData.forEach((row) => {
-                sum += row.number;
-            });
-            newData.forEach((row) => {
-                row.percentage = ((row.number / sum) * 100).toFixed(1) + "%";
+                row.percentage =
+                    total > 0
+                        ? ((row.number / total) * 100).toFixed(1) + "%"
+                        : "0%";
             });
         }
+
         setChartState({
             ...chartState,
             data: {
@@ -169,6 +168,17 @@ const ChartComponentForm = ({
                                                     parseFloat(e.target.value)
                                                 )
                                             }
+                                            onBlur={(e) => {
+                                                if (e.target.value === "") {
+                                                    handleArrayDataChange(
+                                                        index,
+                                                        "number",
+                                                        0
+                                                    );
+                                                    e.target.value = "0";
+                                                }
+                                            }}
+                                            min={0}
                                             required
                                         />
                                     </td>
@@ -205,7 +215,7 @@ const ChartComponentForm = ({
                                 <tr key={index}>
                                     <td>
                                         <input
-                                            type="text"
+                                            type="number"
                                             value={row.x}
                                             onChange={(e) =>
                                                 handleArrayDataChange(
@@ -225,7 +235,7 @@ const ChartComponentForm = ({
                                                 handleArrayDataChange(
                                                     index,
                                                     "y",
-                                                    parseFloat(e.target.value)
+                                                    e.target.value
                                                 )
                                             }
                                             required
@@ -337,7 +347,7 @@ const ChartComponentForm = ({
                             <input
                                 id="current"
                                 type="number"
-                                value={chartState.data.current || ""}
+                                value={chartState.data.current}
                                 onChange={(e) =>
                                     handleDataChange(
                                         "current",
@@ -345,6 +355,7 @@ const ChartComponentForm = ({
                                     )
                                 }
                                 placeholder="ex. 10"
+                                min={0}
                             />
                         </div>
                         <div className="field" style={{ width: "30%" }}>
@@ -354,7 +365,7 @@ const ChartComponentForm = ({
                             <input
                                 id="goal"
                                 type="number"
-                                value={chartState.data.total || ""}
+                                value={chartState.data.total}
                                 onChange={(e) =>
                                     handleDataChange(
                                         "total",
@@ -362,6 +373,7 @@ const ChartComponentForm = ({
                                     )
                                 }
                                 placeholder="ex. 1000"
+                                min={0}
                             />
                         </div>
                         <div className="radio-group">
@@ -492,7 +504,7 @@ const ChartComponentForm = ({
                     </div>
                 );
             default:
-                return <></>
+                return <></>;
         }
     };
 
@@ -502,7 +514,7 @@ const ChartComponentForm = ({
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="donut"
                         checked={chartState.type === "donut"}
                         onChange={() => handleTypeChange("donut")}
@@ -512,7 +524,7 @@ const ChartComponentForm = ({
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="progress"
                         checked={chartState.type === "progress"}
                         onChange={() => handleTypeChange("progress")}
@@ -522,7 +534,7 @@ const ChartComponentForm = ({
                 <label>
                     <input
                         type="radio"
-                        name="chartType"
+                        name={`chartType-${randomId}`}
                         value="line"
                         checked={chartState.type === "line"}
                         onChange={() => handleTypeChange("line")}
@@ -541,6 +553,10 @@ const ChartComponentForm = ({
                 />
             </div>
             {renderFields()}
+            <div>
+                <h4>Current Data:</h4>
+                <pre>{JSON.stringify(chartState, null, 2)}</pre>
+            </div>
             <div className="footer">
                 <button
                     type="button"

@@ -12,24 +12,11 @@ const formatNumberWithCommas = (number: number): string => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-/*
-    Props:
-        data : [{label : string, number : number, percentage : string}],
-            EX:
-                const data = [
-                    { label: "Equipment", number: 7140, percentage: "34%" },
-                    { label: "Programs", number: 5670, percentage: "27%" },
-                    { label: "Technology", number: 4410, percentage: "21%" },
-                    { label: "Uniforms", number: 3780, percentage: "18%" },
-                ];
-        buttonLink : string,
-        buttonLabel : string
-*/
 const DonutChart = ({ data, buttonLink, buttonLabel }) => {
     const svgRef = useRef(null);
     buttonLink = !/^https?:\/\//i.test(buttonLink)
         ? "http://" + buttonLink
-        : buttonLink; //make sures external link has proper formatting
+        : buttonLink; // Ensures external link has proper formatting
 
     useEffect(() => {
         const width = parseInt(d3.select(svgRef.current).style("width"));
@@ -46,7 +33,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
         const opacityScale = d3
             .scaleLinear()
             .domain([0, data.length - 1])
-            .range([1, 0.2]);
+            .range([1, 0.3]);
 
         // Method to process and sort the data
         const pie = d3
@@ -67,15 +54,15 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
             .append("g")
             .attr("transform", `translate(${width / 2}, ${height / 3})`);
 
-        // Sets the proper color for each slice, the pie method sorts from descending so largest value has full opacity
+        // Draws the donut chart slices
         svgGroup
             .selectAll("path")
             .data(pie(data))
             .enter()
             .append("path")
             .attr("d", arc as any)
-            .attr("fill", (_, i): any => {
-                const opacity = opacityScale(i);
+            .attr("fill", (d): any => {
+                const opacity = opacityScale(d.index);
                 return d3.rgb(baseColor.r, baseColor.g, baseColor.b, opacity);
             })
             .attr("stroke", "#fff")
@@ -107,23 +94,24 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
         const outerArc = d3
             .arc()
             .innerRadius(radius * 1)
-            .outerRadius(radius * 1.1);
+            .outerRadius(radius * 1.3);
 
-        // Defines outer info label group and controls their positioning
+        // Prepare data for outer labels with centroids
+        let outerLabelsData = pie(data).map((d) => {
+            const pos = outerArc.centroid(d as any);
+            return { ...d, x: pos[0], y: pos[1] };
+        });
+
+        // Render adjusted outer labels
         const outerLabel = svgGroup
             .selectAll(".outer-label")
-            .data(pie(data))
+            .data(outerLabelsData)
             .enter()
             .append("g")
             .attr("class", "outer-label")
-            .attr("transform", function (d) {
-                const pos = outerArc.centroid(d as any);
-                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-                pos[0] = radius * 1.45 * (midAngle < Math.PI ? 1 : -1);
-                return `translate(${pos})`;
-            });
+            .attr("transform", (d) => `translate(${d.x}, ${d.y})`);
 
-        // Adds and controls the label from inputted data
+        // Add text labels
         outerLabel
             .append("text")
             .text((d) => d.data.label)
@@ -132,7 +120,7 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
             .attr("font-size", "0.15rem")
             .attr("fill", "#7C7C7C");
 
-        // Adds and controls the number from inputted data
+        // Add numbers below labels
         outerLabel
             .append("text")
             .text((d) => `($${formatNumberWithCommas(d.data.number)})`)
@@ -141,25 +129,20 @@ const DonutChart = ({ data, buttonLink, buttonLabel }) => {
             .attr("font-size", "0.15rem")
             .attr("fill", "#7C7C7C");
 
-        // Defines the lines connecting inner and outer labels
-        const leaderArc = d3
-            .arc()
-            .innerRadius(radius * 0.9)
-            .outerRadius(radius * 0.8);
-
-        // Adds and controls how the lines are generated and positions them between inner and outer label
+        // Update leader lines for adjusted labels
         svgGroup
             .selectAll(".leader-line")
             .data(pie(data))
             .enter()
             .append("polyline")
             .attr("class", "leader-line")
-            .attr("points", function (d: any): any {
-                const posA = leaderArc.centroid(d);
-                const posB = outerArc.centroid(d);
-                const posC = outerArc.centroid(d);
-                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
-                posC[0] = radius * 1.1 * (midAngle < Math.PI ? 1 : -1);
+            .attr("points", function (d: any, i): any {
+                const posA = labelArc.centroid(d).map((coord) => coord * 1.25);
+                const posB = outerArc.centroid(d).map((coord) => coord * 0.85);
+                const posC = [
+                    outerLabelsData[i].x * 0.85,
+                    outerLabelsData[i].y * 0.85,
+                ];
                 return [posA, posB, posC];
             })
             .style("fill", "none")

@@ -55,7 +55,7 @@ const ProviderInfo = (props) => {
                     case "donut":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -72,7 +72,7 @@ const ProviderInfo = (props) => {
                     case "progress":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -85,13 +85,14 @@ const ProviderInfo = (props) => {
                                     units={data.data.units}
                                     buttonLink={data.data.buttonLink}
                                     buttonLabel={data.data.buttonLabel}
+                                    showNumber={data.data.showNumber}
                                 ></ProgressBar>
                             </Collapsible>
                         );
                     case "line":
                         return (
                             <Collapsible
-                                label={type}
+                                label={data.title}
                                 style={{
                                     maxWidth: "1000px",
                                     marginLeft: "auto",
@@ -99,7 +100,6 @@ const ProviderInfo = (props) => {
                                 }}
                             >
                                 <LineChart
-                                    title={data.title}
                                     data={data.data.lineData}
                                 ></LineChart>
                             </Collapsible>
@@ -254,7 +254,7 @@ const ProviderInfo = (props) => {
                                             if (
                                                 index !==
                                                 props.item[category.id].length -
-                                                1
+                                                    1
                                             ) {
                                                 return (
                                                     <div className="modal-text">

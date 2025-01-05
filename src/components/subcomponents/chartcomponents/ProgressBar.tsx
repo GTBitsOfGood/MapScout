@@ -13,9 +13,10 @@ import { Button } from "./Button";
 const ProgressBar = ({
     current,
     total,
-    units = "dollars",
+    units = "",
     buttonLink,
     buttonLabel,
+    showNumber,
 }) => {
     const svgRef = useRef();
     const percentage = Math.min((current / total) * 100, 100);
@@ -54,25 +55,27 @@ const ProgressBar = ({
                     alignItems: "center",
                 }}
             >
-                <p
-                    style={{
-                        fontWeight: "600",
-                        margin: "0",
-                        fontSize: "1.25rem",
-                    }}
-                >
-                    {`${current} ${units}`}
-                    <span
+                {showNumber && (
+                    <p
                         style={{
-                            color: "#333333",
-                            opacity: "80%",
-                            fontSize: "1rem",
-                            fontWeight: "normal",
+                            fontWeight: "600",
+                            margin: "0",
+                            fontSize: "1.25rem",
                         }}
                     >
-                        {` out of ${total} ${units} total`}
-                    </span>
-                </p>
+                        {`${current} ${units}`}
+                        <span
+                            style={{
+                                color: "#333333",
+                                opacity: "80%",
+                                fontSize: "1rem",
+                                fontWeight: "normal",
+                            }}
+                        >
+                            {` out of ${total} ${units} total`}
+                        </span>
+                    </p>
+                )}
                 <p
                     style={{
                         margin: "0",
@@ -81,7 +84,7 @@ const ProgressBar = ({
                         top: "8px",
                     }}
                 >
-                    {String(percentage) + "%"}
+                    {String(Math.round(percentage)) + "%"}
                 </p>
             </div>
             <svg ref={svgRef} style={{ width: "100%" }}></svg>
