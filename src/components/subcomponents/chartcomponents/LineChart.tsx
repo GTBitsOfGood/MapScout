@@ -93,7 +93,7 @@ const LineChart = ({ data }) => {
 
         // Adds and controls y-axis
         g.append("g")
-            .call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format(".2s")))
+            .call(d3.axisLeft(yScale).ticks(5).tickFormat(d3.format(".1f")))
             .call((g) => g.select(".domain").remove())
             .call((g) => g.selectAll(".tick line").remove());
 
