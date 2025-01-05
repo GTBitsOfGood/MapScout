@@ -17,9 +17,8 @@ import DonutChart from "./chartcomponents/DonutChart";
 import ProgressBar from "./chartcomponents/ProgressBar";
 import LineChart from "./chartcomponents/LineChart";
 import GeneralInfo from "components/dashboard/GeneralInfo";
-import ReadMoreAndLess from "react-read-more-less";
-import EventInfoComponent from "components/dashboard/EventInfoComponent";
 import UpcomingEventsContainer from "components/dashboard/calender-component/UpcomingEventContainer";
+import EventInfoComponent from "components/dashboard/EventInfoComponent";
 
 const ProviderInfo = (props) => {
     const [image, setImage] = useState("bog");
@@ -48,7 +47,7 @@ const ProviderInfo = (props) => {
                         <UpcomingEventsContainer
                             events={data.events}
                             displayNumber={data.displayNumber}
-                        ></UpcomingEventsContainer>
+                        />
                     </Collapsible>
                 );
             case "Chart":
@@ -255,7 +254,7 @@ const ProviderInfo = (props) => {
                                             if (
                                                 index !==
                                                 props.item[category.id].length -
-                                                    1
+                                                1
                                             ) {
                                                 return (
                                                     <div className="modal-text">

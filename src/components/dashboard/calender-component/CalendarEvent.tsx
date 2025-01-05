@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, InputGroup } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
@@ -9,7 +9,6 @@ export default function CalendarEvent({
     handleEventDataChange,
     handleDisplayNumberChange,
     handleDelete,
-    handleAdd,
     handleAllDayUpdate,
 }) {
     const {
@@ -158,7 +157,7 @@ export default function CalendarEvent({
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                maxWidth: "35%",
+                                maxWidth: "43%",
                             }}
                         >
                             <Form.Check
@@ -477,22 +476,6 @@ export default function CalendarEvent({
                         Delete
                     </Button>
                 </div>
-                {/* <Button
-                    onClick={() => handleAdd(index)}
-                    style={{
-                        backgroundColor: "white",
-                        color: "#226DFF",
-                        fontWeight: "500",
-                        letterSpacing: "-0.176px",
-                        lineHeight: "150%",
-                        fontSize: "1rem",
-                        padding: "8px",
-                        border: "border: 1px solid #226DFF",
-                        width: "fit-content",
-                    }}
-                >
-                    + Add event
-                </Button> */}
             </div>
         </div>
     );

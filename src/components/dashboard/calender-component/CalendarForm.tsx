@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CalendarEvent from "./CalendarEvent";
 import { Button } from "react-bootstrap";
 
@@ -40,7 +40,7 @@ export default function CalendarForm({
     deleteComponent,
 }: {
     calendarData: ICalendarData;
-    setCalendarData: (newState: ICalendarData) => void;
+    setCalendarData: (newData: ICalendarData) => void;
     deleteComponent: () => void;
 }) {
     const defaultEvent: ICalendarEvent = {
@@ -61,12 +61,6 @@ export default function CalendarForm({
         buttonLink: "",
         buttonText: "",
     };
-
-    // const [events, setEvents] = useState<ICalendarEvent[]>(
-    //     calendarData.events.length > 0
-    //         ? calendarData.events
-    //         : [{ ...defaultEvent }]
-    // );
 
     // const [displayNumber, setDisplayNumber] = useState<number>(
     //     calendarData.displayNumber
@@ -90,12 +84,13 @@ export default function CalendarForm({
         value: string | number | boolean | string[],
         additionalUpdates: Partial<ICalendarEvent> = {}
     ) => {
-        setEvents((prevEvents) => {
-            return prevEvents.map((event, i) =>
+        setCalendarData({
+            ...calendarData,
+            events: events.map((event, i) =>
                 i === index
                     ? { ...event, [field]: value, ...additionalUpdates }
                     : event
-            );
+            )
         });
     };
 
@@ -104,28 +99,30 @@ export default function CalendarForm({
     };
 
     const handleAllDayUpdate = (index: number, isAllDay: boolean) => {
-        setEvents((prevEvents) => {
-            return prevEvents.map((event, i) =>
+        setCalendarData({
+            ...calendarData,
+            events: events.map((event, i) =>
                 i === index
                     ? {
-                          ...event,
-                          isAllDay,
-                          fromTime: isAllDay ? "00:00" : "",
-                          toTime: isAllDay ? "23:59" : "",
-                      }
+                        ...event,
+                        isAllDay,
+                        fromTime: isAllDay ? "00:00" : "",
+                        toTime: isAllDay ? "23:59" : "",
+                    }
                     : event
-            );
+            )
         });
     };
 
     const handleDelete = (index: number) => {
-        // if (events.length > 1) {
-        setEvents((prevEvents) => prevEvents.filter((_, i) => i !== index));
-        // }
+        setCalendarData({
+            ...calendarData,
+            events: events.filter((_, i) => i !== index)
+        });
     };
 
     const handleAdd = (index: number) => {
-        setEvents((prevEvents) => {
+        const newEventHandler = (prevEvents) => {
             const newEvents = [...prevEvents];
             const newEvent = { ...defaultEvent };
 
@@ -135,6 +132,10 @@ export default function CalendarForm({
                 newEvents.splice(index + 1, 0, newEvent);
             }
             return newEvents;
+        };
+        setCalendarData({
+            ...calendarData,
+            events: newEventHandler(events)
         });
     };
 
@@ -149,7 +150,6 @@ export default function CalendarForm({
                 handleDisplayNumberChange={handleDisplayNumberChange}
                 handleAllDayUpdate={handleAllDayUpdate}
                 handleDelete={handleDelete}
-                handleAdd={handleAdd}
             />
         ));
     };

@@ -129,6 +129,7 @@ function Dashboard({ firestore, team, selectItem }) {
             }
         }
         fetchData()
+        sessionStorage.clear()
         setIsLoading(false);
     }, [team, isLoading]);
 

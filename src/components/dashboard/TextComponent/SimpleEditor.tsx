@@ -153,9 +153,32 @@ export function SimpleEditor(
     return null;
   }
 
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditorState({
+      ...editorState,
+      title: event.target.value,
+    });
+  };
 
   return (
     <div className="editor" style={{width: "100%"}}>
+      <div style={{ marginBottom: "16px" }}>
+        <label htmlFor="editor-title" style={{ display: "block", marginBottom: "8px" }}>
+          Title
+        </label>
+        <input
+          id="editor-title"
+          value={editorState.title}
+          onChange={handleTitleChange}
+          placeholder="Title"
+          style={{
+            width: "25%",
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ccc",
+          }}
+        />
+      </div>
       <BubbleMenu
         className="bubble-menu-light"
         tippyOptions={{ duration: 150 }}

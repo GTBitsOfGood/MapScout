@@ -124,12 +124,6 @@ function Home({ firebaseAuth, firestore }) {
                         <span id="head-logo">
                             <b>MapScout</b> <img src={logo} alt="logo" />
                         </span>
-                        <a href="https://www.netlify.com">
-                            <img
-                                src="https://www.netlify.com/v3/img/components/netlify-dark.svg"
-                                alt="Deploys by Netlify"
-                            />
-                        </a>
                         <div
                             style={{
                                 display: "flex",
@@ -318,6 +312,22 @@ function Home({ firebaseAuth, firestore }) {
                             </div>
                         ))}
                     </div>
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "2rem 0",
+                    }}
+                >
+                    <a href="https://www.netlify.com">
+                        <img
+                            src="https://www.netlify.com/v3/img/components/netlify-dark.svg"
+                            alt="Deploys by Netlify"
+                            style={{ maxWidth: "100%" }} 
+                        />
+                    </a>
                 </div>
             </div>
             <Modal
