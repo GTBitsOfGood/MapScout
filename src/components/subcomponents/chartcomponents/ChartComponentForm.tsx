@@ -553,10 +553,6 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 />
             </div>
             {renderFields()}
-            <div>
-                <h4>Current Data:</h4>
-                <pre>{JSON.stringify(chartState, null, 2)}</pre>
-            </div>
             <div className="footer">
                 <button
                     type="button"
