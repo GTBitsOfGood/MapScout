@@ -132,11 +132,12 @@ h2 {
 .map-list {
     position: relative;
     width: 100vw;
-    height: calc(200vh - 70px);
+    height: 100vh;
     z-index: 2;
     background: white;
     padding-top: 10px;
 }
+
 .map-list::-webkit-scrollbar {
     display: none;
 }

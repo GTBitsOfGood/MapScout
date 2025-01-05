@@ -25,6 +25,7 @@ import promiseWithTimeout from "../../functions/promiseWithTimeout";
 import { GOOGLE_API_KEY } from "../../config/keys";
 import { storage } from "../../store";
 import { Store } from "reducers/types";
+import { ICalendarEvent } from "./calender-component/CalendarForm";
 const { v4: uuidv4 } = require("uuid");
 
 let steps = [
@@ -48,12 +49,25 @@ function AddProvider(props) {
     const [descriptions, setDescriptions] = useState(null);
     const [single, setSingle] = useState(null);
     const [error, setError] = useState("");
+    const [firstLoad, setFirstLoad] = useState(true);
     const [content, setContent] = useState(
         'ex. "Changing lives one bit at a time..."'
     );
     const handleUpdate = (updatedContent: string) => {
         setContent(updatedContent);
     };
+
+    useEffect(() => {
+        console.log((sessionStorage.getItem("item")))
+        if (firstLoad === false) {
+            sessionStorage.setItem('item', JSON.stringify(item))
+        } else {
+            if(JSON.parse(sessionStorage.getItem("item")) !== null) {
+                setItem(JSON.parse(sessionStorage.getItem("item")))
+            }
+            setFirstLoad(false)
+        }
+    }, [item])
 
     useEffect(() => {
         async function fetchData() {
@@ -163,6 +177,12 @@ function AddProvider(props) {
     const validateComponent = (component) => {
         const { type, data } = component;
         switch (type) {
+            case "Calendar":
+                return data.events.every((event) => {
+                    const validFields = event.eventName && event.fromDate && event.toDate;
+                    const validTimes = !event.isAllDay ? event.fromTime && event.toTime : true;
+                    return validFields && validTimes;
+                });
             case "Chart":
                 switch (data.type) {
                     case "donut":
@@ -195,6 +215,7 @@ function AddProvider(props) {
     };
 
     async function addFirestore() {
+        sessionStorage.clear()
         setIsLoading(true);
         const i = {
             ...item,
@@ -256,6 +277,7 @@ function AddProvider(props) {
     }
 
     async function updateFirestore() {
+        sessionStorage.clear()
         setIsLoading(true);
         const i = {
             ...item,

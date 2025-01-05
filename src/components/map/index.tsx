@@ -1089,7 +1089,7 @@ const Map = (props) => {
                         }}
                     >
                         {!showInfo && renderTagControl()}
-                        <div style={{ "height": "calc(100% - 43px)", "overflowY": "scroll" }}>
+                        <div style={{ "height": !showInfo ? "calc(100% - 43px)" : "100%", "overflowY": "scroll" }}>
                             <div
                                 className={classNames("tag-row padder", {
                                     "result-tutorial": isEmpty(activeProviders),
@@ -1122,7 +1122,7 @@ const Map = (props) => {
                                         activeProviders[selectedIndex] &&
                                         (
                                             <div className="containerInfo d-flex flex-column" style={{ height: "80vh" }}>
-                                                <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)", overflowY: 'scroll' }}>
+                                                <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)" }}>
                                                     <div className="content d-flex flex-column">
                                                         <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
                                                         <div className="mt-2">

@@ -29,7 +29,7 @@ const TimeTable = (props) => {
 
     const selectFormatter = (cell, row, index) => (
         <FormCheck
-            type="radio"
+            type="checkbox"
             label={days[index].day}
             checked={days[index].selected}
             onClick={() => {

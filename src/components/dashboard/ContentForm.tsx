@@ -13,6 +13,7 @@ import Collapsible from "components/collapsible";
 import ProviderGallery from "./ProviderGallery";
 import EmbedForm from "./embed-component/EmbedForm";
 import { SimpleEditor } from "./TextComponent/SimpleEditor";
+import CalendarForm from "components/dashboard/calender-component/CalendarForm";
 
 const EditableText = ({ text, setText, isEditing, setIsEditing }) => {
     const inputRef = useRef(null);
@@ -114,6 +115,28 @@ const SectionCard = ({
 
     const getDefaultData = (componentType) => {
         switch (componentType) {
+            case "Calendar":
+                return {
+                    displayNumber: 5,
+                    events: [{
+                        eventName: "",
+                        fromDate: "",
+                        toDate: "",
+                        fromTime: "",
+                        toTime: "",
+                        isAllDay: false,
+                        isCustom: false,
+                        address: "",
+                        description: "",
+                        repeatDays: [],
+                        customEndDate: "",
+                        customEndOccurrences: 1,
+                        isOn: true,
+                        isAfter: false,
+                        buttonLink: "",
+                        buttonText: "",
+                    }]
+                };
             case "Chart":
                 return {
                     type: "donut",
@@ -146,8 +169,9 @@ const SectionCard = ({
             case "Text":
                 return {
                     title: "Text",
-                    description: '<p>ex. "Changing lives one bit at a time..."</p>'
-                }
+                    description:
+                        '<p>ex. "Changing lives one bit at a time..."</p>',
+                };
             default:
                 return {};
         }
@@ -190,6 +214,18 @@ const SectionCard = ({
 
     const switchRender = (type, data, i) => {
         switch (type) {
+            case "Calendar":
+                return (
+                    <CalendarForm
+                        calendarData={data}
+                        setCalendarData={(newData) => {
+                            updateIthComponent(newData, i);
+                        }}
+                        deleteComponent={() => {
+                            deleteIthComponent(i);
+                        }}
+                    ></CalendarForm>
+                );
             case "Chart":
                 return (
                     <ChartComponentForm
@@ -295,9 +331,7 @@ const SectionCard = ({
                     }}
                     onClick={() => {
                         setSelectedSection(null);
-                        setSections(
-                            sections.filter((_, i) => i !== index)
-                        );
+                        setSections(sections.filter((_, i) => i !== index));
                     }}
                 >
                     Delete Section
@@ -315,6 +349,7 @@ const SectionCard = ({
                             lineHeight: "24px",
                         }}
                         label={v.type}
+                        defaultState={false}
                     >
                         {switchRender(v.type, v.data, i)}
                     </Collapsible>
@@ -335,17 +370,13 @@ const SectionCard = ({
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item
-                            onClick={() => {
-                                // console.log("")
-                                addComponent("Chart");
-                            }}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Calendar")}>
+                            Calendar
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => addComponent("Chart")}>
                             Chart
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Directory")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Directory")}>
                             Directory
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => addComponent("Embed")}>
@@ -394,8 +425,9 @@ const SectionButton = ({
                         maxWidth: "12px",
                         borderTopLeftRadius: "8px",
                         borderBottomLeftRadius: "8px",
-                        backgroundColor: `${isSelected ? "#226DFF" : "transparent"
-                            }`,
+                        backgroundColor: `${
+                            isSelected ? "#226DFF" : "transparent"
+                        }`,
                     }}
                 ></Col>
                 <Col

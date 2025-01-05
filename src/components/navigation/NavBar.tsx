@@ -8,6 +8,7 @@ import {
     FiBell,
     FiPower,
     FiMessageCircle,
+    FiLogOut,
 } from "react-icons/fi";
 import {
     providerRoute,
@@ -220,7 +221,7 @@ function NavBar(props) {
                         >
                             <div className="cell" onClick={props.logout}>
                                 <div className="icon">
-                                    <FiPower />
+                                    <FiLogOut />
                                 </div>
                                 <div
                                     className={classnames("cell-title", {

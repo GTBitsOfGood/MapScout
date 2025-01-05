@@ -17,7 +17,7 @@ import DonutChart from "./chartcomponents/DonutChart";
 import ProgressBar from "./chartcomponents/ProgressBar";
 import LineChart from "./chartcomponents/LineChart";
 import GeneralInfo from "components/dashboard/GeneralInfo";
-import ReadMoreAndLess from "react-read-more-less";
+import UpcomingEventsContainer from "components/dashboard/calender-component/UpcomingEventContainer";
 import EventInfoComponent from "components/dashboard/EventInfoComponent";
 
 const ProviderInfo = (props) => {
@@ -34,6 +34,22 @@ const ProviderInfo = (props) => {
         const { type, data } = component;
         // console.log(data);
         switch (type) {
+            case "Calendar":
+                return (
+                    <Collapsible
+                        label={"Upcoming Events"}
+                        style={{
+                            maxWidth: "1000px",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                    >
+                        <UpcomingEventsContainer
+                            events={data.events}
+                            displayNumber={data.displayNumber}
+                        />
+                    </Collapsible>
+                );
             case "Chart":
                 switch (data.type) {
                     case "donut":
