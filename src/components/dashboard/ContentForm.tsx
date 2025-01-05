@@ -115,6 +115,30 @@ const SectionCard = ({
 
     const getDefaultData = (componentType) => {
         switch (componentType) {
+            case "Calendar":
+                return {
+                    events: [
+                        {
+                            eventName: "",
+                            fromDate: "",
+                            toDate: "",
+                            fromTime: "",
+                            toTime: "",
+                            isAllDay: false,
+                            isCustom: false,
+                            address: "",
+                            description: "",
+                            repeatDays: [],
+                            customEndDate: "",
+                            customEndOccurrences: 1,
+                            isOn: true,
+                            isAfter: false,
+                            buttonLink: "",
+                            buttonText: "",
+                        },
+                    ],
+                    displayNumber: 5,
+                };
             case "Chart":
                 return {
                     type: "donut",
@@ -149,30 +173,6 @@ const SectionCard = ({
                     title: "Text",
                     description:
                         '<p>ex. "Changing lives one bit at a time..."</p>',
-                };
-            case "Calendar":
-                return {
-                    events: [
-                        {
-                            eventName: "",
-                            fromDate: "",
-                            toDate: "",
-                            fromTime: "",
-                            toTime: "",
-                            isAllDay: false,
-                            isCustom: false,
-                            address: "",
-                            description: "",
-                            repeatDays: [],
-                            customEndDate: "",
-                            customEndOccurrences: 1,
-                            isOn: true,
-                            isAfter: false,
-                            buttonLink: "",
-                            buttonText: "",
-                        },
-                    ],
-                    displayNumber: 5,
                 };
             default:
                 return {};

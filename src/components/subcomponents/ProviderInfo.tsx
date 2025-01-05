@@ -35,6 +35,22 @@ const ProviderInfo = (props) => {
         const { type, data } = component;
         // console.log(data);
         switch (type) {
+            case "Calendar":
+                return (
+                    <Collapsible
+                        label={"Upcoming Events"}
+                        style={{
+                            maxWidth: "1000px",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                    >
+                        <UpcomingEventsContainer
+                            events={data.events}
+                            displayNumber={data.displayNumber}
+                        ></UpcomingEventsContainer>
+                    </Collapsible>
+                );
             case "Chart":
                 switch (data.type) {
                     case "donut":
@@ -150,22 +166,6 @@ const ProviderInfo = (props) => {
                         <EventInfoComponent
                             description={data.description}
                         ></EventInfoComponent>
-                    </Collapsible>
-                );
-            case "Calendar":
-                return (
-                    <Collapsible
-                        label={"Upcoming Events"}
-                        style={{
-                            maxWidth: "1000px",
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                        }}
-                    >
-                        <UpcomingEventsContainer
-                            events={data.events}
-                            displayNumber={data.displayNumber}
-                        ></UpcomingEventsContainer>
                     </Collapsible>
                 );
             default:
