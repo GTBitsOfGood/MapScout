@@ -286,18 +286,6 @@ const SectionCard = ({
                         }}
                     ></SimpleEditor>
                 );
-            case "Calendar":
-                return (
-                    <CalendarForm
-                        calendarData={data}
-                        setCalendarData={(newState) => {
-                            updateIthComponent(newState, i);
-                        }}
-                        deleteComponent={() => {
-                            deleteIthComponent(i);
-                        }}
-                    ></CalendarForm>
-                );
             default:
                 return <></>;
         }
@@ -382,19 +370,13 @@ const SectionCard = ({
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Calendar")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Calendar")}>
                             Calendar
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Chart")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Chart")}>
                             Chart
                         </Dropdown.Item>
-                        <Dropdown.Item
-                            onClick={() => addComponent("Directory")}
-                        >
+                        <Dropdown.Item onClick={() => addComponent("Directory")}>
                             Directory
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => addComponent("Embed")}>
@@ -405,9 +387,6 @@ const SectionCard = ({
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => addComponent("Text")}>
                             Text
-                        </Dropdown.Item>
-                        <Dropdown.Item onClick={() => addComponent("Calendar")}>
-                            Calendar
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
