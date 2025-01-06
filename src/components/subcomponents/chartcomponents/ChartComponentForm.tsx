@@ -81,7 +81,7 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                 ? chartState.data.donutData.map((row) => ({ ...row }))
                 : chartState.data.lineData.map((row) => ({ ...row }));
 
-        newData[index][key] = value !== "" ? parseFloat(value as string) : "";
+        newData[index][key] = value;
 
         if (chartState.type === "donut") {
             const total = newData.reduce((sum, row) => sum + row.number, 0);
@@ -221,9 +221,19 @@ const ChartComponentForm = ({ chartState, setChartState, deleteComponent }) => {
                                                 handleArrayDataChange(
                                                     index,
                                                     "x",
-                                                    e.target.value
+                                                    parseFloat(e.target.value)
                                                 )
                                             }
+                                            onBlur={(e) => {
+                                                if (e.target.value === "") {
+                                                    handleArrayDataChange(
+                                                        index,
+                                                        "x",
+                                                        0
+                                                    );
+                                                    e.target.value = "0";
+                                                }
+                                            }}
                                             required
                                         />
                                     </td>
