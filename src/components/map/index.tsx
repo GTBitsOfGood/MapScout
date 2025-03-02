@@ -25,7 +25,7 @@ import x from "../../assets/img/x.png";
 import dropdownIcon from "../../assets/svg/chevron-down.svg";
 import Switch from "react-switch";
 import { MdChevronRight } from "react-icons/md";
-import backArrow from '../../assets/img/back-arrow.png';
+import backArrow from "../../assets/img/back-arrow.png";
 
 const frame = require("../../assets/svg/Frame.svg");
 
@@ -72,11 +72,11 @@ const Map = (props) => {
     const [filtersData, setFiltersData] = useState({});
     const [categories, setCategories] = useState([]);
 
-    const [showInfo, setShowInfo] = useState(false)
+    const [showInfo, setShowInfo] = useState(false);
 
     function handleCellClick(index) {
         setSelectedIndex(index);
-        setShowInfo(true)
+        setShowInfo(true);
     }
 
     const items = [];
@@ -98,16 +98,31 @@ const Map = (props) => {
 
     const filterByTags = useCallback(
         (temp?) => {
+            if(temp.length===0) {
+                setActiveProviders([]);
+                return;
+            }
+
+            const activeFilters = Object.fromEntries(
+                Object.entries(filtersState).filter(([key, value])=>
+                    Array.isArray(value) && value.length>0
+                )
+            );
+            if(Object.keys(activeFilters).length===0) {
+                setActiveProviders(temp);
+                return;
+            }
+
             setTempProviders(temp);
-            Object.keys(filtersState).forEach((filterName) => {
-                temp = temp.filter((provider) =>
-                    provider['filters'][filterName]
-                        ? provider['filters'][filterName].some((r) =>
+            Object.keys(activeFilters).forEach((filterName) => {
+                temp = temp.filter((provider) => {
+                    return provider["filters"][filterName]
+                        ? provider["filters"][filterName].some((r) =>
                               filtersState[filterName].includes(r)
-                          ) || filtersState[filterName].length === 0
-                        : true
-                );
+                          ) : false
+                });
             });
+
             setActiveProviders(temp);
         },
         [filtersState]
@@ -115,9 +130,11 @@ const Map = (props) => {
 
     const filterSearch = useCallback(
         (filterVal: string, zipCode?: string, zipProvs?) => {
-            const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
             let temp = zipCode ? zipProvs : providers;
-            temp = temp.filter((item) => regex.test(item.facilityName));
+            if(filterVal!=="") {
+                const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
+                temp = temp.filter((item) => regex.test(item.facilityName));
+            }
             filterByTags(temp);
         },
         [filterByTags, providers]
@@ -185,6 +202,7 @@ const Map = (props) => {
 
             setFiltersState(filtersObj);
             setFiltersData(data);
+            // console.log(data);
 
             const collections2 = firestore.collection("providers");
             let provs = await collections2
@@ -214,6 +232,7 @@ const Map = (props) => {
 
             setProviders(provs);
             setActiveProviders(provs);
+            // console.log(provs);
 
             const teamCollection = firestore.collection("teams").doc(getTeam());
             const teamData = await teamCollection
@@ -311,6 +330,8 @@ const Map = (props) => {
             if (typeof e !== "undefined") {
                 const filtertype = e.target.getAttribute("itemType");
                 const filterVal = e.target.value;
+                // console.log(filtertype);
+                // console.log(filterVal);
                 if (filtertype === "search") {
                     setSearchName(filterVal);
                     filterSearch(e.target.value);
@@ -576,7 +597,8 @@ const Map = (props) => {
     }
 
     useEffect(() => {
-        if (activeProviders) filterSearch(searchName);
+        // if (activeProviders) filterSearch(searchName);
+        filterSearch(searchName);
     }, [searchName, filtersState]);
 
     function switchView() {
@@ -667,7 +689,7 @@ const Map = (props) => {
                     )}
 
                 {Object.keys(filtersData).length > FILTER_CUTOFF ? (
-                    <>  
+                    <>
                         <Dropdown>
                             <Dropdown.Toggle
                                 className="astext"
@@ -684,21 +706,21 @@ const Map = (props) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                            {Object.entries(filtersData)
-                                .filter(
-                                    ([key, value]: any[]) =>
-                                        !Number.isInteger(value.priority) ||
-                                        value.priority > FILTER_CUTOFF
-                                )
-                                .sort(
-                                    (
-                                        [aKey, aValue]: any[],
-                                        [bKey, bValue]: any[]
-                                    ) => aValue.priority - bValue.priority
-                                )
-                                .map(([key, value]: any[]) =>
-                                    renderMoreDropdown(value.name, key)
-                                )}
+                                {Object.entries(filtersData)
+                                    .filter(
+                                        ([key, value]: any[]) =>
+                                            !Number.isInteger(value.priority) ||
+                                            value.priority > FILTER_CUTOFF
+                                    )
+                                    .sort(
+                                        (
+                                            [aKey, aValue]: any[],
+                                            [bKey, bValue]: any[]
+                                        ) => aValue.priority - bValue.priority
+                                    )
+                                    .map(([key, value]: any[]) =>
+                                        renderMoreDropdown(value.name, key)
+                                    )}
                             </Dropdown.Menu>
                         </Dropdown>
                         {/* <Button
@@ -712,7 +734,7 @@ const Map = (props) => {
                     </>
                 ) : (
                     <div></div>
-                    // <Button 
+                    // <Button
                     //     className="astext"
                     //     onClick={() => setMoreFilter(true)}>
                     //     {moreFilters}
@@ -845,15 +867,22 @@ const Map = (props) => {
                                     newFilters.push(item.value);
                                 }
 
-                                setFiltersState({
-                                    ...filtersState,
-                                    [key]: newFilters,
-                                });
+                                // setFiltersState({
+                                //     ...filtersState,
+                                //     [key]: newFilters,
+                                // });
+
+                                setFiltersState((prevState)=>{
+                                    // console.log({...prevState, [key]: newFilters});
+                                    return {...prevState, [key]: newFilters};
+                                })
 
                                 setFilterActiveState({
                                     ...filterActiveState,
                                     [key]: newFilters.length > 0,
                                 });
+
+                                // console.log(filtersState);
                             }}
                         >
                             <Form.Check
@@ -885,20 +914,22 @@ const Map = (props) => {
             //             <img src={dropdownIcon} alt="dropdown icon" style={{ height: '16px' }} />
             //         </span>
             //     </Dropdown.Toggle>
-                <Dropdown key={key} drop='right'>
-                    <Dropdown.Toggle className="subMenu" id="sub-dropdown">
-                        {title}
-                        <MdChevronRight/>
-                    </Dropdown.Toggle>
+            <Dropdown key={key} drop="right">
+                <Dropdown.Toggle className="subMenu" id="sub-dropdown">
+                    {title}
+                    <MdChevronRight />
+                </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {filtersData[key].options.map((item, index) => (
                         <div
                             key={index}
                             onClick={() => {
                                 const newFilters = [...filtersState[key]];
-                                
+
                                 if (newFilters.includes(item.value)) {
-                                    const itemIndex = newFilters.indexOf(item.value);
+                                    const itemIndex = newFilters.indexOf(
+                                        item.value
+                                    );
                                     newFilters.splice(itemIndex, 1);
                                 } else {
                                     newFilters.push(item.value);
@@ -908,10 +939,10 @@ const Map = (props) => {
                                     ...filtersState,
                                     [key]: newFilters,
                                 });
-    
+
                                 setFilterActiveState({
                                     ...filterActiveState,
-                                    [key]: newFilters.length > 0,  
+                                    [key]: newFilters.length > 0,
                                 });
                             }}
                         >
@@ -927,7 +958,7 @@ const Map = (props) => {
                         </div>
                     ))}
                 </Dropdown.Menu>
-             </Dropdown>
+            </Dropdown>
         );
     }
 
@@ -957,10 +988,10 @@ const Map = (props) => {
             className={classNames("bg-white", {
                 "overflow-scroll": !isDesktop,
             })}
-            style={{ "height": "100vh" }}
+            style={{ height: "100vh" }}
         >
             {/* <NavBar /> */}
-            <div style={{ "height": "100%" }}>
+            <div style={{ height: "100%" }}>
                 <div>
                     <div
                         className={classNames("row-spaced", "ml-2", "pt-3", {
@@ -976,32 +1007,61 @@ const Map = (props) => {
                                     }}
                                 >
                                     {showInfo ? (
-                                        <div style={{display: "flex", flexDirection: "row", alignItems: "center",}}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <a
-                                                onClick={() => setShowInfo(false)}
-                                                style={{ cursor: "pointer", marginRight: "10px", marginLeft: "10px",}}
+                                                onClick={() =>
+                                                    setShowInfo(false)
+                                                }
+                                                style={{
+                                                    cursor: "pointer",
+                                                    marginRight: "10px",
+                                                    marginLeft: "10px",
+                                                }}
                                             >
-                                                <img src={backArrow} alt="Back" style={{ width: '80%', height: '80%', marginBottom: '8px' }} />      
-                                            </a>                                          
-                                            <h4 style={{ fontWeight: "bold", }}>{providers[selectedIndex].facilityName + " #" + providers[selectedIndex].stationNum}</h4>
-                                            </div>
-                                        ) : (
-                                            <InputGroup className="mb-3">
-                                                <InputGroup.Text id="search-addon" className="search">
-                                                    <img
-                                                        src={searchIcon}
-                                                        alt="search"
-                                                        className="imgSearch"
-                                                    />
-                                                </InputGroup.Text>
-                                                <Form.Control
-                                                    placeholder={searchZipcode}
-                                                    itemType="search"
-                                                    onChange={filterProviders}
-                                                    value={searchName}
-                                                    className="search-bar"
+                                                <img
+                                                    src={backArrow}
+                                                    alt="Back"
+                                                    style={{
+                                                        width: "80%",
+                                                        height: "80%",
+                                                        marginBottom: "8px",
+                                                    }}
                                                 />
-                                            </InputGroup>
+                                            </a>
+                                            <h4 style={{ fontWeight: "bold" }}>
+                                                {activeProviders[selectedIndex]
+                                                    .facilityName +
+                                                    " #" +
+                                                    activeProviders[selectedIndex]
+                                                        .stationNum}
+                                            </h4>
+                                        </div>
+                                    ) : (
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text
+                                                id="search-addon"
+                                                className="search"
+                                            >
+                                                <img
+                                                    src={searchIcon}
+                                                    alt="search"
+                                                    className="imgSearch"
+                                                />
+                                            </InputGroup.Text>
+                                            <Form.Control
+                                                placeholder={searchZipcode}
+                                                itemType="search"
+                                                onChange={filterProviders}
+                                                value={searchName}
+                                                className="search-bar"
+                                            />
+                                        </InputGroup>
                                     )}
                                 </Col>
                             </Row>
@@ -1009,7 +1069,7 @@ const Map = (props) => {
                         <div className="mb-3">
                             <div
                                 className="right-container"
-                                style={{ display: "flex"}}
+                                style={{ display: "flex" }}
                             >
                                 <div
                                     style={{
@@ -1021,16 +1081,18 @@ const Map = (props) => {
                                         style={
                                             isDesktop
                                                 ? {
-                                                    marginRight: "10px",
-                                                    fontWeight: "700",
-                                                    fontFamily: "Inter, sans-serif",
-                                                }
+                                                      marginRight: "10px",
+                                                      fontWeight: "700",
+                                                      fontFamily:
+                                                          "Inter, sans-serif",
+                                                  }
                                                 : {
-                                                    marginRight: "0px", 
-                                                    fontWeight: "600", 
-                                                    fontFamily: "Inter, sans-serif",
-                                                    fontSize: "12px", 
-                                                }
+                                                      marginRight: "0px",
+                                                      fontWeight: "600",
+                                                      fontFamily:
+                                                          "Inter, sans-serif",
+                                                      fontSize: "12px",
+                                                  }
                                         }
                                     >
                                         {isDesktop
@@ -1069,10 +1131,12 @@ const Map = (props) => {
                                 )}
                             </div>
                         </div>
-
                     </div>
                 </div>
-                <div className={classNames({ "row-nowrap": isDesktop })} style={{ "height": "calc(100% - 70px)" }}>
+                <div
+                    className={classNames({ "row-nowrap": isDesktop })}
+                    style={{ height: "calc(100% - 70px)" }}
+                >
                     <div
                         className={classNames("map-list")}
                         style={{
@@ -1085,11 +1149,18 @@ const Map = (props) => {
                                 ? "100vw"
                                 : 0,
                             display: !isDesktop && !defaultView && "none",
-                            "height": "100%"
+                            height: "100%",
                         }}
                     >
                         {!showInfo && renderTagControl()}
-                        <div style={{ "height": !showInfo ? "calc(100% - 43px)" : "100%", "overflowY": "scroll" }}>
+                        <div
+                            style={{
+                                height: !showInfo
+                                    ? "calc(100% - 43px)"
+                                    : "100%",
+                                overflowY: "scroll",
+                            }}
+                        >
                             <div
                                 className={classNames("tag-row padder", {
                                     "result-tutorial": isEmpty(activeProviders),
@@ -1097,7 +1168,9 @@ const Map = (props) => {
                             >
                                 {!showInfo && (
                                     <>
-                                        {Object.keys(filtersState).map(renderTag)}
+                                        {Object.keys(filtersState).map(
+                                            renderTag
+                                        )}
                                         {evaluateFilters() && (
                                             <div
                                                 onClick={() => clearFilters()}
@@ -1105,8 +1178,9 @@ const Map = (props) => {
                                                 style={{
                                                     border: "none",
                                                     color: "#2F76FF",
-                                                    fontFamily: 'Inter, sans-serif',
-                                                    fontWeight: '700',
+                                                    fontFamily:
+                                                        "Inter, sans-serif",
+                                                    fontWeight: "700",
                                                 }}
                                             >
                                                 Clear
@@ -1114,19 +1188,34 @@ const Map = (props) => {
                                         )}
                                     </>
                                 )}
-                                </div>
+                            </div>
                             {!isEmpty(activeProviders) ? (
-                                <div className='container2'>
+                                <div className="container2">
                                     {showInfo ? (
                                         activeProviders &&
-                                        activeProviders[selectedIndex] &&
-                                        (
-                                            <div className="containerInfo d-flex flex-column" style={{ height: "80vh" }}>
-                                                <div className="padder d-flex flex-column" style={{ height: "calc(200vh - 70px)" }}>
+                                        activeProviders[selectedIndex] && (
+                                            <div
+                                                className="containerInfo d-flex flex-column"
+                                                style={{ height: "80vh" }}
+                                            >
+                                                <div
+                                                    className="padder d-flex flex-column"
+                                                    style={{
+                                                        height: "calc(200vh - 70px)",
+                                                    }}
+                                                >
                                                     <div className="content d-flex flex-column">
-                                                        <ProviderInfo item={activeProviders[selectedIndex]} categories={categories} />
-                                                        <div className="mt-2">
-                                                        </div>                              
+                                                        <ProviderInfo
+                                                            item={
+                                                                activeProviders[
+                                                                    selectedIndex
+                                                                ]
+                                                            }
+                                                            categories={
+                                                                categories
+                                                            }
+                                                        />
+                                                        <div className="mt-2"></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1135,34 +1224,53 @@ const Map = (props) => {
                                         <>
                                             <strong className="custom-padder">
                                                 {activeProviders.length}
-                                                {clinWikiMap ? " trials found" : " locations found"}
+                                                {clinWikiMap
+                                                    ? " trials found"
+                                                    : " locations found"}
                                             </strong>
                                             {activeProviders
-                                                .slice(lowerPageBound, upperPageBound)
+                                                .slice(
+                                                    lowerPageBound,
+                                                    upperPageBound
+                                                )
                                                 .map((i, index) => (
                                                     <div
                                                         // className={classNames({
                                                         //     "result-tutorial": index == 0,
                                                         // })}
                                                         key={i.id}
-                                                    >   
+                                                    >
                                                         <ProviderCell
                                                             item={i}
                                                             index={index}
-                                                            primaryColor={primaryColor}
-                                                            onMouseEnter={debounce(() => {
-                                                                if (defaultView && isDesktop) {
-                                                                    setCurrmarker(index);
-                                                                }
-                                                            }, 300)}
-                                                            onClick={() => handleCellClick(index)}
-                                                            distances={distances}
+                                                            primaryColor={
+                                                                primaryColor
+                                                            }
+                                                            onMouseEnter={debounce(
+                                                                () => {
+                                                                    if (
+                                                                        defaultView &&
+                                                                        isDesktop
+                                                                    ) {
+                                                                        setCurrmarker(
+                                                                            index
+                                                                        );
+                                                                    }
+                                                                },
+                                                                300
+                                                            )}
+                                                            onClick={() =>
+                                                                handleCellClick(
+                                                                    index
+                                                                )
+                                                            }
+                                                            distances={
+                                                                distances
+                                                            }
                                                         />
                                                     </div>
                                                 ))}
                                         </>
-                                    
-                                    
                                     )}
                                 </div>
                             ) : (
