@@ -58,16 +58,16 @@ function AddProvider(props) {
     };
 
     useEffect(() => {
-        console.log((sessionStorage.getItem("item")))
-        if (firstLoad === false) {
+        if (props.selected !== null) {
             sessionStorage.setItem('item', JSON.stringify(item))
-        } else {
-            if(JSON.parse(sessionStorage.getItem("item")) !== null) {
-                setItem(JSON.parse(sessionStorage.getItem("item")))
-            }
-            setFirstLoad(false)
         }
-    }, [item])
+    }, [props]);
+
+    useEffect(() => {
+        if(JSON.parse(sessionStorage.getItem("item")) !== null) {
+            setItem(JSON.parse(sessionStorage.getItem("item")))
+        }
+    }, []);
 
     useEffect(() => {
         async function fetchData() {
@@ -392,14 +392,14 @@ function AddProvider(props) {
                                     block
                                     disabled={!completed}
                                     onClick={
-                                        props.selected &&
-                                            props.selected.facilityName
+                                        item &&
+                                            item.facilityName
                                             ? updateFirestore
                                             : addFirestore
                                     }
                                 >
-                                    {props.selected &&
-                                        props.selected.facilityName
+                                    {item &&
+                                        item.facilityName
                                         ? "Edit"
                                         : "Add"}{" "}
                                     Provider
@@ -445,9 +445,8 @@ function AddProvider(props) {
                                                         onClick={
                                                             step ===
                                                                 steps.length - 1
-                                                                ? props.selected &&
-                                                                    props.selected
-                                                                        .facilityName
+                                                                ? item &&
+                                                                    item.facilityName
                                                                     ? updateFirestore
                                                                     : addFirestore
                                                                 : next
@@ -461,9 +460,8 @@ function AddProvider(props) {
                                                     >
                                                         {step ===
                                                             steps.length - 1
-                                                            ? props.selected &&
-                                                                props.selected
-                                                                    .facilityName
+                                                            ? item &&
+                                                                item.facilityName
                                                                 ? "Edit Provider"
                                                                 : "Add Provider"
                                                             : "Next"}

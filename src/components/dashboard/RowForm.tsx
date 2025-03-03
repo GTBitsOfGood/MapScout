@@ -52,7 +52,7 @@ const RowForm = (props) => {
     };
 
     const [item, setItem] = useState(
-        props.item.facilityName ? props.item : JSON.parse(sessionStorage.getItem("item")) || defaultItem
+        props.item.facilityName ? props.item : defaultItem
     );
     const [showModal, setShowModal] = useState(false);
 
