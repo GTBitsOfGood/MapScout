@@ -43,7 +43,8 @@ function AddProvider(props) {
     const [step, setStep] = useState(0);
     const [completed, setCompleted] = useState(false);
     const [animate, setAnimate] = useState(true);
-    const [item, setItem] = useState(props.selected || {});
+    const [item, setItem] = useState((JSON.parse(sessionStorage.getItem("item")) !== null 
+                                    ? JSON.parse(sessionStorage.getItem("item")) : props.selected) || {});
     const [isLoading, setIsLoading] = useState(true);
     const [filters, setFilters] = useState(null);
     const [descriptions, setDescriptions] = useState(null);
@@ -59,8 +60,11 @@ function AddProvider(props) {
 
     // selected provider persists on refresh when attempting to edit
     useEffect(() => {
-        if ((item !== null) && (Object.keys(item).length > 0)) {
+        console.log(props)
+        if (JSON.parse(sessionStorage.getItem("item")) == null || Object.keys(item).length > 0) {
             sessionStorage.setItem('item', JSON.stringify(item))
+            console.log("set sessionStorage: ")
+            console.log(JSON.parse(sessionStorage.getItem("item")))
         }
     }, [item]);
 
