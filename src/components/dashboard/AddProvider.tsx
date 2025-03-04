@@ -59,10 +59,10 @@ function AddProvider(props) {
 
     // selected provider persists on refresh when attempting to edit
     useEffect(() => {
-        if (props.selected !== null) {
+        if ((item !== null) && (Object.keys(item).length > 0)) {
             sessionStorage.setItem('item', JSON.stringify(item))
         }
-    }, [props]);
+    }, [item]);
 
     useEffect(() => {
         if(JSON.parse(sessionStorage.getItem("item")) !== null) {
