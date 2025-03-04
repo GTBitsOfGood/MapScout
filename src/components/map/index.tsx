@@ -202,7 +202,6 @@ const Map = (props) => {
 
             setFiltersState(filtersObj);
             setFiltersData(data);
-            // console.log(data);
 
             const collections2 = firestore.collection("providers");
             let provs = await collections2
@@ -232,7 +231,6 @@ const Map = (props) => {
 
             setProviders(provs);
             setActiveProviders(provs);
-            // console.log(provs);
 
             const teamCollection = firestore.collection("teams").doc(getTeam());
             const teamData = await teamCollection
@@ -330,8 +328,6 @@ const Map = (props) => {
             if (typeof e !== "undefined") {
                 const filtertype = e.target.getAttribute("itemType");
                 const filterVal = e.target.value;
-                // console.log(filtertype);
-                // console.log(filterVal);
                 if (filtertype === "search") {
                     setSearchName(filterVal);
                     filterSearch(e.target.value);
@@ -597,7 +593,6 @@ const Map = (props) => {
     }
 
     useEffect(() => {
-        // if (activeProviders) filterSearch(searchName);
         filterSearch(searchName);
     }, [searchName, filtersState]);
 
@@ -673,12 +668,12 @@ const Map = (props) => {
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
-
+                
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
                             Number.isInteger(value.priority) &&
-                            value.priority <= FILTER_CUTOFF
+                            value.priority < FILTER_CUTOFF
                     )
                     .sort(
                         ([aKey, aValue]: any[], [bKey, bValue]: any[]) =>
@@ -710,7 +705,7 @@ const Map = (props) => {
                                     .filter(
                                         ([key, value]: any[]) =>
                                             !Number.isInteger(value.priority) ||
-                                            value.priority > FILTER_CUTOFF
+                                            value.priority >= FILTER_CUTOFF
                                     )
                                     .sort(
                                         (
@@ -867,22 +862,15 @@ const Map = (props) => {
                                     newFilters.push(item.value);
                                 }
 
-                                // setFiltersState({
-                                //     ...filtersState,
-                                //     [key]: newFilters,
-                                // });
-
-                                setFiltersState((prevState)=>{
-                                    // console.log({...prevState, [key]: newFilters});
-                                    return {...prevState, [key]: newFilters};
-                                })
+                                setFiltersState((prevState)=>({
+                                    ...prevState,
+                                    [key]: newFilters
+                                }))
 
                                 setFilterActiveState({
                                     ...filterActiveState,
                                     [key]: newFilters.length > 0,
                                 });
-
-                                // console.log(filtersState);
                             }}
                         >
                             <Form.Check
