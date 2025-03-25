@@ -22,7 +22,7 @@ export default (props: {
             bottom: 20,
             right: 20,
             color: "white",
-            backgroundColor: "#244D75",
+            backgroundColor: "#007bff",
         }}
     >
         {props.currentStep === 0 ? "Got it!" : "Next"}

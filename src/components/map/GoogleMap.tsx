@@ -18,9 +18,11 @@ export default ({
     onShowMoreClick,
     selectedMarker,
     primaryColor,
+    center,
+    setCenter,
 }) => {
     const [selected, setSelected] = useState(-1);
-    const [center, setCenter] = useState(defaultCenter);
+    // const [center, setCenter] = useState(defaultCenter);
     const [zoom, setZoom] = useState(defaultZoom);
     const getMapOptions = (maps) => ({
         clickableIcons: false,

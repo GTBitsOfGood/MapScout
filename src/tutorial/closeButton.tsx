@@ -8,8 +8,8 @@ export default function Close({ onClick }) {
             onClick={onClick}
             style={{
                 position: "absolute",
-                bottom: 10,
-                right: 100,
+                bottom: 20,
+                right: 123,
                 color: "black",
                 textDecorationLine: "underline",
             }}

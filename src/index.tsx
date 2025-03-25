@@ -14,6 +14,8 @@ import { SENTRY_API_KEY } from "./config/keys";
 import routes from "./routes";
 import { history, store } from "./store";
 import { TeamDocProps } from "./types/firestore";
+import { Button } from "react-bootstrap";
+import prevButton from "tutorial/prevButton";
 
 Sentry.init({
     dsn: SENTRY_API_KEY,
@@ -40,7 +42,7 @@ const getRoutes = async () => {
             startAt={0}
             components={{ Close }}
             nextButton={nextButton}
-            prevButton={() => <></>}
+            prevButton={prevButton}
             styles={{
                 popover: (base) => ({
                     ...base,
@@ -57,7 +59,7 @@ const getRoutes = async () => {
                 </ConnectedRouter>
             </Provider>
         </TourProvider>,
-        document.getElementById("app"),
+        document.getElementById("app")
     );
 };
 

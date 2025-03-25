@@ -74,6 +74,13 @@ const Map = (props) => {
 
     const [showInfo, setShowInfo] = useState(false);
 
+    const [center, setCenter] = useState({lat: defaultLat, lng: defaultLong});
+
+    const [tempTutorialCurrmarker, setTempTutorialCurrmarker] = useState(-1);
+    const [tempTutorialActiveProviders, setTempTutorialActiveProviders] =
+        useState([]);
+    const [tempTutorialCenter, setTempTutorialCenter] = useState({lat: 0, lng: 1});
+
     function handleCellClick(index) {
         setSelectedIndex(index);
         setShowInfo(true);
@@ -98,17 +105,17 @@ const Map = (props) => {
 
     const filterByTags = useCallback(
         (temp?) => {
-            if(temp.length===0) {
+            if (temp.length === 0) {
                 setActiveProviders([]);
                 return;
             }
 
             const activeFilters = Object.fromEntries(
-                Object.entries(filtersState).filter(([key, value])=>
-                    Array.isArray(value) && value.length>0
+                Object.entries(filtersState).filter(
+                    ([key, value]) => Array.isArray(value) && value.length > 0
                 )
             );
-            if(Object.keys(activeFilters).length===0) {
+            if (Object.keys(activeFilters).length === 0) {
                 setActiveProviders(temp);
                 return;
             }
@@ -119,7 +126,8 @@ const Map = (props) => {
                     return provider["filters"][filterName]
                         ? provider["filters"][filterName].some((r) =>
                               filtersState[filterName].includes(r)
-                          ) : false
+                          )
+                        : false;
                 });
             });
 
@@ -131,7 +139,7 @@ const Map = (props) => {
     const filterSearch = useCallback(
         (filterVal: string, zipCode?: string, zipProvs?) => {
             let temp = zipCode ? zipProvs : providers;
-            if(filterVal!=="") {
+            if (filterVal !== "") {
                 const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
                 temp = temp.filter((item) => regex.test(item.facilityName));
             }
@@ -664,11 +672,12 @@ const Map = (props) => {
     const renderTagControl = () => (
         <>
             <div
+                id="filter-row"
                 className={classNames("filter-row", "padder", "filters")}
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
-                
+
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -862,10 +871,10 @@ const Map = (props) => {
                                     newFilters.push(item.value);
                                 }
 
-                                setFiltersState((prevState)=>({
+                                setFiltersState((prevState) => ({
                                     ...prevState,
-                                    [key]: newFilters
-                                }))
+                                    [key]: newFilters,
+                                }));
 
                                 setFilterActiveState({
                                     ...filterActiveState,
@@ -950,6 +959,33 @@ const Map = (props) => {
         );
     }
 
+    //attempt at doing tip 4 for locations
+    // would pass these functions to the step's action and actionAfter
+    // basically storing the current state temporarily and then centering on
+    // the first marker
+    // restore state on leaving the tip
+    const onLocationTipEnter = () => {
+        if (providers.length === 0) {
+            // lol ask samrat
+            return;
+        }
+        setTempTutorialActiveProviders(activeProviders);
+        setTempTutorialCurrmarker(currmarker);
+        setTempTutorialCenter(center);
+
+        setActiveProviders(providers);
+        setCurrmarker(0);
+        const lat = providers[0].latitude;
+        const lng = providers[0].longitude;
+        setCenter({ lat, lng });
+    };
+
+    const onLocationTipLeave = () => {
+        setActiveProviders(tempTutorialActiveProviders);
+        setCurrmarker(tempTutorialCurrmarker);
+        setCenter(tempTutorialCenter);
+    };
+
     // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
         searchProviderName,
@@ -1026,8 +1062,9 @@ const Map = (props) => {
                                                 {activeProviders[selectedIndex]
                                                     .facilityName +
                                                     " #" +
-                                                    activeProviders[selectedIndex]
-                                                        .stationNum}
+                                                    activeProviders[
+                                                        selectedIndex
+                                                    ].stationNum}
                                             </h4>
                                         </div>
                                     ) : (
@@ -1095,7 +1132,7 @@ const Map = (props) => {
                                         onChange={handleToggle}
                                         checked={isToggled}
                                         offColor="#E0E0E0"
-                                        onColor={primaryColor}
+                                        onColor="#017BFF"
                                         handleDiameter={18}
                                         uncheckedIcon={false}
                                         checkedIcon={false}
@@ -1142,6 +1179,7 @@ const Map = (props) => {
                     >
                         {!showInfo && renderTagControl()}
                         <div
+                            id="provider-space"
                             style={{
                                 height: !showInfo
                                     ? "calc(100% - 43px)"
@@ -1336,6 +1374,8 @@ const Map = (props) => {
                             }}
                             selectedMarker={currmarker}
                             onShowMoreClick={handleCellClick}
+                            center={center}
+                            setCenter={setCenter}
                         />
                     </div>
                 </div>
@@ -1350,3 +1390,4 @@ export default compose<any>(
         state,
     }))
 )(Map);
+
