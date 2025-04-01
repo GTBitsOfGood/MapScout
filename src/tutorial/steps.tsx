@@ -1,6 +1,7 @@
 import React from "react";
 import Row from "react-bootstrap/Row";
 import { StepType } from "@reactour/tour";
+import { tutorialHelpers } from "../components/map/tutorialHelpers";
 
 const bgColor = "#007bff";
 
@@ -162,9 +163,15 @@ const steps: StepType[] = [
     //     position: [550, 20],
     // },
     {
-        selector: ".filter-tooltip-tutorial",
-        action: () => console.log("hi"),
-        actionAfter: () => console.log("leave"),
+        selector: "#map-marker-tutorial",
+        action: () => {
+            console.log("Tutorial: Entering location pin step");
+            tutorialHelpers.onLocationTipEnter();
+        },
+        actionAfter: () => {
+            console.log("Tutorial: Leaving location pin step");
+            tutorialHelpers.onLocationTipLeave();
+        },
         content: () => (
             <div>
                 <Row

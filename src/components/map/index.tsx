@@ -20,6 +20,7 @@ import localizationStrings from "../../utils/Localization";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
+import { registerCallbacks } from "./tutorialHelpers";
 import searchIcon from "../../assets/img/searchicon.png";
 import x from "../../assets/img/x.png";
 import dropdownIcon from "../../assets/svg/chevron-down.svg";
@@ -250,6 +251,53 @@ const Map = (props) => {
             setDefaultLong(teamData.longitude);
             setDefaultZoom(teamData.zoom);
             setIsLoading(false);
+            
+            // Register tutorial callbacks now that providers are loaded
+            console.log(`Registering tutorial callbacks with ${provs.length} providers available`);
+            registerCallbacks(
+                // Define the enter callback inline for clarity
+                () => {
+                    console.log("Tutorial enter called, saving state");
+                    if (provs.length === 0) {
+                        console.warn("No providers available for tutorial");
+                        return;
+                    }
+                    
+                    // Save current state
+                    setTempTutorialActiveProviders([...activeProviders]);
+                    setTempTutorialCurrmarker(currmarker);
+                    setTempTutorialCenter({...center});
+                    
+                    // Show the first provider
+                    const firstProvider = provs[0];
+                    if (firstProvider) {
+                        console.log("Setting active provider to", firstProvider.facilityName);
+                        // Focus on just the first provider for demonstration
+                        setActiveProviders([firstProvider]);
+                        setCurrmarker(0);
+                        setCenter({ 
+                            lat: firstProvider.latitude,
+                            lng: firstProvider.longitude
+                        });
+                    }
+                },
+                // Define the leave callback inline
+                () => {
+                    console.log("Tutorial leave called, restoring state");
+                    // Check if we had providers before entering the tutorial
+                    if (tempTutorialActiveProviders && tempTutorialActiveProviders.length > 0) {
+                        console.log(`Restoring ${tempTutorialActiveProviders.length} providers`);
+                        // Restore the previous list of visible providers
+                        setActiveProviders([...tempTutorialActiveProviders]);
+                        setCurrmarker(tempTutorialCurrmarker);
+                        setCenter({...tempTutorialCenter});
+                    } else if (provs.length > 0) {
+                        console.log(`No saved state, restoring all ${provs.length} providers`);
+                        // If no previous state but we have providers, restore them all
+                        setActiveProviders([...provs]);
+                    }
+                }
+            );
         }
         document.title = getTeam().toUpperCase();
         setIsLoading(true);
@@ -964,28 +1012,6 @@ const Map = (props) => {
     // basically storing the current state temporarily and then centering on
     // the first marker
     // restore state on leaving the tip
-    const onLocationTipEnter = () => {
-        if (providers.length === 0) {
-            // lol ask samrat
-            return;
-        }
-        setTempTutorialActiveProviders(activeProviders);
-        setTempTutorialCurrmarker(currmarker);
-        setTempTutorialCenter(center);
-
-        setActiveProviders(providers);
-        setCurrmarker(0);
-        const lat = providers[0].latitude;
-        const lng = providers[0].longitude;
-        setCenter({ lat, lng });
-    };
-
-    const onLocationTipLeave = () => {
-        setActiveProviders(tempTutorialActiveProviders);
-        setCurrmarker(tempTutorialCurrmarker);
-        setCenter(tempTutorialCenter);
-    };
-
     // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
         searchProviderName,
