@@ -1,14 +1,18 @@
 import React from "react";
 import Row from "react-bootstrap/Row";
 import { StepType } from "@reactour/tour";
+import { tutorialHelpers } from "../components/map/tutorialHelpers";
+
+const bgColor = "#007bff";
+
 const steps: StepType[] = [
     {
-        selector: ".filters",
+        selector: "#filter-row",
         content: () => (
             <div>
                 <Row
                     style={{
-                        backgroundColor: "#244D75",
+                        backgroundColor: bgColor,
                         borderTopLeftRadius: 16,
                         borderTopRightRadius: 16,
                         paddingTop: 5,
@@ -46,22 +50,21 @@ const steps: StepType[] = [
                         fontWeight: 500,
                     }}
                 >
-                    Filters can be a powerful way to refine your data and get
-                    the specific information you need. Waypoints can be filtered
-                    with these dropdowns, which will vary depending on the map
-                    that is being viewed.
+                    Refine your search with filters! When selected, only
+                    applicable locations will be shown.
                 </Row>
             </div>
         ),
         position: [880, 30],
+        padding: { mask: [-5, 10] },
     },
     {
-        selector: ".result-tutorial",
+        selector: "#provider-space",
         content: () => (
             <div>
                 <Row
                     style={{
-                        backgroundColor: "#244D75",
+                        backgroundColor: bgColor,
                         borderTopLeftRadius: 16,
                         borderTopRightRadius: 16,
                         paddingTop: 5,
@@ -99,21 +102,81 @@ const steps: StepType[] = [
                         fontWeight: 500,
                     }}
                 >
-                    Here is a result that is displayed. Hovering over it will
-                    show the location on the map and clicking on the result will
-                    display addition information.
+                    The locations that match your preference(s) will appear
+                    here. Clicking on a result will display the information for
+                    that location.
                 </Row>
             </div>
         ),
         position: [900, 180],
+        padding: { mask: [-5, 2] },
     },
+    // {
+    //     selector: ".filter-tooltip-tutorial",
+    //     content: () => (
+    //         <div>
+    //             <Row
+    //                 style={{
+    //                     backgroundColor: bgColor,
+    //                     borderTopLeftRadius: 16,
+    //                     borderTopRightRadius: 16,
+    //                     paddingTop: 5,
+    //                     paddingBottom: 5,
+    //                     paddingLeft: 15,
+    //                     color: "white",
+    //                     fontWeight: 500,
+    //                     fontSize: 24,
+    //                     justifyContent: "left",
+    //                 }}
+    //             >
+    //                 Need Help?
+    //             </Row>
+    //             <Row
+    //                 style={{
+    //                     height: 0,
+    //                     width: 0,
+    //                     position: "absolute",
+    //                     left: 0,
+    //                     borderBottom: "20px solid transparent",
+    //                     borderTop: "20px solid transparent",
+    //                     borderRight: "20px solid white",
+    //                 }}
+    //             ></Row>
+    //             <Row
+    //                 style={{
+    //                     paddingLeft: 1,
+    //                     paddingRight: 1,
+    //                     paddingTop: 5,
+    //                     paddingBottom: 10,
+    //                     borderBottom: "1px solid lightgray",
+    //                     marginRight: 1,
+    //                     marginLeft: 1,
+    //                     marginBottom: 50,
+    //                     fontWeight: 500,
+    //                 }}
+    //             >
+    //                 If you need a small refresher on certain features, hover
+    //                 over this icon for help!
+    //             </Row>
+    //         </div>
+    //     ),
+    //     position: [550, 20],
+    // },
     {
-        selector: ".filter-tooltip-tutorial",
+        selector: "#map-marker-tutorial",
+        action: () => {
+            console.log("Tutorial: Entering location pin step");
+            tutorialHelpers.onLocationTipEnter();
+        },
+        actionAfter: () => {
+            console.log("Tutorial: Leaving location pin step");
+            tutorialHelpers.onLocationTipLeave();
+        },
         content: () => (
             <div>
                 <Row
                     style={{
-                        backgroundColor: "#244D75",
+                        backgroundColor: bgColor,
                         borderTopLeftRadius: 16,
                         borderTopRightRadius: 16,
                         paddingTop: 5,
@@ -125,7 +188,7 @@ const steps: StepType[] = [
                         justifyContent: "left",
                     }}
                 >
-                    Need Help?
+                    Location Pins
                 </Row>
                 <Row
                     style={{
@@ -151,8 +214,11 @@ const steps: StepType[] = [
                         fontWeight: 500,
                     }}
                 >
-                    If you need a small refresher on certain features, hover
-                    over this icon for help!
+                    Pins show a location's placement on the map. Hover over any
+                    Pin to display its Label, as shown. By clicking Show More
+                    Info on the Label, you will arrive at the information page
+                    for that location, just as you can from the Search Results
+                    Panel.
                 </Row>
             </div>
         ),
@@ -171,12 +237,12 @@ const steps: StepType[] = [
                         right: 50,
                         borderRight: "20px solid transparent",
                         borderLeft: "20px solid transparent",
-                        borderBottom: "20px solid #244D75",
+                        borderBottom: "20px solid #007bff",
                     }}
                 ></Row>
                 <Row
                     style={{
-                        backgroundColor: "#244D75",
+                        backgroundColor: bgColor,
                         borderTopLeftRadius: 16,
                         borderTopRightRadius: 16,
                         paddingTop: 5,

@@ -20,6 +20,7 @@ import localizationStrings from "../../utils/Localization";
 import ProviderInfo from "../subcomponents/ProviderInfo";
 import GoogleMap from "./GoogleMap";
 import ProviderCell from "./ProviderCell";
+import { registerCallbacks } from "./tutorialHelpers";
 import searchIcon from "../../assets/img/searchicon.png";
 import x from "../../assets/img/x.png";
 import dropdownIcon from "../../assets/svg/chevron-down.svg";
@@ -74,6 +75,13 @@ const Map = (props) => {
 
     const [showInfo, setShowInfo] = useState(false);
 
+    const [center, setCenter] = useState({lat: defaultLat, lng: defaultLong});
+
+    const [tempTutorialCurrmarker, setTempTutorialCurrmarker] = useState(-1);
+    const [tempTutorialActiveProviders, setTempTutorialActiveProviders] =
+        useState([]);
+    const [tempTutorialCenter, setTempTutorialCenter] = useState({lat: 0, lng: 1});
+
     function handleCellClick(index) {
         setSelectedIndex(index);
         setShowInfo(true);
@@ -98,17 +106,17 @@ const Map = (props) => {
 
     const filterByTags = useCallback(
         (temp?) => {
-            if(temp.length===0) {
+            if (temp.length === 0) {
                 setActiveProviders([]);
                 return;
             }
 
             const activeFilters = Object.fromEntries(
-                Object.entries(filtersState).filter(([key, value])=>
-                    Array.isArray(value) && value.length>0
+                Object.entries(filtersState).filter(
+                    ([key, value]) => Array.isArray(value) && value.length > 0
                 )
             );
-            if(Object.keys(activeFilters).length===0) {
+            if (Object.keys(activeFilters).length === 0) {
                 setActiveProviders(temp);
                 return;
             }
@@ -119,7 +127,8 @@ const Map = (props) => {
                     return provider["filters"][filterName]
                         ? provider["filters"][filterName].some((r) =>
                               filtersState[filterName].includes(r)
-                          ) : false
+                          )
+                        : false;
                 });
             });
 
@@ -131,7 +140,7 @@ const Map = (props) => {
     const filterSearch = useCallback(
         (filterVal: string, zipCode?: string, zipProvs?) => {
             let temp = zipCode ? zipProvs : providers;
-            if(filterVal!=="") {
+            if (filterVal !== "") {
                 const regex = new RegExp(`${filterVal.toLowerCase()}`, "gi");
                 temp = temp.filter((item) => regex.test(item.facilityName));
             }
@@ -242,6 +251,53 @@ const Map = (props) => {
             setDefaultLong(teamData.longitude);
             setDefaultZoom(teamData.zoom);
             setIsLoading(false);
+            
+            // Register tutorial callbacks now that providers are loaded
+            console.log(`Registering tutorial callbacks with ${provs.length} providers available`);
+            registerCallbacks(
+                // Define the enter callback inline for clarity
+                () => {
+                    console.log("Tutorial enter called, saving state");
+                    if (provs.length === 0) {
+                        console.warn("No providers available for tutorial");
+                        return;
+                    }
+                    
+                    // Save current state
+                    setTempTutorialActiveProviders([...activeProviders]);
+                    setTempTutorialCurrmarker(currmarker);
+                    setTempTutorialCenter({...center});
+                    
+                    // Show the first provider
+                    const firstProvider = provs[0];
+                    if (firstProvider) {
+                        console.log("Setting active provider to", firstProvider.facilityName);
+                        // Focus on just the first provider for demonstration
+                        setActiveProviders([firstProvider]);
+                        setCurrmarker(0);
+                        setCenter({ 
+                            lat: firstProvider.latitude,
+                            lng: firstProvider.longitude
+                        });
+                    }
+                },
+                // Define the leave callback inline
+                () => {
+                    console.log("Tutorial leave called, restoring state");
+                    // Check if we had providers before entering the tutorial
+                    if (tempTutorialActiveProviders && tempTutorialActiveProviders.length > 0) {
+                        console.log(`Restoring ${tempTutorialActiveProviders.length} providers`);
+                        // Restore the previous list of visible providers
+                        setActiveProviders([...tempTutorialActiveProviders]);
+                        setCurrmarker(tempTutorialCurrmarker);
+                        setCenter({...tempTutorialCenter});
+                    } else if (provs.length > 0) {
+                        console.log(`No saved state, restoring all ${provs.length} providers`);
+                        // If no previous state but we have providers, restore them all
+                        setActiveProviders([...provs]);
+                    }
+                }
+            );
         }
         document.title = getTeam().toUpperCase();
         setIsLoading(true);
@@ -664,11 +720,12 @@ const Map = (props) => {
     const renderTagControl = () => (
         <>
             <div
+                id="filter-row"
                 className={classNames("filter-row", "padder", "filters")}
                 style={{ display: "flex", alignItems: "center" }}
             >
                 <div style={{ marginRight: "8px", marginBottom: "6px" }}> </div>
-                
+
                 {Object.entries(filtersData)
                     .filter(
                         ([key, value]: any[]) =>
@@ -862,10 +919,10 @@ const Map = (props) => {
                                     newFilters.push(item.value);
                                 }
 
-                                setFiltersState((prevState)=>({
+                                setFiltersState((prevState) => ({
                                     ...prevState,
-                                    [key]: newFilters
-                                }))
+                                    [key]: newFilters,
+                                }));
 
                                 setFilterActiveState({
                                     ...filterActiveState,
@@ -950,6 +1007,11 @@ const Map = (props) => {
         );
     }
 
+    //attempt at doing tip 4 for locations
+    // would pass these functions to the step's action and actionAfter
+    // basically storing the current state temporarily and then centering on
+    // the first marker
+    // restore state on leaving the tip
     // Localization is unused because it's hardcoded and doesn't fit with our dynamic model
     let {
         searchProviderName,
@@ -1026,8 +1088,9 @@ const Map = (props) => {
                                                 {activeProviders[selectedIndex]
                                                     .facilityName +
                                                     " #" +
-                                                    activeProviders[selectedIndex]
-                                                        .stationNum}
+                                                    activeProviders[
+                                                        selectedIndex
+                                                    ].stationNum}
                                             </h4>
                                         </div>
                                     ) : (
@@ -1095,7 +1158,7 @@ const Map = (props) => {
                                         onChange={handleToggle}
                                         checked={isToggled}
                                         offColor="#E0E0E0"
-                                        onColor={primaryColor}
+                                        onColor="#017BFF"
                                         handleDiameter={18}
                                         uncheckedIcon={false}
                                         checkedIcon={false}
@@ -1142,6 +1205,7 @@ const Map = (props) => {
                     >
                         {!showInfo && renderTagControl()}
                         <div
+                            id="provider-space"
                             style={{
                                 height: !showInfo
                                     ? "calc(100% - 43px)"
@@ -1336,6 +1400,8 @@ const Map = (props) => {
                             }}
                             selectedMarker={currmarker}
                             onShowMoreClick={handleCellClick}
+                            center={center}
+                            setCenter={setCenter}
                         />
                     </div>
                 </div>
@@ -1350,3 +1416,4 @@ export default compose<any>(
         state,
     }))
 )(Map);
+

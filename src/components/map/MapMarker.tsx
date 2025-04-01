@@ -28,7 +28,11 @@ export default ({
 }: MapMarkerProps) => (
     <Popup
         trigger={    
-            <div style={{ cursor: "pointer", width: "18px", height: "18px" }} onClick={onMarkerClick}>
+            <div 
+                id={index === 0 ? "map-marker-tutorial" : `map-marker-${index}`}
+                style={{ cursor: "pointer", width: "18px", height: "18px" }} 
+                onClick={onMarkerClick}
+            >
                 {selectedIndex === index ? (
                     <svg
                         width="30px"
