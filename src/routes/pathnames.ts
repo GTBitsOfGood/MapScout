@@ -8,5 +8,5 @@ export const signupRoute = "/signup";
 export const providerRoute = "/provider";
 export const formRoute = "/provider/add";
 export const templateRoute = "/provider/template";
-export const chatRoute = "/provider/feeback";
+export const chatRoute = "/provider/feedback";
 export const settingsRoute = "/provider/settings";

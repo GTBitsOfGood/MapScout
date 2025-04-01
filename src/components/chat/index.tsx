@@ -49,7 +49,9 @@ function Chat({firebase}) {
             await sendSlackMessage(firebase.auth.email, message);
             // Keep the state updates after all the async functions are done!
             // For some reason, updating them first causes them to not update the state
-            setIsSubmitted(true);
+            setTimeout(() => {
+                setIsSubmitted(true);
+            }, 1000);
             setMessage("");
         }
     };
@@ -78,7 +80,7 @@ function Chat({firebase}) {
                             marginBottom: 6
                         }}
                     >
-                        <div className="chat-message">Thanks for your feedback, we have recieved your message, our team will reach out to you shortely!</div>
+                        <div className="chat-message">Thanks for your message, we will reach out to you shortly with an update!</div>
                     </div>
                     )}
                     <Form onSubmit={formSubmit}>
