@@ -3,6 +3,7 @@ export const aboutRoute = "/about";
 export const authRoute = "/auth";
 export const pwdRoute = "/forgot";
 export const signupRoute = "/signup";
+export const teamSignupRoute = "/teamsignup"
 
 // Private routes
 export const providerRoute = "/provider";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import Alert from "react-bootstrap/Alert";
@@ -15,27 +15,43 @@ import { link } from "d3";
 
 const classNames = require("classnames");
 
-function Auth({ firebase, history }) {
+function teamSignUp({ firebase, history }) {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [teams, setTeams] = useState([]);
+    const [selectedTeam, setSelectedTeam] = useState("");
     const [error, setError] = useState(null);
     const [animate, setAnimate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    function handleChange(e) {
-        const { value, type } = e.target;
-        if (type === "email") {
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (name === "email") {
             setEmail(value);
-        } else {
-            setPassword(value);
+        } else if (name === "team") {
+            setSelectedTeam(value);
         }
-    }
+    };
 
     async function handleSubmit(e) {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await firebase.auth().signInWithEmailAndPassword(email, password);
+            if (email && selectedTeam) {
+              const existingMember = await firebase.firestore()
+                .collection('waitlistTeamMember')
+                .where('email', "==", email)
+                .where('team', "==", selectedTeam)
+                .get()
+              if (!existingMember.empty) {
+                setError("There's already an existing account!")
+                setIsLoading(false)
+                return;
+              }
+              await firebase.firestore().collection('waitlistTeamMember').add({
+                email: email,
+                team: selectedTeam
+              })
+            }
             setAnimate(true);
             await setTimeout(() => {
                 setIsLoading(false);
@@ -51,12 +67,25 @@ function Auth({ firebase, history }) {
     const {
         emailLabel,
         emailPlaceholder,
-        passwordLabel,
-        passwordPlaceholder,
-        login,
         signUp,
-        forgotPassword,
     } = localizationStrings;
+
+    useEffect(() => {
+      const fetchTeams = async () => {
+        try {
+          const response = await firebase.firestore().collection('teams').get();
+          const teamsList = response.docs.map(doc => ({
+            id: doc.id,
+          }));
+          setTeams(teamsList);
+          setIsLoading(false)
+        } catch (error) {
+          setError('Failed to fetch teams');
+          setIsLoading(false);
+        }
+      }
+      fetchTeams()
+    }, [firebase]);
 
     return (
         <Container fluid>
@@ -73,23 +102,31 @@ function Auth({ firebase, history }) {
                     }}
                 >
                     <div className="mb-4">
-                        <h2>{login}</h2>
+                        <h2>{signUp}</h2>
                     </div>
                     <Form.Group controlId="formEmail">
                         <Form.Label>{emailLabel}</Form.Label>
                         <Form.Control
-                            type="email"
+                            name="email"
                             placeholder={emailPlaceholder}
-                            onChange={handleChange}
+                            onChange={handleInputChange}
                         />
                     </Form.Group>
-                    <Form.Group controlId="formPassword">
-                        <Form.Label>{passwordLabel}</Form.Label>
+                    <Form.Group controlId="formTeam">
+                        <Form.Label>Team</Form.Label>
                         <Form.Control
-                            type="password"
-                            placeholder={passwordPlaceholder}
-                            onChange={handleChange}
-                        />
+                            name="team"
+                            as="select"
+                            value={selectedTeam}
+                            onChange={handleInputChange}
+                        >
+                        <option value="">Select a team</option>
+                          {teams.map((team) => (
+                              <option key={team.id} value={team.id}>
+                                  {team.id}
+                              </option>
+                          ))}
+                      </Form.Control>
                     </Form.Group>
                     <br />
                     {error ? (
@@ -107,24 +144,8 @@ function Auth({ firebase, history }) {
                         disabled={isLoading}
                         block
                     >
-                        {isLoading && <div className="loader" />} {login}
-                    </Button>
-                    <Button
-                        variant="outline-primary"
-                        disabled={isLoading}
-                        block
-                        as={Link}
-                        to={
-                            teamSignupRoute
-                        }
-                    >
                         {isLoading && <div className="loader" />} {signUp}
                     </Button>
-                    <div className="mt-2">
-                        <a href={pwdRoute}>
-                            <small>{forgotPassword}</small>
-                        </a>
-                    </div>
                 </Form>
             </div>
             {animate ? (
@@ -138,4 +159,4 @@ function Auth({ firebase, history }) {
     );
 }
 
-export default withFirebase(Auth);
+export default withFirebase(teamSignUp);

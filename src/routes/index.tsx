@@ -7,7 +7,9 @@ import SentryWrapper from "../components/wrappers/SentryWrapper";
 import AboutUs from "../components/about";
 import SignUp from "../components/signup/index";
 import Home from "../components/home";
-import { homeRoute, aboutRoute, signupRoute } from "./pathnames";
+import teamSignUp from "components/teamsignup";
+
+import { homeRoute, aboutRoute, signupRoute, teamSignupRoute } from "./pathnames";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function renderComponentWithErrorBoundary<P>(Component: React.JSXElementConstructor<any>) {
@@ -41,7 +43,10 @@ const routes = (allRoutes: string[]) => (
                     path={signupRoute}
                     component={renderComponentWithErrorBoundary(SignUp)}
                 />
-
+                <Route
+                    path={teamSignupRoute}
+                    component={renderComponentWithErrorBoundary(teamSignUp)}
+                />
                 <ProviderRoutes />
             </Switch>
         </BrowserRouter>
