@@ -67,6 +67,8 @@ function teamSignUp({ firebase, history }) {
     const {
         emailLabel,
         emailPlaceholder,
+        passwordLabel,
+        passwordPlaceholder,
         signUp,
     } = localizationStrings;
 
@@ -110,6 +112,14 @@ function teamSignUp({ firebase, history }) {
                             name="email"
                             placeholder={emailPlaceholder}
                             onChange={handleInputChange}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formPassword">
+                        <Form.Label>{passwordLabel}</Form.Label>
+                        <Form.Control
+                            type="password"
+                            placeholder={passwordPlaceholder}
+                            // onChange={handleChange}
                         />
                     </Form.Group>
                     <Form.Group controlId="formTeam">
