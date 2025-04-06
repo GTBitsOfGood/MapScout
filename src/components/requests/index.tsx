@@ -40,6 +40,7 @@ const Requests = ({ firestore, team }) => {
     }, [team, firestore]);
 
     const handleAccept = async (email: string) => {
+        // THANASIS! NEED TO DO CREATEUSER HERE FOR AUTHENTICATION
         try {
             const snapshot = await firestore
                 .collection("waitlistTeamMember")
