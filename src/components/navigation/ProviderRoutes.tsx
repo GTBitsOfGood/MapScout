@@ -34,9 +34,11 @@ import {
     formRoute,
     providerRoute,
     pwdRoute,
+    requestsRoute,
     settingsRoute,
     templateRoute,
 } from "../../routes/pathnames";
+import requests from "components/requests";
 
 //const classNames = require("classnames");
 
@@ -76,6 +78,7 @@ function DashboardContent({ isAuth, auth }) {
                 <PrivateRoute path={formRoute} component={AddProvider} />
                 <PrivateRoute path={templateRoute} component={Template} />
                 <PrivateRoute path={chatRoute} component={Chat} />
+                <PrivateRoute path={requestsRoute} component={requests} />
                 <PrivateRoute path={settingsRoute} component={settings} />
             </Switch>
         </div>
@@ -207,5 +210,5 @@ const mapStateToProps = (state) => ({
 export default compose<any>(
     withFirestore,
     withFirebase,
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps)
 )(React.memo(ProviderRoutes, areEqual));

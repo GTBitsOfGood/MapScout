@@ -10,3 +10,4 @@ export const formRoute = "/provider/add";
 export const templateRoute = "/provider/template";
 export const chatRoute = "/provider/feedback";
 export const settingsRoute = "/provider/settings";
+export const requestsRoute = "/provider/requests";
