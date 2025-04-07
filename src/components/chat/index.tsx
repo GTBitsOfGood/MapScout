@@ -20,7 +20,7 @@ async function sendSlackMessage(email, message) {
         },
         body: JSON.stringify(data),
     };
-    fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions);
+    fetch("https://bit-bot-iota.vercel.app/bog/mapscout", requestOptions);
 }
 
 const addToDo = (newToDo) => {

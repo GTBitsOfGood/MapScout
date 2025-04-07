@@ -46,7 +46,7 @@ async function sendSlackMessage(email) {
         },
         body: JSON.stringify(data),
     };
-    fetch("https://bit-bot-five.vercel.app/bog/mapscout", requestOptions);
+    fetch("https://bit-bot-iota.vercel.app/bog/mapscout", requestOptions);
 }
 
 function Home({ firebaseAuth, firestore }) {
