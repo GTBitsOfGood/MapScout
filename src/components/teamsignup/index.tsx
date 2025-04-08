@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -19,6 +18,7 @@ function teamSignUp({ firebase, history }) {
     const [email, setEmail] = useState("");
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [animate, setAnimate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +29,9 @@ function teamSignUp({ firebase, history }) {
             setEmail(value);
         } else if (name === "team") {
             setSelectedTeam(value);
+        }
+        else if (name === "password") {
+            setPassword(value);
         }
     };
 
@@ -49,7 +52,8 @@ function teamSignUp({ firebase, history }) {
               }
               await firebase.firestore().collection('waitlistTeamMember').add({
                 email: email,
-                team: selectedTeam
+                team: selectedTeam,
+                password: password
               })
             }
             setAnimate(true);
@@ -117,9 +121,10 @@ function teamSignUp({ firebase, history }) {
                     <Form.Group controlId="formPassword">
                         <Form.Label>{passwordLabel}</Form.Label>
                         <Form.Control
+                            name="password"
                             type="password"
                             placeholder={passwordPlaceholder}
-                            // onChange={handleChange}
+                            onChange={handleInputChange}
                         />
                     </Form.Group>
                     <Form.Group controlId="formTeam">

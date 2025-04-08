@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withFirestore } from "react-redux-firebase";
+import { withFirebase, withFirestore } from "react-redux-firebase";
 import { Store } from "reducers/types";
 import { compose } from "redux";
 import RequestCard from "./RequestCard";
@@ -10,7 +10,7 @@ const mapStateToProps = (state: Store) => ({
     team: state.item.team,
 });
 
-const Requests = ({ firestore, team }) => {
+const Requests = ({ firestore, firebase, team }) => {
     //array of emailAddresses
     const [requests, setRequests] = useState<string[]>([]);
 
@@ -51,17 +51,19 @@ const Requests = ({ firestore, team }) => {
             const doc = snapshot.docs[0];
             const newUserRef = firestore.collection("users").doc();
             const uid = newUserRef.id;
-
-            await newUserRef.set({
+            const newUser = {
                 uid,
                 email: doc.data().email,
                 team: doc.data().team,
-            });
+                password: doc.data().password
+            };
             await firestore
                 .collection("waitlistTeamMember")
                 .doc(doc.id)
                 .delete();
             setRequests((prev) => prev.filter((r) => r !== email));
+            
+            await firebase.createUser(newUser)
             console.log("Accepted and added to users");
         } catch (err) {
             console.error("Error accepting request:", err);
@@ -124,5 +126,6 @@ const Requests = ({ firestore, team }) => {
 
 export default compose<any>(
     withFirestore,
+    withFirebase,
     connect(mapStateToProps, {})
 )(Requests);
