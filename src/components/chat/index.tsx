@@ -7,6 +7,8 @@ import "firebase/database";
 import { chatRef } from "../../store";
 import Discussion from "./Discussion";
 import { updateNewChat as Update } from "../../functions/reduxActions";
+import ChatBubble from "./ChatBubble";
+import { SendIcon } from "components/dashboard/TextComponent/Icons";
 
 async function sendSlackMessage(email, message) {
     const data = {
@@ -29,7 +31,6 @@ const addToDo = (newToDo) => {
 
 function Chat({firebase}) {
     const [message, setMessage] = useState("");
-    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
     const inputChange = (e) => {
         setMessage(e.target.value);
@@ -49,9 +50,12 @@ function Chat({firebase}) {
             await sendSlackMessage(firebase.auth.email, message);
             // Keep the state updates after all the async functions are done!
             // For some reason, updating them first causes them to not update the state
-            setTimeout(() => {
-                setIsSubmitted(true);
-            }, 1000);
+            await addToDo({
+                message: "Thanks for your message, we will reach out to you shortly with an update!",
+                fromSlack: true,
+                uid: firebase.auth.uid,
+                username: firebase.auth.email,
+            });
             setMessage("");
         }
     };
@@ -66,39 +70,22 @@ function Chat({firebase}) {
                 </div>
                 <div className="mr-5 ml-5">
                     <Discussion />
-                    { isSubmitted && (
-                        <div
-                        className="chat-bubble"
-                        style={{
-                            alignSelf: "flex-start",
-                            borderColor: "#E5E5E5",
-                            borderTopLeftRadius: 30,
-                            borderTopRightRadius: 30,
-                            borderTopWidth: 8,
-                            borderBottomLeftRadius: 0,
-                            borderBottomRightRadius: 30,
-                            marginBottom: 6
-                        }}
-                    >
-                        <div className="chat-message">Thanks for your message, we will reach out to you shortly with an update!</div>
-                    </div>
-                    )}
-                    <Form onSubmit={formSubmit}>
+                    <Form onSubmit={formSubmit} id="chat-input-container">
                         <Form.Control
-                            placeholder="Enter message"
+                            id="chat-input"
+                            placeholder="Enter message..."
                             as="textarea"
-                            rows="3"
                             value={message}
                             onChange={inputChange}
                         />
                         <Button
-                            className="mt-2 pl-5 pr-5"
+                            id="chat-send-button"
                             type="submit"
                             value="submit"
                             variant="primary"
                             disabled={message === ""}
                         >
-                            SEND
+                            <SendIcon />
                         </Button>
                     </Form>
                 </div>

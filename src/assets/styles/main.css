@@ -1429,6 +1429,7 @@ h2 {
     max-height: 440px;
     width: 60vw;
     overflow-y: scroll;
+    gap: 16px;
 }
 
 #discussion-scroll::-webkit-scrollbar {
@@ -1436,7 +1437,6 @@ h2 {
 }
 
 .chat-bubble {
-    border: solid 8px limegreen;
     padding: 10px 24px;
     width: 34vw;
     border-radius: 30px;
@@ -1445,11 +1445,44 @@ h2 {
 .chat-message {
     font-size: 18px;
     overflow-wrap: break-word;
+    color: black;
 }
 
 .chat-time {
     font-size: 12px;
-    color: gray;
+    color: #797979;
+}
+
+#chat-input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    border: 1px solid #6D6D6D;
+    padding: 16px;
+    gap: 16px;
+}
+
+#chat-input {
+    border: none;
+    height: 97px;
+    max-height: 97px;
+    overflow-y: scroll;
+    resize: none;
+    line-height: 20px;
+    white-space: pre-wrap;
+}
+
+#chat-send-button {
+    background-color: #3072CB;
+    border: solid 1px #1A4F97;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    padding: 8px;
 }
 
 .veil {

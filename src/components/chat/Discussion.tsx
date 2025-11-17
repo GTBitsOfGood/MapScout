@@ -18,27 +18,23 @@ function Discussion({ chatHistory }) {
         setData(chatHistory.slice().reverse());
     }, [chatHistory]);
 
-    return (
-        <div id="discussion-root" ref={root}>
-            {height >= 440 && <div className="veil" />}
-            <div id="discussion-scroll">
-                {data &&
-                    data.map((item, index) => (
-                        <ChatBubble
-                            isEnd={
-                                index <= 0 ||
-                                data[index - 1].fromSlack !== item.fromSlack
-                            }
-                            isStart={
-                                index >= data.length - 1 ||
-                                data[index + 1].fromSlack !== item.fromSlack
-                            }
-                            item={item}
-                        />
-                    ))}
-            </div>
-        </div>
-    );
+  return (
+    <div id="discussion-root" ref={root}>
+      {
+        height >= 440
+        && <div className="veil" />
+      }
+      <div id="discussion-scroll">
+        {
+          data && data.map((item) => (
+            <ChatBubble
+              item={item}
+            />
+          ))
+        }
+      </div>
+    </div>
+  );
 }
 
 const mapStateToProps = (state) => ({
