@@ -6,7 +6,7 @@ import {
     FiFileText,
     FiMap,
     FiBell,
-    FiPower,
+    FiUsers,
     FiMessageCircle,
     FiLogOut,
 } from "react-icons/fi";
@@ -14,6 +14,7 @@ import {
     providerRoute,
     templateRoute,
     chatRoute,
+    requestsRoute,
 } from "../../routes/pathnames";
 import { databaseRef, responseRef } from "../../store";
 import { updateChat, updateNewChat } from "../../functions/reduxActions";
@@ -29,13 +30,13 @@ function NavBar(props) {
             const { firebaseAuth } = props;
             const chats = payload
                 ? Object.values(payload).filter(
-                      (x: any) => x.uid && x.uid === firebaseAuth.auth.uid,
+                      (x: any) => x.uid && x.uid === firebaseAuth.auth.uid
                   )
                 : [];
             const responses = payload2
                 ? Object.values(payload2).filter((x: any) => {
                       const index = x.message.indexOf(
-                          `$${firebaseAuth.auth.uid}`,
+                          `$${firebaseAuth.auth.uid}`
                       );
                       if (index === 0) {
                           x.message = x.message
@@ -74,7 +75,7 @@ function NavBar(props) {
         databaseRef.on("value", (snapshot) => {
             parseChat(
                 snapshot.child("chat").val(),
-                snapshot.child("response").val(),
+                snapshot.child("response").val()
             );
         });
         responseRef.on("child_added", () => {
@@ -185,6 +186,24 @@ function NavBar(props) {
                                 </div>
                             </div>
                         </Link>
+                        <Link
+                            to={requestsRoute}
+                            style={{ textDecoration: "none" }}
+                        >
+                            <div className="cell">
+                                <div className="icon">
+                                    <FiUsers />
+                                </div>
+                                <div
+                                    className={classnames("cell-title", {
+                                        none: !expand,
+                                        fadeIn: expand,
+                                    })}
+                                >
+                                    REQUESTS
+                                </div>
+                            </div>
+                        </Link>
                     </div>
                     <div>
                         <div className="cell">
@@ -195,7 +214,7 @@ function NavBar(props) {
                                 onClick={() =>
                                     window.open(
                                         "https://www.notion.so/gtbitsofgood/MapScout-FAQs-9f6191f9571b47bc964f52a3961eb2ee",
-                                        "_blank",
+                                        "_blank"
                                     )
                                 }
                                 className={classnames("cell-title", {
