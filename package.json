@@ -65,7 +65,7 @@
         "@types/react-modal": "^3.16.3",
         "autoprefixer": "9.8.0",
         "babel-polyfill": "^6.26.0",
-        "bootstrap": "^4.3.1",
+        "bootstrap": "^5.0.0",
         "classnames": "^2.2.6",
         "connected-react-router": "^4.2.3",
         "cross-env": "^7.0.3",
