@@ -32,27 +32,10 @@ function validURL(str) {
 }
 
 const RowForm = (props) => {
-    const defaultItem = {
-        facilityName: "",
-        address: [],
-        description: "",
-        buildingNum: [],
-        stationNum: "",
-        childcare: [false],
-        epic: [false],
-        hours: {},
-        links: {},
-        notes: [],
-        phoneNum: [],
-        website: [],
-        image: "modalimage.png",
-        imageURL: null,
-        content: {},
-        filters: {},
-    };
+
 
     const [item, setItem] = useState(
-        props.item.facilityName ? props.item : JSON.parse(sessionStorage.getItem("item")) || defaultItem
+        props.item.id ? props.item : JSON.parse(sessionStorage.getItem("item"))
     );
     const [showModal, setShowModal] = useState(false);
 

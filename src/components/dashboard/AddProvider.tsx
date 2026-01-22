@@ -39,17 +39,37 @@ let steps = [
 ];
 
 function AddProvider(props) {
+    const defaultItem = {
+        facilityName: "",
+        address: [],
+        description: "",
+        buildingNum: [],
+        stationNum: "",
+        childcare: [false],
+        epic: [false],
+        hours: {},
+        links: {},
+        notes: [],
+        phoneNum: [],
+        website: [],
+        image: "modalimage.png",
+        imageURL: null,
+        content: {},
+        filters: {},
+    };
     const { width } = useWindowSize();
     const [step, setStep] = useState(0);
     const [completed, setCompleted] = useState(false);
     const [animate, setAnimate] = useState(true);
-    const [item, setItem] = useState(props.selected || {});
+    const [item, setItem] = useState((JSON.parse(sessionStorage.getItem("item")) !== null 
+                                    ? JSON.parse(sessionStorage.getItem("item")) : 
+                                    (props.selected !== null && Object.keys(props.selected).length > 0 
+                                    ? props.selected : defaultItem)))
     const [isLoading, setIsLoading] = useState(true);
     const [filters, setFilters] = useState(null);
     const [descriptions, setDescriptions] = useState(null);
     const [single, setSingle] = useState(null);
     const [error, setError] = useState("");
-    const [firstLoad, setFirstLoad] = useState(true);
     const [content, setContent] = useState(
         'ex. "Changing lives one bit at a time..."'
     );
@@ -57,17 +77,20 @@ function AddProvider(props) {
         setContent(updatedContent);
     };
 
+    // selected provider persists on refresh when attempting to edit
     useEffect(() => {
-        console.log((sessionStorage.getItem("item")))
-        if (firstLoad === false) {
+        if (JSON.parse(sessionStorage.getItem("item")) == null || Object.keys(item).length > 0) {
             sessionStorage.setItem('item', JSON.stringify(item))
-        } else {
-            if(JSON.parse(sessionStorage.getItem("item")) !== null) {
-                setItem(JSON.parse(sessionStorage.getItem("item")))
-            }
-            setFirstLoad(false)
+            console.log("stored")
         }
-    }, [item])
+        console.log("item:", item)
+    }, [item]);
+
+    useEffect(() => {
+        if(JSON.parse(sessionStorage.getItem("item")) !== null) {
+            setItem(JSON.parse(sessionStorage.getItem("item")))
+        }
+    }, []);
 
     useEffect(() => {
         async function fetchData() {
@@ -392,14 +415,14 @@ function AddProvider(props) {
                                     block
                                     disabled={!completed}
                                     onClick={
-                                        props.selected &&
-                                            props.selected.facilityName
+                                        item &&
+                                            item.id
                                             ? updateFirestore
                                             : addFirestore
                                     }
                                 >
-                                    {props.selected &&
-                                        props.selected.facilityName
+                                    {item &&
+                                        item.id
                                         ? "Edit"
                                         : "Add"}{" "}
                                     Provider
@@ -445,9 +468,8 @@ function AddProvider(props) {
                                                         onClick={
                                                             step ===
                                                                 steps.length - 1
-                                                                ? props.selected &&
-                                                                    props.selected
-                                                                        .facilityName
+                                                                ? item &&
+                                                                    item.id
                                                                     ? updateFirestore
                                                                     : addFirestore
                                                                 : next
@@ -461,9 +483,8 @@ function AddProvider(props) {
                                                     >
                                                         {step ===
                                                             steps.length - 1
-                                                            ? props.selected &&
-                                                                props.selected
-                                                                    .facilityName
+                                                            ? item &&
+                                                                item.id
                                                                 ? "Edit Provider"
                                                                 : "Add Provider"
                                                             : "Next"}
@@ -497,6 +518,8 @@ function AddProvider(props) {
                                                                 i
                                                             );
                                                         setItem(i);
+                                                        console.log(item)
+                                                        console.log("item set", i)
                                                         setCompleted(c);
                                                     }}
                                                     filters={filters}
